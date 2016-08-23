@@ -157,6 +157,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\Dependencies.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Product.cs" />
@@ -243,6 +244,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-3.1.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AzureRepositories\AzureRepositories.csproj">
+      <Project>{ccf1e3b1-16b8-404d-8a5a-ad8862aa6858}</Project>
+      <Name>AzureRepositories</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AzureStorage\AzureStorage.csproj">
+      <Project>{b3642177-0525-48a7-844e-7e5054fef3b5}</Project>
+      <Name>AzureStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{e689375b-0822-47e4-ae16-6ab9f3cf5698}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{1dcf2948-0a67-4169-8c2a-43da4909e3a1}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
