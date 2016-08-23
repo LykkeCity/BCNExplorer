@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/bundles/css/main")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse " role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="logo"><a href="@Url.Action("Index", "Home")"><img src="~/Images/logo.png" /></a></div>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active pull-right"><a href="@Url.Action("Index", "Home")">Explorer </a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="container">
+        @RenderBody()
+
+    </div>
+    <footer class="footer" style="position: absolute">
+        <div class="container">
+            <div class="copyr">© Lykke @DateTime.Now.Year - Blockchain Explorer v@(Product.Version)</div>
+            <div class="pull-right f-social">
+                <a href=""><img class="social-icon" src="~/Images/fb.png" /><span class="social-name">Facebook</span></a>
+                <a href=""><img class="social-icon" src="~/Images/tw.png" /><span class="social-name">Twitter</span></a>
+            </div>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/js/jquery")
+    @Scripts.Render("~/bundles/js/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
