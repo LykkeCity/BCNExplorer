@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureStorage", "AzureStorage\AzureStorage.csproj", "{B3642177-0525-48A7-844E-7E5054FEF3B5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinjaProviders", "NinjaProviders\NinjaProviders.csproj", "{F6A82C81-9E41-4C77-B665-50BFCDBA853B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,14 @@ Global
 		{B3642177-0525-48A7-844E-7E5054FEF3B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B3642177-0525-48A7-844E-7E5054FEF3B5}.Release|x64.ActiveCfg = Release|x64
 		{B3642177-0525-48A7-844E-7E5054FEF3B5}.Release|x64.Build.0 = Release|x64
+		{F6A82C81-9E41-4C77-B665-50BFCDBA853B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A82C81-9E41-4C77-B665-50BFCDBA853B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6A82C81-9E41-4C77-B665-50BFCDBA853B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F6A82C81-9E41-4C77-B665-50BFCDBA853B}.Debug|x64.Build.0 = Debug|Any CPU
+		{F6A82C81-9E41-4C77-B665-50BFCDBA853B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6A82C81-9E41-4C77-B665-50BFCDBA853B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6A82C81-9E41-4C77-B665-50BFCDBA853B}.Release|x64.ActiveCfg = Release|Any CPU
+		{F6A82C81-9E41-4C77-B665-50BFCDBA853B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

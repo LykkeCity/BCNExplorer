@@ -162,6 +162,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Product.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BlockController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -235,6 +236,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Block\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -261,6 +263,10 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{1dcf2948-0a67-4169-8c2a-43da4909e3a1}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NinjaProviders\NinjaProviders.csproj">
+      <Project>{f6a82c81-9e41-4c77-b665-50bfcdba853b}</Project>
+      <Name>NinjaProviders</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

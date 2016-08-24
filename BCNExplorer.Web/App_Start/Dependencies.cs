@@ -5,9 +5,11 @@ using System.Web.Mvc;
 using AzureRepositories;
 using AzureRepositories.Log;
 using AzureStorage.Tables;
+using Common;
 using Common.IocContainer;
 using Common.Log;
 using Core.Settings;
+using NinjaProviders;
 
 namespace BCNExplorer.Web.App_Start
 {
@@ -23,11 +25,15 @@ namespace BCNExplorer.Web.App_Start
         {
             var dr = new MyDependencyResolver();
             var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
+            settings.NinjaUrl = settings.NinjaUrl.AddLastSymbolIfNotExists('/');
+
             dr.IoC.Register(settings);
 
             var log = new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "LogBackoffce", null));
 
             dr.IoC.Register<ILog>(log);
+
+            dr.IoC.BindNinjaProviders();
 
             return dr;
         }
