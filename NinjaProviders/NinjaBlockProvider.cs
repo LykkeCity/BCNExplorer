@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Settings;
 using NBitcoin;
+using NBitcoin.OpenAsset;
 using Newtonsoft.Json;
 
 namespace NinjaProviders
@@ -20,7 +21,6 @@ namespace NinjaProviders
         public long Nonce { get; set; }
         public int TotalTransactions { get; set; }
         public string PreviousBlock { get; set; }
-
     }
 
     internal class BlockNinjaResponce

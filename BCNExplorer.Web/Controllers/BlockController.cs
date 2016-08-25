@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using BCNExplorer.Web.Models;
 using NinjaProviders;
 
 namespace BCNExplorer.Web.Controllers
@@ -17,14 +18,16 @@ namespace BCNExplorer.Web.Controllers
             _ninjaBlockProvider = ninjaBlockProvider;
         }
         
-        [Route("block/{id}")]
         public async Task<ActionResult> Index(string id)
         {
-            var result = await _ninjaBlockProvider.GetAsync(id);
-            if (result == null)
+            var ninjaBlock = await _ninjaBlockProvider.GetAsync(id);
+
+            if (ninjaBlock == null)
                 return HttpNotFound();
 
-            return View();
+            var result = BlockViewModel.Create(ninjaBlock);
+
+            return View(result);
         }
     }
 }
