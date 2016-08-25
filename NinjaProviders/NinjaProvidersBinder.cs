@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Common.IocContainer;
+using NinjaProviders.BlockChainReder;
+using NinjaProviders.Providers;
 
 namespace NinjaProviders
 {
@@ -12,6 +14,8 @@ namespace NinjaProviders
         public static void BindNinjaProviders(this IoC ioc)
         {
             ioc.RegisterPerCall<NinjaBlockProvider>();
+            ioc.RegisterPerCall<NinjaTransactionProvider>();
+            ioc.RegisterPerCall<NinjaBlockChainReader>();
         }
     }
 }

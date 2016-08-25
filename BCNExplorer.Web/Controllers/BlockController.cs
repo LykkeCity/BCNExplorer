@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using NinjaProviders;
+using NinjaProviders.Providers;
 
 namespace BCNExplorer.Web.Controllers
 {

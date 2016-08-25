@@ -48,10 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NinjaBlockChainReader.cs" />
-    <Compile Include="NinjaBlockProvider.cs" />
+    <Compile Include="BlockChainReder\NinjaBlockChainReader.cs" />
+    <Compile Include="Contracts\BlockContract.cs" />
+    <Compile Include="Contracts\TransactionContract.cs" />
+    <Compile Include="Providers\NinjaBlockProvider.cs" />
     <Compile Include="NinjaProvidersBinder.cs" />
+    <Compile Include="Providers\NinjaTransactionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransportTypes\NinjaBlock.cs" />
+    <Compile Include="TransportTypes\NinjaTransaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

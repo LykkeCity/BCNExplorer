@@ -1,18 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
+using Core.Settings;
 
-namespace NinjaProviders
+namespace NinjaProviders.BlockChainReder
 {
-    public static class NinjaBlockChainReader
+    public class NinjaBlockChainReader
     {
-        private static async Task<string> DoRequest(string url)
+        private readonly string _ninjaBaseUrl;
+
+        public NinjaBlockChainReader(BaseSettings baseSettings)
         {
-            var webRequest = (HttpWebRequest)WebRequest.Create(url);
+            _ninjaBaseUrl = baseSettings.NinjaUrl;
+        }
+
+        private async Task<string> DoRequest(string url)
+        {
+            var webRequest = (HttpWebRequest)WebRequest.Create(_ninjaBaseUrl + url);
             webRequest.Method = "GET";
             webRequest.ContentType = "application/x-www-form-urlencoded";
             var webResponse = await webRequest.GetResponseAsync();
@@ -26,7 +31,7 @@ namespace NinjaProviders
             }
         }
 
-        public static async Task<T> DoRequest<T>(string url)
+        public async Task<T> DoRequest<T>(string url)
         {
             try
             {
