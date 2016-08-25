@@ -23,12 +23,14 @@ namespace BCNExplorer.Web.Controllers
         {
             var ninjaBlock = await _ninjaBlockProvider.GetAsync(id);
 
-            if (ninjaBlock == null)
-                return HttpNotFound();
+            if (ninjaBlock != null)
+            {
+                var result = BlockViewModel.Create(ninjaBlock);
 
-            var result = BlockViewModel.Create(ninjaBlock);
+                return View(result);
+            }
 
-            return View(result);
+            return HttpNotFound();
         }
     }
 }

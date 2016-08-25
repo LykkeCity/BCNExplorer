@@ -3,30 +3,36 @@ using Newtonsoft.Json;
 
 namespace NinjaProviders.Contracts
 {
-    internal class TransactionContract
+    public class TransactionContract
     {
         public string TransactionId { get; set; }
 
+        [JsonProperty("transaction")]
+        public string Hex { get; set; }
+
+        [JsonProperty("fees")]
+        public double Fees { get; set; }
+
         [JsonProperty("block")]
-        public BlockModel Block { get; set; }
+        public BlockContract Block { get; set; }
 
         [JsonProperty("receivedCoins")]
-        public BitCoinInOut[] ReceivedCoins { get; set; }
+        public BitCoinInOutContract[] Outputs { get; set; }
 
         [JsonProperty("spentCoins")]
-        public BitCoinInOut[] SpentCoins { get; set; }
+        public BitCoinInOutContract[] Inputs { get; set; }
 
         [JsonProperty("firstSeen")]
         public DateTime FirstSeen { get; set; }
 
         #region Classes
-        public class BlockModel
+        public class BlockContract
         {
             [JsonProperty("confirmations")]
-            public int Confirmations { get; set; }
+            public double Confirmations { get; set; }
 
             [JsonProperty("height")]
-            public int Height { get; set; }
+            public double Height { get; set; }
 
             [JsonProperty("blockId")]
             public string BlockId { get; set; }
@@ -35,7 +41,7 @@ namespace NinjaProviders.Contracts
             public DateTime BlockTime { get; set; }
         }
 
-        public class BitCoinInOut
+        public class BitCoinInOutContract
         {
             [JsonProperty("address")]
             public string Address { get; set; }

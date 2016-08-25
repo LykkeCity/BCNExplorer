@@ -1,0 +1,92 @@
+﻿@using Common
+@model TransactionViewModel
+@{
+    Layout = null;
+}
+
+<ul class="list-group">
+
+    <li class="list-group-item clearfix intput-output-group-list-item">
+        <div class="intput-output-group">
+            <div class="icon dspl-icon">
+                <span class="currency-icon thumbnail">
+                    <span class="bg-warning">
+                        <i class="fa fa-btc"></i>
+                    </span>
+                </span>
+            </div>
+            <div class="inputs">
+                @if (Model.IsCoinBase)
+                {
+                    <div class="address-item ">
+                        <div class="amount">
+
+                        </div>
+                        <div class="address">
+                            <b>Mined coins</b>
+                        </div>
+                    </div>
+                }
+                else
+                {
+
+                    foreach (var input in (Model.TransactionIn ?? Enumerable.Empty<TransactionViewModel.InOut>()).Where(input => input.AssetId == null && input.Value != 0))
+                    {
+                        <div class="address-item ">
+                            <div class="amount">
+                                - @BitcoinUtils.SatoshiToBtc(input.Value)
+                            </div>
+                            <div class="address">
+                                <i class="fa fa-lg fa-arrow-left displ-fa"></i>
+                                @if (input.Address == null)
+                                {
+                                    <span>Unrecognized address</span>
+                                }
+                                else
+                                {
+                                    <a>@input.Address</a>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+
+            <div class="outputs">
+                <div class="outputs-container">
+                    <div class="center-chevron">
+                        <img src="/images/arrow.png" />
+                    </div>
+
+                    @foreach (var output in (Model.TransactionsOut ?? Enumerable.Empty<TransactionViewModel.InOut>()).Where(output => output.AssetId == null && output.Value != 0))
+                    {
+                        <div class="address-item ">
+                            <div class="amount">
+                                @BitcoinUtils.SatoshiToBtc(output.Value)
+                            </div>
+                            <div class="address">
+                                @if (output.Address == null)
+                                {
+                                    <span>Unrecognized address</span>
+                                }
+                                else
+                                {
+                                    <a>@output.Address</a>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <div class="address-item div-fees">
+                        <div class="amount">
+                            @($"{BitcoinUtils.SatoshiToBtc(Model.Fees):0.00######}")
+                        </div>
+                        <div class="address">
+                            Fees
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>

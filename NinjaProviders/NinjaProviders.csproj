@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlockChainReder\NinjaBlockChainReader.cs" />
+    <Compile Include="BlockChainReader\NinjaBlockChainReader.cs" />
     <Compile Include="Contracts\BlockContract.cs" />
     <Compile Include="Contracts\TransactionContract.cs" />
     <Compile Include="Providers\NinjaBlockProvider.cs" />

@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Core.Settings;
 
-namespace NinjaProviders.BlockChainReder
+namespace NinjaProviders.BlockChainReader
 {
     public class NinjaBlockChainReader
     {

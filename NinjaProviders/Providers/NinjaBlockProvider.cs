@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using NBitcoin;
 using Newtonsoft.Json;
-using NinjaProviders.BlockChainReder;
+using NinjaProviders.BlockChainReader;
 using NinjaProviders.Contracts;
 using NinjaProviders.TransportTypes;
 

@@ -124,6 +124,7 @@
     <Compile Include="ArrayHelpers.cs" />
     <Compile Include="AsyncLock.cs" />
     <Compile Include="AsyncQueue.cs" />
+    <Compile Include="BitcoinUtils.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="CachedDataDictionary.cs" />
     <Compile Include="Cache\CacheExtensions.cs" />
