@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using BCNExplorer.Web.App_Start;
+using BCNExplorer.Web.Controllers;
 
 namespace BCNExplorer.Web
 {
@@ -19,6 +20,22 @@ namespace BCNExplorer.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             
             DependencyResolver.SetResolver(Dependencies.CreateDepencencyResolver());
+        }
+
+        protected void Application_EndRequest()
+        {
+            if (Context.Response.StatusCode == 404)
+            {
+                Response.Clear();
+
+                var rd = new RouteData();
+
+                rd.Values["controller"] = "Error";
+                rd.Values["action"] = "NotFound";
+
+                IController c = new ErrorController();
+                c.Execute(new RequestContext(new HttpContextWrapper(Context), rd));
+            }
         }
     }
 }

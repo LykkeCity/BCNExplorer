@@ -20,6 +20,12 @@ namespace BCNExplorer.Web
             );
 
             routes.MapRoute(
+                name: "TransactionIndex",
+                url: "transaction/{id}",
+                defaults: new { controller = "Transaction", action = "Index" }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
