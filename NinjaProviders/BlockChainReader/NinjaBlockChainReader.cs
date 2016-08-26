@@ -15,7 +15,7 @@ namespace NinjaProviders.BlockChainReader
             _ninjaBaseUrl = baseSettings.NinjaUrl;
         }
 
-        private async Task<string> DoRequest(string url)
+        public async Task<string> DoRequest(string url)
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(_ninjaBaseUrl + url);
             webRequest.Method = "GET";
