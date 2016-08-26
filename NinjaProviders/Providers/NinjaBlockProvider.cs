@@ -39,7 +39,8 @@ namespace NinjaProviders.Providers
                 Difficulty = block.Header.Bits.Difficulty,
                 MerkleRoot = block.Header.HashMerkleRoot.ToString(),
                 PreviousBlock = block.Header.HashPrevBlock.ToString(),
-                Nonce = block.Header.Nonce
+                Nonce = block.Header.Nonce,
+                TransactionIds = block.Transactions.Select(p=>p.ToHex())
             };
 
             return result;
@@ -48,6 +49,25 @@ namespace NinjaProviders.Providers
         public async Task<NinjaBlockHeader> GetHeaderAsync(string id)
         {
             var blockResponse = await _blockChainReader.DoRequest<BlockContractHeader>($"blocks/{id}?headeronly=true");
+            if (blockResponse == null)
+            {
+                return null;
+            }
+
+            var result = new NinjaBlockHeader
+            {
+                Confirmations = blockResponse.AdditionalInformation.Confirmations,
+                Time = blockResponse.AdditionalInformation.Time,
+                Height = blockResponse.AdditionalInformation.Height,
+                Hash = blockResponse.AdditionalInformation.BlockId,
+            };
+
+            return result;
+        }
+
+        public async Task<NinjaBlockHeader> GetLastBlockAsync()
+        {
+            var blockResponse = await _blockChainReader.DoRequest<BlockContractHeader>($"blocks/tip?headeronly=true");
             if (blockResponse == null)
             {
                 return null;

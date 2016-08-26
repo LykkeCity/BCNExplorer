@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NinjaProviders.TransportTypes
 {
@@ -17,6 +14,7 @@ namespace NinjaProviders.TransportTypes
         public long Nonce { get; set; }
         public int TotalTransactions { get; set; }
         public string PreviousBlock { get; set; }
+        public  IEnumerable<string> TransactionIds { get; set; }
     }
 
     public class NinjaBlockHeader
