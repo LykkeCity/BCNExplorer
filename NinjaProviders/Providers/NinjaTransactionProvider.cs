@@ -35,7 +35,7 @@ namespace NinjaProviders.Providers
 
             foreach (var input in inputs.Where(inp => outputs.Any(x => x.Address == inp.Address)))
             {
-                foreach (var output in outputs.Where(x => x.Address == input.Address && x.AssetId == input.AssetId))
+                foreach (var output in outputs.Where(x => x.Address == input.Address && x.AssetId == input.AssetId).ToList())
                 {
                     input.Value -= output.Value;
                     input.Quantity -= output.Quantity;
@@ -53,9 +53,8 @@ namespace NinjaProviders.Providers
                 IsCoinBase = transactionInfo.IsCoinBase,
                 IsColor = transactionInfo.HasValidColoredMarker(),
                 Block =  NinjaTransaction.BlockMinInfo.Create(responce.Block),
-                TransactionIn = NinjaTransaction.InOut.Create(inputs).ToList(),
-                TransactionsOut = NinjaTransaction.InOut.Create(outputs).ToList(),
-                Fees = responce.Fees
+                Fees = responce.Fees,
+                TransactionsByAssets = NinjaTransaction.InOutsByAsset.Create(inputs, outputs)
             };
             
             return result;

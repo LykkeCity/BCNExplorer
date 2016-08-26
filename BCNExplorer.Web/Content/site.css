@@ -522,7 +522,10 @@ a {
 .assetBlock .assetid{
     color: #8A95A2;
     border-top: 1px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
     padding: 15px 0px;
+    padding-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .navbar-inverse .navbar-toggle {

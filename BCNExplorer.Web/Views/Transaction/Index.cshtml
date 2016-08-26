@@ -1,4 +1,5 @@
-﻿@model TransactionViewModel
+﻿@using Common
+@model TransactionViewModel
     
 @{
     ViewBag.Title = "Transaction - " + Model.TransactionId;
@@ -32,7 +33,7 @@
                             </tr>
                             <tr>
                                 <td class="no-wrap">Fee paid</td>
-                                <td class="expand-column">@Model.Fees BTC</td>
+                                <td class="expand-column">@BitcoinUtils.SatoshiToBtc(Model.Fees) BTC</td>
                             </tr>
                             <tr>
                                 <td class="no-wrap">Assets transacted</td>

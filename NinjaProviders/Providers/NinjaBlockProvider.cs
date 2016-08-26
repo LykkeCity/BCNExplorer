@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NBitcoin;
+using NBitcoin.OpenAsset;
 using Newtonsoft.Json;
 using NinjaProviders.BlockChainReader;
 using NinjaProviders.Contracts;
@@ -26,13 +28,13 @@ namespace NinjaProviders.Providers
             }
 
             var block = Block.Parse(blockResponse.Hex);
-
+            
             var result = new NinjaBlock
             {
                 Confirmations = blockResponse.AdditionalInformation.Confirmations,
                 Time = blockResponse.AdditionalInformation.Time,
                 Height = blockResponse.AdditionalInformation.Height,
-                Hash = block.Header.ToString(),
+                Hash = blockResponse.AdditionalInformation.BlockId,
                 TotalTransactions = block.Transactions.Count,
                 Difficulty = block.Header.Bits.Difficulty,
                 MerkleRoot = block.Header.HashMerkleRoot.ToString(),
@@ -41,6 +43,25 @@ namespace NinjaProviders.Providers
             };
 
             return result;
-        } 
+        }
+
+        public async Task<NinjaBlockHeader> GetHeaderAsync(string id)
+        {
+            var blockResponse = await _blockChainReader.DoRequest<BlockContractHeader>($"blocks/{id}?headeronly=true");
+            if (blockResponse == null)
+            {
+                return null;
+            }
+
+            var result = new NinjaBlockHeader
+            {
+                Confirmations = blockResponse.AdditionalInformation.Confirmations,
+                Time = blockResponse.AdditionalInformation.Time,
+                Height = blockResponse.AdditionalInformation.Height,
+                Hash = blockResponse.AdditionalInformation.BlockId,
+            };
+
+            return result;
+        }
     }
 }

@@ -18,4 +18,12 @@ namespace NinjaProviders.TransportTypes
         public int TotalTransactions { get; set; }
         public string PreviousBlock { get; set; }
     }
+
+    public class NinjaBlockHeader
+    {
+        public string Hash { get; set; }
+        public long Height { get; set; }
+        public DateTime Time { get; set; }
+        public long Confirmations { get; set; }
+    }
 }

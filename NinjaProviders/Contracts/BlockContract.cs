@@ -14,19 +14,24 @@ namespace NinjaProviders.Contracts
 
         [JsonProperty("block")]
         public string Hex { get; set; }
-
-        public class AdditionalInformationContract
-        {
-            [JsonProperty("height")]
-            public long Height { get; set; }
-            [JsonProperty("blockTime")]
-            public DateTime Time { get; set; }
-            [JsonProperty("confirmations")]
-            public long Confirmations { get; set; }
-            [JsonProperty("blockId")]
-            public string BlockId { get; set; }
-        }
     }
 
+    internal class AdditionalInformationContract
+    {
+        [JsonProperty("height")]
+        public long Height { get; set; }
+        [JsonProperty("blockTime")]
+        public DateTime Time { get; set; }
+        [JsonProperty("confirmations")]
+        public long Confirmations { get; set; }
+        [JsonProperty("blockId")]
+        public string BlockId { get; set; }
+    }
+
+    internal class BlockContractHeader
+    {
+        [JsonProperty("additionalInformation")]
+        public AdditionalInformationContract AdditionalInformation { get; set; }
+    }
 
 }

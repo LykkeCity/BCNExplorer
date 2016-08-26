@@ -10,13 +10,13 @@ namespace NinjaProviders.TransportTypes
     public class NinjaTransaction
     {
         public string TransactionId { get; set; }
-        public IList<InOut> TransactionIn { get; set; }
-        public IList<InOut> TransactionsOut { get; set; }
+
         public bool IsCoinBase { get; set; }
         public bool IsColor { get; set; }
         public string Hex { get; set; }
         public double Fees { get; set; }
         public BlockMinInfo Block { get; set; }
+        public IEnumerable<InOutsByAsset> TransactionsByAssets { get; set; } 
         
         #region Classes 
 
@@ -37,7 +37,7 @@ namespace NinjaProviders.TransportTypes
                     Address = x.Address,
                     Index = x.Index,
                     Value = x.Value,
-                    AssetId = x.AssetId,
+                    AssetId = x.AssetId ?? "",
                     Quantity = x.Quantity
                 });
             } 
@@ -59,6 +59,56 @@ namespace NinjaProviders.TransportTypes
                     Height = blockContract.Height,
                     Time = blockContract.BlockTime
                 };
+            }
+        }
+
+        public class InOutsByAsset
+        {
+            public bool IsColored { get; set; }
+            public string AssetId { get; set; }
+            public IEnumerable<InOut> TransactionIn { get; set; }
+            public IEnumerable<InOut> TransactionsOut { get; set; }
+
+            //TODO рефакторить (копипаст со старого проекта)
+            public static IEnumerable<InOutsByAsset> Create(
+                IEnumerable<TransactionContract.BitCoinInOutContract> transactionsIns,
+                IEnumerable<TransactionContract.BitCoinInOutContract> transactionsOut)
+            {
+                var inputs = InOut.Create(transactionsIns);
+                var outputs = InOut.Create(transactionsOut);
+
+                //item1 = input, item2 = output
+                var dict = new Dictionary<string, Tuple<IList<InOut>, IList<InOut>>>();
+
+                foreach (var input in inputs)
+                {
+                    if (!dict.ContainsKey(input.AssetId))
+                    {
+                        var newTuple = new Tuple<IList<InOut>, IList<InOut>>(new List<InOut>(), new List<InOut>());
+                        dict.Add(input.AssetId, newTuple);
+                    }
+
+                    dict[input.AssetId].Item1.Add(input);
+                }
+
+                foreach (var output in outputs)
+                {
+                    if (!dict.ContainsKey(output.AssetId))
+                    {
+                        var newTuple = new Tuple<IList<InOut>, IList<InOut>>(new List<InOut>(), new List<InOut>());
+                        dict.Add(output.AssetId, newTuple);
+                    }
+
+                    dict[output.AssetId].Item2.Add(output);
+                }
+
+                return dict.Select(p => new InOutsByAsset
+                {
+                    AssetId = p.Key,
+                    IsColored = !string.IsNullOrEmpty(p.Key),
+                    TransactionIn = p.Value.Item1,
+                    TransactionsOut = p.Value.Item2
+                });
             }
         }
 

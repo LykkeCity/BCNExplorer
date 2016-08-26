@@ -10,15 +10,13 @@ namespace BCNExplorer.Web.Models
         public string TransactionId { get; set; }
         public double Confirmations { get; set; }
         public DateTime Time { get; set; }
-        public IEnumerable<InOut> TransactionIn { get; set; }
-        public IEnumerable<InOut> TransactionsOut { get; set; }
         public bool IsColor { get; set; }
         public bool IsCoinBase { get; set; }
 
         public double Fees { get; set; }
         public int AssetsCount { get; set; }
-
         public BlockViewModel Block { get; set; }
+        public IEnumerable<InOutsByAsset> InOutsByAssets { get; set; } 
 
         #region Classes 
 
@@ -79,15 +77,30 @@ namespace BCNExplorer.Web.Models
                 Block = BlockViewModel.Create(ninjaTransaction.Block),
                 Confirmations = ninjaTransaction.Block.Confirmations,
                 Fees = ninjaTransaction.Fees,
-                TransactionsOut = InOut.Create(ninjaTransaction.TransactionsOut),
-                TransactionIn = InOut.Create(ninjaTransaction.TransactionIn)
+                InOutsByAssets = InOutsByAsset.Create(ninjaTransaction.TransactionsByAssets),
+                AssetsCount = ninjaTransaction.TransactionsByAssets.Count(p => p.IsColored)
             };
-
-
+            
             return result;
         }
+
+        public class InOutsByAsset
+        {
+            public bool IsColored { get; set; }
+            public string AssetId { get; set; }
+            public IEnumerable<InOut> TransactionIn { get; set; }
+            public IEnumerable<InOut> TransactionsOut { get; set; }
+
+            public static IEnumerable<InOutsByAsset> Create(IEnumerable<NinjaTransaction.InOutsByAsset> source)
+            {
+                return source.Select(p => new InOutsByAsset
+                {
+                    AssetId = p.AssetId,
+                    IsColored = p.IsColored,
+                    TransactionIn = InOut.Create(p.TransactionIn),
+                    TransactionsOut = InOut.Create(p.TransactionsOut)}
+                );
+            }
+        }
     }
-
-
-
 }

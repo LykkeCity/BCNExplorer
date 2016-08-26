@@ -27,26 +27,42 @@
                             <td class="no-wrap">Height</td>
                             <td class="expand-column">@Model.Height</td>
                         </tr>
-                        <tr>
-                            <td class="no-wrap">Total transactions</td>
-                            <td class="expand-column">@Model.TotalTransactions</td>
-                        </tr>
-                        <tr>
-                            <td class="no-wrap">Previous block</td>
-                            <td class="expand-column"><a href="@Url.Action("Index", "Block", new { id = Model.PreviousBlock })">@Model.PreviousBlock</a></td>
-                        </tr>
-                        <tr>
-                            <td class="no-wrap">Difficulty</td>
-                            <td class="expand-column">@($"{Model.Difficulty:N}")</td>
-                        </tr>
-                        <tr>
-                            <td class="no-wrap">Merkle Root</td>
-                            <td class="expand-column">@Model.MerkleRoot</td>
-                        </tr>
-                        <tr>
-                            <td class="no-wrap">Nonce</td>
-                            <td class="expand-column">@Model.Nonce</td>
-                        </tr>
+
+                        @if (Model.TotalTransactions != 0)
+                        {
+                            <tr>
+                                <td class="no-wrap">Total transactions</td>
+                                <td class="expand-column">@Model.TotalTransactions</td>
+                            </tr>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PreviousBlock))
+                        {
+                            <tr>
+                                <td class="no-wrap">Previous block</td>
+                                <td class="expand-column"><a href="@Url.Action("Index", "Block", new { id = Model.PreviousBlock })">@Model.PreviousBlock</a></td>
+                            </tr>
+                        }
+                        @if (Model.Difficulty != 0)
+                        {
+                            <tr>
+                                <td class="no-wrap">Difficulty</td>
+                                <td class="expand-column">@($"{Model.Difficulty:N}")</td>
+                            </tr>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.MerkleRoot))
+                        {
+                            <tr>
+                                <td class="no-wrap">Merkle Root</td>
+                                <td class="expand-column">@Model.MerkleRoot</td>
+                            </tr>
+                        }
+                        @if (Model.Nonce != 0)
+                        {
+                            <tr>
+                                <td class="no-wrap">Nonce</td>
+                                <td class="expand-column">@Model.Nonce</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -55,15 +71,12 @@
         <hr>
         <h3 class="transactions-header">@Model.TotalTransactions Transactions</h3>
 
- 
+
 
     </div>
     <div class="footer-push">
         <div class="text-center">
-            <ul class="pagination">
-
-
-            </ul>
+            <ul class="pagination"></ul>
         </div>
     </div>
 </div>

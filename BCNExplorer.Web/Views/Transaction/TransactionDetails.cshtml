@@ -2,6 +2,8 @@
 @model TransactionViewModel
 @{
     Layout = null;
+    var btcAsset = Model.InOutsByAssets.FirstOrDefault(p => !p.IsColored);
+    var coloredAssets = Model.InOutsByAssets.Where(p => p.IsColored);
 }
 
 <ul class="list-group">
@@ -30,7 +32,7 @@
                 else
                 {
 
-                    foreach (var input in (Model.TransactionIn ?? Enumerable.Empty<TransactionViewModel.InOut>()).Where(input => input.AssetId == null && input.Value != 0))
+                    foreach (var input in btcAsset.TransactionIn.Where(input => input.Value != 0))
                     {
                         <div class="address-item ">
                             <div class="amount">
@@ -56,10 +58,10 @@
             <div class="outputs">
                 <div class="outputs-container">
                     <div class="center-chevron">
-                        <img src="/images/arrow.png" />
+                        <img src="/images/arrow.png"/>
                     </div>
 
-                    @foreach (var output in (Model.TransactionsOut ?? Enumerable.Empty<TransactionViewModel.InOut>()).Where(output => output.AssetId == null && output.Value != 0))
+                    @foreach (var output in btcAsset.TransactionsOut.Where(output => output.Value != 0))
                     {
                         <div class="address-item ">
                             <div class="amount">
@@ -79,7 +81,7 @@
                     }
                     <div class="address-item div-fees">
                         <div class="amount">
-                            @($"{BitcoinUtils.SatoshiToBtc(Model.Fees):0.00######}")
+                            @(String.Format("{0:0.00######}", BitcoinUtils.SatoshiToBtc(Model.Fees)))
                         </div>
                         <div class="address">
                             Fees
@@ -89,4 +91,91 @@
             </div>
         </div>
     </li>
+
+    @foreach (var inOutByAsset in coloredAssets.OrderBy(p => p.AssetId))
+    {
+        <li class="list-group-item clearfix intput-output-group-list-item assetBlock">
+            <div class="assetid"><span class="pull-right">@inOutByAsset.AssetId</span></div>
+            <div class="intput-output-group">
+                <div class="icon dspl-icon">
+
+                </div>
+                <div class="inputs">
+                    @if (inOutByAsset.TransactionIn.Any())
+                    {
+                        foreach (var input in (inOutByAsset.TransactionIn))
+                        {
+                            <div class="address-item ">
+                                <div class="amount">
+                                    @{
+                                        var l = inOutByAsset.TransactionsOut.Select(itm => itm.Quantity - input.Quantity);
+                                        var def = l.FirstOrDefault();
+                                        if (def != 0)
+                                        {
+                                            Write(BitcoinUtils.FormatColoredAsset(def).ToString("N0"));
+                                        }
+                                        else
+                                        {
+                                            Write(" - " + BitcoinUtils.FormatColoredAsset(input.Quantity).ToString("N0"));
+                                        }
+                                    }
+                                </div>
+                                <div class="address">
+                                    <i class="fa fa-lg fa-arrow-left displ-fa"></i>
+                                    @if (input.Address == null)
+                                    {
+                                        <span>Unrecognized address</span>
+                                    }
+                                    else
+                                    {
+                                        <a>@input.Address</a>
+                                    }
+                                </div>
+                            </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="address-item ">
+                                                <div class="amount">
+
+                                                </div>
+                                                <div class="address">
+                                                    <b>Issued assets</b>
+                                                </div>
+                                            </div>
+                                        }
+                </div>
+
+                <div class="outputs">
+                    <div class="outputs-container">
+                        <div class="center-chevron">
+                            <img src="/images/arrow.png"/>
+                        </div>
+
+                        @foreach (var output in inOutByAsset.TransactionsOut)
+                        {
+                            <div class="address-item ">
+                                <div class="amount">
+                                    @BitcoinUtils.FormatColoredAsset(output.Quantity).ToString("N0")
+                                </div>
+                                <div class="address">
+                                    @if (output.Address == null)
+                                    {
+                                        <span>Unrecognized address</span>
+                                    }
+                                    else
+                                    {
+                                        <a>@output.Address</a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </li>
+    }
+
+
 </ul>

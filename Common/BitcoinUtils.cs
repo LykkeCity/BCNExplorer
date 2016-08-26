@@ -12,5 +12,10 @@ namespace Common
         {
             return (decimal)(satoshi * 0.00000001);
         }
+
+        public static double FormatColoredAsset(double satoshi)
+        {
+            return satoshi/100;
+        }
     }
 }
