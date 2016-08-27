@@ -26,7 +26,7 @@ namespace BCNExplorer.Web.App_Start
             var dr = new MyDependencyResolver();
             var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
             settings.NinjaUrl = settings.NinjaUrl.AddLastSymbolIfNotExists('/');
-            settings.NinjaUrl = "https://btc-ninja.azurewebsites.net/";
+            //settings.NinjaUrl = "https://btc-ninja.azurewebsites.net/";
 
             dr.IoC.Register(settings);
 
