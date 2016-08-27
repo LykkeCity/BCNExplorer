@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="Models\LastBlockViewModel.cs" />
     <Compile Include="Models\BlockViewModel.cs" />
+    <Compile Include="Models\TransactionIdList.cs" />
     <Compile Include="Models\TransactionViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -192,6 +193,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
     <Content Include="Images\404.png" />
+    <Content Include="Images\ajaxLoader.gif" />
     <Content Include="Images\arrow.png" />
     <Content Include="Images\btn-hover.png" />
     <Content Include="Images\btn.png" />
@@ -207,6 +209,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Scripts\app\block\index.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\fontawesome-webfont.eot" />
@@ -252,10 +255,11 @@
     <Content Include="Views\Shared\NotFound.cshtml" />
     <Content Include="Views\Transaction\Index.cshtml" />
     <Content Include="Views\Transaction\TransactionDetails.cshtml" />
+    <Content Include="Views\Transaction\TransactionIdList.cshtml" />
+    <Content Include="Views\Transaction\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\app\" />
     <Folder Include="Views\Search\" />
   </ItemGroup>
   <ItemGroup>

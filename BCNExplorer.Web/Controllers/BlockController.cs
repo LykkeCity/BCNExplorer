@@ -18,7 +18,9 @@ namespace BCNExplorer.Web.Controllers
         {
             _ninjaBlockProvider = ninjaBlockProvider;
         }
-        
+
+        [Route("block/{id}")]
+        [OutputCache(Duration = 10*60, VaryByParam = "*")]
         public async Task<ActionResult> Index(string id)
         {
             var ninjaBlock = await _ninjaBlockProvider.GetAsync(id);

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<TransactionViewModel>
+
+@{
+    Layout = null;
+}
+
+@foreach (var tran in Model)
+{
+    var divclass = tran.IsColor ? "colortr" : "";
+    <br>
+    <div class="panel panel-success transaction-details @divclass">
+        <div class="panel-heading row">
+            <h3 class="panel-title address-transaction-header col-sm-7">
+                <a href="@Url.Action("Index", "Transaction", new { id = tran.TransactionId })">@tran.TransactionId</a>
+            </h3>
+            <div class="col-sm-3 text-center tr-date"></div>
+            <div class="confirmation-label col-sm-2 text-center">
+                <span class="confirmations-count">@tran.Confirmations confirmation</span>
+            </div>
+        </div>
+
+        <ul class="list-group">
+
+            <li class="list-group-item clearfix section-header">
+                <h3 class="panel-title hd-bt">Bitcoin</h3>
+            </li>
+
+            <li class="list-group-item clearfix intput-output-group-list-item">
+
+                <div class="intput-output-group show-details">
+                    @Html.Partial("TransactionDetails", tran)
+                </div>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+}

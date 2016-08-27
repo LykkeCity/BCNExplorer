@@ -13,17 +13,7 @@ namespace BCNExplorer.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-                name: "BlockIndex",
-                url: "block/{id}",
-                defaults: new { controller = "Block", action = "Index"}
-            );
-
-            routes.MapRoute(
-                name: "TransactionIndex",
-                url: "transaction/{id}",
-                defaults: new { controller = "Transaction", action = "Index" }
-            );
+            routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
                 name: "Default",

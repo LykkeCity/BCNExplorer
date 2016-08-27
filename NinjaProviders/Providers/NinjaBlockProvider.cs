@@ -40,7 +40,7 @@ namespace NinjaProviders.Providers
                 MerkleRoot = block.Header.HashMerkleRoot.ToString(),
                 PreviousBlock = block.Header.HashPrevBlock.ToString(),
                 Nonce = block.Header.Nonce,
-                TransactionIds = block.Transactions.Select(p=>p.ToHex())
+                TransactionIds = block.Transactions.Select(p=>p.GetHash().ToString())
             };
 
             return result;

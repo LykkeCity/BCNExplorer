@@ -17,17 +17,23 @@ namespace NinjaProviders.BlockChainReader
 
         public async Task<string> DoRequest(string url)
         {
-            var webRequest = (HttpWebRequest)WebRequest.Create(_ninjaBaseUrl + url);
-            webRequest.Method = "GET";
-            webRequest.ContentType = "application/x-www-form-urlencoded";
-            var webResponse = await webRequest.GetResponseAsync();
-            using (var receiveStream = webResponse.GetResponseStream())
+            try
             {
-                using (var sr = new StreamReader(receiveStream))
+                var webRequest = (HttpWebRequest)WebRequest.Create(_ninjaBaseUrl + url);
+                webRequest.Method = "GET";
+                webRequest.ContentType = "application/x-www-form-urlencoded";
+                var webResponse = await webRequest.GetResponseAsync();
+                using (var receiveStream = webResponse.GetResponseStream())
                 {
-                    return await sr.ReadToEndAsync();
+                    using (var sr = new StreamReader(receiveStream))
+                    {
+                        return await sr.ReadToEndAsync();
+                    }
                 }
-
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
 

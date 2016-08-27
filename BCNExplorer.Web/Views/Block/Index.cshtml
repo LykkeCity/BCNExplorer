@@ -3,7 +3,10 @@
 @{
     ViewBag.Title = "Block - " + Model.Hash;
 }
-
+@section scripts
+{
+    @Scripts.Render("~/Scripts/app/block/index.js")
+}
 <div class="container pd">
     <header class="top-nav-links clearfix">
         <h1>Block @Model.Height</h1>
@@ -69,14 +72,7 @@
         </div>
 
         <hr>
-        <h3 class="transactions-header">@Model.TotalTransactions Transactions</h3>
-
-
-
+        @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.TransactionIdList)
     </div>
-    <div class="footer-push">
-        <div class="text-center">
-            <ul class="pagination"></ul>
-        </div>
-    </div>
+
 </div>

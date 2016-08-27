@@ -36,7 +36,7 @@
                     {
                         <div class="address-item ">
                             <div class="amount">
-                                - @BitcoinUtils.SatoshiToBtc(input.Value)
+                                - @BitcoinUtils.SatoshiToBtc(input.Value).ToString("0.00######")
                             </div>
                             <div class="address">
                                 <i class="fa fa-lg fa-arrow-left displ-fa"></i>
@@ -65,7 +65,7 @@
                     {
                         <div class="address-item ">
                             <div class="amount">
-                                @BitcoinUtils.SatoshiToBtc(output.Value)
+                                @BitcoinUtils.SatoshiToBtc(output.Value).ToString("0.00######")
                             </div>
                             <div class="address">
                                 @if (output.Address == null)
@@ -81,7 +81,7 @@
                     }
                     <div class="address-item div-fees">
                         <div class="amount">
-                            @(String.Format("{0:0.00######}", BitcoinUtils.SatoshiToBtc(Model.Fees)))
+                            @BitcoinUtils.SatoshiToBtc(Model.Fees).ToString("0.00######")
                         </div>
                         <div class="address">
                             Fees

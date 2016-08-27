@@ -66,7 +66,7 @@ namespace BCNExplorer.Web.Models
 
         #endregion
 
-        public static TransactionViewModel Create(NinjaTransaction ninjaTransaction)
+        public static TransactionViewModel Create(NinjaTransaction ninjaTransaction, string id = null)
         {
             var result = new TransactionViewModel
             {

@@ -340,6 +340,9 @@ footer{
     padding: 20px;
     height: 96px;
 }
+.footer-push {
+    padding-bottom: 50px;
+}
 .f-social{}
 .f-social a{
     display: inline-block;
@@ -593,4 +596,18 @@ a {
 
 .list-group-item  .balance-left {
     float: left;    margin-left: 23px;
+}
+
+.transactions-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.transactions-container-load {
+    height: 300px;
+    background: url(/Images/ajaxLoader.gif) 50% 50% no-repeat;  
+}
+
+.confirmations-count {
+    white-space: nowrap;
 }

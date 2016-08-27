@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NinjaProviders.TransportTypes;
 
 namespace BCNExplorer.Web.Models
@@ -14,6 +15,8 @@ namespace BCNExplorer.Web.Models
         public long Nonce { get; set; }
         public int TotalTransactions { get; set; }
         public string PreviousBlock { get; set; }
+        public TransactionIdList TransactionIdList { get; set; }
+        private const int PageSize = 20;
 
         public static BlockViewModel Create(NinjaBlock ninjaBlock)
         {
@@ -27,7 +30,7 @@ namespace BCNExplorer.Web.Models
                 Nonce = ninjaBlock.Nonce,
                 PreviousBlock = ninjaBlock.PreviousBlock,
                 Time = ninjaBlock.Time,
-                TotalTransactions = ninjaBlock.TotalTransactions
+                TransactionIdList = new TransactionIdList(ninjaBlock.TransactionIds, PageSize)
             };
         }
     }
