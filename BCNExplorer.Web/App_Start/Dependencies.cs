@@ -15,25 +15,29 @@ namespace BCNExplorer.Web.App_Start
 {
     public class Dependencies
     {
-        public static class WebSiteSettings
-        {
+        //public static class WebSiteSettings
+        //{
 
-            public static string ConnectionString => ConfigurationManager.AppSettings["ConnectionString"] ?? "UseDevelopmentStorage=true";
+        //    public static string ConnectionString => ConfigurationManager.AppSettings["ConnectionString"] ?? "UseDevelopmentStorage=true";
+        //}
+
+        public static BaseSettings ReadBaseSettings()
+        {
+            return new BaseSettings
+            {
+                NinjaUrl = ConfigurationManager.AppSettings["ninjaurl"]
+            };
         }
 
         public static IDependencyResolver CreateDepencencyResolver()
         {
             var dr = new MyDependencyResolver();
-            var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
+            //var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
+            var settings = ReadBaseSettings();
             settings.NinjaUrl = settings.NinjaUrl.AddLastSymbolIfNotExists('/');
-            //settings.NinjaUrl = "https://btc-ninja.azurewebsites.net/";
 
             dr.IoC.Register(settings);
-
-            var log = new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "LogBackoffce", null));
-
-            dr.IoC.Register<ILog>(log);
-
+            
             dr.IoC.BindNinjaProviders();
 
             return dr;
