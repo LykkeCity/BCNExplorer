@@ -17,16 +17,25 @@
     }
 
     var pagination = {
-        renderItem: function(page, isActive) {
+        renderItem: function(page, isActive, isDisabled) {
             var a = $('<a>');
             a.addClass('transaction-pagination-pointer');
-            a.attr('href', '#');
+            if (!isDisabled) {
+                a.attr('href', '#');
+            }
             a.attr('data-page', page);
             a.html(page);
+
+            if (isDisabled) {
+                a.addClass("disabled");
+            }
 
             var li = $('<li>');
             if (isActive) {
                 li.addClass('active');
+            }
+            if (isDisabled) {
+                li.addClass('disabled');
             }
 
             li.append(a);
@@ -52,14 +61,14 @@
 
             var currentlyShowing = true;
             for (var pageCursor = 1; pageCursor <= totalPages; pageCursor++) {
-                var $item = pagination.renderItem(pageCursor, currentPage === pageCursor);
+                var $item = pagination.renderItem(pageCursor, currentPage === pageCursor, false);
 
                 if (showPagesArray.includes(pageCursor)) {
                     $container.append($item);
                     currentlyShowing = true;
                 } else {
                     if (currentlyShowing) {
-                        var dotItem = pagination.renderItem('...', false);
+                        var dotItem = pagination.renderItem('...', false, true);
                         $container.append(dotItem);
                     }
                     currentlyShowing = false;
