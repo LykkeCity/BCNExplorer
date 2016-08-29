@@ -39,7 +39,8 @@
                                 - @BitcoinUtils.SatoshiToBtc(input.Value).ToString("0.00######")
                             </div>
                             <div class="address">
-                                <i class="fa fa-lg fa-arrow-left displ-fa"></i>
+                                <a href="@Url.Action("Index", "Transaction", new {id = input.TransactionId})"><i class="fa fa-lg fa-arrow-left displ-fa"></i></a>
+                                
                                 @if (input.Address == null)
                                 {
                                     <span>Unrecognized address</span>
