@@ -3,7 +3,10 @@
 @{
     ViewData["Title"] = "Address - " + Model.AddressId;
 }
-
+@section scripts
+{
+    @Scripts.Render("~/Scripts/app/transaction/transactionlist.js")
+}
 <div class="container">
     <header class="top-nav-links clearfix">
         <h1>Address</h1>
@@ -21,7 +24,7 @@
                         </tr>
                         <tr>
                             <td class="no-wrap">Total transactions</td>
-                            @*<td class="expand-column">@Model.TransactionIds.Count()</td>*@
+                            <td class="expand-column">@Model.TotalTransactions</td>
                         </tr>
                         @if (Model.UncoloredAddress != null)
                         {
@@ -83,6 +86,7 @@
 
             </div>
         </div>
-
+        <hr>
+        @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.TransactionIdList)
     </div>
 </div>
