@@ -48,7 +48,7 @@ namespace NinjaProviders.Providers
 
         public async Task<NinjaBlockHeader> GetHeaderAsync(string id)
         {
-            var blockResponse = await _blockChainReader.DoRequest<BlockContractHeader>($"blocks/{id}?headeronly=true");
+            var blockResponse = await _blockChainReader.DoRequest<BlockHeaderContract>($"blocks/{id}?headeronly=true");
             if (blockResponse == null)
             {
                 return null;
@@ -67,7 +67,7 @@ namespace NinjaProviders.Providers
 
         public async Task<NinjaBlockHeader> GetLastBlockAsync()
         {
-            var blockResponse = await _blockChainReader.DoRequest<BlockContractHeader>($"blocks/tip?headeronly=true");
+            var blockResponse = await _blockChainReader.DoRequest<BlockHeaderContract>($"blocks/tip?headeronly=true");
             if (blockResponse == null)
             {
                 return null;

@@ -22,11 +22,11 @@ namespace NinjaProviders.Providers
         {
             var responce = await _blockChainReader.DoRequest($"whatisit/{id}");
 
-            if (IsType<BlockContract>(responce))
+            if (IsBlock(responce))
             {
                 return NinjaType.Block;
             }
-            if (IsType<TransactionContract>(responce))
+            if (IsTransaction(responce))
             {
                 return NinjaType.Transaction;
             }
@@ -34,16 +34,16 @@ namespace NinjaProviders.Providers
             return null;
         }
 
-        private bool IsType<T>(string responce)
+        private bool IsBlock(string responce)
         {
-            try
-            {
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(responce)!=null;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<BlockHeaderContract>(responce);
+            return deserialized?.AdditionalInformation?.BlockId != null;
+        }
+
+        private bool IsTransaction(string responce)
+        {
+            var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<TransactionContract>(responce);
+            return deserialized.TransactionId != null;
         }
     }
 }

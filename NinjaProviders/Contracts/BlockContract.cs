@@ -28,7 +28,7 @@ namespace NinjaProviders.Contracts
         public string BlockId { get; set; }
     }
 
-    internal class BlockContractHeader
+    internal class BlockHeaderContract
     {
         [JsonProperty("additionalInformation")]
         public AdditionalInformationContract AdditionalInformation { get; set; }
