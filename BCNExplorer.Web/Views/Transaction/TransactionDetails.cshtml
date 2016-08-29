@@ -47,7 +47,7 @@
                                 }
                                 else
                                 {
-                                    <a>@input.Address</a>
+                                    <a href="@Url.Action("Index", "Address", new {id = input.Address})">@input.Address</a>
                                 }
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                                 }
                                 else
                                 {
-                                    <a>@output.Address</a>
+                                    <a href="@Url.Action("Index", "Address", new {id = output.Address})">@output.Address</a>
                                 }
                             </div>
                         </div>

@@ -51,11 +51,14 @@
     <Compile Include="BlockChainReader\NinjaBlockChainReader.cs" />
     <Compile Include="Contracts\BlockContract.cs" />
     <Compile Include="Contracts\TransactionContract.cs" />
+    <Compile Include="Contracts\AddressContract.cs" />
+    <Compile Include="Providers\NinjaAddressProvider.cs" />
     <Compile Include="Providers\NinjaBlockProvider.cs" />
     <Compile Include="NinjaProvidersBinder.cs" />
     <Compile Include="Providers\NinjaSearchProvider.cs" />
     <Compile Include="Providers\NinjaTransactionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransportTypes\NinjaAddress.cs" />
     <Compile Include="TransportTypes\NinjaBlock.cs" />
     <Compile Include="TransportTypes\NinjaType.cs" />
     <Compile Include="TransportTypes\NinjaTransaction.cs" />

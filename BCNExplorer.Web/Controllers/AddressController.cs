@@ -1,14 +1,25 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using BCNExplorer.Web.Models;
+using NinjaProviders.Providers;
 
 namespace BCNExplorer.Web.Controllers
 {
     public class AddressController:Controller
     {
-        [Route("address/{id}")]
-        public ActionResult Index()
+        private readonly NinjaAddressProvider _ninjaAddressProvider;
+
+        public AddressController(NinjaAddressProvider ninjaAddressProvider)
         {
-            return View(new AddressViewModel());
+            _ninjaAddressProvider = ninjaAddressProvider;
+        }
+
+        [Route("address/{id}")]
+        public async Task<ActionResult> Index(string id)
+        {
+            var result = await _ninjaAddressProvider.GetAddress(id);
+
+            return View(AddressViewModel.Create(result));
         }
     }
 }
