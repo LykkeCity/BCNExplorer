@@ -17,6 +17,7 @@ namespace NinjaProviders
             ioc.RegisterPerCall<NinjaTransactionProvider>();
             ioc.RegisterPerCall<NinjaBlockChainReader>();
             ioc.RegisterPerCall<NinjaSearchProvider>();
+            ioc.RegisterPerCall<NinjaAddressProvider>();
         }
     }
 }

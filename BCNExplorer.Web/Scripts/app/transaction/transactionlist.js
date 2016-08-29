@@ -10,7 +10,6 @@
                 },
                 method: 'post'
             }).done(function(resp) {
-
                 $loadContainer.removeClass('transactions-container-load').html(resp);
             });
         }
