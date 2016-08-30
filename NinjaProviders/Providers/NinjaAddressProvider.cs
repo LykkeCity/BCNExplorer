@@ -41,7 +41,24 @@ namespace NinjaProviders.Providers
                 }
             });
 
-            await Task.WhenAll(fillMainInfoTask, fillTransactionsTask);
+            var fillSummaryTask = GetAddressSummary(id).ContinueWith(p =>
+            {
+                if (p.Result != null)
+                {
+                    ninjaAddress = ninjaAddress ?? new NinjaAddress();
+                    ninjaAddress.Balance = p.Result.Confirmed.Balance;
+                    ninjaAddress.TotalTransactions = p.Result.Confirmed.TotalTransactions;
+
+                    var assets = p.Result.Confirmed.Assets ?? Enumerable.Empty<AddressAssetContract>();
+                    ninjaAddress.Assets = assets.Select(a => new NinjaAddress.Asset
+                    {
+                        AssetId = a.AssetId,
+                        Quantity = a.Quantity
+                    });
+                }
+            });
+
+            await Task.WhenAll(fillMainInfoTask, fillTransactionsTask, fillSummaryTask);
 
             return ninjaAddress;
         } 
@@ -54,6 +71,11 @@ namespace NinjaProviders.Providers
         private async Task<AddressTransactionListContract> GetTransactionsForAddress(string id)
         {
             return await _blockChainReader.DoRequest<AddressTransactionListContract>($"/balances/{id}");
-        } 
+        }
+
+        private async Task<AddressSummaryContract> GetAddressSummary(string id)
+        {
+            return await _blockChainReader.DoRequest<AddressSummaryContract>($"/balances/{id}/summary");
+        }
     }
 }

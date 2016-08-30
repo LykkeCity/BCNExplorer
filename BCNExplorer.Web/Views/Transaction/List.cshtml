@@ -14,9 +14,20 @@
                 <a href="@Url.Action("Index", "Transaction", new { id = tran.TransactionId })">@tran.TransactionId</a>
             </h3>
             <div class="col-sm-3 text-center tr-date"></div>
-            <div class="confirmation-label col-sm-2 text-center">
-                <span class="confirmations-count">@tran.Confirmations confirmation</span>
-            </div>
+
+            @if (tran.IsConfirmed)
+            {
+                <div class="confirmation-label col-sm-2 text-center">
+                    <span class="confirmations-count">@tran.Block.Confirmations confirmation</span>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-2 text-center">
+                    <span class="confirmations-count">Uncorfirmed</span>
+                </div>
+            }
+
         </div>
 
         <ul class="list-group">

@@ -36,14 +36,26 @@ namespace NinjaProviders.Providers
 
         private bool IsBlock(string responce)
         {
-            var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<BlockHeaderContract>(responce);
+            var deserialized = TryDeserialize<BlockHeaderContract>(responce);
             return deserialized?.AdditionalInformation?.BlockId != null;
         }
 
         private bool IsTransaction(string responce)
         {
-            var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<TransactionContract>(responce);
-            return deserialized.TransactionId != null;
+            var deserialized = TryDeserialize<TransactionContract>(responce);
+            return deserialized?.TransactionId != null;
         }
+
+        private T TryDeserialize<T>(string source)
+        {
+            try
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(source);
+            }
+            catch (Exception)
+            {
+                return default(T);
+            }
+        } 
     }
 }

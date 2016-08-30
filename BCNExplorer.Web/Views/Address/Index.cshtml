@@ -57,7 +57,7 @@
                             </div>
                         </li>
 
-                        @*@if (Model.Assets != null && Model.Assets.Count != 0)
+                        @if (Model.Assets.Any())
                         {
                             <li class="list-group-item clearfix section-header">
                                 <h3 class="panel-title">Assets</h3>
@@ -71,14 +71,14 @@
                                         </span>
                                     </div>
                                     <div class="details-left">
-                                        <p class="list-group-item-text text-muted"> Asset ID: @itm.Id</p>
+                                        <p class="list-group-item-text text-muted"> Asset ID: @itm.AssetId</p>
                                     </div>
                                     <div class="details-right">
-                                        <h4 class="list-group-item-heading amount">@itm.Quantity.ToString("N0")</h4>
+                                        <h4 class="list-group-item-heading amount">@BitcoinUtils.FormatColoredAsset(itm.Quantity)</h4>
                                     </div>
                                 </li>
                             }
-                        }*@
+                        }
 
                     </ul>
 

@@ -7,7 +7,6 @@
 }
 
 <ul class="list-group">
-
     <li class="list-group-item clearfix intput-output-group-list-item">
         <div class="intput-output-group">
             <div class="icon dspl-icon">
@@ -40,7 +39,7 @@
                             </div>
                             <div class="address">
                                 <a href="@Url.Action("Index", "Transaction", new {id = input.TransactionId})"><i class="fa fa-lg fa-arrow-left displ-fa"></i></a>
-                                
+
                                 @if (input.Address == null)
                                 {
                                     <span>Unrecognized address</span>
@@ -59,7 +58,7 @@
             <div class="outputs">
                 <div class="outputs-container">
                     <div class="center-chevron">
-                        <img src="/images/arrow.png"/>
+                        <img src="/images/arrow.png" />
                     </div>
 
                     @foreach (var output in btcAsset.TransactionsOut.Where(output => output.Value != 0))
@@ -99,7 +98,11 @@
             <div class="assetid"><span class="pull-right">@inOutByAsset.AssetId</span></div>
             <div class="intput-output-group">
                 <div class="icon dspl-icon">
-
+                    <span class="currency-icon thumbnail">
+                        <span class="bg-warning">
+                            <i class="fa fa-money"></i>
+                        </span>
+                    </span>
                 </div>
                 <div class="inputs">
                     @if (inOutByAsset.TransactionIn.Any())
@@ -122,14 +125,17 @@
                                     }
                                 </div>
                                 <div class="address">
-                                    <i class="fa fa-lg fa-arrow-left displ-fa"></i>
+                                    <a href="@Url.Action("Index", "Transaction", new {id = input.TransactionId})">
+                                        <i class="fa fa-lg fa-arrow-left displ-fa"></i>
+                                    </a>
+
                                     @if (input.Address == null)
                                     {
                                         <span>Unrecognized address</span>
                                     }
                                     else
                                     {
-                                        <a>@input.Address</a>
+                                        <a href="@Url.Action("Index", "Address", new {id = input.Address})">@input.Address</a>
                                     }
                                 </div>
                             </div>
@@ -151,7 +157,7 @@
                 <div class="outputs">
                     <div class="outputs-container">
                         <div class="center-chevron">
-                            <img src="/images/arrow.png"/>
+                            <img src="/images/arrow.png" />
                         </div>
 
                         @foreach (var output in inOutByAsset.TransactionsOut)
@@ -167,7 +173,7 @@
                                     }
                                     else
                                     {
-                                        <a>@output.Address</a>
+                                        <a href="@Url.Action("Index", "Address", new {id = output.Address})">@output.Address</a>
                                     }
                                 </div>
                             </div>
@@ -176,7 +182,5 @@
                 </div>
             </div>
         </li>
-    }
-
-
+                                        }
 </ul>

@@ -52,13 +52,18 @@ namespace NinjaProviders.TransportTypes
 
             public static BlockMinInfo Create(TransactionContract.BlockContract blockContract)
             {
-                return new BlockMinInfo
+                if (blockContract != null)
                 {
-                    BlockId = blockContract.BlockId,
-                    Confirmations = blockContract.Confirmations,
-                    Height = blockContract.Height,
-                    Time = blockContract.BlockTime
-                };
+                    return new BlockMinInfo
+                    {
+                        BlockId = blockContract.BlockId,
+                        Confirmations = blockContract.Confirmations,
+                        Height = blockContract.Height,
+                        Time = blockContract.BlockTime
+                    };
+                }
+
+                return null;
             }
         }
 
