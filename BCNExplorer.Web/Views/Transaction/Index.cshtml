@@ -52,29 +52,33 @@
                     </table>
                 </div>
                 <div class="col-md-5">
-                    @if (Model.Block != null)
+                    @if (Model.IsConfirmed)
                     {
                         <div class="title-bl">Transaction confirmed</div>
                         <table class="table table-rounded ">
                             <tbody>
-                                <tr>
-                                    <td class="no-wrap">Confirmations</td>
-                                    <td class="expand-column">@Model.Block.Confirmations confirmations</td>
-                                </tr>
-                                <tr>
-                                    <td class="no-wrap">Time</td>
-                                    <td class="expand-column">@($"{Model.Block.Time:F}")</td>
-                                </tr>
-                                <tr> 
-                                    <td class="no-wrap">Block</td>
-                                    <td class="expand-column"><a href="@Url.Action("Index", "Block", new { id = Model.Block.BlockId })">@Model.Block.BlockId</a></td>
-                                </tr>
-                                <tr>
-                                    <td class="no-wrap">Height</td>
-                                    <td class="expand-column">@Model.Block.Height</td>
-                                </tr>
+                            <tr>
+                                <td class="no-wrap">Confirmations</td>
+                                <td class="expand-column">@Model.Block.Confirmations confirmations</td>
+                            </tr>
+                            <tr>
+                                <td class="no-wrap">Time</td>
+                                <td class="expand-column">@($"{Model.Block.Time:F}")</td>
+                            </tr>
+                            <tr>
+                                <td class="no-wrap">Block</td>
+                                <td class="expand-column"><a href="@Url.Action("Index", "Block", new {id = Model.Block.BlockId})">@Model.Block.BlockId</a></td>
+                            </tr>
+                            <tr>
+                                <td class="no-wrap">Height</td>
+                                <td class="expand-column">@Model.Block.Height</td>
+                            </tr>
                             </tbody>
                         </table>
+                    }
+                    else
+                    {
+                        <div class="title-bl">Transaction unconfirmed</div>
                     }
                 </div>
             </div>

@@ -52,6 +52,7 @@
     <Compile Include="Contracts\BlockContract.cs" />
     <Compile Include="Contracts\TransactionContract.cs" />
     <Compile Include="Contracts\AddressContract.cs" />
+    <Compile Include="Contracts\WhatIsItContract.cs" />
     <Compile Include="Providers\NinjaAddressProvider.cs" />
     <Compile Include="Providers\NinjaBlockProvider.cs" />
     <Compile Include="NinjaProvidersBinder.cs" />

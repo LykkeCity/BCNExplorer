@@ -3,6 +3,7 @@
     public enum NinjaType
     {
         Block,
-        Transaction
+        Transaction,
+        Address
     }
 }

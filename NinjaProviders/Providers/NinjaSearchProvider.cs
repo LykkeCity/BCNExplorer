@@ -30,6 +30,10 @@ namespace NinjaProviders.Providers
             {
                 return NinjaType.Transaction;
             }
+            if (IsAddress(responce))
+            {
+                return NinjaType.Address;
+            }
 
             return null;
         }
@@ -44,6 +48,13 @@ namespace NinjaProviders.Providers
         {
             var deserialized = TryDeserialize<TransactionContract>(responce);
             return deserialized?.TransactionId != null;
+        }
+
+        private bool IsAddress(string responce)
+        {
+            var deserialized = TryDeserialize<WhatIsItContract>(responce);
+            return deserialized?.Type == WhatIsItContract.ColoredAddressType ||
+                   deserialized?.Type == WhatIsItContract.UncoloredAddressType;
         }
 
         private T TryDeserialize<T>(string source)

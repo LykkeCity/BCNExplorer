@@ -31,6 +31,10 @@ namespace BCNExplorer.Web.Controllers
                 {
                     return RedirectToAction("Index", "Transaction", new { id = id });
                 }
+                case NinjaType.Address:
+                {
+                    return RedirectToAction("Index", "Address", new { id = id });
+                }
                 default:
                 {
                     return HttpNotFound();

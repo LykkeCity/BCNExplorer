@@ -12,7 +12,7 @@ namespace BCNExplorer.Web.Models
         public string UncoloredAddress { get; set; }
         public string ColoredAddress { get; set; }
         public double Balance { get; set; }
-        public double TotalTransactions { get; set; }
+        public double TotalConfirmedTransactions { get; set; }
         public IEnumerable<Asset> Assets { get; set; }
         public TransactionIdList TransactionIdList { get; set; }
         private const int PageSize = 20;
@@ -25,7 +25,7 @@ namespace BCNExplorer.Web.Models
                 TransactionIdList = new TransactionIdList(ninjaAddress.TransactionIds, PageSize),
                 UncoloredAddress = ninjaAddress.UncoloredAddress,
                 ColoredAddress = ninjaAddress.ColoredAddress,
-                TotalTransactions = ninjaAddress.TotalTransactions,
+                TotalConfirmedTransactions = ninjaAddress.TotalTransactions,
                 Balance = ninjaAddress.Balance,
                 Assets = ninjaAddress.Assets.Select(p=> new Asset
                 {
