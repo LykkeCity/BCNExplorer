@@ -442,11 +442,19 @@ a {
 }
 .confirmation-label{}
 .confirmation-label span{
-    background: #1DBF31;
     color: #fff;
     padding: 5px 10px;
     text-transform: uppercase;
     font-family: 'ProximaNova-Semibold';
+}
+
+
+.confirmation-label.confirmed span{
+    background: #1DBF31;
+}
+
+.confirmation-label.not-confirmed span{
+    background: #FF3D2E;
 }
 
 .panel-success > .panel-heading {
