@@ -18,7 +18,7 @@
 
     $('body').on('click', '.share-social-button', function () {
         var href = $(this).attr('href');
-        popupCenter(href, href, 600, 600);
+        popupCenter(href, href, 600, 450);
         return false;
     });
 })
