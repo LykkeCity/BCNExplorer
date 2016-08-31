@@ -32,7 +32,7 @@
                 {
                     <div class="row">
                         <div class="col-sm-8">
-                            <div class="search-header">
+                            <div class="search-header hidden-xs">
                                 <form method="get" action="@Url.Action("Search", "Search")" class="form-inline">
                                     <div class="input-group search">
                                         <input type="text" class="form-control input-sm search-top" placeholder="Search" name="id">
@@ -59,7 +59,7 @@
         @RenderBody()
 
     </div>
-    <footer class="footer" style="position: absolute">
+    <footer class="footer">
         <div class="container">
             <div class="copyr">© Lykke @DateTime.Now.Year - Blockchain Explorer v@(Product.Version)</div>
             <div class="pull-right f-social">

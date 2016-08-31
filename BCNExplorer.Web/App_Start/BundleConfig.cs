@@ -23,7 +23,6 @@ namespace BCNExplorer.Web
             bundles.Add(new StyleBundle("~/bundles/css/main").Include(
                       "~/Content/bootstrap.css",
                        "~/Content/site.css",
-                      "~/Content/media.css",
                       "~/Content/font-awesome.css"
                      ));
         }

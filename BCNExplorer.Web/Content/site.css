@@ -112,6 +112,7 @@ body {margin-top: 0px;background: #F7F8F9; font-family: 'ProximaNova-Regular'; c
 }
 
 .search {
+    padding-top: 11px;
     width: 100%;
 }
 
@@ -332,6 +333,7 @@ table td.no-wrap, table th.no-wrap {
 }
 
 footer{
+    position: absolute;
     background: #fff;
     bottom: 0;
     width: 100%;
@@ -439,8 +441,17 @@ a {
 
 .tr-date{
     color: #C7C7C7;
+    padding: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
-.confirmation-label{}
+.confirmation-label {
+    padding: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .confirmation-label span{
     color: #fff;
     padding: 5px 10px;
@@ -468,6 +479,14 @@ a {
 }
 .address-transaction-header {
     padding: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.address a {
+    font-size: 14px;
+    color: #3f4d60;
 }
 
 .list-group-item {

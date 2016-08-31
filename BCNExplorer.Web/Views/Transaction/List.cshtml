@@ -16,7 +16,7 @@
             @if (tran.IsConfirmed)
             {
                 <div class="col-sm-3 text-center tr-date ">
-                    <span class="hidden-sm hidden-xs">@tran.Block.Time</span>
+                    <span>@tran.Block.Time.ToString("F")</span>
                     
                 </div>
                 <div class="confirmation-label confirmed col-sm-2 text-center">
