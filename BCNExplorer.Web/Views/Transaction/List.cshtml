@@ -13,8 +13,6 @@
             <h3 class="panel-title address-transaction-header col-sm-7">
                 <a href="@Url.Action("Index", "Transaction", new { id = tran.TransactionId })">@tran.TransactionId</a>
             </h3>
-
-
             @if (tran.IsConfirmed)
             {
                 <div class="col-sm-3 text-center tr-date ">
