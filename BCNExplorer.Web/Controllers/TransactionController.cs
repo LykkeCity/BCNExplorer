@@ -43,7 +43,10 @@ namespace BCNExplorer.Web.Controllers
             {
                 var task = _ninjaTransactionProvider.GetAsync(id).ContinueWith(p =>
                 {
-                    result.Add(TransactionViewModel.Create(p.Result));
+                    if (p.Result != null)
+                    {
+                        result.Add(TransactionViewModel.Create(p.Result));
+                    }
                 });
 
                 loadTransactionTasks.Add(task);
