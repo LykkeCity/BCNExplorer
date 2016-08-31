@@ -18,8 +18,12 @@ namespace BCNExplorer.Web.Controllers
         public async Task<ActionResult> Index(string id)
         {
             var result = await _ninjaAddressProvider.GetAddress(id);
+            if (result != null)
+            {
+                return View(AddressViewModel.Create(result));
+            }
 
-            return View(AddressViewModel.Create(result));
+            return View("NotFound");
         }
     }
 }

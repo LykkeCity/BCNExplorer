@@ -37,7 +37,7 @@ namespace BCNExplorer.Web.Controllers
                 }
                 default:
                 {
-                    return HttpNotFound();
+                    return View("NotFound");
                 }
             }
         }

@@ -30,7 +30,7 @@ namespace BCNExplorer.Web.Controllers
                 return View(result);
             }
 
-            return HttpNotFound();
+            return View("NotFound");
         }
 
         [Route("transation/list")]
