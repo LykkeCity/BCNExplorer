@@ -10,7 +10,7 @@ namespace Providers.BlockChainReader
 {
     public class HttpReader
     {
-        public async Task<string> Get(string absUrl)
+        public async Task<string> GetAsync(string absUrl)
         {
             try
             {
@@ -32,14 +32,14 @@ namespace Providers.BlockChainReader
             }
         }
 
-        public async Task<T> Get<T>(string absUrl)
+        public async Task<T> GetAsync<T>(string absUrl)
         {
             try
             {
-                var result = await Get(absUrl);
+                var result = await GetAsync(absUrl);
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(result);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return default(T);
             }

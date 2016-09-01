@@ -162,6 +162,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Product.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AssetController.cs" />
     <Compile Include="Controllers\AddressController.cs" />
     <Compile Include="Controllers\BlockController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AssetViewModel.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\LastBlockViewModel.cs" />
     <Compile Include="Models\BlockViewModel.cs" />
@@ -262,6 +264,7 @@
     <Content Include="Views\Transaction\TransactionIdList.cshtml" />
     <Content Include="Views\Transaction\List.cshtml" />
     <Content Include="Views\Address\Index.cshtml" />
+    <Content Include="Views\Asset\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

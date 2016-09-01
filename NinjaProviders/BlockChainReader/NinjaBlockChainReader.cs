@@ -9,45 +9,23 @@ namespace Providers.BlockChainReader
     public class NinjaBlockChainReader
     {
         private readonly string _ninjaBaseUrl;
+        private readonly HttpReader _httpReader;
 
-        public NinjaBlockChainReader(BaseSettings baseSettings)
+        public NinjaBlockChainReader(BaseSettings baseSettings, 
+            HttpReader httpReader)
         {
+            _httpReader = httpReader;
             _ninjaBaseUrl = baseSettings.NinjaUrl;
         }
 
-        public async Task<string> DoRequest(string url)
+        public Task<string> GetAsync(string url)
         {
-            try
-            {
-                var webRequest = (HttpWebRequest)WebRequest.Create(_ninjaBaseUrl + url);
-                webRequest.Method = "GET";
-                webRequest.ContentType = "application/x-www-form-urlencoded";
-                var webResponse = await webRequest.GetResponseAsync();
-                using (var receiveStream = webResponse.GetResponseStream())
-                {
-                    using (var sr = new StreamReader(receiveStream))
-                    {
-                        return await sr.ReadToEndAsync();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
+            return _httpReader.GetAsync(_ninjaBaseUrl + url);
         }
 
-        public async Task<T> DoRequest<T>(string url)
+        public Task<T> GetAsync<T>(string url)
         {
-            try
-            {
-                var result = await DoRequest(url);
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(result);
-            }
-            catch (Exception)
-            {
-                return default(T);
-            }
+            return _httpReader.GetAsync<T>(_ninjaBaseUrl + url);
         }
     }
 }

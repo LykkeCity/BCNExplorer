@@ -18,7 +18,7 @@ namespace BCNExplorer.Web.Controllers
         [Route("address/{id}")]
         public async Task<ActionResult> Index(string id)
         {
-            var result = await _ninjaAddressProvider.GetAddress(id);
+            var result = await _ninjaAddressProvider.GetAddressAsync(id);
             if (result != null)
             {
                 return View(AddressViewModel.Create(result));

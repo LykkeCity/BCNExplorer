@@ -20,7 +20,7 @@ namespace Providers.Providers.Ninja
 
         public async Task<NinjaTransaction> GetAsync(string id)
         {
-            var responce = await _blockChainReader.DoRequest<TransactionContract>($"transactions/{id}?colored=true");
+            var responce = await _blockChainReader.GetAsync<TransactionContract>($"transactions/{id}?colored=true");
             if (responce == null)
             {
                 return null;

@@ -1,11 +1,9 @@
-﻿using System;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
-using Providers.Providers;
 using Providers.Providers.Ninja;
 
 namespace BCNExplorer.Web.Controllers
@@ -37,21 +35,15 @@ namespace BCNExplorer.Web.Controllers
         [Route("transation/list")]
         public async Task<ActionResult> List(IList<string> ids)
         {
-            var result = new List<TransactionViewModel>();
+            var result = new ConcurrentStack<TransactionViewModel>();
 
-            var loadTransactionTasks = new List<Task>();
-            foreach (var id in ids)
+            var loadTransactionTasks = ids.Select(id => _ninjaTransactionProvider.GetAsync(id).ContinueWith(task =>
             {
-                var task = _ninjaTransactionProvider.GetAsync(id).ContinueWith(p =>
+                if (task.Result != null)
                 {
-                    if (p.Result != null)
-                    {
-                        result.Add(TransactionViewModel.Create(p.Result));
-                    }
-                });
-
-                loadTransactionTasks.Add(task);
-            }
+                    result.Push(TransactionViewModel.Create(task.Result));
+                }
+            }));
 
             await Task.WhenAll(loadTransactionTasks);
 

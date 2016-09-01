@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Providers.BlockChainReader;
 using Providers.Contracts.Ninja;
-using Providers.TransportTypes;
 using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
@@ -16,10 +15,10 @@ namespace Providers.Providers.Ninja
             _blockChainReader = blockChainReader;
         }
 
-        public async Task<NinjaAddress> GetAddress(string id)
+        public async Task<NinjaAddress> GetAddressAsync(string id)
         {
             NinjaAddress ninjaAddress = null;
-            var fillMainInfoTask = GetAddressMainInfo(id).ContinueWith(p =>
+            var fillMainInfoTask = GetAddressMainInfoAsync(id).ContinueWith(p =>
             {
                 if (p.Result != null)
                 {
@@ -30,7 +29,7 @@ namespace Providers.Providers.Ninja
                 }
             });
 
-            var fillTransactionsTask = GetTransactionsForAddress(id).ContinueWith(p =>
+            var fillTransactionsTask = GetTransactionsForAddressAsync(id).ContinueWith(p =>
             {
                 if (p.Result != null)
                 {
@@ -39,7 +38,7 @@ namespace Providers.Providers.Ninja
                 }
             });
 
-            var fillSummaryTask = GetAddressSummary(id).ContinueWith(p =>
+            var fillSummaryTask = GetAddressSummaryAsync(id).ContinueWith(p =>
             {
                 if (p.Result != null)
                 {
@@ -61,19 +60,19 @@ namespace Providers.Providers.Ninja
             return ninjaAddress;
         } 
 
-        private async Task<WhatIsItAdrressContract> GetAddressMainInfo(string id)
+        private async Task<WhatIsItAdrressContract> GetAddressMainInfoAsync(string id)
         {
-            return await _blockChainReader.DoRequest<WhatIsItAdrressContract>($"/whatisit/{id}");
+            return await _blockChainReader.GetAsync<WhatIsItAdrressContract>($"/whatisit/{id}");
         }
 
-        private async Task<AddressTransactionListContract> GetTransactionsForAddress(string id)
+        private async Task<AddressTransactionListContract> GetTransactionsForAddressAsync(string id)
         {
-            return await _blockChainReader.DoRequest<AddressTransactionListContract>($"/balances/{id}");
+            return await _blockChainReader.GetAsync<AddressTransactionListContract>($"/balances/{id}");
         }
 
-        private async Task<AddressSummaryContract> GetAddressSummary(string id)
+        private async Task<AddressSummaryContract> GetAddressSummaryAsync(string id)
         {
-            return await _blockChainReader.DoRequest<AddressSummaryContract>($"/balances/{id}/summary");
+            return await _blockChainReader.GetAsync<AddressSummaryContract>($"/balances/{id}/summary");
         }
     }
 }

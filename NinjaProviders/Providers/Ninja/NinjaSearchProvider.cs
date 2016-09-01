@@ -18,7 +18,7 @@ namespace Providers.Providers.Ninja
 
         public async Task<NinjaType?> GetTypeAsync(string id)
         {
-            var responce = await _blockChainReader.DoRequest($"whatisit/{id}");
+            var responce = await _blockChainReader.GetAsync($"whatisit/{id}");
 
             if (IsBlock(responce))
             {
