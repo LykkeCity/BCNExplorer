@@ -56,6 +56,7 @@
     <Compile Include="Contracts\Ninja\TransactionContract.cs" />
     <Compile Include="Contracts\Ninja\AddressContract.cs" />
     <Compile Include="Contracts\Ninja\WhatIsItContract.cs" />
+    <Compile Include="Providers\Common\SearchProvider.cs" />
     <Compile Include="Providers\Lykke\LykkeAssetProvider.cs" />
     <Compile Include="Providers\Lykke\LykkeConstants.cs" />
     <Compile Include="Providers\Ninja\NinjaAddressProvider.cs" />

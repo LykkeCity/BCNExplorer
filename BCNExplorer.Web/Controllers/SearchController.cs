@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using Providers.Providers;
-using Providers.Providers.Ninja;
-using Providers.TransportTypes;
+using Providers.Providers.Common;
 using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly NinjaSearchProvider _ninjaSearchProvider;
+        private readonly SearchProvider _searchProvider;
 
-        public SearchController(NinjaSearchProvider ninjaSearchProvider)
+        public SearchController(SearchProvider searchProvider)
         {
-            _ninjaSearchProvider = ninjaSearchProvider;
+            _searchProvider = searchProvider;
         }
 
         public async Task<ActionResult> Search(string id)
         {
-            var type = await _ninjaSearchProvider.GetTypeAsync(id);
+            var type = await _searchProvider.GetTypeAsync(id);
             switch (type)
             {
                 case NinjaType.Block:
@@ -36,6 +30,10 @@ namespace BCNExplorer.Web.Controllers
                 case NinjaType.Address:
                 {
                     return RedirectToAction("Index", "Address", new { id = id });
+                }
+                case NinjaType.Asset:
+                {
+                    return RedirectToAction("Index", "Asset", new { id = id });
                 }
                 default:
                 {

@@ -8,6 +8,7 @@ using Common.IocContainer;
 using Providers.BlockChainReader;
 using Providers.Contracts.Lykke;
 using Providers.Providers;
+using Providers.Providers.Common;
 using Providers.Providers.Lykke;
 using Providers.Providers.Ninja;
 
@@ -20,6 +21,7 @@ namespace Providers
             ioc.BindCommon();
             ioc.BindNinjaProviders();
             ioc.BindLykkeProviders();
+            ioc.BindCommonProviders();
         }
 
         private static void BindCommon(this IoC ioc)
@@ -46,6 +48,11 @@ namespace Providers
             ioc.RegisterPerCall<NinjaBlockChainReader>();
             ioc.RegisterPerCall<NinjaSearchProvider>();
             ioc.RegisterPerCall<NinjaAddressProvider>();
+        }
+
+        private static void BindCommonProviders(this IoC ioc)
+        {
+            ioc.RegisterPerCall<SearchProvider>();
         }
     }
 }

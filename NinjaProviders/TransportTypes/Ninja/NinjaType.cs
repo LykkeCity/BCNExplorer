@@ -4,6 +4,7 @@
     {
         Block,
         Transaction,
-        Address
+        Address,
+        Asset
     }
 }
