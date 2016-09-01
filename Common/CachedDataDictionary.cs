@@ -39,7 +39,7 @@ namespace Common
 
         public async Task<TValue> GetItemAsync(TKey key)
         {
-            if (HaveToRefreshCash() || true)
+            if (HaveToRefreshCash())
             {
                 _cashe = await _getData();
                 _lastRefreshDateTime = DateTime.UtcNow;
