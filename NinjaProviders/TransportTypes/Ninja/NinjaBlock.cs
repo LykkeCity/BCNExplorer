@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NinjaProviders.TransportTypes
+namespace Providers.TransportTypes.Ninja
 {
     public class NinjaBlock
     {

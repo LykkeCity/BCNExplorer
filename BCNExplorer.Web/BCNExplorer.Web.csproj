@@ -292,9 +292,9 @@
       <Project>{1dcf2948-0a67-4169-8c2a-43da4909e3a1}</Project>
       <Name>Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NinjaProviders\NinjaProviders.csproj">
+    <ProjectReference Include="..\NinjaProviders\Providers.csproj">
       <Project>{f6a82c81-9e41-4c77-b665-50bfcdba853b}</Project>
-      <Name>NinjaProviders</Name>
+      <Name>Providers</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

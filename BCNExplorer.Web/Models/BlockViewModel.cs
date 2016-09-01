@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NinjaProviders.TransportTypes;
+using Providers.TransportTypes;
+using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Models
 {

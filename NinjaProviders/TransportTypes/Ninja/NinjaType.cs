@@ -1,4 +1,4 @@
-﻿namespace NinjaProviders.TransportTypes
+﻿namespace Providers.TransportTypes.Ninja
 {
     public enum NinjaType
     {

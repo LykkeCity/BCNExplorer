@@ -9,7 +9,7 @@ using Common;
 using Common.IocContainer;
 using Common.Log;
 using Core.Settings;
-using NinjaProviders;
+using Providers;
 
 namespace BCNExplorer.Web.App_Start
 {
@@ -38,7 +38,7 @@ namespace BCNExplorer.Web.App_Start
 
             dr.IoC.Register(settings);
             
-            dr.IoC.BindNinjaProviders();
+            dr.IoC.BindProviders();
 
             return dr;
         }

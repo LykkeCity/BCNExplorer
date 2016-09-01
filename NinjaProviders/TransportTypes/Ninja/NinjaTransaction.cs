@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NinjaProviders.Contracts;
+using Providers.Contracts.Ninja;
 
-namespace NinjaProviders.TransportTypes
+namespace Providers.TransportTypes.Ninja
 {
     public class NinjaTransaction
     {

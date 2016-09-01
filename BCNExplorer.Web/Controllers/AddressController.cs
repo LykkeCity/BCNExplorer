@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
-using NinjaProviders.Providers;
+using Providers.Providers;
+using Providers.Providers.Ninja;
 
 namespace BCNExplorer.Web.Controllers
 {

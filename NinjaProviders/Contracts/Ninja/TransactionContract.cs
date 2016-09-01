@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace NinjaProviders.Contracts
+namespace Providers.Contracts.Ninja
 {
     public class TransactionContract
     {

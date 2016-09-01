@@ -1,25 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
-using Core.Settings;
 
 namespace Providers.BlockChainReader
 {
-    public class NinjaBlockChainReader
+    public class HttpReader
     {
-        private readonly string _ninjaBaseUrl;
-
-        public NinjaBlockChainReader(BaseSettings baseSettings)
-        {
-            _ninjaBaseUrl = baseSettings.NinjaUrl;
-        }
-
-        public async Task<string> DoRequest(string url)
+        public async Task<string> Get(string absUrl)
         {
             try
             {
-                var webRequest = (HttpWebRequest)WebRequest.Create(_ninjaBaseUrl + url);
+                var webRequest = (HttpWebRequest)WebRequest.Create(absUrl);
                 webRequest.Method = "GET";
                 webRequest.ContentType = "application/x-www-form-urlencoded";
                 var webResponse = await webRequest.GetResponseAsync();
@@ -37,11 +32,11 @@ namespace Providers.BlockChainReader
             }
         }
 
-        public async Task<T> DoRequest<T>(string url)
+        public async Task<T> Get<T>(string absUrl)
         {
             try
             {
-                var result = await DoRequest(url);
+                var result = await Get(absUrl);
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(result);
             }
             catch (Exception)

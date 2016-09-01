@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace NinjaProviders.Contracts
+namespace Providers.Contracts.Ninja
 {
 
     #region WhatIsItAdrressContract

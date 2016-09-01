@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using NinjaProviders.Providers;
-using NinjaProviders.TransportTypes;
+using Providers.Providers;
+using Providers.Providers.Ninja;
+using Providers.TransportTypes;
+using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Controllers
 {

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using NBitcoin;
 using NBitcoin.OpenAsset;
-using NinjaProviders.BlockChainReader;
-using NinjaProviders.Contracts;
-using NinjaProviders.TransportTypes;
+using Providers.BlockChainReader;
+using Providers.Contracts.Ninja;
+using Providers.TransportTypes;
+using Providers.TransportTypes.Ninja;
 
-namespace NinjaProviders.Providers
+namespace Providers.Providers.Ninja
 {
     public class NinjaTransactionProvider
     {
