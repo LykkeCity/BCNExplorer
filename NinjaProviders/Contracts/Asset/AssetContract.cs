@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Providers.Contracts.Lykke
+namespace Providers.Contracts.Asset
 {
-    public class LykkeAssetContract
+    public class AssetContract
     {
         [JsonProperty("asset_ids")]
         public string[] AssetIds { get; set; }

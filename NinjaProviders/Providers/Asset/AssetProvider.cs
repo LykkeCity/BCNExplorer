@@ -1,15 +1,15 @@
 ﻿using System.Threading.Tasks;
 using Common;
-using Providers.Contracts.Lykke;
-using Providers.TransportTypes.Lykke;
+using Providers.Contracts.Asset;
+using Providers.TransportTypes.Asset;
 
-namespace Providers.Providers.Lykke
+namespace Providers.Providers.Asset
 {
-    public class LykkeAssetProvider
+    public class AssetProvider
     {
-        private readonly CachedDataDictionary<string, LykkeAssetContract> _cacheDictionary;
+        private readonly CachedDataDictionary<string, AssetContract> _cacheDictionary;
 
-        public LykkeAssetProvider(CachedDataDictionary<string, LykkeAssetContract> cacheDictionary)
+        public AssetProvider(CachedDataDictionary<string, AssetContract> cacheDictionary)
         {
             _cacheDictionary = cacheDictionary;
         }

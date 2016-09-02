@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
-using Providers;
-using Providers.Providers;
 using Providers.Providers.Ninja;
 
 namespace BCNExplorer.Web.Controllers

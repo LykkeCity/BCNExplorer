@@ -6,24 +6,24 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Core.Settings;
-using Providers.Contracts.Lykke;
+using Providers.Contracts.Asset;
 
 namespace Providers.BlockChainReader
 {
-    public class LykkeBlockChainReader
+    public class AssetReader
     {
         private readonly HttpReader _httpReader;
 
-        public LykkeBlockChainReader(HttpReader httpReader)
+        public AssetReader(HttpReader httpReader)
         {
             _httpReader = httpReader;
         }
 
-        private async Task<IEnumerable<LykkeAssetContract>> GetAllAsync(IEnumerable<string> absUrls)
+        private async Task<IEnumerable<AssetContract>> GetAllAsync(IEnumerable<string> absUrls)
         {
-            var assets = new ConcurrentStack<LykkeAssetContract>();
+            var assets = new ConcurrentStack<AssetContract>();
             
-            var populateTasks = absUrls.Select(url => _httpReader.GetAsync<LykkeAssetContract>(url).ContinueWith(task =>
+            var populateTasks = absUrls.Select(url => _httpReader.GetAsync<AssetContract>(url).ContinueWith(task =>
             {
                 if (task.Result != null)
                 {
@@ -36,10 +36,10 @@ namespace Providers.BlockChainReader
             return assets.ToList();
         }
 
-        public async Task<Dictionary<string, LykkeAssetContract>> GetDictionaryAsync(IEnumerable<string> absUrls)
+        public async Task<Dictionary<string, AssetContract>> GetDictionaryAsync(IEnumerable<string> absUrls)
         {
             var assets = await GetAllAsync(absUrls);
-            var result = new Dictionary<string, LykkeAssetContract>(StringComparer.OrdinalIgnoreCase);
+            var result = new Dictionary<string, AssetContract>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var asset in assets)
             {

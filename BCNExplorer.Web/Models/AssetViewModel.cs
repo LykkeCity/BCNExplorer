@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Providers.TransportTypes.Lykke;
+using Providers.TransportTypes.Asset;
 
 namespace BCNExplorer.Web.Models
 {

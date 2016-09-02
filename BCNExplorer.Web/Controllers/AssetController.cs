@@ -1,17 +1,15 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
-using Providers.Providers;
-using Providers.Providers.Lykke;
-using Providers.Providers.Ninja;
+using Providers.Providers.Asset;
 
 namespace BCNExplorer.Web.Controllers
 {
     public class AssetController : Controller
     {
-        private readonly LykkeAssetProvider _assetProvider;
+        private readonly AssetProvider _assetProvider;
 
-        public AssetController(LykkeAssetProvider assetProvider)
+        public AssetController(AssetProvider assetProvider)
         {
             _assetProvider = assetProvider;
         }

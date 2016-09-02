@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Providers.Contracts.Lykke;
+using Providers.Contracts.Asset;
 
-namespace Providers.TransportTypes.Lykke
+namespace Providers.TransportTypes.Asset
 {
     public class LykkeAsset
     {
@@ -33,7 +32,7 @@ namespace Providers.TransportTypes.Lykke
         
         public string Version { get; set; }
 
-        public static LykkeAsset Create(LykkeAssetContract source)
+        public static LykkeAsset Create(AssetContract source)
         {
             return new LykkeAsset
             {

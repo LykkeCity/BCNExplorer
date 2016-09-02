@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Providers.Providers.Lykke
+namespace Providers.Providers.Asset
 {
-    public class LykkeConstants
+    public class Constants
     {
         public static IEnumerable<string> AssetDefinitonUrls => new[]
         {

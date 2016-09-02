@@ -4,7 +4,6 @@ using NBitcoin;
 using NBitcoin.OpenAsset;
 using Providers.BlockChainReader;
 using Providers.Contracts.Ninja;
-using Providers.TransportTypes;
 using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
