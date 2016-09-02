@@ -20,11 +20,10 @@ namespace BCNExplorer.Web
             bundles.Add(new ScriptBundle("~/bundles/js/transaction").Include(
                       "~/Scripts/app/transaction/*.js"));
 
-            bundles.Add(new StyleBundle("~/bundles/css/main").Include(
-                      "~/Content/bootstrap.css",
-                       "~/Content/site.css",
-                      "~/Content/font-awesome.css"
-                     ));
+            bundles.Add(new StyleBundle("~/Content/maincss")
+                .Include("~/Content/bootstrap.css", new CssRewriteUrlTransform())
+                .Include("~/Content/site.css", new CssRewriteUrlTransform())
+                .Include("~/Content/font-awesome.css", new CssRewriteUrlTransform()));
         }
     }
 }

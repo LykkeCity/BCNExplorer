@@ -35,8 +35,8 @@ namespace Providers
             
             ioc.RegisterFactorySingleTone(() =>
                 new CachedDataDictionary<string, LykkeAssetContract>(
-                    async () => await ioc.GetObject<LykkeBlockChainReader>().GetDictionaryAsync(LykkeConstants.AssetUrls)
-                    ));
+                    async () => await ioc.GetObject<LykkeBlockChainReader>().GetDictionaryAsync(LykkeConstants.AssetDefinitonUrls)
+                    , validDataInSeconds: 60*60*1));
 
             ioc.RegisterPerCall<LykkeAssetProvider>();
         }

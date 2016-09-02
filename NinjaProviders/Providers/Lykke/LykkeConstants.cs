@@ -4,6 +4,11 @@ namespace Providers.Providers.Lykke
 {
     public class LykkeConstants
     {
-        public static IEnumerable<string> AssetUrls => new[] { "https://lykke.com/asset/lkeUSD" };
+        public static IEnumerable<string> AssetDefinitonUrls => new[]
+        {
+            "https://www.lykkex.com/lkeUSD",
+            "https://www.lykkex.com/lkeEUR",
+            "https://www.lykkex.com/lkeCHF"
+        };
     }
 }
