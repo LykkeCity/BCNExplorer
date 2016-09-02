@@ -63,17 +63,35 @@
                             </li>
                             foreach (var itm in Model.Assets)
                             {
+                                var assetDivisibity = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.Divisibility, 0);
+                                var assetShortName = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.NameShort, "");
+                                var assetName = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.Name, itm.AssetId);
+                                var assetIcon = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.IconUrl, null);
+
                                 <li class="list-group-item clearfix asset-list">
                                     <div class="currency-icon thumbnail dspl-icon">
-                                        <span class="bg-primary">
-                                            <i class="fa fa-money"></i>
-                                        </span>
+                                        @if (assetIcon != null)
+                                        {
+                                            <a href="@Url.Action("Index", "Asset", new {id = itm.AssetId})">
+                                                <img src="@assetIcon" />
+                                            </a>
+                                            
+                                        }
+                                        else
+                                        {
+                                            <span class="bg-primary">
+                                                <i class="fa fa-money"></i>
+                                            </span>
+                                        }
+
                                     </div>
                                     <div class="details-left">
-                                        <p class="list-group-item-text text-muted"> Asset ID: @itm.LykkeConstantsId</p>
+                                        <p class="list-group-item-text text-muted">
+                                            @assetName
+                                        </p>
                                     </div>
                                     <div class="details-right">
-                                        <h4 class="list-group-item-heading amount">@BitcoinUtils.FormatColoredAsset(itm.Quantity)</h4>
+                                        <h4 class="list-group-item-heading amount">@BitcoinUtils.CalculateColoredAssetQuantity(itm.Quantity, assetDivisibity).ToString("N2") @assetShortName</h4>
                                     </div>
                                 </li>
                             }

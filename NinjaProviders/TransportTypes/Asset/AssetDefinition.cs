@@ -4,7 +4,7 @@ using Providers.Contracts.Asset;
 
 namespace Providers.TransportTypes.Asset
 {
-    public class LykkeAsset
+    public class AssetDefinition
     {
         public IEnumerable<string> AssetIds { get; set; }
         
@@ -32,9 +32,9 @@ namespace Providers.TransportTypes.Asset
         
         public string Version { get; set; }
 
-        public static LykkeAsset Create(AssetContract source)
+        public static AssetDefinition Create(AssetContract source)
         {
-            return new LykkeAsset
+            return new AssetDefinition
             {
                 AssetIds = source.AssetIds ?? Enumerable.Empty<string>(),
                 ContactUrl = source.ContactUrl,

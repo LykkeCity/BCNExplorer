@@ -8,6 +8,9 @@
 
 <ul class="list-group">
     <li class="list-group-item clearfix intput-output-group-list-item">
+        <div class="assetid">
+            <h3 class="panel-title hd-bt">Bitcoin</h3>
+        </div>
         <div class="intput-output-group">
             <div class="icon dspl-icon">
                 <span class="currency-icon thumbnail">
@@ -58,7 +61,7 @@
             <div class="outputs">
                 <div class="outputs-container">
                     <div class="center-chevron">
-                        <img src="/images/arrow.png" />
+                        <img src="/images/arrow.png"/>
                     </div>
 
                     @foreach (var output in btcAsset.TransactionsOut.Where(output => output.Value != 0))
@@ -94,14 +97,34 @@
 
     @foreach (var inOutByAsset in coloredAssets.OrderBy(p => p.AssetId))
     {
+        var assetDivisibity = Model.AssetDic.GetAssetProp(inOutByAsset.AssetId, p => p.Divisibility, 0);
+        var assetShortName = Model.AssetDic.GetAssetProp(inOutByAsset.AssetId, p => p.NameShort, "");
+        var assetName = Model.AssetDic.GetAssetProp(inOutByAsset.AssetId, p => p.Name, null);
+        var assetIcon = Model.AssetDic.GetAssetProp(inOutByAsset.AssetId, p => p.IconUrl, null);
         <li class="list-group-item clearfix intput-output-group-list-item assetBlock">
-            <div class="assetid"><span class="pull-right">@inOutByAsset.AssetId</span></div>
+
+            <div class="assetid">
+                @if (assetName == null)
+                {
+                    <span class="panel-title hd-bt">@assetName</span>
+                }
+                <span>@inOutByAsset.AssetId</span>
+            </div>
             <div class="intput-output-group">
                 <div class="icon dspl-icon">
                     <span class="currency-icon thumbnail">
-                        <span class="bg-warning">
-                            <i class="fa fa-money"></i>
-                        </span>
+                        @if (assetIcon != null)
+                        {
+                            <a href="@Url.Action("Index", "Asset", new {id = inOutByAsset.AssetId})">
+                                <img src="@assetIcon" />
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="bg-primary">
+                                <i class="fa fa-money"></i>
+                            </span>
+                        }
                     </span>
                 </div>
                 <div class="inputs">
@@ -109,6 +132,7 @@
                     {
                         foreach (var input in (inOutByAsset.TransactionIn))
                         {
+
                             <div class="address-item ">
                                 <div class="amount">
                                     @{
@@ -116,11 +140,11 @@
                                         var def = l.FirstOrDefault();
                                         if (def != 0)
                                         {
-                                            Write(BitcoinUtils.FormatColoredAsset(def).ToString("N0"));
+                                            Write(BitcoinUtils.CalculateColoredAssetQuantity(def, assetDivisibity).ToString("N0") + " " + assetShortName);
                                         }
                                         else
                                         {
-                                            Write(" - " + BitcoinUtils.FormatColoredAsset(input.Quantity).ToString("N0"));
+                                            Write(" - " + BitcoinUtils.CalculateColoredAssetQuantity(input.Quantity, assetDivisibity).ToString("N0") + " " + assetShortName);
                                         }
                                     }
                                 </div>
@@ -139,32 +163,32 @@
                                     }
                                 </div>
                             </div>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <div class="address-item ">
-                                                <div class="amount">
+                        }
+                    }
+                    else
+                    {
+                        <div class="address-item ">
+                            <div class="amount">
 
-                                                </div>
-                                                <div class="address">
-                                                    <b>Issued assets</b>
-                                                </div>
-                                            </div>
-                                        }
+                            </div>
+                            <div class="address">
+                                <b>Issued assets</b>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 <div class="outputs">
                     <div class="outputs-container">
                         <div class="center-chevron">
-                            <img src="/images/arrow.png" />
+                            <img src="/images/arrow.png"/>
                         </div>
 
                         @foreach (var output in inOutByAsset.TransactionsOut)
                         {
                             <div class="address-item ">
                                 <div class="amount">
-                                    @BitcoinUtils.FormatColoredAsset(output.Quantity).ToString("N0")
+                                    @BitcoinUtils.CalculateColoredAssetQuantity(output.Quantity, assetDivisibity).ToString("N0")
                                 </div>
                                 <div class="address">
                                     @if (output.Address == null)

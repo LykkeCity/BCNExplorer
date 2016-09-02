@@ -36,7 +36,7 @@ namespace Providers
             ioc.RegisterFactorySingleTone(() =>
                 new CachedDataDictionary<string, AssetContract>(
                     async () => await ioc.GetObject<AssetReader>().GetDictionaryAsync(Constants.AssetDefinitonUrls)
-                    , validDataInSeconds: 60*60*1));
+                    , validDataInSeconds: 1*60*60));
 
             ioc.RegisterPerCall<AssetProvider>();
         }

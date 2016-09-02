@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Linq.Expressions;
+using Providers.TransportTypes.Asset;
 
 namespace BCNExplorer.Web.Models
 {
@@ -19,6 +20,22 @@ namespace BCNExplorer.Web.Models
             return null;
         }
 
-        //public AssetDictionary Create(IDictionary<Asset> )
+        public T GetAssetProp<T>(string asset, Expression<Func<AssetViewModel, T>> selectPropExpression, T defaultValue)
+        {
+            var ent = Get(asset);
+            if (ent != null)
+            {
+                return selectPropExpression.Compile()(ent);
+            }
+            return defaultValue;
+        }
+
+        public static AssetDictionary Create(IDictionary<string, AssetDefinition> source)
+        {
+            return new AssetDictionary
+            {
+                Dic = source.ToDictionary(p => p.Key, p => AssetViewModel.Create(p.Value))
+            };
+        }
     }
 }

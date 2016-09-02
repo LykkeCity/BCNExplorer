@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Providers.TransportTypes;
+using Providers.TransportTypes.Asset;
 using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Models
@@ -17,6 +18,7 @@ namespace BCNExplorer.Web.Models
         public bool IsConfirmed { get; set; }
         public BlockViewModel Block { get; set; }
         public IEnumerable<InOutsByAsset> InOutsByAssets { get; set; } 
+        public AssetDictionary AssetDic { get; set; }
 
         #region Classes 
 
@@ -71,7 +73,7 @@ namespace BCNExplorer.Web.Models
 
         #endregion
 
-        public static TransactionViewModel Create(NinjaTransaction ninjaTransaction)
+        public static TransactionViewModel Create(NinjaTransaction ninjaTransaction, IDictionary<string, AssetDefinition> assetDictionary)
         {
             var result = new TransactionViewModel
             {
@@ -82,7 +84,8 @@ namespace BCNExplorer.Web.Models
                 Fees = ninjaTransaction.Fees,
                 InOutsByAssets = InOutsByAsset.Create(ninjaTransaction.TransactionsByAssets),
                 AssetsCount = ninjaTransaction.TransactionsByAssets.Count(p => p.IsColored),
-                IsConfirmed = ninjaTransaction.Block != null
+                IsConfirmed = ninjaTransaction.Block != null,
+                AssetDic = AssetDictionary.Create(assetDictionary)
             };
             
             return result;

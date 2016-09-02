@@ -10,7 +10,9 @@ namespace Providers.Providers.Asset
             "https://www.lykkex.com/lkeEUR",
             "https://www.lykkex.com/lkeCHF",
             "https://lykke.com/asset/LKK",
-            "https://www.lykkex.com/LykkeCorpEquity"
+            "https://www.lykkex.com/LykkeCorpEquity",
+            "https://www.lykkex.com/lkeJPY",
+            "https://www.lykkex.com/lkeGBP"
         };
     }
 }

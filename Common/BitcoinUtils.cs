@@ -13,9 +13,9 @@ namespace Common
             return (decimal)(satoshi * 0.00000001);
         }
 
-        public static double FormatColoredAsset(double satoshi)
+        public static double CalculateColoredAssetQuantity(double quantity, int divisibility )
         {
-            return satoshi/100;
+            return quantity*Math.Pow(10, - divisibility);
         }
     }
 }

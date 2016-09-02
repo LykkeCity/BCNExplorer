@@ -32,7 +32,7 @@ namespace BCNExplorer.Web.Models
 
         public string Version { get; set; }
 
-        public static AssetViewModel Create(LykkeAsset source)
+        public static AssetViewModel Create(AssetDefinition source)
         {
             return new AssetViewModel
             {

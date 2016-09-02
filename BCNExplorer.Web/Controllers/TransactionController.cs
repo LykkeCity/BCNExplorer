@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
+using Providers.Providers.Asset;
 using Providers.Providers.Ninja;
 
 namespace BCNExplorer.Web.Controllers
@@ -11,10 +12,12 @@ namespace BCNExplorer.Web.Controllers
     public class TransactionController:Controller
     {
         private readonly NinjaTransactionProvider _ninjaTransactionProvider;
+        private readonly AssetProvider _assetProvider;
 
-        public TransactionController(NinjaTransactionProvider ninjaTransactionProvider)
+        public TransactionController(NinjaTransactionProvider ninjaTransactionProvider, AssetProvider assetProvider)
         {
             _ninjaTransactionProvider = ninjaTransactionProvider;
+            _assetProvider = assetProvider;
         }
 
         [Route("transaction/{id}")]
@@ -24,7 +27,7 @@ namespace BCNExplorer.Web.Controllers
 
             if (ninjaTransaction != null)
             {
-                var result = TransactionViewModel.Create(ninjaTransaction);
+                var result = TransactionViewModel.Create(ninjaTransaction, await _assetProvider.GetAssetDictionaryAsync());
 
                 return View(result);
             }
@@ -37,11 +40,13 @@ namespace BCNExplorer.Web.Controllers
         {
             var result = new ConcurrentStack<TransactionViewModel>();
 
+            var assetDictionary = await _assetProvider.GetAssetDictionaryAsync();
+
             var loadTransactionTasks = ids.Select(id => _ninjaTransactionProvider.GetAsync(id).ContinueWith(task =>
             {
                 if (task.Result != null)
                 {
-                    result.Push(TransactionViewModel.Create(task.Result));
+                    result.Push(TransactionViewModel.Create(task.Result, assetDictionary));
                 }
             }));
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Providers.TransportTypes;
+using Providers.TransportTypes.Asset;
 using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Models
@@ -18,7 +19,9 @@ namespace BCNExplorer.Web.Models
         public TransactionIdList TransactionIdList { get; set; }
         private const int PageSize = 20;
 
-        public static AddressViewModel Create(NinjaAddress ninjaAddress)
+        public AssetDictionary AssetDic { get; set; }
+
+        public static AddressViewModel Create(NinjaAddress ninjaAddress, IDictionary<string, AssetDefinition> assetDictionary)
         {
             return new AddressViewModel
             {
@@ -28,11 +31,12 @@ namespace BCNExplorer.Web.Models
                 ColoredAddress = ninjaAddress.ColoredAddress,
                 TotalConfirmedTransactions = ninjaAddress.TotalTransactions,
                 Balance = ninjaAddress.Balance,
-                Assets = ninjaAddress.Assets.Select(p=> new Asset
+                Assets = ninjaAddress.Assets.Select(p => new Asset
                 {
                     AssetId = p.AssetId,
                     Quantity = p.Quantity
-                })
+                }),
+                AssetDic = AssetDictionary.Create(assetDictionary)
             };
         }
 
