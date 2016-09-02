@@ -31,7 +31,7 @@ namespace BCNExplorer.Web.Models
                 ColoredAddress = ninjaAddress.ColoredAddress,
                 TotalConfirmedTransactions = ninjaAddress.TotalTransactions,
                 Balance = ninjaAddress.Balance,
-                Assets = ninjaAddress.Assets.Select(p => new Asset
+                Assets = (ninjaAddress.Assets ?? Enumerable.Empty<NinjaAddress.Asset>()).Select(p => new Asset
                 {
                     AssetId = p.AssetId,
                     Quantity = p.Quantity

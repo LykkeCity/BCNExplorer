@@ -188,7 +188,7 @@
                         {
                             <div class="address-item ">
                                 <div class="amount">
-                                    @BitcoinUtils.CalculateColoredAssetQuantity(output.Quantity, assetDivisibity).ToString("N0")
+                                    @BitcoinUtils.CalculateColoredAssetQuantity(output.Quantity, assetDivisibity).ToString("N0") @assetShortName
                                 </div>
                                 <div class="address">
                                     @if (output.Address == null)
