@@ -16,6 +16,7 @@ namespace BCNExplorer.Web.Controllers
 
         public async Task<ActionResult> Search(string id)
         {
+            id = (id ?? "").Trim();
             var type = await _searchProvider.GetTypeAsync(id);
             switch (type)
             {
