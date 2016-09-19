@@ -10,46 +10,58 @@
 <body>
     <div class="navbar navbar-inverse " role="navigation">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <div class="logo"><a href="@Url.Action("Index", "Home")"><img src="~/Images/logo.png"/></a>
+            <div class="row">
+                <div class="col-xs-2">
+                    <div class="logo">
+                        <a href="@Url.Action("Index", "Home")">
+                            <img src="~/Images/logo.png" />
+                        </a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="collapse navbar-collapse">
-                @if (ViewBag.HideTopSearch == true)
-                {
-                    <ul class="nav navbar-nav">
-                        <li class="active pull-right"><a href="@Url.Action("Index", "Home")">Explorer </a></li>
-                    </ul>
-                }
-                else
-                {
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <div class="search-header hidden-xs">
-                                <form method="get" action="@Url.Action("Search", "Search")" class="form-inline">
-                                    <div class="input-group search">
-                                        <input type="text" class="form-control input-sm search-top" placeholder="Search" name="id">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-s-top" type="submit"></button>
-                                        </span>
-                                    </div>
-                                </form>
+                <div class="col-xs-8">
+                    <div class="text-center hidden-md hidden-lg hidden-sm">
+                        <h6 class="logo-text">Explore The Blockchain</h6>
+                    </div>
+                </div>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle btn-circle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse">
+                    @if (ViewBag.HideTopSearch == true)
+                    {
+                        <ul class="nav navbar-nav">
+                            <li class="active pull-right"><a href="@Url.Action("Index", "Home")">Explorer </a></li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div class="search-header hidden-xs">
+                                    <form method="get" action="@Url.Action("Search", "Search")" class="form-inline">
+                                        <div class="input-group search">
+                                            <input type="text" class="form-control input-sm search-top" placeholder="Search" name="id">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-s-top" type="submit"></button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <ul class="nav navbar-nav">
+                                    <li class="active pull-right"><a href="@Url.Action("Index", "Home")">Explorer </a></li>
+                                </ul>
                             </div>
                         </div>
-                        <div class="col-sm-2">
-                            <ul class="nav navbar-nav">
-                                <li class="active pull-right"><a href="@Url.Action("Index", "Home")">Explorer </a></li>
-                            </ul>
-                        </div>
-                    </div>
-                }
+                    }
+
+                </div>
 
             </div>
 
@@ -57,14 +69,19 @@
     </div>
     <div class="container">
         @RenderBody()
-
     </div>
     <footer class="footer">
         <div class="container">
-            <div class="copyr">© Lykke @DateTime.Now.Year - Blockchain Explorer v@(Product.Version)</div>
-            <div class="pull-right f-social">
-                <a class="share-social-button" href="https://www.facebook.com/sharer/sharer.php?u=@Request.Url" target="_blank"><img class="social-icon" src="~/Images/fb.png" /><span class="social-name">Facebook</span></a>
-                <a class="share-social-button" href="https://twitter.com/share?url=@Request.Url&text=@ViewBag.Title" target="_blank"><img class="social-icon" src="~/Images/tw.png" /><span class="social-name">Twitter</span></a>
+            <div class="row">
+                <div class="col-sm-6 copyr hidden-xs">
+                    © Lykke @DateTime.Now.Year - Blockchain Explorer v@(Product.Version)
+                </div>
+                <div class="col-sm-3 col-xs-6 text-center">
+                    <a class="share-social-button" href="https://www.facebook.com/sharer/sharer.php?u=@Request.Url" target="_blank"><img class="social-icon" src="~/Images/fb.png" /><span class="social-name  hidden-xs">Facebook</span></a>
+                </div>
+                <div class="col-sm-3 col-xs-6 text-center">
+                    <a class="share-social-button" href="https://twitter.com/share?url=@Request.Url&text=@ViewBag.Title" target="_blank"><img class="social-icon" src="~/Images/tw.png" /><span class="social-name  hidden-xs">Twitter</span></a>
+                </div>
             </div>
         </div>
     </footer>
