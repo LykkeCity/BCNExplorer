@@ -243,6 +243,7 @@ table td.no-wrap, table th.no-wrap {
 }
 .transaction-details .intput-output-group .outputs .outputs-container {
     position: relative;
+    padding-left: 19px;
 }
 
 
@@ -265,9 +266,7 @@ table td.no-wrap, table th.no-wrap {
         vertical-align: middle
     }
 
-    .outputs .address {
-        margin-left: 14px;
-    }
+
 
 
 }
@@ -540,7 +539,7 @@ a {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 400px) {
 .address a, .amount, .address {
     font-size: 11px;
     color: #3f4d60;
@@ -554,6 +553,12 @@ a {
     margin-bottom: -1px;
     background-color: #fff;
     border: none;
+}
+
+@media (max-width: 768px) {
+    .transaction-details .panel-heading {
+        text-align: center;
+    }
 }
 
 .hd-bt {
@@ -614,7 +619,7 @@ a {
     border-top: 1px solid #E0E0E0;
 }
  .assetid{
-    color: #8A95A2;
+    /*color: #8A95A2;*/
     padding-top: 5px;
     padding-bottom: 0px;
     margin-bottom: 15px;
