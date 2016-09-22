@@ -9,18 +9,20 @@
 <ul class="list-group">
     <li class="list-group-item clearfix intput-output-group-list-item container-fluid">
         <div class="assetid">
-            <h3 class="panel-title hd-bt hidde">Bitcoin</h3>
+            <h3 class="panel-title hd-bt hidden-xs">Bitcoin</h3>
         </div>
         <div class="intput-output-group ">
             <div class="row">
                 <div class="col-sm-1">
-                    <div class="icon dspl-icon">
+                    <div class="icon dspl-icon " style=" float:left">
                         <span class="currency-icon thumbnail">
                             <span class="bg-warning">
                                 <i class="fa fa-btc"></i>
                             </span>
                         </span>
                     </div>
+                    <h3 class="hd-bt hidden-sm hidden-md hidden-lg" style="margin-top: 16px; float:left">Bitcoin</h3>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="col-sm-6">
                     <div class="inputs">
@@ -63,7 +65,7 @@
                     </div>
                 </div>
                 <div class="col-sm-5">
-                    <div class="outputs">
+                    @*<div class="outputs">
                         <div class="outputs-container">
                             <div class="center-chevron">
                                 <img src="/images/arrow.png" />
@@ -96,17 +98,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                   
+                    </div>*@                   
                 </div>
             </div>
-
-
-
-
         </div>
     </li>
 
-    @foreach (var inOutByAsset in coloredAssets.OrderBy(p => p.AssetId))
+    @*@foreach (var inOutByAsset in coloredAssets.OrderBy(p => p.AssetId))
     {
         var assetDivisibity = Model.AssetDic.GetAssetProp(inOutByAsset.AssetId, p => p.Divisibility, 0);
         var assetShortName = Model.AssetDic.GetAssetProp(inOutByAsset.AssetId, p => p.NameShort, "");
@@ -117,9 +115,9 @@
             <div class="assetid">
                 @if (assetName != null)
                 {
-                    <span class="panel-title hd-bt">@assetName</span>
+                    <span class="hd-bt">@assetName</span>
                 }
-                <span>@inOutByAsset.AssetId</span>
+                <span class="elipsis-text">@inOutByAsset.AssetId</span>
             </div>
             <div class="intput-output-group">
                 <div class="icon dspl-icon">
@@ -217,5 +215,5 @@
                 </div>
             </div>
         </li>
-                                        }
+    }*@
 </ul>

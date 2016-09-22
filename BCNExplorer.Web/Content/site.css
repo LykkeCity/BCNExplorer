@@ -246,7 +246,7 @@ table td.no-wrap, table th.no-wrap {
 }
 .transaction-details .intput-output-group .outputs .outputs-container .center-chevron {
     color: #eee;
-    /*position: absolute;*/
+    position: absolute;
     top: 39%;
     left: -32px;
     padding: 4px;
@@ -576,7 +576,11 @@ a {
     /* border-left: 2px solid #D4D4D4; */
 }
 
-.inputs{padding-right: 30px !important;}
+.inputs {
+    padding-right: 30px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
 
 .assetBlock {
     border-top: 1px solid #E0E0E0;
@@ -742,4 +746,8 @@ a {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.display-inline-block {
+    display: inline-block!important;
 }
