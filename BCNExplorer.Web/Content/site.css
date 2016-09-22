@@ -220,11 +220,13 @@ table td.no-wrap, table th.no-wrap {
     vertical-align: middle;
     width: 50%;
 }
-
-.transaction-details .intput-output-group .inputs {
-    padding-left: 5px;
-    border-left: 1px solid #eee; 
+@media (min-width: 768px) {
+    .transaction-details .intput-output-group .inputs {
+        padding-left: 5px;
+        border-left: 1px solid #eee; 
+    }
 }
+
 .transaction-details .intput-output-group .address-item .amount {
     float: right!important;
     float: right;
@@ -244,11 +246,10 @@ table td.no-wrap, table th.no-wrap {
 }
 .transaction-details .intput-output-group .outputs .outputs-container .center-chevron {
     color: #eee;
-    position: absolute;
+    /*position: absolute;*/
     top: 39%;
     left: -32px;
     padding: 4px;
-    margin-top: -18px;
     background-color: #fff;
     width: 28px;
 }
@@ -438,9 +439,7 @@ body .btn-s-top {
 .block-h-top, .tr-h-top{
     color: #3f4d60;
     margin-bottom: 20px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    word-wrap: break-word;
 }
 
 .block-h-top, .tr-h-top {
@@ -728,4 +727,19 @@ a {
     .text-lg-right { text-align: right; }
     .text-lg-center { text-align: center; }
     .text-lg-justify { text-align: justify; }
+}
+
+@media (max-width: 768px) {
+    .outputs {
+        border-radius: 4px;
+        background-color: #ffffff;
+        border: solid 1px #cfd2d7;
+    }
+}
+
+
+.elipsis-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
