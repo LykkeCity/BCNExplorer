@@ -15,11 +15,11 @@
             </h3>
             @if (tran.IsConfirmed)
             {
-                <div class="col-sm-3 text-center tr-date ">
+                <div class="col-sm-3 tr-date ">
                     <span>@tran.Block.Time.ToString("F")</span>
                     
                 </div>
-                <div class="confirmation-label confirmed col-sm-2 text-center">
+                <div class="confirmation-label confirmed col-sm-2">
                     <span class="confirmations-count">@tran.Block.Confirmations confirmation</span>
                 </div>
             }
