@@ -230,7 +230,7 @@ table td.no-wrap, table th.no-wrap {
 .transaction-details .intput-output-group .address-item .amount {
     float: right!important;
     float: right;
-    width: 115px;
+    width: 170px;
     padding-left: 30px;
     overflow: hidden;
     text-overflow: ellipsis;
