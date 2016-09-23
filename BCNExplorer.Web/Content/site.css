@@ -778,3 +778,7 @@ a {
 .display-inline-block {
     display: inline-block!important;
 }
+
+.fees-text {
+    margin-right: 120px;
+}
