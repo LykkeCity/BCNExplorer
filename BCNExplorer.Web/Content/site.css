@@ -231,7 +231,7 @@ table td.no-wrap, table th.no-wrap {
     float: right!important;
     float: right;
     width: 115px;
-    padding-left: 15px;
+    padding-left: 30px;
     overflow: hidden;
     text-overflow: ellipsis;
     /* white-space: nowrap; */
@@ -265,12 +265,7 @@ table td.no-wrap, table th.no-wrap {
         width: 8px;
         vertical-align: middle
     }
-
-
-
-
 }
-
 
 .transaction-explorer .confirmation-value {
     overflow: hidden;
@@ -610,7 +605,6 @@ a {
 }
 
 .inputs {
-    padding-right: 30px !important;
     padding-top: 5px !important;
     padding-bottom: 5px !important;
 }
@@ -767,7 +761,7 @@ a {
 }
 
 @media (max-width: 768px) {
-    .outputs {
+    .outputs-container {
         border-radius: 4px;
         background-color: #ffffff;
         border: solid 1px #cfd2d7;
@@ -784,7 +778,3 @@ a {
 .display-inline-block {
     display: inline-block!important;
 }
-
-    .outputs .amount {
-      width: 145px!important;
-    }
