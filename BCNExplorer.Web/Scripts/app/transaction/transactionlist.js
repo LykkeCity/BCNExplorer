@@ -41,13 +41,25 @@
 
             var wrapper = $('<div>');
             wrapper.append(li);
-            return wrapper.html();
+            return $(wrapper.html());
         },
         totalPages: function() {
             return pagination.$container().data('total-pages');
         },
         $container: function() {
-            return $('.transaction-pagination-container');
+            return $('#transaction-pagination-container');
+        },
+        setCurrentPage: function(pageNum) {
+            var $currentPage = pagination.$currentPageContainer();
+            $currentPage.html(pageNum);
+            $currentPage.attr('data-value', pageNum);
+        },
+        $currentPageContainer:function() {
+            return $('#current-page');
+        },
+        getCurrentPage: function () {
+            var $currentPage = pagination.$currentPageContainer();
+            return  $currentPage.data('value');
         },
         render: function(currentPage) {
             var $container = pagination.$container();
@@ -57,23 +69,38 @@
             var totalPages = pagination.totalPages();
 
             var showPagesArray = pagination.getShowPagesArray(currentPage, totalPages, 2);
-
+            pagination.setCurrentPage(currentPage);
             var currentlyShowing = true;
+            var nextPage = (currentPage+1) <= totalPages ? (currentPage + 1) : totalPages;
+            
+            var prevPage = (currentPage-1) >= 1 ? (currentPage - 1) : 1;
+
+            var $prevPage = pagination.renderItem(prevPage, false, currentPage == 1);
+            $prevPage.find('a').html(renderGlyphIcon('glyphicon-menu-left'));
+
+            var $nextPage = pagination.renderItem(nextPage, false, currentPage == totalPages);
+            $nextPage.find('a').html(renderGlyphIcon('glyphicon-menu-right'));
+            $prevPage.add($nextPage).addClass('hidden-sm hidden-md hidden-lg');
+            $container.append($prevPage);
+
             for (var pageCursor = 1; pageCursor <= totalPages; pageCursor++) {
                 var $item = pagination.renderItem(pageCursor, currentPage === pageCursor, false);
-
+                if (currentPage != pageCursor) {
+                    $item.addClass('hidden-xs');
+                }
                 if (showPagesArray.includes(pageCursor)) {
                     $container.append($item);
                     currentlyShowing = true;
                 } else {
                     if (currentlyShowing) {
                         var dotItem = pagination.renderItem('...', false, true);
+                        dotItem.addClass('hidden-xs');
                         $container.append(dotItem);
                     }
                     currentlyShowing = false;
                 }
             }
-
+            $container.append($nextPage);
             $container.show();
         },
         getShowPagesArray: function(currentPage, lastPage, nearItemsCount) {
@@ -111,15 +138,19 @@
     pagination.render(1);
     loadTransactions($('.transactions-container:visible'));
 
-    $('body').on('click', '.transaction-pagination-pointer', function() {
-        var page = $(this).data('page'),
-            $loadContainer = $('.transactions-container[data-page=' + page + ']').not('transactions-container-load');
+    function loadPage(page) {
+        var $loadContainer = $('.transactions-container[data-page=' + page + ']').not('transactions-container-load');
 
         pagination.render(page);
-        
+
         $('.transactions-container').not('[data-page=' + page + ']').addClass('hidden');
 
         loadTransactions($loadContainer);
+    }
+
+    $('body').on('click', '.transaction-pagination-pointer', function () {
+        loadPage($(this).data('page'));
+
         return false;
     });
 });
@@ -134,4 +165,15 @@ Array.prototype.getUnique = function () {
         u[this[i]] = 1;
     }
     return a;
+}
+
+renderGlyphIcon = function(name) {
+    var result = $('<span>');
+    result.addClass('glyphicon')
+    result.addClass(name);
+
+    var wrap = $('<div>');
+    wrap.append(result);
+
+    return wrap.html();
 }
