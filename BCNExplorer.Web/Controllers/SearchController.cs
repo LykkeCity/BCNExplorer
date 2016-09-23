@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using BCNExplorer.Web.Models;
 using Providers.Providers.Common;
+using Providers.Providers.Ninja;
 using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Controllers
@@ -8,10 +10,12 @@ namespace BCNExplorer.Web.Controllers
     public class SearchController : Controller
     {
         private readonly SearchProvider _searchProvider;
+        private readonly NinjaBlockProvider _ninjaBlockProvider;
 
-        public SearchController(SearchProvider searchProvider)
+        public SearchController(SearchProvider searchProvider, NinjaBlockProvider ninjaBlockProvider)
         {
             _searchProvider = searchProvider;
+            _ninjaBlockProvider = ninjaBlockProvider;
         }
 
         public async Task<ActionResult> Search(string id)
@@ -38,7 +42,8 @@ namespace BCNExplorer.Web.Controllers
                 }
                 default:
                 {
-                    return View("NotFound");
+                    var lastBlock = await _ninjaBlockProvider.GetLastBlockAsync();
+                    return View("NotFound", LastBlockViewModel.Create(lastBlock));
                 }
             }
         }

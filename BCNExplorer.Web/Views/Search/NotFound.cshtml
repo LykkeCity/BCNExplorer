@@ -1,0 +1,30 @@
+﻿@model LastBlockViewModel
+@{
+    ViewBag.Title = "Bitcoin Chain Explorer";
+    ViewBag.HideTopSearch = true;
+}
+
+<div class="page-content">
+    <div class="home-section home-first">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="home-search">
+                        <h1>We didn't find anything...</h1>
+                        <form method="get" action="@Url.Action("Search", "Search")">
+                            <div class="input-group" role="search">
+                                <input type="text" class="form-control input-lg search-input" name="id" placeholder="Search blocks, transactions, assets or addresses">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-search" type="submit"><span class="glyphicon glyphicon-search"></span> <span class="hidden-sm hidden-xs">Search</span></button>
+                                </span>
+                            </div>
+                        </form>
+                        <p>
+                            <small>Last block: <a href="@Url.Action("Index", "Block", new { id= Model.BlockId } )">@Model.Height</a></small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
