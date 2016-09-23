@@ -218,7 +218,7 @@ table td.no-wrap, table th.no-wrap {
 }
 .transaction-details .intput-output-group .inputs, .transaction-details .intput-output-group .outputs {
     vertical-align: middle;
-    width: 50%;
+    width: 1%;
 }
 @media (min-width: 768px) {
     .transaction-details .intput-output-group .inputs {
@@ -779,9 +779,6 @@ a {
     display: inline-block!important;
 }
 
-.fees-text {
-    margin-right: 120px;
-}
 
 .div-fees .address {
     text-overflow: initial!important;
