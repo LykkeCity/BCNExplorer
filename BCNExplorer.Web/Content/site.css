@@ -783,3 +783,11 @@ a {
 .div-fees .address {
     text-overflow: initial!important;
 }
+
+.transactions-container {
+    min-height: 100px;
+}
+
+.load-trans {
+    width: 100%;
+}

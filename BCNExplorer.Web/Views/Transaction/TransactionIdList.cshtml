@@ -5,17 +5,15 @@
     @foreach (var page in Model.Pages)
     {
         <li
-            class="@(Model.CurrentPage != page ? "hidden" : "") transactions-container transactions-container-load"
+            class="hidden transactions-container js-transactions-container"
             data-page="@page"
             data-transaction-ids="@Json.Encode(Model.GetPage(page).ToArray())" data-load-url="@Url.Action("List", "Transaction")">
-            
+            <div class="text-center">
+                @if (Model.CurrentPage != page)
+                {
+                    <a class="btn btn-default load-trans js-load-trans">Show More</a>
+                }
+            </div>
         </li>
     }
 </ul>
-
-
-<div class="footer-push">
-    <div class="text-center">
-        <ul id="transaction-pagination-container" class="pagination transaction-pagination-container" data-total-pages="@Model.TotalPages"></ul>
-    </div>
-</div>
