@@ -9,5 +9,6 @@ namespace Providers.Contracts.Ninja
 
         public const string UncoloredAddressType = "PUBKEY_ADDRESS";
         public const string ColoredAddressType = "COLORED_ADDRESS";
+        public const string ScriptAddressType = "SCRIPT_ADDRESS";
     }
 }

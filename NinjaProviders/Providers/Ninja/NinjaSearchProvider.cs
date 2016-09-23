@@ -51,7 +51,8 @@ namespace Providers.Providers.Ninja
         {
             var deserialized = TryDeserialize<WhatIsItContract>(responce);
             return deserialized?.Type == WhatIsItContract.ColoredAddressType ||
-                   deserialized?.Type == WhatIsItContract.UncoloredAddressType;
+                   deserialized?.Type == WhatIsItContract.UncoloredAddressType || 
+                   deserialized?.Type == WhatIsItContract.ScriptAddressType;
         }
 
         private T TryDeserialize<T>(string source)
