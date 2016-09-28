@@ -1,5 +1,6 @@
 ﻿$(function() {
     $('body').on('click', '.js-toggle-aggregated', function () {
-        $(this).parents('.inputs,.outputs').find('.aggregated-item-container').slideToggle();
+        var address = $(this).data('address');
+        $(this).parents('.js-aggregated-transactions-container').find('.hidden-transactions').slideToggle();
     });
 });

@@ -801,7 +801,7 @@ a {
     font-size: 13px;
 }
 
-.aggregated-item-container {
+.hidden-transactions {
     display: none;
 }
 .toggle-aggregated {
