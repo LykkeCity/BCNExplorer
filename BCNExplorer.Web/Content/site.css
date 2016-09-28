@@ -247,8 +247,14 @@ table td.no-wrap, table th.no-wrap {
 }
 .transaction-details .intput-output-group .outputs .outputs-container {
     position: relative;
-    /*padding-left: 19px;*/
 }
+@media(max-width: 768px) {
+    .transaction-details .intput-output-group .outputs .outputs-container {
+        padding-left: 15px;
+    }   
+}
+
+
 
 
 .transaction-details .intput-output-group .outputs .outputs-container .center-chevron {
@@ -537,11 +543,14 @@ a {
     color: #3f4d60;
 }
 
+.aggregated-item .address, .aggregated-item .amount, .aggregated-item .address a{
+    color: #8c94a0;
+    font-size: 13px;
+}
 
 @media (max-width: 400px) {
-.address a, .amount, .address {
+.address a, .amount, .address,.aggregated-item .address, .aggregated-item .amount, .aggregated-item .address a {
     font-size: 11px;
-    color: #3f4d60;
 }
 }
 
@@ -796,11 +805,6 @@ a {
     width: 100%;
 }
 
-.aggregated-item .address, .aggregated-item .amount, .aggregated-item .address a{
-    color: #8c94a0;
-    font-size: 13px;
-}
-
 .hidden-transactions {
     display: none;
 }
@@ -810,5 +814,5 @@ a {
 
 .amount .toggle-indicatior {
     top: 1px;
-    font-size: 10px;
+    font-size: 9px;
 }
