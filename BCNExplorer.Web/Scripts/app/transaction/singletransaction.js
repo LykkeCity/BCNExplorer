@@ -1,6 +1,7 @@
 ﻿$(function() {
     $('body').on('click', '.js-toggle-aggregated', function () {
-        var address = $(this).data('address');
-        $(this).parents('.js-aggregated-transactions-container').find('.hidden-transactions').slideToggle();
+        var $container = $(this).parents('.js-aggregated-transactions-container');
+        $container.find('.hidden-transactions').slideToggle();
+        $container.find('.toggle-indicatior').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-top');
     });
 });

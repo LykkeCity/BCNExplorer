@@ -44,7 +44,7 @@
                                             @input.TitleItem.Value.ToString("0.00######")
                                             @if (input.ShowAggregatedTransactions)
                                             {
-                                                <span class="pull-right"> (@input.Count) ▼</span>
+                                                <span class="pull-right"> (@input.Count) <span class="glyphicon glyphicon-triangle-bottom toggle-indicatior"></span> </span>
                                             }
                                         </div>
                                         <div class="address">
@@ -110,7 +110,7 @@
                                             @output.TitleItem.Value.ToString("0.00######")
                                             @if (output.ShowAggregatedTransactions)
                                             {
-                                                <span class="pull-right"> (@output.Count) ▼</span>
+                                                <span class="pull-right"> (@output.Count) <span class="glyphicon glyphicon-triangle-bottom toggle-indicatior"></span></span>
                                             }
                                         </div>
                                         <div class="address">
@@ -207,7 +207,7 @@
                                             @input.TitleItem.Value.ToString("N0") @input.TitleItem.ShortName
                                             @if (input.ShowAggregatedTransactions)
                                             {
-                                                <span class="pull-right"> (@input.Count) ▼</span>
+                                                <span class="pull-right"> (@input.Count) <span class="glyphicon glyphicon-triangle-bottom toggle-indicatior"></span></span>
                                             }
                                         </div>
                                         <div class="address">
@@ -272,7 +272,7 @@
                                                 @output.TitleItem.Value.ToString("N0") @output.TitleItem.ShortName
                                                 @if (output.ShowAggregatedTransactions)
                                                 {
-                                                    <span class="pull-right"> (@output.Count) ▼</span>
+                                                    <span class="pull-right"> (@output.Count) <span class="glyphicon glyphicon-triangle-bottom toggle-indicatior"></span></span>
                                                 }
                                             </div>
                                             <div class="address">

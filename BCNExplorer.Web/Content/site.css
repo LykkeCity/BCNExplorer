@@ -807,3 +807,8 @@ a {
 .toggle-aggregated {
     cursor: pointer;
 }
+
+.amount .toggle-indicatior {
+    top: 1px;
+    font-size: 10px;
+}
