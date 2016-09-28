@@ -799,9 +799,11 @@ a {
 .aggregated-item .address, .aggregated-item .amount, .aggregated-item .address a{
     color: #8c94a0;
     font-size: 13px;
-    display: none;
 }
 
+.aggregated-item-container {
+    display: none;
+}
 .toggle-aggregated {
     cursor: pointer;
 }
