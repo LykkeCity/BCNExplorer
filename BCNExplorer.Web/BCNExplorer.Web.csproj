@@ -214,6 +214,7 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Scripts\app\common\share-social-buttons.js" />
+    <Content Include="Scripts\app\transaction\singletransaction.js" />
     <Content Include="Scripts\app\transaction\transactionlist.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -267,10 +268,6 @@
     <Content Include="Views\Address\Index.cshtml" />
     <Content Include="Views\Asset\Index.cshtml" />
     <Content Include="Views\Search\NotFound.cshtml" />
-    <Content Include="Views\Transaction\TransactionDetailsBitcoinIn.cshtml" />
-    <Content Include="Views\Transaction\TransactionDetailsBitcoinOut.cshtml" />
-    <Content Include="Views\Transaction\TransactionDetailsColoredAssetIn.cshtml" />
-    <Content Include="Views\Transaction\TransactionDetailsColoredAssetOut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

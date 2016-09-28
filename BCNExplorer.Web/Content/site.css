@@ -227,14 +227,18 @@ table td.no-wrap, table th.no-wrap {
     }
 }
 
+.address-item {
+    padding-right: 5px;
+}
+
 .transaction-details .intput-output-group .address-item .amount {
     float: right!important;
     float: right;
     width: 130px;
-    padding-left: 30px;
+    padding-left: 6px;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* white-space: nowrap; */
+     white-space: nowrap; 
 }
 .transaction-details .intput-output-group .address-item .address {
     overflow: hidden;
@@ -243,7 +247,7 @@ table td.no-wrap, table th.no-wrap {
 }
 .transaction-details .intput-output-group .outputs .outputs-container {
     position: relative;
-    padding-left: 19px;
+    /*padding-left: 19px;*/
 }
 
 
@@ -790,4 +794,14 @@ a {
 
 .load-trans {
     width: 100%;
+}
+
+.aggregated-item .address, .aggregated-item .amount, .aggregated-item .address a{
+    color: #8c94a0;
+    font-size: 13px;
+    display: none;
+}
+
+.toggle-aggregated {
+    cursor: pointer;
 }

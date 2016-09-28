@@ -51,11 +51,9 @@ namespace BCNExplorer.Web.Models
         {
             public bool IsCoinBase { get; set; }
 
-            public IEnumerable<In> Ins { get; set; }
-            public IEnumerable<Out> Outs { get; set; }
 
-            public IEnumerable<In> GroupedIns => AssetHelper.GroupByAddress(Ins);
-            public IEnumerable<Out> GroupedOuts => AssetHelper.GroupByAddress(Outs);
+            public IEnumerable<AggregatedInOut<In>> AggregatedIns { get; set; }
+            public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
 
             public double Fees { get; set; }
 
@@ -83,15 +81,13 @@ namespace BCNExplorer.Web.Models
                 {
                     Fees = BitcoinUtils.SatoshiToBtc(fees),
                     IsCoinBase = isCoinBase,
-                    Ins = ins,
-                    Outs = outs
+                    AggregatedIns = AssetHelper.GroupByAddress(ins),
+                    AggregatedOuts = AssetHelper.GroupByAddress(outs)
                 };
             }
 
-            public class In:IAssetInOut
+            public class In:AssetInOut
             {
-                public double Value { get; set; }
-                public string Address { get; set; }
                 public string PreviousTransactionId { get; set; }
                 public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
                 public static IEnumerable<In> Create(IEnumerable<NinjaTransaction.InOut> ins)
@@ -105,10 +101,8 @@ namespace BCNExplorer.Web.Models
                 }
             }
 
-            public class Out:IAssetInOut
+            public class Out:AssetInOut
             {
-                public double Value { get; set; }
-                public string Address { get; set; }
                 public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
                 public static IEnumerable<Out> Create(IEnumerable<NinjaTransaction.InOut> outs)
                 {
@@ -128,16 +122,15 @@ namespace BCNExplorer.Web.Models
             public string Name { get; set; }
             public string IconImageUrl { get; set; }
 
-            public IEnumerable<In> Ins { get; set; }
-            public IEnumerable<Out> Outs { get; set; }
+            public IEnumerable<AggregatedInOut<In>> AggregatedIns { get; set; }
+            public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
 
             #region Classes
 
-            public class In:IAssetInOut
+            public class In:AssetInOut
             {
                 public string PreviousTransactionId { get; set; }
-                public double Value { get; set; }
-                public string Address { get; set; }
+
                 public string ShortName { get; set; }
                 public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
 
@@ -156,10 +149,8 @@ namespace BCNExplorer.Web.Models
                 }
             }
 
-            public class Out:IAssetInOut
+            public class Out:AssetInOut
             {
-                public double Value { get; set; }
-                public string Address { get; set; }
                 public string ShortName { get; set; }
                 public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
 
@@ -181,14 +172,17 @@ namespace BCNExplorer.Web.Models
                 var divisibility = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Divisibility, 0);
                 var assetShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null);
 
+                var ins = inOutsByAsset.TransactionIn.Select(p => In.Create(p, divisibility, inOutsByAsset.TransactionsOut, assetShortName));
+                var outs = inOutsByAsset.TransactionsOut.Select(p => Out.Create(p, divisibility, assetShortName));
+                
                 var result = new ColoredAsset
                 {
                     AssetId = inOutsByAsset.AssetId,
                     Divisibility = divisibility,
                     Name = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Name, null) ?? inOutsByAsset.AssetId,
                     IconImageUrl = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.IconUrl, null),
-                    Ins = inOutsByAsset.TransactionIn.Select(p=> In.Create(p, divisibility, inOutsByAsset.TransactionsOut, assetShortName)),
-                    Outs = inOutsByAsset.TransactionsOut.Select(p => Out.Create(p, divisibility, assetShortName))
+                    AggregatedIns = AssetHelper.GroupByAddress(ins),
+                    AggregatedOuts = AssetHelper.GroupByAddress(outs)
                 };
 
                 return result;
@@ -219,24 +213,46 @@ namespace BCNExplorer.Web.Models
         }
     }
 
-    public interface IAssetInOut
+    public abstract class AssetInOut
     {
-        string Address { get; set; }
-        double Value { get; set; }
+        public string Address { get; set; }
+        public double Value { get; set; }
+
+        public virtual T Clone<T>() where T:AssetInOut
+        {
+            return (T)this.MemberwiseClone();
+        }
+    }
+
+    public class AggregatedInOut<T> where T: AssetInOut
+    {
+        public T TitleItem { get; set; }
+
+        public IEnumerable<T> AggregatedTransactions { get; set; }
+
+        public bool ShowAggregatedTransactions => AggregatedTransactions?.Count() > 1;
+
+        public int Count => AggregatedTransactions?.Count() ?? 0;
+
     }
 
     public static class AssetHelper
     {
-        public static IEnumerable<T> GroupByAddress<T>(IEnumerable<T> source) where  T:IAssetInOut
+
+        public static IEnumerable<AggregatedInOut<T>> GroupByAddress<T>(IEnumerable<T> source) where T: AssetInOut
         {
             return source
                 .GroupBy(p => p.Address)
                 .Select(p =>
                 {
-                    var result = p.First();
-                    result.Value = p.Sum(x => x.Value);
+                    var titleItem = p.First().Clone<T>();
+                    titleItem.Value = p.Sum(ti => ti.Value);
 
-                    return result;
+                    return new AggregatedInOut<T>
+                    {
+                        TitleItem = titleItem,
+                        AggregatedTransactions = p.ToList()
+                    };
                 });
         } 
     }

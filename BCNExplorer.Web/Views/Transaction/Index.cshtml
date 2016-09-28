@@ -1,8 +1,12 @@
-﻿@using Common
-@model TransactionViewModel
+﻿@model TransactionViewModel
     
 @{
     ViewBag.Title = "Transaction - " + Model.TransactionId;
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/js/transaction")
 }
 
 <div class="container">
