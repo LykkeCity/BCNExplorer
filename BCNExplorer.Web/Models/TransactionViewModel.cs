@@ -138,13 +138,13 @@ namespace BCNExplorer.Web.Models
                 {
                     var l = outs.Select(itm => itm.Quantity - sourceIn.Quantity);
                     var def = l.FirstOrDefault();
-
+                    var quantity = (def != 0 ? def : sourceIn.Quantity)*(-1);
                     return new In
                     {
                         Address = sourceIn.Address,
                         PreviousTransactionId = sourceIn.TransactionId,
                         ShortName = shortName,
-                        Value = BitcoinUtils.CalculateColoredAssetQuantity((def != 0 ? def : sourceIn.Quantity), divisibility)
+                        Value = BitcoinUtils.CalculateColoredAssetQuantity(quantity, divisibility)
                     };
                 }
             }
