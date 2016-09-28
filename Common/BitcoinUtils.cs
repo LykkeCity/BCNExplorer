@@ -8,9 +8,9 @@ namespace Common
 {
     public static class BitcoinUtils
     {
-        public static decimal SatoshiToBtc(double satoshi)
+        public static double SatoshiToBtc(double satoshi)
         {
-            return (decimal)(satoshi * 0.00000001);
+            return satoshi * 0.00000001;
         }
 
         public static double CalculateColoredAssetQuantity(double quantity, int divisibility )

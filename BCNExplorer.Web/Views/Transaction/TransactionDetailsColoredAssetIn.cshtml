@@ -1,0 +1,32 @@
+﻿
+@{
+    Layout = null;
+}
+@model TransactionViewModel.ColoredAsset.In
+
+<div class="address-item ">
+    <div class="amount">
+        <span> @Model.Value.ToString("N0")&nbsp;@Model.ShortName</span>
+    </div>
+    <div class="address">
+        <a href="@Url.Action("Index", "Transaction", new {id = Model.PreviousTransactionId})">
+            <i class="fa fa-lg fa-arrow-left displ-fa"></i>
+        </a>
+
+        @if (Model.IsUnrecoginzedAddress)
+        {
+            <span>Unrecognized address</span>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", "Address", new {id = Model.Address})">@Model.Address</a>
+        }
+    </div>
+</div>
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+﻿@{
+    Layout = null;
+}
+
+@model TransactionViewModel.BitcoinAsset.Out
+
+<div class="address-item ">
+    <div class="amount">
+        @Model.Value.ToString("0.00######")
+    </div>
+    <div class="address">
+        @if (Model.IsUnrecoginzedAddress)
+        {
+            <span>Unrecognized address</span>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", "Address", new {id = Model.Address})">@Model.Address</a>
+        }
+    </div>
+</div>

@@ -267,6 +267,10 @@
     <Content Include="Views\Address\Index.cshtml" />
     <Content Include="Views\Asset\Index.cshtml" />
     <Content Include="Views\Search\NotFound.cshtml" />
+    <Content Include="Views\Transaction\TransactionDetailsBitcoinIn.cshtml" />
+    <Content Include="Views\Transaction\TransactionDetailsBitcoinOut.cshtml" />
+    <Content Include="Views\Transaction\TransactionDetailsColoredAssetIn.cshtml" />
+    <Content Include="Views\Transaction\TransactionDetailsColoredAssetOut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

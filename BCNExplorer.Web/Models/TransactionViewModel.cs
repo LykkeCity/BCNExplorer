@@ -16,11 +16,9 @@ namespace BCNExplorer.Web.Models
         public int AssetsCount { get; set; }
         public bool IsConfirmed { get; set; }
         public BlockViewModel Block { get; set; }
-        
         public BitcoinAsset Bitcoin { get; set; }
-
-        public IEnumerable<ColoredAsset> ColoredAssets { get; set; } 
-
+        public IEnumerable<ColoredAsset> ColoredAssets { get; set; }
+        
         #region Classes 
 
         public class BlockViewModel
@@ -52,27 +50,47 @@ namespace BCNExplorer.Web.Models
         public class BitcoinAsset
         {
             public bool IsCoinBase { get; set; }
+
             public IEnumerable<In> Ins { get; set; }
             public IEnumerable<Out> Outs { get; set; }
-            public decimal Fees { get; set; }
+
+            public IEnumerable<In> GroupedIns => AssetHelper.GroupByAddress(Ins);
+            public IEnumerable<Out> GroupedOuts => AssetHelper.GroupByAddress(Outs);
+
+            public double Fees { get; set; }
+
+            public static IEnumerable<In> Group(IEnumerable<In> source)
+            {
+                var groupedByAddress = source.GroupBy(p => p.Address);
+                return groupedByAddress.Select(p =>
+                {
+                    var result = p.First();
+                    result.Value = p.Sum(x => x.Value);
+
+                    return result;
+                });
+            } 
 
             public static BitcoinAsset Create(double fees,
                 bool isCoinBase,
-                IEnumerable<NinjaTransaction.InOut> ins,
-                IEnumerable<NinjaTransaction.InOut> outs)
+                IEnumerable<NinjaTransaction.InOut> ninjaIn,
+                IEnumerable<NinjaTransaction.InOut> ninjaOuts)
             {
+                var ins = In.Create(ninjaIn);
+                var outs = Out.Create(ninjaOuts);
+
                 return new BitcoinAsset
                 {
                     Fees = BitcoinUtils.SatoshiToBtc(fees),
                     IsCoinBase = isCoinBase,
-                    Ins = In.Create(ins),
-                    Outs = Out.Create(outs)
+                    Ins = ins,
+                    Outs = outs
                 };
             }
 
-            public class In
+            public class In:IAssetInOut
             {
-                public decimal Value { get; set; }
+                public double Value { get; set; }
                 public string Address { get; set; }
                 public string PreviousTransactionId { get; set; }
                 public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
@@ -87,9 +105,9 @@ namespace BCNExplorer.Web.Models
                 }
             }
 
-            public class Out
+            public class Out:IAssetInOut
             {
-                public decimal Value { get; set; }
+                public double Value { get; set; }
                 public string Address { get; set; }
                 public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
                 public static IEnumerable<Out> Create(IEnumerable<NinjaTransaction.InOut> outs)
@@ -107,7 +125,6 @@ namespace BCNExplorer.Web.Models
         {
             public string AssetId { get; set; }
             public int Divisibility { get; set; }
-            public string ShortName { get; set; }
             public string Name { get; set; }
             public string IconImageUrl { get; set; }
 
@@ -116,14 +133,15 @@ namespace BCNExplorer.Web.Models
 
             #region Classes
 
-            public class In
+            public class In:IAssetInOut
             {
                 public string PreviousTransactionId { get; set; }
-                public double Quantity { get; set; }
+                public double Value { get; set; }
                 public string Address { get; set; }
+                public string ShortName { get; set; }
                 public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
 
-                public static In Create(NinjaTransaction.InOut sourceIn, int divisibility, IEnumerable<NinjaTransaction.InOut> outs )
+                public static In Create(NinjaTransaction.InOut sourceIn, int divisibility,  IEnumerable<NinjaTransaction.InOut> outs, string shortName)
                 {
                     var l = outs.Select(itm => itm.Quantity - sourceIn.Quantity);
                     var def = l.FirstOrDefault();
@@ -132,23 +150,26 @@ namespace BCNExplorer.Web.Models
                     {
                         Address = sourceIn.Address,
                         PreviousTransactionId = sourceIn.TransactionId,
-                        Quantity = BitcoinUtils.CalculateColoredAssetQuantity((def != 0 ? def : sourceIn.Quantity), divisibility)
+                        ShortName = shortName,
+                        Value = BitcoinUtils.CalculateColoredAssetQuantity((def != 0 ? def : sourceIn.Quantity), divisibility)
                     };
                 }
             }
 
-            public class Out
+            public class Out:IAssetInOut
             {
-                public double Quantity { get; set; }
+                public double Value { get; set; }
                 public string Address { get; set; }
+                public string ShortName { get; set; }
                 public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
 
-                public static Out Create(NinjaTransaction.InOut sourceOut, int divisibility)
+                public static Out Create(NinjaTransaction.InOut sourceOut, int divisibility, string shortName)
                 {
                     return new Out
                     {
                         Address = sourceOut.Address,
-                        Quantity = BitcoinUtils.CalculateColoredAssetQuantity(sourceOut.Quantity, divisibility)
+                        Value = BitcoinUtils.CalculateColoredAssetQuantity(sourceOut.Quantity, divisibility),
+                        ShortName = shortName
                     };
                 }
             }
@@ -158,6 +179,7 @@ namespace BCNExplorer.Web.Models
             public static ColoredAsset Create(NinjaTransaction.InOutsByAsset inOutsByAsset, AssetDictionary assetDictionary)
             {
                 var divisibility = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Divisibility, 0);
+                var assetShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null);
 
                 var result = new ColoredAsset
                 {
@@ -165,9 +187,8 @@ namespace BCNExplorer.Web.Models
                     Divisibility = divisibility,
                     Name = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Name, null) ?? inOutsByAsset.AssetId,
                     IconImageUrl = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.IconUrl, null),
-                    ShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null),
-                    Ins = inOutsByAsset.TransactionIn.Select(p=> In.Create(p, divisibility, inOutsByAsset.TransactionsOut)),
-                    Outs = inOutsByAsset.TransactionsOut.Select(p => Out.Create(p, divisibility))
+                    Ins = inOutsByAsset.TransactionIn.Select(p=> In.Create(p, divisibility, inOutsByAsset.TransactionsOut, assetShortName)),
+                    Outs = inOutsByAsset.TransactionsOut.Select(p => Out.Create(p, divisibility, assetShortName))
                 };
 
                 return result;
@@ -196,5 +217,27 @@ namespace BCNExplorer.Web.Models
             
             return result;
         }
+    }
+
+    public interface IAssetInOut
+    {
+        string Address { get; set; }
+        double Value { get; set; }
+    }
+
+    public static class AssetHelper
+    {
+        public static IEnumerable<T> GroupByAddress<T>(IEnumerable<T> source) where  T:IAssetInOut
+        {
+            return source
+                .GroupBy(p => p.Address)
+                .Select(p =>
+                {
+                    var result = p.First();
+                    result.Value = p.Sum(x => x.Value);
+
+                    return result;
+                });
+        } 
     }
 }
