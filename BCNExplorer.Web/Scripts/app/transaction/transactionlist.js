@@ -12,6 +12,7 @@
                 method: 'post'
             }).done(function(resp) {
                 $loadContainer.removeClass(loadingClass).html(resp);
+                $loadContainer.trigger('transactions-loaded');
             });
         }
 

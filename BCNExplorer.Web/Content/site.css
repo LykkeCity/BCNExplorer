@@ -816,3 +816,7 @@ a {
     top: 1px;
     font-size: 9px;
 }
+
+.current-address-transaction .amount {
+    font-weight: bold;
+}

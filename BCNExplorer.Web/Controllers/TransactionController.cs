@@ -35,6 +35,7 @@ namespace BCNExplorer.Web.Controllers
             return View("NotFound");
         }
 
+        [OutputCache(Duration = 2 * 60)]
         [Route("transation/list")]
         public async Task<ActionResult> List(IList<string> ids)
         {

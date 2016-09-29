@@ -39,7 +39,7 @@
                             foreach (var input in Model.Bitcoin.AggregatedIns)
                             {
                                 <div class="js-aggregated-transactions-container">
-                                    <div class="address-item title-item">
+                                    <div class="address-item title-item" data-address="@input.TitleItem.Address">
                                         <div class="amount @(input.ShowAggregatedTransactions?"js-toggle-aggregated toggle-aggregated":"")">
                                             @input.TitleItem.Value.ToString("0.00######")
                                             @if (input.ShowAggregatedTransactions)
@@ -68,7 +68,7 @@
                                     <div class="hidden-transactions">
                                         @foreach (var aggregated in input.AggregatedTransactions)
                                         {
-                                            <div class="address-item title-item aggregated-item">
+                                            <div class="address-item title-item aggregated-item" data-address="@aggregated.Address">
                                                 <div class="amount">
                                                     @aggregated.Value.ToString("0.00######")
                                                 </div>
@@ -105,7 +105,7 @@
                             @foreach (var output in Model.Bitcoin.AggregatedOuts)
                             {
                                 <div class="js-aggregated-transactions-container">
-                                    <div class="address-item ">
+                                    <div class="address-item " data-address="@output.TitleItem.Address">
                                         <div class="amount @(output.ShowAggregatedTransactions ? "js-toggle-aggregated toggle-aggregated" : "")">
                                             @output.TitleItem.Value.ToString("0.00######")
                                             @if (output.ShowAggregatedTransactions)
@@ -127,10 +127,10 @@
 
                                     @if (output.ShowAggregatedTransactions)
                                     {
-                                    <div class="hidden-transactions">
+                                        <div class="hidden-transactions">
                                         @foreach (var aggregated in output.AggregatedTransactions)
                                         {
-                                            <div class="address-item title-item aggregated-item">
+                                            <div class="address-item title-item aggregated-item" data-address="@output.TitleItem.Address">
                                                 <div class="amount">
                                                     @aggregated.Value.ToString("0.00######")
                                                 </div>
@@ -202,7 +202,7 @@
                             @foreach (var input in coloredAsset.AggregatedIns)
                             {
                                 <div class="js-aggregated-transactions-container">
-                                    <div class="address-item ">
+                                    <div class="address-item "  data-address="@input.TitleItem.Address">
                                         <div class="amount @(input.ShowAggregatedTransactions ? "js-toggle-aggregated toggle-aggregated" : "")">
                                             @input.TitleItem.Value.ToString("0.######") @input.TitleItem.ShortName
                                             @if (input.ShowAggregatedTransactions)
@@ -231,7 +231,7 @@
                                     <div class="hidden-transactions">
                                         @foreach (var aggregated in input.AggregatedTransactions)
                                         {
-                                            <div class="address-item aggregated-item">
+                                            <div class="address-item aggregated-item"  data-address="@aggregated.Address">
                                                 <div class="amount">
                                                     @aggregated.Value.ToString("0.######") @input.TitleItem.ShortName
                                                 </div>
@@ -267,7 +267,7 @@
                                 @foreach (var output in coloredAsset.AggregatedOuts)
                                 {
                                     <div class="js-aggregated-transactions-container">
-                                        <div class="address-item @(output.ShowAggregatedTransactions ? "js-toggle-aggregated toggle-aggregated" : "")">
+                                        <div class="address-item @(output.ShowAggregatedTransactions ? "js-toggle-aggregated toggle-aggregated" : "")"  data-address="@output.TitleItem.Address">
                                             <div class="amount">
                                                 @output.TitleItem.Value.ToString("0.######") @output.TitleItem.ShortName
                                                 @if (output.ShowAggregatedTransactions)
@@ -292,7 +292,7 @@
                                         <div class="hidden-transactions">
                                             @foreach (var aggregated in output.AggregatedTransactions)
                                             {
-                                                <div class="address-item aggregated-item">
+                                                <div class="address-item aggregated-item"  data-address="@aggregated.Address">
                                                     <div class="amount">
                                                         @aggregated.Value.ToString("0.######") @aggregated.ShortName
                                                     </div>

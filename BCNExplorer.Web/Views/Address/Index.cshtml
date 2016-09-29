@@ -5,7 +5,11 @@
 }
 @section scripts{
     @Scripts.Render("~/bundles/js/transaction")
+    @Scripts.Render("~/bundles/js/address")
 }
+
+@Html.Hidden("current-address", Model.AddressId)
+@Html.Hidden("current-colored-address", Model.ColoredAddress)
 <div class="container">
     <header class="top-nav-links clearfix">
         <h1>Address</h1>
