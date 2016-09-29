@@ -260,7 +260,7 @@ table td.no-wrap, table th.no-wrap {
 .transaction-details .intput-output-group .outputs .outputs-container .center-chevron {
     color: #eee;
     position: absolute;
-    top: 10%;
+    top: 10px;
     left: -32px;
     padding: 4px;
     background-color: #fff;
