@@ -204,7 +204,7 @@
                                 <div class="js-aggregated-transactions-container">
                                     <div class="address-item ">
                                         <div class="amount @(input.ShowAggregatedTransactions ? "js-toggle-aggregated toggle-aggregated" : "")">
-                                            @input.TitleItem.Value.ToString("N0") @input.TitleItem.ShortName
+                                            @input.TitleItem.Value.ToString("0.######") @input.TitleItem.ShortName
                                             @if (input.ShowAggregatedTransactions)
                                             {
                                                 <span class="pull-right"> (@input.Count) <span class="glyphicon glyphicon-triangle-bottom toggle-indicatior"></span></span>
@@ -233,7 +233,7 @@
                                         {
                                             <div class="address-item aggregated-item">
                                                 <div class="amount">
-                                                    @aggregated.Value.ToString("N0") @input.TitleItem.ShortName
+                                                    @aggregated.Value.ToString("0.######") @input.TitleItem.ShortName
                                                 </div>
                                                 <div class="address">
                                                     <a href="@Url.Action("Index", "Transaction", new {id = aggregated.PreviousTransactionId})">
@@ -269,7 +269,7 @@
                                     <div class="js-aggregated-transactions-container">
                                         <div class="address-item @(output.ShowAggregatedTransactions ? "js-toggle-aggregated toggle-aggregated" : "")">
                                             <div class="amount">
-                                                @output.TitleItem.Value.ToString("N0") @output.TitleItem.ShortName
+                                                @output.TitleItem.Value.ToString("0.######") @output.TitleItem.ShortName
                                                 @if (output.ShowAggregatedTransactions)
                                                 {
                                                     <span class="pull-right"> (@output.Count) <span class="glyphicon glyphicon-triangle-bottom toggle-indicatior"></span></span>
@@ -294,7 +294,7 @@
                                             {
                                                 <div class="address-item aggregated-item">
                                                     <div class="amount">
-                                                        @aggregated.Value.ToString("N0") @aggregated.ShortName
+                                                        @aggregated.Value.ToString("0.######") @aggregated.ShortName
                                                     </div>
                                                     <div class="address">
 
