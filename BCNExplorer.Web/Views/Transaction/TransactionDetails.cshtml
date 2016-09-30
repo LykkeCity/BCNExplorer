@@ -195,13 +195,20 @@
             }
         </div>
         <div class="address">
+            @if (inOutViewModel.ShowPreviousTransaction)
+            {
+                <a href="@Url.Action("Index", "Transaction", new {id = inOutViewModel.PreviousTransactionId})">
+                    <i class="fa fa-lg fa-arrow-left displ-fa"></i>
+                </a>
+
+            }
             @if (inOutViewModel.IsUnrecoginzedAddress)
             {
                 <span>Unrecognized address</span>
             }
             else
             {
-                <a href="@Url.Action("Index", "Address", new {id = inOutViewModel.Address })">@inOutViewModel.Address</a>
+                <a href="@Url.Action("Index", "Address", new {id = inOutViewModel.Address})">@inOutViewModel.Address</a>
             }
         </div>
     </div>
