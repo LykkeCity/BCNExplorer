@@ -269,7 +269,7 @@ table td.no-wrap, table th.no-wrap {
 
 @media (max-width: 768px) {
     .transaction-details .intput-output-group .outputs .outputs-container .center-chevron {
-        top: 20%;
+        top: 2px;
         left: -3px;
         padding: 0px; 
         width: 8px;
@@ -778,6 +778,20 @@ a {
         border-radius: 4px;
         background-color: #ffffff;
         border: solid 1px #cfd2d7;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .outputs-container .address {
+        padding-left: 8px;
+    }
+
+    .transaction-details .intput-output-group .icon {
+        width: 58px;
+    }
+
+    .transaction-details .intput-output-group .address-item .amount {
+        width: 100px;
     }
 }
 
@@ -819,4 +833,17 @@ a {
 
 .current-address-transaction .amount {
     font-weight: bold;
+}
+
+.prev-tran img {
+    height: 16px;
+    margin-right: 3px;
+}
+
+.prev-tran:hover {
+    text-decoration: none;
+}
+
+.aggregate-toggle {
+    margin-left: 5px;
 }

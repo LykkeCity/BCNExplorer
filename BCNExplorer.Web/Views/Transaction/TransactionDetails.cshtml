@@ -183,22 +183,22 @@
 
 @helper RenderInOut(IInOutViewModel inOutViewModel)
 {
-    <div class="address-item @(inOutViewModel.ShowAggregatedTransactions ? "js-toggle-aggregated toggle-aggregated" : "")" data-address="@inOutViewModel.Address">
+    <div class="address-item @(inOutViewModel.ShowAggregatedTransactions? "js-toggle-aggregated toggle-aggregated" : "")" data-address="@inOutViewModel.Address">
         <div class="amount">
             @inOutViewModel.ValueDescription
             @if (inOutViewModel.ShowAggregatedTransactions)
             {
-                <span class="pull-right">
+                <span  class="aggregate-toggle">
                     (@inOutViewModel.AggregatedTransactionCount)
                     <span class="glyphicon glyphicon-triangle-bottom toggle-indicatior"></span>
                 </span>
             }
         </div>
         <div class="address">
-            @if (inOutViewModel.ShowPreviousTransaction)
+            @if (inOutViewModel.ShowPreviousTransaction )
             {
-                <a href="@Url.Action("Index", "Transaction", new {id = inOutViewModel.PreviousTransactionId})">
-                    <i class="fa fa-lg fa-arrow-left displ-fa"></i>
+                <a href="@Url.Action("Index", "Transaction", new {id = inOutViewModel.PreviousTransactionId})" class="prev-tran">
+                    <img src="~/Images/previ-tran.png"/>
                 </a>
 
             }

@@ -206,6 +206,7 @@
     <Content Include="Images\line.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\placeholder.png" />
+    <Content Include="Images\previ-tran.png" />
     <Content Include="Images\processing-menu.gif" />
     <Content Include="Images\search-btn.png" />
     <Content Include="Images\tw.png" />
