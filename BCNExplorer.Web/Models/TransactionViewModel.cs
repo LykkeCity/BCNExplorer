@@ -50,8 +50,7 @@ namespace BCNExplorer.Web.Models
         public class BitcoinAsset
         {
             public bool IsCoinBase { get; set; }
-
-
+            
             public IEnumerable<AggregatedInOut<In>> AggregatedIns { get; set; }
             public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
 
@@ -88,29 +87,46 @@ namespace BCNExplorer.Web.Models
 
             public class In:AssetInOut
             {
-                public string PreviousTransactionId { get; set; }
-                public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
+                public In(double value, string address, string previousTransactionId)
+                {
+                    Value = value;
+                    Address = address;
+                    PreviousTransactionId = previousTransactionId;
+                }
+
+                public override string PreviousTransactionId { get; }
+
+                public override string ValueDescription => Value.ToString("0.00######");
+                
+                public override int AggregatedTransactionCount => _aggregatedTransactionCount;
+                
                 public static IEnumerable<In> Create(IEnumerable<NinjaTransaction.InOut> ins)
                 {
-                    return ins.Where(p => p.Value != 0).Select(p => new In
-                    {
-                        Value = BitcoinUtils.SatoshiToBtc(p.Value * (-1)), 
-                        Address = p.Address,
-                        PreviousTransactionId = p.TransactionId
-                    });
+                    return ins.Where(p => p.Value != 0)
+                        .Select(p => new In(
+                            value: BitcoinUtils.SatoshiToBtc(p.Value * (-1)), 
+                            address:p.Address, 
+                            previousTransactionId:p.TransactionId));
                 }
             }
 
             public class Out:AssetInOut
             {
-                public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
+                public Out(double value, string address)
+                {
+                    Value = value;
+                    Address = address;
+                }
+
+                public override string PreviousTransactionId => null;
+
+                public override string ValueDescription => Value.ToString("0.00######");
+                
+                public override int AggregatedTransactionCount => _aggregatedTransactionCount;
+                
                 public static IEnumerable<Out> Create(IEnumerable<NinjaTransaction.InOut> outs)
                 {
-                    return outs.Where(p => p.Value != 0).Select(p => new Out
-                    {
-                        Value = BitcoinUtils.SatoshiToBtc(p.Value),
-                        Address = p.Address
-                    });
+                    return outs.Where(p => p.Value != 0).Select(p => new Out(value: BitcoinUtils.SatoshiToBtc(p.Value), address:p.Address));
                 }
             }
         }
@@ -129,39 +145,61 @@ namespace BCNExplorer.Web.Models
 
             public class In:AssetInOut
             {
-                public string PreviousTransactionId { get; set; }
+                public In(double value, string address, string previousTransactionId, string shortName)
+                {
+                    Value = value;
+                    Address = address;
+                    PreviousTransactionId = previousTransactionId;
+                    ShortName = shortName;
+                }
+
+                public override string PreviousTransactionId { get; }
+
+                public override string ValueDescription => $"{Value.ToString("0.########")} {ShortName}";
+                
+                public override int AggregatedTransactionCount => _aggregatedTransactionCount;
 
                 public string ShortName { get; set; }
-                public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
 
                 public static In Create(NinjaTransaction.InOut sourceIn, int divisibility,  IEnumerable<NinjaTransaction.InOut> outs, string shortName)
                 {
                     var l = outs.Select(itm => itm.Quantity - sourceIn.Quantity);
                     var def = l.FirstOrDefault();
                     var quantity = (def != 0 ? def : sourceIn.Quantity)*(-1);
-                    return new In
-                    {
-                        Address = sourceIn.Address,
-                        PreviousTransactionId = sourceIn.TransactionId,
-                        ShortName = shortName,
-                        Value = BitcoinUtils.CalculateColoredAssetQuantity(quantity, divisibility)
-                    };
+
+                    return new In(
+                        value: BitcoinUtils.CalculateColoredAssetQuantity(quantity, divisibility), 
+                        address: sourceIn.Address, 
+                        previousTransactionId: sourceIn.TransactionId,
+                        shortName: shortName);
                 }
             }
 
             public class Out:AssetInOut
             {
+                public Out(double value, string address, string shortName)
+                {
+                    Value = value;
+                    Address = address;
+                    ShortName = shortName;
+                }
+
+                public override string PreviousTransactionId => null;
+
+                public override string ValueDescription => $"{Value.ToString("0.########")} {ShortName}";
+
+
+                public override int AggregatedTransactionCount => _aggregatedTransactionCount;
+                
+
                 public string ShortName { get; set; }
-                public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
 
                 public static Out Create(NinjaTransaction.InOut sourceOut, int divisibility, string shortName)
                 {
-                    return new Out
-                    {
-                        Address = sourceOut.Address,
-                        Value = BitcoinUtils.CalculateColoredAssetQuantity(sourceOut.Quantity, divisibility),
-                        ShortName = shortName
-                    };
+                    return new Out(
+                        value: BitcoinUtils.CalculateColoredAssetQuantity(sourceOut.Quantity, divisibility), 
+                        address: sourceOut.Address,
+                        shortName: shortName);
                 }
             }
             
@@ -213,10 +251,24 @@ namespace BCNExplorer.Web.Models
         }
     }
 
-    public abstract class AssetInOut
+    public abstract class AssetInOut: IInOutViewModel
     {
         public string Address { get; set; }
         public double Value { get; set; }
+
+        public abstract string PreviousTransactionId { get; }
+        public bool ShowPreviousTransaction => PreviousTransactionId != null;
+        public abstract string ValueDescription { get; }
+        public bool ShowAggregatedTransactions => AggregatedTransactionCount > 1;
+        public abstract int AggregatedTransactionCount { get; }
+
+        protected int _aggregatedTransactionCount;
+        public virtual void SetAggregatedTransactionCount(int count)
+        {
+            _aggregatedTransactionCount = count;
+        }
+
+        public bool IsUnrecoginzedAddress => string.IsNullOrEmpty(Address);
 
         public virtual T Clone<T>() where T:AssetInOut
         {
@@ -233,12 +285,10 @@ namespace BCNExplorer.Web.Models
         public bool ShowAggregatedTransactions => AggregatedTransactions?.Count() > 1;
 
         public int Count => AggregatedTransactions?.Count() ?? 0;
-
     }
 
     public static class AssetHelper
     {
-
         public static IEnumerable<AggregatedInOut<T>> GroupByAddress<T>(IEnumerable<T> source) where T: AssetInOut
         {
             return source
@@ -246,14 +296,27 @@ namespace BCNExplorer.Web.Models
                 .Select(p =>
                 {
                     var titleItem = p.First().Clone<T>();
-                    titleItem.Value = p.Sum(ti => ti.Value);
+                    var allItems = p.ToList();
 
+                    titleItem.Value = p.Sum(ti => ti.Value);
+                    titleItem.SetAggregatedTransactionCount(allItems.Count);
                     return new AggregatedInOut<T>
                     {
                         TitleItem = titleItem,
-                        AggregatedTransactions = p.ToList()
+                        AggregatedTransactions = allItems
                     };
                 });
         } 
+    }
+
+    public interface IInOutViewModel
+    {
+        string ValueDescription { get; } 
+        bool ShowAggregatedTransactions { get;  }
+        int AggregatedTransactionCount { get;  }
+        bool IsUnrecoginzedAddress { get; }
+        string Address { get; }
+        bool ShowPreviousTransaction { get; }
+        string PreviousTransactionId { get; }
     }
 }
