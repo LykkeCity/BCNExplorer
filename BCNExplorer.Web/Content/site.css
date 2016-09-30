@@ -543,7 +543,7 @@ a {
     color: #3f4d60;
 }
 
-.aggregated-item .address, .aggregated-item .amount, .aggregated-item .address a{
+.hidden-transactions .address, .hidden-transactions .amount, .hidden-transactions .address a{
     color: #8c94a0;
     font-size: 13px;
 }
