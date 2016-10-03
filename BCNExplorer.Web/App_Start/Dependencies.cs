@@ -15,25 +15,16 @@ namespace BCNExplorer.Web.App_Start
 {
     public class Dependencies
     {
-        //public static class WebSiteSettings
-        //{
-
-        //    public static string ConnectionString => ConfigurationManager.AppSettings["ConnectionString"] ?? "UseDevelopmentStorage=true";
-        //}
-
-        public static BaseSettings ReadBaseSettings()
+        public static class WebSiteSettings
         {
-            return new BaseSettings
-            {
-                NinjaUrl = ConfigurationManager.AppSettings["ninjaurl"]
-            };
+
+            public static string ConnectionString => ConfigurationManager.AppSettings["ConnectionString"] ?? "UseDevelopmentStorage=true";
         }
 
         public static IDependencyResolver CreateDepencencyResolver()
         {
             var dr = new MyDependencyResolver();
-            //var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
-            var settings = ReadBaseSettings();
+            var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
             settings.NinjaUrl = settings.NinjaUrl.AddLastSymbolIfNotExists('/');
 
             dr.IoC.Register(settings);
@@ -78,7 +69,6 @@ namespace BCNExplorer.Web.App_Start
                 var result = IoC.CreateInstance(serviceType);
                 return result == null ? _nullData : new[] { result };
             }
-
         }
     }
 }
