@@ -9,5 +9,18 @@ namespace Core.Settings
     public class BaseSettings
     {
         public string NinjaUrl { get; set; }
+        public DbSettings Db { get; set; }
+        public JobsSettings Jobs { get; set; }
+    }
+
+    public class DbSettings
+    {
+        public string LogsConnString { get; set; }
+        public string AssetsConnString { get; set; }
+    }
+
+    public class JobsSettings
+    {
+        public bool IsDebug { get; set; }
     }
 }
