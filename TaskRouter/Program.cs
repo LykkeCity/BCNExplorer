@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using AzureRepositories;
+using AzureRepositories.Binders;
 using AzureRepositories.Log;
 using AzureStorage.Tables;
 using Common;
@@ -65,7 +66,7 @@ namespace TaskRouter
 
             container.IoC.BindProviders();
             container.IoC.Register(settings);
-            container.IoC.BindRouterFunctions();
-        }
+            container.IoC.BindAzureRepositories(settings, log);
+            container.IoC.BindRouterFunctions();}
     }
 }

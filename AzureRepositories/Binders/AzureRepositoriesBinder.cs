@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Common.IocContainer;
 using Common.Log;
-using Core.GrabBlockTask;
+using Core.GrabTransactionTask;
 using Core.Settings;
 
 namespace AzureRepositories.Binders
@@ -14,7 +14,7 @@ namespace AzureRepositories.Binders
     {
         public static void BindAzureRepositories(this IoC ioc, BaseSettings baseSettings, ILog log)
         {
-            ioc.Register<IGrabBlockCommandsRepository>(AzureRepoFactories.CreateGrabBlockTaskRepository(baseSettings, log));
+            ioc.Register<IGrabBlockDirectorBase>(AzureRepoFactories.CreateGrabAssetsRepository(baseSettings, log));
 
         }
     }

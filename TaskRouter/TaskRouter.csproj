@@ -96,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functions\RouterFunctionsBinder.cs" />
-    <Compile Include="Functions\ScanBlocksFunction.cs" />
+    <Compile Include="Functions\ScanBlocksFunctions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

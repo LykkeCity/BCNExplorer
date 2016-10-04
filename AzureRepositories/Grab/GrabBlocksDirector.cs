@@ -1,17 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AzureStorage;
 using Common;
-using Core.GrabBlockTask;
+using Core.GrabTransactionTask;
 using Core.Settings;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace AzureRepositories.GrabBlockTask
+namespace AzureRepositories.Grab
 {
-    public class PendingGrabBlockCommandEntity : TableEntity, IPendingGrabBlockCommand
+    public class GrabBlockCommandEntity : TableEntity, IGrabBlockCommand
     {
         public static string GenerateRowKey(string blockId)
         {
@@ -25,9 +24,9 @@ namespace AzureRepositories.GrabBlockTask
 
         public string BlockId { get; set; }
 
-        public static PendingGrabBlockCommandEntity Create(string blockId)
+        public static GrabBlockCommandEntity Create(string blockId)
         {
-            return new PendingGrabBlockCommandEntity
+            return new GrabBlockCommandEntity
             {
                 PartitionKey = GenerateRowKey(blockId),
                 RowKey = GeneratePartitionKey(),
@@ -64,7 +63,7 @@ namespace AzureRepositories.GrabBlockTask
         public string FailDescription { get; set; }
     }
 
-    public class GrabBlockDoneResultEntity : TableEntity, IDoneGrabBlockResult
+    public class GrabBlockDoneResultEntity : TableEntity, IGrabBlockDoneResult
     {
         public static string GenerateRowKey(string blockId)
         {
@@ -89,48 +88,43 @@ namespace AzureRepositories.GrabBlockTask
         }
     }
 
-    public class GrabBlockCommandsRepository: IGrabBlockCommandsRepository
+    public abstract class GrabBlockDirectorBase: IGrabBlockDirectorBase
     {
-        private readonly INoSQLTableStorage<PendingGrabBlockCommandEntity> _commandRepository;
-
+        private readonly INoSQLTableStorage<GrabBlockCommandEntity> _commandRepository;
         private readonly INoSQLTableStorage<GrabBlockFailedResultEntity> _failedResultRepository;
-
         private readonly INoSQLTableStorage<GrabBlockDoneResultEntity> _doneResultRepository;
+        private readonly int _attemptLimit;
 
-        private readonly BaseSettings _baseSettings;
-
-        public GrabBlockCommandsRepository(INoSQLTableStorage<PendingGrabBlockCommandEntity> commandRepository, 
+        public GrabBlockDirectorBase(INoSQLTableStorage<GrabBlockCommandEntity> commandRepository, 
             INoSQLTableStorage<GrabBlockFailedResultEntity> failedResultRepository, 
-            INoSQLTableStorage<GrabBlockDoneResultEntity> doneResultRepository, 
-            BaseSettings baseSettings)
+            INoSQLTableStorage<GrabBlockDoneResultEntity> doneResultRepository, int attemptLimit)
         {
             _commandRepository = commandRepository;
             _failedResultRepository = failedResultRepository;
             _doneResultRepository = doneResultRepository;
-            _baseSettings = baseSettings;
+            _attemptLimit = attemptLimit;
         }
 
 
-        public async Task CreateGrabCommand(IPendingGrabBlockCommand pendingCommand)
+        public async Task CreateGrabCommandAsync(IGrabBlockCommand command)
         {
-            await _commandRepository.InsertOrMergeAsync(PendingGrabBlockCommandEntity.Create(pendingCommand.BlockId));
+            await _commandRepository.InsertOrMergeAsync(GrabBlockCommandEntity.Create(command.BlockId));
         }
 
-        public async Task SetGrabResultDone(IDoneGrabBlockResult doneResult)
+        public async Task SetGrabResultDoneAsync(IGrabBlockDoneResult grabBlockDoneResult)
         {
             await Task.WhenAll(
-                _commandRepository.DeleteAsync(PendingGrabBlockCommandEntity.Create(doneResult.BlockId)),
-                _doneResultRepository.InsertOrMergeAsync(GrabBlockDoneResultEntity.Create(doneResult.BlockId)));
+                _commandRepository.DeleteAsync(GrabBlockCommandEntity.Create(grabBlockDoneResult.BlockId)),
+                _doneResultRepository.InsertOrMergeAsync(GrabBlockDoneResultEntity.Create(grabBlockDoneResult.BlockId)));
         }
 
-        public async Task SetGrabResultFailed(IGrabBlockFailedResult grabBlockFailedResult)
+        public async Task SetGrabResultFailedAsync(IGrabBlockFailedResult grabBlockFailedResult)
         {
             var removeCmdTask = Task.Run(async () =>
             {
-                var attempts = await _failedResultRepository.GetDataAsync(GrabBlockFailedResultEntity.GeneratePartitionKey(grabBlockFailedResult.BlockId));
-                if (attempts.Count() >= _baseSettings.Jobs.MaxGrabTransactionAttemptCount)
+                if (await IsAttemptLimitReached(grabBlockFailedResult.BlockId))
                 {
-                    await _commandRepository.DeleteAsync(PendingGrabBlockCommandEntity.Create(grabBlockFailedResult.BlockId));
+                    await _commandRepository.DeleteAsync(GrabBlockCommandEntity.Create(grabBlockFailedResult.BlockId));
                 }
             });
 
@@ -141,9 +135,30 @@ namespace AzureRepositories.GrabBlockTask
             await Task.WhenAll(removeCmdTask, addFailResultTask);
         }
 
-        public async Task<IEnumerable<IPendingGrabBlockCommand>> GetAllPendingCommands()
+        public async Task<IEnumerable<IGrabBlockCommand>> GetAllPendingCommandsAsync()
         {
-            return await _commandRepository.GetDataAsync(PendingGrabBlockCommandEntity.GeneratePartitionKey());
+            return await _commandRepository.GetDataAsync(GrabBlockCommandEntity.GeneratePartitionKey());
+        }
+
+        public bool NeedToAddToProccessing(string blockId)
+        {
+            return !_commandRepository.RecordExists(GrabBlockCommandEntity.Create(blockId)) 
+                && !_doneResultRepository.RecordExists(GrabBlockDoneResultEntity.Create(blockId))
+                && !IsAttemptLimitReached(blockId).Result;
+        }
+
+        private async Task<bool> IsAttemptLimitReached(string blockId)
+        {
+            var attempts = await _failedResultRepository.GetDataAsync(GrabBlockFailedResultEntity.GeneratePartitionKey(blockId));
+
+            return attempts.Count() >= _attemptLimit;
+        }
+    }
+
+    public class GrabNewAssets:GrabBlockDirectorBase
+    {
+        public GrabNewAssets(INoSQLTableStorage<GrabBlockCommandEntity> commandRepository, INoSQLTableStorage<GrabBlockFailedResultEntity> failedResultRepository, INoSQLTableStorage<GrabBlockDoneResultEntity> doneResultRepository, int attemptLimit) : base(commandRepository, failedResultRepository, doneResultRepository, attemptLimit)
+        {
         }
     }
 }

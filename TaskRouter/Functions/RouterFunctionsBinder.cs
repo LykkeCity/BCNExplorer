@@ -6,7 +6,7 @@ namespace TaskRouter.Functions
     {
         public static void BindRouterFunctions(this IoC ioc)
         {
-            ioc.RegisterPerCall<ScanBlocksFunction>();
+            ioc.RegisterPerCall<ScanBlocksFunctions>();
         }
     }
 }

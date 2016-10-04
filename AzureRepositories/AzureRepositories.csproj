@@ -92,7 +92,7 @@
     <Compile Include="AzureRepoFactories.cs" />
     <Compile Include="Binders\AzureRepositoriesBinder.cs" />
     <Compile Include="GeneralSettingsReader.cs" />
-    <Compile Include="GrabBlockTask\GrabBlockCommandsRepository.cs" />
+    <Compile Include="Grab\GrabBlocksRepository.cs" />
     <Compile Include="Log\LogToTable.cs" />
     <Compile Include="Log\LogToTableAndConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
