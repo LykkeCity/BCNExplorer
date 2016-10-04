@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using AssetScanner.Functions;
 using AzureRepositories;
+using AzureRepositories.Binders;
 using AzureRepositories.Log;
 using AzureStorage.Tables;
 using Common;
@@ -67,6 +68,7 @@ namespace AssetScanner
             container.IoC.BindProviders();
             container.IoC.Register(settings);
             container.IoC.BindAssetsFunctions();
+            container.IoC.BindAzureRepositories(settings, log);
         }
     }
 }

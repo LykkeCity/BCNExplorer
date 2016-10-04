@@ -89,7 +89,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AzureRepoFactories.cs" />
+    <Compile Include="Binders\AzureRepositoriesBinder.cs" />
     <Compile Include="GeneralSettingsReader.cs" />
+    <Compile Include="GrabBlockTask\GrabBlockCommandsRepository.cs" />
     <Compile Include="Log\LogToTable.cs" />
     <Compile Include="Log\LogToTableAndConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,7 +110,12 @@
       <Project>{e689375b-0822-47e4-ae16-6ab9f3cf5698}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{1dcf2948-0a67-4169-8c2a-43da4909e3a1}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
