@@ -57,7 +57,7 @@
                                 <p class="list-group-item-text text-muted"></p>
                             </div>
                             <div class="details-right text-right">
-                                <h4 class="list-group-item-heading">@BitcoinUtils.SatoshiToBtc(Model.Balance) BTC</h4>
+                                <h4 class="list-group-item-heading">@BitcoinUtils.SatoshiToBtc(Model.Balance).ToString("0.####################") BTC</h4>
                             </div>
                         </li>
 
@@ -96,7 +96,7 @@
                                         </p>
                                     </div>
                                     <div class="details-right">
-                                        <h4 class="list-group-item-heading amount">@BitcoinUtils.CalculateColoredAssetQuantity(itm.Quantity, assetDivisibity).ToString("N2") @assetShortName</h4>
+                                        <h4 class="list-group-item-heading amount">@BitcoinUtils.CalculateColoredAssetQuantity(itm.Quantity, assetDivisibity).ToString("0.####################") @assetShortName</h4>
                                     </div>
                                 </li>
                             }
