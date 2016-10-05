@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common;
+using Core.Asset;
 using Providers.TransportTypes;
 using Providers.TransportTypes.Asset;
 using Providers.TransportTypes.Ninja;
@@ -229,7 +230,7 @@ namespace BCNExplorer.Web.Models
 
         #endregion
 
-        public static TransactionViewModel Create(NinjaTransaction ninjaTransaction, IDictionary<string, AssetDefinition> assetDictionary)
+        public static TransactionViewModel Create(NinjaTransaction ninjaTransaction, IDictionary<string, IAsset> assetDictionary)
         {
             var bc = ninjaTransaction.TransactionsByAssets.First(p => !p.IsColored);
             var colored = ninjaTransaction.TransactionsByAssets.Where(p => p.IsColored).OrderBy(p => p.AssetId);

@@ -10,28 +10,21 @@ namespace Providers.Providers.Asset
 {
     public class AssetProvider
     {
-        private readonly CachedDataDictionary<string, AssetContract> _cacheDictionary;
+        private readonly CachedDataDictionary<string, IAsset> _cacheDictionary;
 
-        public AssetProvider(CachedDataDictionary<string, AssetContract> cacheDictionary)
+        public AssetProvider(CachedDataDictionary<string, IAsset> cacheDictionary)
         {
             _cacheDictionary = cacheDictionary;
         }
 
         public async Task<IAsset> GetAssetAsync(string assetId)
         {
-            var assetContract = await _cacheDictionary.GetItemAsync(assetId);
-            if (assetContract != null)
-            {
-                return AssetDefinition.Create(assetContract);
-            }
-
-            return null;
+            return await _cacheDictionary.GetItemAsync(assetId);
         }
 
-        public async Task<IDictionary<string, AssetDefinition>> GetAssetDictionaryAsync()
+        public async Task<IDictionary<string, IAsset>> GetAssetDictionaryAsync()
         {
-            return (await _cacheDictionary.GetDictionaryAsync())
-                .ToDictionary(p => p.Key, p => AssetDefinition.Create(p.Value));
+            return await _cacheDictionary.GetDictionaryAsync();
         } 
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Core.Asset;
 using Providers.TransportTypes;
 using Providers.TransportTypes.Asset;
 using Providers.TransportTypes.Ninja;
@@ -21,7 +22,7 @@ namespace BCNExplorer.Web.Models
 
         public AssetDictionary AssetDic { get; set; }
 
-        public static AddressViewModel Create(NinjaAddress ninjaAddress, IDictionary<string, AssetDefinition> assetDictionary)
+        public static AddressViewModel Create(NinjaAddress ninjaAddress, IDictionary<string, IAsset> assetDictionary)
         {
             return new AddressViewModel
             {

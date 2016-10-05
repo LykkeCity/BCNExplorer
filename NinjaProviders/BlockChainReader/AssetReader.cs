@@ -48,24 +48,5 @@ namespace Providers.BlockChainReader
 
             return assets.ToList();
         }
-
-        public async Task<Dictionary<string, AssetContract>> GetDictionaryAsync(IEnumerable<string> absUrls)
-        {
-            var assets = await ReadAssetDataAsync(absUrls.ToArray());
-            var result = new Dictionary<string, AssetContract>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var asset in assets)
-            {
-                result[asset.Name] = asset;
-                result[asset.NameShort] = asset;
-
-                foreach (var assetId in asset.AssetIds ?? Enumerable.Empty<string>())
-                {
-                    result[assetId] = asset;
-                }
-            }
-
-            return result;
-        }
     }
 }

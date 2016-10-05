@@ -57,6 +57,7 @@
     <Compile Include="Contracts\Ninja\AddressContract.cs" />
     <Compile Include="Contracts\Ninja\WhatIsItContract.cs" />
     <Compile Include="Helpers\AssetHelper.cs" />
+    <Compile Include="Providers\Asset\AssetIndexer.cs" />
     <Compile Include="Providers\Common\SearchProvider.cs" />
     <Compile Include="Providers\Asset\AssetProvider.cs" />
     <Compile Include="Providers\Asset\Constants.cs" />

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 using Common.IocContainer;
+using Core.Asset;
 using Providers.BlockChainReader;
 using Providers.Contracts.Asset;
 using Providers.Providers;
@@ -32,11 +33,11 @@ namespace Providers
         private static void BindLykkeProviders(this IoC ioc)
         {
             ioc.RegisterPerCall<AssetReader>();
-            
+
             ioc.RegisterFactorySingleTone(() =>
-                new CachedDataDictionary<string, AssetContract>(
-                    async () => await ioc.GetObject<AssetReader>().GetDictionaryAsync(Constants.AssetDefinitonUrls)
-                    , validDataInSeconds: 1*60*60));
+                new CachedDataDictionary<string, IAsset>(
+                    async () => AssetIndexer.IndexAssets(await ioc.GetObject<AssetReader>().ReadAssetDataAsync(Constants.AssetDefinitonUrls))
+                    , validDataInSeconds: 1 * 60 * 60));
 
             ioc.RegisterPerCall<AssetProvider>();
         }

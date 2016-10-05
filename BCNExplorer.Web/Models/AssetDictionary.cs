@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Core.Asset;
 using Providers.TransportTypes.Asset;
 
 namespace BCNExplorer.Web.Models
@@ -30,7 +31,7 @@ namespace BCNExplorer.Web.Models
             return defaultValue;
         }
 
-        public static AssetDictionary Create(IDictionary<string, AssetDefinition> source)
+        public static AssetDictionary Create(IDictionary<string, IAsset> source)
         {
             return new AssetDictionary
             {
