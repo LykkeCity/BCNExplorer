@@ -72,7 +72,7 @@ namespace Providers.Providers.Ninja
 
         private async Task<AddressSummaryContract> GetAddressSummaryAsync(string id)
         {
-            return await _blockChainReader.GetAsync<AddressSummaryContract>($"/balances/{id}/summary");
+            return await _blockChainReader.GetAsync<AddressSummaryContract>($"/balances/{id}/summary?colored=true");
         }
     }
 }
