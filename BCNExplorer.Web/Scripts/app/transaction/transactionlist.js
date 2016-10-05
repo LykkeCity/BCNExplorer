@@ -5,15 +5,16 @@
         var loadingClass = 'transactions-container-load';
         if (transactionIds != undefined && loadUrl != undefined) {
             $loadContainer.hide().addClass(loadingClass).removeClass('hidden').fadeIn('slow');
+
             return $.ajax(loadUrl, {
-                data: {
-                    ids: transactionIds
-                },
-                method: 'post'
-            }).done(function(resp) {
-                $loadContainer.removeClass(loadingClass).html(resp);
-                $loadContainer.trigger('transactions-loaded');
-            });
+                    data: {
+                        ids: transactionIds
+                    },
+                    method: 'post'
+                }).done(function(resp) {
+                    $loadContainer.removeClass(loadingClass).html(resp);
+                    $loadContainer.trigger('transactions-loaded');
+                });
         }
 
         return $.Deferred().promise();
