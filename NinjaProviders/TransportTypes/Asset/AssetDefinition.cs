@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Core.Asset;
 using Providers.Contracts.Asset;
 
 namespace Providers.TransportTypes.Asset
 {
-    public class AssetDefinition
+    public class AssetDefinition:IAsset
     {
         public IEnumerable<string> AssetIds { get; set; }
         
@@ -31,6 +32,7 @@ namespace Providers.TransportTypes.Asset
         public string ImageUrl { get; set; }
         
         public string Version { get; set; }
+        public string AssetDefinitionUrl { get; set; }
 
         public static AssetDefinition Create(AssetContract source)
         {
@@ -48,7 +50,8 @@ namespace Providers.TransportTypes.Asset
                 Name = source.Name,
                 NameShort = source.NameShort,
                 Type = source.Type,
-                Version = source.Version
+                Version = source.Version,
+                AssetDefinitionUrl = source.AssetDefinitionUrl
             };
         }
     }

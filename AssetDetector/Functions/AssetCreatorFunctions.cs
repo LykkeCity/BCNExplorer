@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Common.Log;
 using JobsCommon;
 using Microsoft.Azure.WebJobs;
+using Providers.BlockChainReader;
 
 namespace AssetScanner.Functions
 {
@@ -15,10 +16,6 @@ namespace AssetScanner.Functions
             _log = log;
         }
 
-        public async Task CreateAssets([QueueTrigger(JobsQueues.AddNewAssetsQueueName)] string message, DateTimeOffset insertionTime)
-        {
-            await _log.WriteInfo("asda", "sadasd", "sdas", $" {message} started {DateTime.Now} ");
-            await Task.Delay(10*1000);
-        }
+
     }
 }

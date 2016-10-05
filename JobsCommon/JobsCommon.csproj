@@ -95,7 +95,7 @@
   <ItemGroup>
     <Compile Include="DResolver.cs" />
     <Compile Include="JobsConnectionStringSettings.cs" />
-    <Compile Include="JobsQueues.cs" />
+    <Compile Include="JobsQueueNames.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

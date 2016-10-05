@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Core.Asset;
+using Newtonsoft.Json;
 
 namespace Providers.Contracts.Asset
 {
@@ -42,5 +43,7 @@ namespace Providers.Contracts.Asset
 
         [JsonProperty("version")]
         public string Version { get; set; }
+
+        public string AssetDefinitionUrl { get; set; }
     }
 }

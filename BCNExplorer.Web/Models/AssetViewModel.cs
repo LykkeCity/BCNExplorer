@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Core.Asset;
 using Providers.TransportTypes.Asset;
 
 namespace BCNExplorer.Web.Models
@@ -32,7 +33,7 @@ namespace BCNExplorer.Web.Models
 
         public string Version { get; set; }
 
-        public static AssetViewModel Create(AssetDefinition source)
+        public static AssetViewModel Create(IAsset source)
         {
             return new AssetViewModel
             {

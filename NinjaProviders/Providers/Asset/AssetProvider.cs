@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Common;
+using Core.Asset;
 using Providers.Contracts.Asset;
 using Providers.TransportTypes.Asset;
 
@@ -16,7 +17,7 @@ namespace Providers.Providers.Asset
             _cacheDictionary = cacheDictionary;
         }
 
-        public async Task<AssetDefinition> GetAssetAsync(string assetId)
+        public async Task<IAsset> GetAssetAsync(string assetId)
         {
             var assetContract = await _cacheDictionary.GetItemAsync(assetId);
             if (assetContract != null)

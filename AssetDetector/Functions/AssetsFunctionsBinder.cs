@@ -7,6 +7,7 @@ namespace AssetScanner.Functions
         public static void BindAssetsFunctions(this IoC ioc)
         {
             ioc.RegisterPerCall<AssetCreatorFunctions>();
+            ioc.RegisterPerCall<AssetDataFunctions>();
         }
     }
 }

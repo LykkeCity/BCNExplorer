@@ -19,7 +19,17 @@ namespace Providers.BlockChainReader
             _httpReader = httpReader;
         }
 
-        private async Task<IEnumerable<AssetContract>> GetAllAsync(IEnumerable<string> absUrls)
+        public async Task<AssetContract> ReadAssetDataAsync(string absUrl)
+        {
+            var respModel = await _httpReader.GetAsync<AssetContract>(absUrl);
+
+            var result = respModel.ParsedBody;
+            result.AssetDefinitionUrl = respModel.Url;
+
+            return result;
+        }
+
+        public async Task<IEnumerable<AssetContract>> ReadAssetDataAsync(IEnumerable<string> absUrls)
         {
             var assets = new ConcurrentStack<AssetContract>();
             
@@ -27,7 +37,10 @@ namespace Providers.BlockChainReader
             {
                 if (task.Result != null)
                 {
-                    assets.Push(task.Result);
+                    var respModel = task.Result.ParsedBody;
+                    respModel.AssetDefinitionUrl = task.Result.Url;
+
+                    assets.Push(respModel);
                 }
             }));
 
@@ -38,7 +51,7 @@ namespace Providers.BlockChainReader
 
         public async Task<Dictionary<string, AssetContract>> GetDictionaryAsync(IEnumerable<string> absUrls)
         {
-            var assets = await GetAllAsync(absUrls);
+            var assets = await ReadAssetDataAsync(absUrls.ToArray());
             var result = new Dictionary<string, AssetContract>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var asset in assets)

@@ -32,17 +32,30 @@ namespace Providers.BlockChainReader
             }
         }
 
-        public async Task<T> GetAsync<T>(string absUrl)
+        public async Task<HttpReadResult<T>> GetAsync<T>(string absUrl)
         {
+            T parsedBody;
             try
             {
                 var result = await GetAsync(absUrl);
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(result);
+                parsedBody = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(result);
             }
             catch (Exception e)
             {
-                return default(T);
+                parsedBody = default(T);
             }
+
+            return new HttpReadResult<T>
+            {
+                ParsedBody = parsedBody,
+                Url = absUrl
+            };
+        }
+
+        public class HttpReadResult<T>
+        {
+            public string Url { get; set; }
+            public T ParsedBody { get; set; }
         }
     }
 }

@@ -23,9 +23,9 @@ namespace Providers.BlockChainReader
             return _httpReader.GetAsync(_ninjaBaseUrl + url);
         }
 
-        public Task<T> GetAsync<T>(string url)
+        public async Task<T> GetAsync<T>(string url)
         {
-            return _httpReader.GetAsync<T>(_ninjaBaseUrl + url);
+            return (await _httpReader.GetAsync<T>(_ninjaBaseUrl + url)).ParsedBody;
         }
     }
 }
