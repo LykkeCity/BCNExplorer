@@ -61,7 +61,8 @@ body {margin-top: 0px;background: #F7F8F9; font-family: 'ProximaNova-Regular'; c
 }
 .page-content {
     padding-top: 20px;
-    padding-bottom: 60px;
+    padding-bottom: 20px;
+    min-height: calc(80vh - 37px);
 }
 .input-lg {
     height: 48px;
@@ -367,7 +368,7 @@ table td.no-wrap, table th.no-wrap {
 }
 
 footer{
-    position: absolute;
+    /*position: absolute;*/
     background: #fff;
     bottom: 0;
     width: 100%;
@@ -812,7 +813,7 @@ a {
 }
 
 .transactions-container {
-    min-height: 100px;
+    min-height: 30px;
 }
 
 .load-trans {
