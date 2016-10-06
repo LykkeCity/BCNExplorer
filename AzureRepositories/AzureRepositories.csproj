@@ -90,9 +90,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Asset\AssetRepository.cs" />
+    <Compile Include="Asset\UpdateAssetDataCommandProducer.cs" />
     <Compile Include="AzureRepoFactories.cs" />
     <Compile Include="Binders\AzureRepositoriesBinder.cs" />
     <Compile Include="GeneralSettingsReader.cs" />
+    <Compile Include="JobsQueueNames.cs" />
     <Compile Include="Log\LogToTable.cs" />
     <Compile Include="Log\LogToTableAndConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

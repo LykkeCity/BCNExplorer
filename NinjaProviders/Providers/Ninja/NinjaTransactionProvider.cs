@@ -4,6 +4,7 @@ using NBitcoin;
 using NBitcoin.OpenAsset;
 using Providers.BlockChainReader;
 using Providers.Contracts.Ninja;
+using Providers.Helpers;
 using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
@@ -26,7 +27,7 @@ namespace Providers.Providers.Ninja
             }
 
             var transactionInfo = Transaction.Parse(responce.Hex);
-
+            
             var inputs = responce.Inputs.ToList();
             var outputs = responce.Outputs.ToList();
 

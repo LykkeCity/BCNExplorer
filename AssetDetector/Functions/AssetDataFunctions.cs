@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AzureRepositories;
 using Common.Log;
 using Core.Asset;
 using JobsCommon;
