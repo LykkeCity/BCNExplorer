@@ -41,7 +41,7 @@
                 </table>
             </div>
             <div class="col-md-5">
-                <div class="panel panel-default">
+                <div class="panel asset-balances">
                     <div class="list-group-item clearfix section-header">
                         <h3 class="panel-title">Balance</h3>
                     </div>
@@ -53,7 +53,7 @@
                                 </span>
                             </span>
                             <div class="details-left balance-left">
-                                <h4 class="list-group-item-heading">Bitcoin</h4>
+                                <h4 class="list-group-item-heading asset-name">Bitcoin</h4>
                                 <p class="list-group-item-text text-muted"></p>
                             </div>
                             <div class="details-right text-right">
@@ -63,7 +63,7 @@
 
                         @if (Model.Assets.Any())
                         {
-                            <li class="list-group-item clearfix section-header">
+                            <li class="list-group-item clearfix section-header assets-group-header">
                                 <h3 class="panel-title">Assets</h3>
                             </li>
                             foreach (var itm in Model.Assets)
@@ -90,12 +90,11 @@
                                         }
 
                                     </div>
-                                    <div class="details-left">
-                                        <p class="list-group-item-text text-muted">
-                                            @assetName
-                                        </p>
+                                    <div class="details-left balance-left">
+                                        <h4 class="list-group-item-heading asset-name">@assetName</h4>
                                     </div>
-                                    <div class="details-right">
+
+                                    <div class="details-right text-right">
                                         <h4 class="list-group-item-heading amount">@BitcoinUtils.CalculateColoredAssetQuantity(itm.Quantity, assetDivisibity).ToString("0.####################") @assetShortName</h4>
                                     </div>
                                 </li>

@@ -539,7 +539,7 @@ a {
     white-space: nowrap;
 }
 
-.address a, .amount {
+.transaction-details .address a,.transaction-details .amount {
     font-size: 14px;
     color: #3f4d60;
 }
@@ -550,7 +550,7 @@ a {
 }
 
 @media (max-width: 400px) {
-.address a, .amount, .address,.aggregated-item .address, .aggregated-item .amount, .aggregated-item .address a {
+.transaction-details .address a,.transaction-details .amount,.transaction-details .address,.transaction-details .aggregated-item .address,.transaction-details .aggregated-item .amount,.transaction-details .aggregated-item .address a {
     font-size: 11px;
 }
 }
@@ -709,8 +709,9 @@ a {
 .asset-list .details-right {
 
 }
-.details-right .amount{    text-align: right;
-    margin-top: 10px;
+.details-right .amount{    
+    text-align: right;
+    /*margin-top: 10px;*/
 }
 .asset-list .details-left{}
 .asset-list .list-group-item-heading{}
@@ -847,4 +848,20 @@ a {
 
 .aggregate-toggle {
     margin-left: 5px;
+}
+
+.asset-balances, .asset-balances .list-group-item {
+    background-color: transparent
+}
+.asset-balances h4 {
+    font-size: 16px;
+}
+
+.asset-balances .list-group-item {
+    border: none;
+    border-bottom: 1px solid #ddd;
+}
+
+.assets-group-header {
+    margin-top: 15px;  
 }
