@@ -261,11 +261,11 @@ table td.no-wrap, table th.no-wrap {
 .transaction-details .intput-output-group .outputs .outputs-container .center-chevron {
     color: #eee;
     position: absolute;
-    top: 10px;
+    top: 5px;
     left: -32px;
     padding: 4px;
     background-color: #fff;
-    width: 28px;
+    width: 25px;
 }
 
 @media (max-width: 768px) {
