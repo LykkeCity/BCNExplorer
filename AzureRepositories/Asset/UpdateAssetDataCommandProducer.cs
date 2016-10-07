@@ -7,7 +7,7 @@ using AzureStorage.Queue;
 
 namespace AzureRepositories.Asset
 {
-    public class CreateAssetDataContext
+    public class UpdateAssetDataContext
     {
         public const string Id = "CreateAssetDataContext";
         public string AssetDefinitionUrl { get; set; }
@@ -21,18 +21,25 @@ namespace AzureRepositories.Asset
         {
             _queueExt = queueExt;
 
-            _queueExt.RegisterTypes(QueueType.Create(CreateAssetDataContext.Id, typeof(QueueRequestModel<CreateAssetDataContext>)));
+            _queueExt.RegisterTypes(QueueType.Create(UpdateAssetDataContext.Id, typeof(QueueRequestModel<UpdateAssetDataContext>)));
         }
 
-        public Task CreateUpdateAssetDataCommand(string url)
+        public async Task CreateUpdateAssetDataCommand(params string[] urls)
         {
-            return _queueExt.PutMessageAsync(new QueueRequestModel<CreateAssetDataContext>
+            var putInQueryTask = new List<Task>();
+
+            foreach (var url in urls)
             {
-                Data = new CreateAssetDataContext
+                putInQueryTask.Add(_queueExt.PutMessageAsync(new QueueRequestModel<UpdateAssetDataContext>
                 {
-                    AssetDefinitionUrl = url
-                }
-            });
+                    Data = new UpdateAssetDataContext
+                    {
+                        AssetDefinitionUrl = url
+                    }
+                }));
+            }
+
+            await Task.WhenAll(putInQueryTask);
         } 
     }
 }

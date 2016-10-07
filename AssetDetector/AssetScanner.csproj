@@ -91,7 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Functions\AssetDataFunctions.cs" />
+    <Compile Include="Functions\UpdateAssetDataFunctions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Functions\AssetCreatorFunctions.cs" />

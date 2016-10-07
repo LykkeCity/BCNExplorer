@@ -30,7 +30,7 @@ namespace AssetScanner.Functions
         public async Task ParseLastBlock([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
         {
 
-            var txId = "f6c78f15f6c540101c153397288141e7ef3f1a34562d24810e558d87793dacc6";
+            var txId = "0c0a21b640b1011ed397138d76b81375d35c10e419b52fc887677634dd7bcd4f";
             var transaction = await _ninjaTransactionProvider.GetAsync(txId);
             var definitionUrl = AssetHelper.TryGetAssetDefinitionUrl(transaction.Hex);
             if (definitionUrl != null)

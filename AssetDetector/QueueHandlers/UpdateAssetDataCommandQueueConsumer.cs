@@ -37,11 +37,11 @@ namespace AssetScanner.QueueHandlers
                 return true;
             });
 
-            _queueReader.RegisterHandler<QueueRequestModel<CreateAssetDataContext>>(
-                CreateAssetDataContext.Id, itm => CreateAssetData(itm.Data));
+            _queueReader.RegisterHandler<QueueRequestModel<UpdateAssetDataContext>>(
+                UpdateAssetDataContext.Id, itm => UpdateAssetData(itm.Data));
         }
 
-        public async Task CreateAssetData(CreateAssetDataContext context)
+        public async Task UpdateAssetData(UpdateAssetDataContext context)
         {
             await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", "CreateAssetData", $"Update {context.AssetDefinitionUrl} started {DateTime.Now} ");
 
