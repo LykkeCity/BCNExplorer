@@ -183,8 +183,8 @@
 
 @helper RenderInOut(IInOutViewModel inOutViewModel)
 {
-    <div class="address-item @(inOutViewModel.ShowAggregatedTransactions? "js-toggle-aggregated toggle-aggregated" : "")" data-address="@inOutViewModel.Address">
-        <div class="amount">
+    <div class="address-item " data-address="@inOutViewModel.Address">
+        <div class="amount @(inOutViewModel.ShowAggregatedTransactions? "js-toggle-aggregated toggle-aggregated" : "")">
             @inOutViewModel.ValueDescription
             @if (inOutViewModel.ShowAggregatedTransactions)
             {
