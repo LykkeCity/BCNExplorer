@@ -2,6 +2,6 @@
 {
     public class JobsQueueNames
     {
-        public const string AddNewAssetsQueueName = "newassets";
+        public const string UpdateAssetDataTasks = "updateassetdata";
     }
 }

@@ -18,7 +18,7 @@ namespace AzureRepositories.Binders
         {
             ioc.Register<IAssetRepository>(AzureRepoFactories.CreateAssetRepository(baseSettings, log));
 
-            ioc.Register<UpdateAssetDataCommandProducer>(AzureRepoFactories.CreateUpdateAssetDataCommandProducer(baseSettings, log));
+            ioc.Register(AzureRepoFactories.CreateUpdateAssetDataCommandProducer(baseSettings, log));
         }
     }
 }

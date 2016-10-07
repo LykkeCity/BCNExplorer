@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using AssetScanner.Functions;
+using AssetScanner.QueueHandlers;
 using AzureRepositories;
 using AzureRepositories.Binders;
 using AzureRepositories.Log;
+using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common;
 using Common.Log;
@@ -32,6 +34,9 @@ namespace AssetScanner
 
                 var container = new DResolver();
                 InitContainer(container, settings, log);
+
+                var emailQueueHandler = container.IoC.CreateInstance<UpdateAssetDataCommandQueueConsumer>();
+                emailQueueHandler.Start();
 
                 var config = new JobHostConfiguration
                 {
@@ -69,6 +74,11 @@ namespace AssetScanner
             container.IoC.Register(settings);
             container.IoC.BindAssetsFunctions();
             container.IoC.BindAzureRepositories(settings, log);
+
+            var updateAssetDataQueue = new AzureQueueExt(settings.Db.AssetsConnString, JobsQueueNames.UpdateAssetDataTasks);
+            var updateAssetDataQueueReader = new QueueReader(updateAssetDataQueue, "UpdateAssetDataQueueReader", 5*1000, log);
+            container.IoC.Register<IQueueReader> (updateAssetDataQueueReader);
+            container.IoC.RegisterSingleTone<UpdateAssetDataCommandQueueConsumer>();
         }
     }
 }

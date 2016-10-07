@@ -18,9 +18,9 @@ namespace AzureRepositories
             return new AssetRepository(new AzureTableStorage<AssetEntity>(baseSettings.Db.AssetsConnString, "Assets", log));
         }
 
-        public static UpdateAssetDataCommandProducer CreateUpdateAssetDataCommandProducer(BaseSettings baseSettings, ILog log)
+        public static AssetDataCommandProducer CreateUpdateAssetDataCommandProducer(BaseSettings baseSettings, ILog log)
         {
-            return new UpdateAssetDataCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString,  JobsQueueNames.AddNewAssetsQueueName));
+            return new AssetDataCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString,  JobsQueueNames.UpdateAssetDataTasks));
         }
     }
 }

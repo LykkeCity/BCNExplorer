@@ -26,23 +26,23 @@ namespace AssetScanner.Functions
             _assetReader = assetReader;
         }
 
-        public async Task UpdateAssets([TimerTrigger("00:20:00", RunOnStartup = true)] TimerInfo timer)
-        {
-            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", null, "Update assets started");
+        //public async Task UpdateAssets([TimerTrigger("00:20:00", RunOnStartup = true)] TimerInfo timer)
+        //{
+        //    await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", null, "Update assets started");
 
-            var assetsToUpdate =  await _assetRepository.GetAllAsync();
-            var updatedAssets = await _assetReader.ReadAssetDataAsync(assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray());
+        //    var assetsToUpdate =  await _assetRepository.GetAllAsync();
+        //    var updatedAssets = await _assetReader.ReadAssetDataAsync(assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray());
 
-            await _assetRepository.InsertOrReplaceAsync(updatedAssets.Select(AssetDefinition.Create).ToArray());
-        }
+        //    await _assetRepository.InsertOrReplaceAsync(updatedAssets.Select(AssetDefinition.Create).ToArray());
+        //}
 
-        public async Task CreateAssetData([QueueTrigger(JobsQueueNames.AddNewAssetsQueueName)] string message, DateTimeOffset insertionTime)
-        {
-            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", "CreateAssetData", $" {message} started {DateTime.Now} ");
+        //public async Task CreateAssetData([QueueTrigger(JobsQueueNames.AddNewAssetsQueueName)] string message, DateTimeOffset insertionTime)
+        //{
+        //    await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", "CreateAssetData", $" {message} started {DateTime.Now} ");
 
-            var assetData = await _assetReader.ReadAssetDataAsync(message);
-            await _assetRepository.InsertOrReplaceAsync(AssetDefinition.Create(assetData));
-        }
+        //    var assetData = await _assetReader.ReadAssetDataAsync(message);
+        //    await _assetRepository.InsertOrReplaceAsync(AssetDefinition.Create(assetData));
+        //}
 
         
     }
