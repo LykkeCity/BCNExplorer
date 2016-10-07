@@ -38,6 +38,9 @@ namespace Providers.Contracts.Ninja
     {
         [JsonProperty("confirmed")]
         public AddressSummaryInnerContract Confirmed { get; set; }
+
+        [JsonProperty("unConfirmed")]
+        public AddressSummaryInnerContract Unconfirmed { get; set; }
     }
 
     public class AddressSummaryInnerContract

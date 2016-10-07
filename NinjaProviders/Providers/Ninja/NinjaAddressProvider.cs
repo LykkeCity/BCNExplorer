@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Providers.BlockChainReader;
 using Providers.Contracts.Ninja;
@@ -17,15 +18,14 @@ namespace Providers.Providers.Ninja
 
         public async Task<NinjaAddress> GetAddressAsync(string id)
         {
-            NinjaAddress ninjaAddress = null;
+            var ninjaAddress = new Lazy<NinjaAddress>( () => new NinjaAddress());
             var fillMainInfoTask = GetAddressMainInfoAsync(id).ContinueWith(p =>
             {
                 if (p.Result != null)
                 {
-                    ninjaAddress = ninjaAddress ?? new NinjaAddress();
-                    ninjaAddress.AddressId = id;
-                    ninjaAddress.ColoredAddress = p.Result.ColoredAddress;
-                    ninjaAddress.UncoloredAddress = p.Result.UncoloredAddress;
+                    ninjaAddress.Value.AddressId = id;
+                    ninjaAddress.Value.ColoredAddress = p.Result.ColoredAddress;
+                    ninjaAddress.Value.UncoloredAddress = p.Result.UncoloredAddress;
                 }
             });
 
@@ -33,8 +33,7 @@ namespace Providers.Providers.Ninja
             {
                 if (p.Result != null)
                 {
-                    ninjaAddress = ninjaAddress ?? new NinjaAddress();
-                    ninjaAddress.TransactionIds = p.Result.Transactions.Select(tr => tr.TxId);
+                    ninjaAddress.Value.TransactionIds = p.Result.Transactions.Select(tr => tr.TxId);
                 }
             });
 
@@ -42,12 +41,13 @@ namespace Providers.Providers.Ninja
             {
                 if (p.Result != null)
                 {
-                    ninjaAddress = ninjaAddress ?? new NinjaAddress();
-                    ninjaAddress.Balance = p.Result.Confirmed.Balance;
-                    ninjaAddress.TotalTransactions = p.Result.Confirmed.TotalTransactions;
+                    ninjaAddress.Value.Balance = p.Result.Confirmed.Balance;
+                    ninjaAddress.Value.TotalTransactions = p.Result.Confirmed.TotalTransactions;
+
+                    ninjaAddress.Value.UnconfirmedBalanceDelta = p.Result.Unconfirmed.Balance;
 
                     var assets = p.Result.Confirmed.Assets ?? Enumerable.Empty<AddressAssetContract>();
-                    ninjaAddress.Assets = assets.Select(a => new NinjaAddress.Asset
+                    ninjaAddress.Value.Assets = assets.Select(a => new NinjaAddress.Asset
                     {
                         AssetId = a.AssetId,
                         Quantity = a.Quantity
@@ -57,7 +57,7 @@ namespace Providers.Providers.Ninja
 
             await Task.WhenAll(fillMainInfoTask, fillTransactionsTask, fillSummaryTask);
 
-            return ninjaAddress;
+            return ninjaAddress.IsValueCreated ? ninjaAddress.Value : null;
         } 
 
         private async Task<WhatIsItAdrressContract> GetAddressMainInfoAsync(string id)

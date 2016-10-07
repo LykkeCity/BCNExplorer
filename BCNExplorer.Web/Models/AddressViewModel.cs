@@ -15,6 +15,9 @@ namespace BCNExplorer.Web.Models
         public string UncoloredAddress { get; set; }
         public string ColoredAddress { get; set; }
         public double Balance { get; set; }
+        public double UnconfirmedBalance => Balance + UnconfirmedBalanceDelta;
+        public double UnconfirmedBalanceDelta { get; set; }
+        public bool ShowUnconfirmedBalance => UnconfirmedBalanceDelta != 0;
         public double TotalConfirmedTransactions { get; set; }
         public IEnumerable<Asset> Assets { get; set; }
         public TransactionIdList TransactionIdList { get; set; }
@@ -37,6 +40,7 @@ namespace BCNExplorer.Web.Models
                     AssetId = p.AssetId,
                     Quantity = p.Quantity
                 }),
+                UnconfirmedBalanceDelta = ninjaAddress.UnconfirmedBalanceDelta,
                 AssetDic = AssetDictionary.Create(assetDictionary)
             };
         }

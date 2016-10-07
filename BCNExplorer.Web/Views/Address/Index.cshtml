@@ -54,10 +54,17 @@
                             </span>
                             <div class="details-left balance-left">
                                 <h4 class="list-group-item-heading asset-name">Bitcoin</h4>
-                                <p class="list-group-item-text text-muted"></p>
+                                @if (Model.ShowUnconfirmedBalance)
+                                {
+                                    <p class="list-group-item-text text-muted">UnconfirmedBalance</p>
+                                }
                             </div>
                             <div class="details-right text-right">
                                 <h4 class="list-group-item-heading">@BitcoinUtils.SatoshiToBtc(Model.Balance).ToString("0.####################") BTC</h4>
+                                @if (Model.ShowUnconfirmedBalance)
+                                {
+                                    <p class="list-group-item-text text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToString("0.####################") BTC</p>
+                                }
                             </div>
                         </li>
 

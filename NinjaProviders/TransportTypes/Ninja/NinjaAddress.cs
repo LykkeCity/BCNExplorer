@@ -10,6 +10,7 @@ namespace Providers.TransportTypes.Ninja
         public string UncoloredAddress { get; set; }
         public string ColoredAddress { get; set; }
         public double Balance { get; set; }
+        public double UnconfirmedBalanceDelta { get; set; }
         public IEnumerable<Asset> Assets { get; set; } 
 
         public class Asset
