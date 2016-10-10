@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobsCommon", "JobsCommon\Jo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskRouter", "TaskRouter\TaskRouter.csproj", "{3681A5A1-A745-4F3A-B368-3EBAD2FE55E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{E9662635-933B-403D-9488-FE822BBA6655}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,14 @@ Global
 		{3681A5A1-A745-4F3A-B368-3EBAD2FE55E2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3681A5A1-A745-4F3A-B368-3EBAD2FE55E2}.Release|x64.ActiveCfg = Release|Any CPU
 		{3681A5A1-A745-4F3A-B368-3EBAD2FE55E2}.Release|x64.Build.0 = Release|Any CPU
+		{E9662635-933B-403D-9488-FE822BBA6655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9662635-933B-403D-9488-FE822BBA6655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9662635-933B-403D-9488-FE822BBA6655}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E9662635-933B-403D-9488-FE822BBA6655}.Debug|x64.Build.0 = Debug|Any CPU
+		{E9662635-933B-403D-9488-FE822BBA6655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9662635-933B-403D-9488-FE822BBA6655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9662635-933B-403D-9488-FE822BBA6655}.Release|x64.ActiveCfg = Release|Any CPU
+		{E9662635-933B-403D-9488-FE822BBA6655}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,7 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 using Common.IocContainer;
+using Common.Log;
 using Core.Asset;
+using Core.Settings;
+using NBitcoin.Indexer;
+using Providers.Binders;
 using Providers.BlockChainReader;
 using Providers.Contracts.Asset;
 using Providers.Providers;
@@ -17,12 +21,14 @@ namespace Providers
 {
     public static class ProvidersBinder
     {
-        public static void BindProviders(this IoC ioc)
+        public static void BindProviders(this IoC ioc, BaseSettings baseSettings, ILog log)
         {
             ioc.BindCommon();
             ioc.BindNinjaProviders();
             ioc.BindLykkeProviders();
             ioc.BindCommonProviders();
+
+            ioc.Register(ProvidersFactories.CreateNinjaIndexerClient(baseSettings, log));
         }
 
         private static void BindCommon(this IoC ioc)

@@ -64,7 +64,7 @@ namespace TaskRouter
             log.WriteInfo("InitContainer", "App start", null, $"BaseSettings : {settings.ToJson()}").Wait();
             container.IoC.Register<ILog>(log);
 
-            container.IoC.BindProviders();
+            container.IoC.BindProviders(settings, log);
             container.IoC.Register(settings);
             container.IoC.BindAzureRepositories(settings, log);
             container.IoC.BindRouterFunctions();}

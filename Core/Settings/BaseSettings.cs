@@ -11,6 +11,7 @@ namespace Core.Settings
         public string NinjaUrl { get; set; }
         public DbSettings Db { get; set; }
         public JobsSettings Jobs { get; set; }
+        public NinjaIndexerCredentials NinjaIndexerCredentials { get; set; }
     }
 
     public class DbSettings
@@ -22,5 +23,11 @@ namespace Core.Settings
     public class JobsSettings
     {
         public bool IsDebug { get; set; }
+    }
+
+    public class NinjaIndexerCredentials
+    {
+        public string AzureName { get; set; }
+        public string AzureKey { get; set; }
     }
 }
