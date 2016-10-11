@@ -11,7 +11,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AzureRepositories.Asset
 {
-    public class AssetEntity:TableEntity, IAsset
+    public class AssetDefinitionEntity:TableEntity, IAsset
     {
         public static string GeneratePartitionKey()
         {
@@ -39,9 +39,9 @@ namespace AzureRepositories.Asset
         public string Version { get; set; }
         public string AssetDefinitionUrl { get; set; }
 
-        public static AssetEntity Create(IAsset data)
+        public static AssetDefinitionEntity Create(IAsset data)
         {
-            return new AssetEntity
+            return new AssetDefinitionEntity
             {
                 PartitionKey = GeneratePartitionKey(),
                 RowKey = GenerateRowKey(data.AssetIds),
@@ -63,23 +63,23 @@ namespace AzureRepositories.Asset
         }
     }
 
-    public class AssetRepository:IAssetRepository
+    public class AssetDefinitionRepository:IAssetDefinitionRepository
     {
-        private readonly INoSQLTableStorage<AssetEntity> _assetTableStorage;
+        private readonly INoSQLTableStorage<AssetDefinitionEntity> _assetTableStorage;
 
-        public AssetRepository(INoSQLTableStorage<AssetEntity> assetTableStorage)
+        public AssetDefinitionRepository(INoSQLTableStorage<AssetDefinitionEntity> assetTableStorage)
         {
             _assetTableStorage = assetTableStorage;
         }
 
         public async Task InsertOrReplaceAsync(IAsset[] assets)
         {
-            await _assetTableStorage.InsertOrReplaceBatchAsync(assets.Select(AssetEntity.Create));
+            await _assetTableStorage.InsertOrReplaceBatchAsync(assets.Select(AssetDefinitionEntity.Create));
         }
 
         public async Task<IEnumerable<IAsset>> GetAllAsync()
         {
-            return await _assetTableStorage.GetDataAsync(AssetEntity.GeneratePartitionKey());
+            return await _assetTableStorage.GetDataAsync(AssetDefinitionEntity.GeneratePartitionKey());
         }
     }
 

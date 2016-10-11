@@ -89,7 +89,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Asset\AssetRepository.cs" />
+    <Compile Include="Asset\AssetDefinitionRepository.cs" />
+    <Compile Include="Asset\AssetParsedBlockRepository.cs" />
+    <Compile Include="Asset\ParseBlockCommandProducer.cs" />
     <Compile Include="Asset\UpdateAssetDataCommandProducer.cs" />
     <Compile Include="AzureRepoFactories.cs" />
     <Compile Include="Binders\AzureRepositoriesBinder.cs" />
@@ -117,9 +119,7 @@
       <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Grab\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -36,7 +36,7 @@ namespace Core.Asset
          string AssetDefinitionUrl { get; }
     }
 
-    public interface IAssetRepository
+    public interface IAssetDefinitionRepository
     {
         Task<IEnumerable<IAsset>> GetAllAsync();
         Task InsertOrReplaceAsync(params IAsset[] assets);

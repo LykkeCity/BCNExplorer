@@ -65,6 +65,14 @@
       <HintPath>..\packages\WindowsAzure.Storage.7.2.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NBitcoin, Version=3.0.0.51, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NBitcoin.3.0.0.51\lib\net45\NBitcoin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NBitcoin.Indexer, Version=2.0.7.16, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NBitcoin.Indexer.2.0.7.16\lib\net45\NBitcoin.Indexer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NCrontab, Version=2.0.16709.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ncrontab.2.0.0\lib\net20\NCrontab.dll</HintPath>
       <Private>True</Private>
@@ -94,8 +102,9 @@
     <Compile Include="Functions\UpdateAssetDataFunctions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Functions\AssetCreatorFunctions.cs" />
-    <Compile Include="Functions\AssetsFunctionsBinder.cs" />
+    <Compile Include="Functions\ParseBlocksFunctions.cs" />
+    <Compile Include="Binders\AssetsFunctionsBinder.cs" />
+    <Compile Include="QueueHandlers\ParseBlockCommandQueueConsumer.cs" />
     <Compile Include="QueueHandlers\UpdateAssetDataCommandQueueConsumer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +137,7 @@
       <Name>Providers</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -4,9 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AzureStorage.Queue;
+using Common.Log;
 
 namespace AzureRepositories.Asset
 {
+    public interface IAssetDataQueueReader : IQueueReader
+    {
+        
+    }
+
+    public class AssetDataQueueReader : QueueReader, IAssetDataQueueReader
+    {
+        public AssetDataQueueReader(IQueueExt queueExt, string componentName, int periodMs, ILog log) : base(queueExt, componentName, periodMs, log)
+        {
+        }
+    }
+
     public class UpdateAssetDataContext
     {
         public const string Id = "CreateAssetDataContext";

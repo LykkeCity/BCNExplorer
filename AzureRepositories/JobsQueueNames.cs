@@ -2,6 +2,7 @@
 {
     public class JobsQueueNames
     {
-        public const string UpdateAssetDataTasks = "updateassetdata";
+        public const string UpdateAssetDataCommands = "updateassetdatacommand";
+        public const string ParseBlockCommands = "parseblockcommands";
     }
 }
