@@ -99,10 +99,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Functions\UpdateAssetDataFunctions.cs" />
+    <Compile Include="TimerFunctions\UpdateAssetDataFunctions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Functions\ParseBlocksFunctions.cs" />
+    <Compile Include="TimerFunctions\ParseBlocksFunctions.cs" />
     <Compile Include="Binders\AssetsFunctionsBinder.cs" />
     <Compile Include="QueueHandlers\ParseBlockCommandQueueConsumer.cs" />
     <Compile Include="QueueHandlers\UpdateAssetDataCommandQueueConsumer.cs" />

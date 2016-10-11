@@ -6,7 +6,7 @@ using Common.Log;
 using Core.Asset;
 using Microsoft.Azure.WebJobs;
 
-namespace AssetScanner.Functions
+namespace AssetScanner.TimerFunctions
 {
     public class UpdateAssetDataFunctions
     {
@@ -25,10 +25,12 @@ namespace AssetScanner.Functions
         {
             var assetsToUpdate = await _assetDefinitionRepository.GetAllAsync();
 
-            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", assetsToUpdate.ToJson(), "Update assets started");
+            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", assetsToUpdate.ToJson(), "Started");
 
             await _assetDataCommandProducer.CreateUpdateAssetDataCommand(
                     assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray());
+
+            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", assetsToUpdate.ToJson(), "Done");
         }
     }
 }

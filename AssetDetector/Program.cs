@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using AssetScanner.Binders;
-using AssetScanner.Functions;
 using AssetScanner.QueueHandlers;
 using AzureRepositories;
 using AzureRepositories.Binders;

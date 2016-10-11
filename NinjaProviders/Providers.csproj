@@ -85,6 +85,7 @@
     <Compile Include="Contracts\Ninja\TransactionContract.cs" />
     <Compile Include="Contracts\Ninja\AddressContract.cs" />
     <Compile Include="Contracts\Ninja\WhatIsItContract.cs" />
+    <Compile Include="Helpers\BlockHelper.cs" />
     <Compile Include="Helpers\IndexerClientHelper.cs" />
     <Compile Include="Helpers\TransactionHelper.cs" />
     <Compile Include="Providers\Asset\AssetIndexer.cs" />

@@ -1,5 +1,5 @@
-﻿using AssetScanner.Functions;
-using AssetScanner.QueueHandlers;
+﻿using AssetScanner.QueueHandlers;
+using AssetScanner.TimerFunctions;
 using AzureRepositories;
 using AzureRepositories.Asset;
 using AzureStorage.Queue;

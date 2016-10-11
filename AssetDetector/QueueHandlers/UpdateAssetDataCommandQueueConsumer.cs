@@ -40,10 +40,12 @@ namespace AssetScanner.QueueHandlers
 
         public async Task UpdateAssetData(UpdateAssetDataContext context)
         {
-            await _log.WriteInfo("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), $"Update {context.AssetDefinitionUrl} started {DateTime.Now} ");
+            await _log.WriteInfo("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), "Started");
 
             var assetData = await _assetReader.ReadAssetDataAsync(context.AssetDefinitionUrl);
             await _assetDefinitionRepository.InsertOrReplaceAsync(AssetDefinition.Create(assetData));
+            
+            await _log.WriteInfo("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), "Done");
         }
 
         public void Start()
