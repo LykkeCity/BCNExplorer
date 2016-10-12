@@ -38,7 +38,7 @@ namespace AzureRepositories.Asset
         public async Task CreateParseBlockCommand(params string[] blockHashs)
         {
             var putInQueryTask = new List<Task>();
-
+            
             foreach (var blockHash in blockHashs)
             {
                 putInQueryTask.Add(_queueExt.PutMessageAsync(new QueueRequestModel<ParseBlockContext>

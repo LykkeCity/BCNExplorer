@@ -36,7 +36,7 @@ namespace AssetScanner.Binders
         public static ParseBlockQueueReader CreateUpdateParseBlockCommandQueueReader(BaseSettings baseSettings, ILog log)
         {
             var updateAssetDataQueue = new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.ParseBlockCommands);
-            return new ParseBlockQueueReader(updateAssetDataQueue, "ParseBlockQueueReader", 1 * 1000 * 60, log);
+            return new ParseBlockQueueReader(updateAssetDataQueue, "ParseBlockQueueReader", 5 * 1000, log);
         }
         
     }

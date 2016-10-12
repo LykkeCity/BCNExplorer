@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Core.Asset
@@ -33,7 +30,37 @@ namespace Core.Asset
         string ImageUrl { get; }
 
         string Version { get; }
-         string AssetDefinitionUrl { get; }
+        string AssetDefinitionUrl { get; }
+    }
+
+    public class Compare : IEqualityComparer<IAsset>
+    {
+        public bool Equals(IAsset x, IAsset y)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetHashCode(IAsset obj)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public sealed class AssetDefinitionUrlEqualityComparer : IEqualityComparer<IAsset>
+    {
+        public bool Equals(IAsset x, IAsset y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return string.Equals(x.AssetDefinitionUrl, y.AssetDefinitionUrl);
+        }
+
+        public int GetHashCode(IAsset obj)
+        {
+            return (obj.AssetDefinitionUrl != null ? obj.AssetDefinitionUrl.GetHashCode() : 0);
+        }
     }
 
     public interface IAssetDefinitionRepository

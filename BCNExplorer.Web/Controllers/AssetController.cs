@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using Providers.Providers.Asset;
@@ -25,5 +26,11 @@ namespace BCNExplorer.Web.Controllers
 
             return View("NotFound");
         }
+        [Route("assets")]
+        public async Task<ActionResult> AssetDirectiory()
+        {
+            var result = (await _assetProvider.GetAssetsAsync()).Select(AssetViewModel.Create);
+            return View(result);
+        } 
     }
 }

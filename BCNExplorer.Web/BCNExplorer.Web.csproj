@@ -270,6 +270,7 @@
     <Content Include="Views\Address\Index.cshtml" />
     <Content Include="Views\Asset\Index.cshtml" />
     <Content Include="Views\Search\NotFound.cshtml" />
+    <Content Include="Views\Asset\AssetDirectiory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

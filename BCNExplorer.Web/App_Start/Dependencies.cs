@@ -24,9 +24,7 @@ namespace BCNExplorer.Web.App_Start
         public static IDependencyResolver CreateDepencencyResolver()
         {
             var dr = new MyDependencyResolver();
-
-
-
+            
             var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
             settings.NinjaUrl = settings.NinjaUrl.AddLastSymbolIfNotExists('/');
 

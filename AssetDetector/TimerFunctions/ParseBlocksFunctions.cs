@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AzureRepositories.Asset;
 using Common;
 using Common.Log;
+using Core.Asset;
 using Microsoft.Azure.WebJobs;
 using NBitcoin;
 using NBitcoin.Indexer;
@@ -15,36 +18,58 @@ namespace AssetScanner.TimerFunctions
         private readonly ILog _log;
         private readonly ParseBlockCommandProducer _parseBlockCommandProducer;
         private readonly IndexerClient _indexerClient;
+        private readonly IAssetParsedBlockRepository _assetParsedBlockRepository;
 
-        public ParseBlocksFunctions(ILog log, ParseBlockCommandProducer parseBlockCommandProducer, IndexerClient indexerClient)
+        public ParseBlocksFunctions(ILog log, ParseBlockCommandProducer parseBlockCommandProducer, IndexerClient indexerClient, IAssetParsedBlockRepository assetParsedBlockRepository)
         {
             _log = log;
             _parseBlockCommandProducer = parseBlockCommandProducer;
             _indexerClient = indexerClient;
+            _assetParsedBlockRepository = assetParsedBlockRepository;
         }
 
-        public async Task ParseLast([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
+        public async Task ParseLast([TimerTrigger("23:10:00", RunOnStartup = true)] TimerInfo timer)
         {
             await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Started");
 
-            var blockPtr =
-                _indexerClient.GetBestBlock().Header;
+            var blockPtr = _indexerClient.GetBestBlock().Header;
 
-            try
-            {
-                while (blockPtr != null)
-                {
-                    await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
-                    blockPtr = _indexerClient.GetBlock(blockPtr.HashPrevBlock).Header;
-                }
+            var chain = _indexerClient.GetMainChain();
 
-                await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Done");
-            }
-            catch (Exception e)
+            var blockIds = new List<string>();
+
+
+            for (int i = 0; i<= chain.Height; i++)
             {
-                await _log.WriteError("ParseBlocksFunctions", "ParseLast", (new {blockHash = blockPtr.GetBlockId() }).ToJson(), e);
-                throw;
+                blockIds.Add(chain.GetBlock(i).Header.GetBlockId());
             }
+
+            var chunkSize = 100;
+
+            for (int i = 0; blockIds.Skip(i* chunkSize).Take(chunkSize).Any(); i++)
+            {
+                await _parseBlockCommandProducer.CreateParseBlockCommand(blockIds.Skip(i * chunkSize).Take(chunkSize).ToArray());
+            }
+
+           
+
+
+            //try
+            //{
+            //    while (blockPtr != null && !(await _assetParsedBlockRepository.IsBlockExistsAsync(AssetParsedBlock.Create(blockPtr.GetBlockId()))))
+            //    {
+            //        await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
+
+            //        blockPtr = _indexerClient.GetBlock(blockPtr.HashPrevBlock).Header;
+            //    }
+
+            //    await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Done");
+            //}
+            //catch (Exception e)
+            //{
+            //    await _log.WriteError("ParseBlocksFunctions", "ParseLast", (new {blockHash = blockPtr.GetBlockId() }).ToJson(), e);
+            //    throw;
+            //}
         }
     }
 }

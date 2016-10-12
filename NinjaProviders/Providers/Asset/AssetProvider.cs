@@ -25,6 +25,11 @@ namespace Providers.Providers.Asset
         public async Task<IDictionary<string, IAsset>> GetAssetDictionaryAsync()
         {
             return await _cacheDictionary.GetDictionaryAsync();
-        } 
+        }
+
+        public async Task<IEnumerable<IAsset>> GetAssetsAsync()
+        {
+            return (await _cacheDictionary.GetDictionaryAsync()).Values.Distinct(new AssetDefinitionUrlEqualityComparer());
+        }
     }
 }

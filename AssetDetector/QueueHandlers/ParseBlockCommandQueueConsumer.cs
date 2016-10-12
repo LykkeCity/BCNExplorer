@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using AzureRepositories.Asset;
 using AzureStorage.Queue;
@@ -7,6 +9,7 @@ using Common.Log;
 using Core.Asset;
 using NBitcoin;
 using NBitcoin.Indexer;
+using NBitcoin.OpenAsset;
 using Providers.Helpers;
 
 namespace AssetScanner.QueueHandlers
@@ -51,7 +54,8 @@ namespace AssetScanner.QueueHandlers
             try
             {
                 var block = _indexerClient.GetBlock(context.BlockHash);
-                foreach (var transaction in block.Transactions)
+
+                foreach (var transaction in block.Transactions.Where(p => p.HasValidColoredMarker()))
                 {
                     var assetDefUrl = transaction.TryGetAssetDefinitionUrl();
 
