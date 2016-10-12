@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Web.Mvc;
 using AzureRepositories;
+using AzureRepositories.Binders;
 using AzureRepositories.Log;
 using AzureStorage.Tables;
 using Common;
@@ -35,7 +36,9 @@ namespace BCNExplorer.Web.App_Start
             dr.IoC.Register<ILog>(log);
             dr.IoC.Register(settings);
             
+            dr.IoC.BindAzureRepositories(settings, log);
             dr.IoC.BindProviders(settings, log);
+
 
             return dr;
         }

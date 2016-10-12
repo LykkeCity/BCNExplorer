@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<AssetViewModel>
 @{
-    ViewBag.Title = "AssetDirectiory";
+    ViewBag.Title = "Asset Directiory";
 }
 
 
@@ -23,7 +23,7 @@
             @foreach (var asset in Model.OrderBy(p => p.Name))
             {
                 <tr>
-                    <td><img src="@asset.IconUrl" /></td>
+                    <td><img class="asset-icon" src="@asset.IconUrl" /></td>
                     <td><a href="@Url.Action("Index", new {id=asset.AssetIds.FirstOrDefault()})">@asset.Name</a></td>
                     <td>@asset.Issuer</td>
                     <td>@asset.NameShort</td>

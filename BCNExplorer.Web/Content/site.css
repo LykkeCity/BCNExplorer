@@ -865,3 +865,7 @@ a {
 .assets-group-header {
     margin-top: 15px;  
 }
+
+.asset-icon {
+    max-width: 50px;
+}

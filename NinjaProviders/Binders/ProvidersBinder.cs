@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common;
+﻿using Common;
 using Common.IocContainer;
 using Common.Log;
 using Core.Asset;
 using Core.Settings;
-using NBitcoin.Indexer;
 using Providers.Binders;
 using Providers.BlockChainReader;
-using Providers.Contracts.Asset;
-using Providers.Providers;
 using Providers.Providers.Asset;
 using Providers.Providers.Common;
 using Providers.Providers.Ninja;
@@ -42,7 +34,7 @@ namespace Providers
 
             ioc.RegisterFactorySingleTone(() =>
                 new CachedDataDictionary<string, IAsset>(
-                    async () => AssetIndexer.IndexAssets(await ioc.GetObject<AssetReader>().ReadAssetDataAsync(Constants.AssetDefinitonUrls))
+                    async () => AssetIndexer.IndexAssets(await ioc.GetObject<IAssetDefinitionRepository>().GetAllAsync())
                     , validDataInSeconds: 1 * 60 * 60));
 
             ioc.RegisterPerCall<AssetProvider>();
