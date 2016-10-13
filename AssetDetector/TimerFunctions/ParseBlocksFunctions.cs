@@ -28,7 +28,7 @@ namespace AssetScanner.TimerFunctions
             _assetParsedBlockRepository = assetParsedBlockRepository;
         }
 
-        public async Task ParseLast([TimerTrigger("23:10:00", RunOnStartup = true)] TimerInfo timer)
+        public async Task ParseLast([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
         {
             await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Started");
 
