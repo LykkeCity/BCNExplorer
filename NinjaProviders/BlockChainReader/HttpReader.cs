@@ -12,11 +12,6 @@ namespace Providers.BlockChainReader
     {
         public async Task<string> GetAsync(string absUrl)
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-                | SecurityProtocolType.Tls11
-                | SecurityProtocolType.Tls12
-                | SecurityProtocolType.Ssl3;
-
             try
             {
                 var webRequest = (HttpWebRequest)WebRequest.Create(absUrl);
