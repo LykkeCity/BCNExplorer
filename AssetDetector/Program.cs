@@ -38,8 +38,8 @@ namespace AssetScanner
                 var updateAssetDataCommandQueueConsumer = container.IoC.CreateInstance<UpdateAssetDataCommandQueueConsumer>();
                 updateAssetDataCommandQueueConsumer.Start();
 
-                //var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBlockCommandQueueConsumer>();
-                //parseBlockCommandQueueConsumer.Start();
+                var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBlockCommandQueueConsumer>();
+                parseBlockCommandQueueConsumer.Start();
 
                 var config = new JobHostConfiguration
                 {
