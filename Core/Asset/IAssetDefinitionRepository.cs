@@ -66,6 +66,10 @@ namespace Core.Asset
     public interface IAssetDefinitionRepository
     {
         Task<IEnumerable<IAsset>> GetAllAsync();
+        Task<IEnumerable<IAsset>> GetAllEmptyAsync();
         Task InsertOrReplaceAsync(params IAsset[] assets);
+        Task InsertEmptyAsync(string defUrl);
+        Task<bool> IsAssetExistsAsync(string defUrl);
+        Task RemoveEmptyAsync(params string[] defUrls);
     }
 }

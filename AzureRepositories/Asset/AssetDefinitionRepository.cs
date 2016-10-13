@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
@@ -14,7 +15,12 @@ namespace AzureRepositories.Asset
         {
             return "Asset";
         }
-        
+
+        public static string GenerateEmptyPartitionKey()
+        {
+            return "Failed Create Asset";
+        }
+
         public static string GenerateRowKey(IEnumerable<string> assetIds )
         {
             return string.Join("_", assetIds);
@@ -58,6 +64,16 @@ namespace AzureRepositories.Asset
                 AssetIds = data.AssetIds.ToJson()
             };
         }
+
+        public static AssetDefinitionEntity CreateEmpty(string url)
+        {
+            return new AssetDefinitionEntity
+            {
+                PartitionKey = GenerateEmptyPartitionKey(),
+                RowKey = Guid.NewGuid().ToString(),
+                AssetDefinitionUrl = url
+            };
+        }
     }
 
     public class AssetDefinitionRepository:IAssetDefinitionRepository
@@ -69,15 +85,37 @@ namespace AzureRepositories.Asset
             _assetTableStorage = assetTableStorage;
         }
 
+        public async Task<IEnumerable<IAsset>> GetAllEmptyAsync()
+        {
+            return await _assetTableStorage.GetDataAsync(AssetDefinitionEntity.GenerateEmptyPartitionKey());
+        }
+
         public async Task InsertOrReplaceAsync(IAsset[] assets)
         {
             await _assetTableStorage.InsertOrReplaceBatchAsync(assets.Select(AssetDefinitionEntity.Create));
+        }
+
+        public async Task InsertEmptyAsync(string defUrl)
+        {
+            await _assetTableStorage.InsertOrReplaceAsync(AssetDefinitionEntity.CreateEmpty(defUrl));
         }
 
         public async Task<IEnumerable<IAsset>> GetAllAsync()
         {
             return await _assetTableStorage.GetDataAsync(AssetDefinitionEntity.GeneratePartitionKey());
         }
-    }
 
+        public async Task<bool> IsAssetExistsAsync(string defUrl)
+        {
+            return (await _assetTableStorage.GetDataAsync(p => p.AssetDefinitionUrl == defUrl)).Any();
+        }
+
+        public async Task RemoveEmptyAsync(params string[] defUrls)
+        {
+            foreach (var defUrl in defUrls)
+            {
+                await _assetTableStorage.DeleteAsync(AssetDefinitionEntity.CreateEmpty(defUrl));
+            }
+        } 
+    }
 }

@@ -21,16 +21,31 @@ namespace AssetScanner.TimerFunctions
             _assetDataCommandProducer = assetDataCommandProducer;
         }
 
-        public async Task UpdateAssets([TimerTrigger("00:30:00", RunOnStartup = true)] TimerInfo timer)
+        //public async Task UpdateAssets([TimerTrigger("00:30:00", RunOnStartup = true)] TimerInfo timer)
+        //{
+        //    var assetsToUpdate = await _assetDefinitionRepository.GetAllAsync();
+
+        //    await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", assetsToUpdate.ToJson(), "Started");
+
+        //    var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();
+
+        //    await _assetDataCommandProducer.CreateUpdateAssetDataCommand(updUrls);
+
+        //    await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", assetsToUpdate.ToJson(), "Done");
+        //}
+
+        public async Task UpdateEmptyAssets([TimerTrigger("00:30:00", RunOnStartup = true)] TimerInfo timer)
         {
-            var assetsToUpdate = await _assetDefinitionRepository.GetAllAsync();
+            var assetsToUpdate = await _assetDefinitionRepository.GetAllEmptyAsync();
+            
+            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateEmptyAssets", assetsToUpdate.ToJson(), "Started");
 
-            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", assetsToUpdate.ToJson(), "Started");
+            var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();
 
-            await _assetDataCommandProducer.CreateUpdateAssetDataCommand(
-                    assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray());
+            await _assetDataCommandProducer.CreateUpdateAssetDataCommand(updUrls);
+            await _assetDefinitionRepository.RemoveEmptyAsync(updUrls);
 
-            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", assetsToUpdate.ToJson(), "Done");
+            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateEmptyAssets", assetsToUpdate.ToJson(), "Done");
         }
     }
 }

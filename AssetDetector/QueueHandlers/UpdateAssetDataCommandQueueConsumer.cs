@@ -40,12 +40,25 @@ namespace AssetScanner.QueueHandlers
 
         public async Task UpdateAssetData(UpdateAssetDataContext context)
         {
-            await _log.WriteInfo("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), "Started");
+            try
+            {
+                await _log.WriteInfo("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), "Started");
 
-            var assetData = await _assetReader.ReadAssetDataAsync(context.AssetDefinitionUrl);
-            await _assetDefinitionRepository.InsertOrReplaceAsync(AssetDefinition.Create(assetData));
-            
-            await _log.WriteInfo("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), "Done");
+                var assetData = await _assetReader.ReadAssetDataAsync(context.AssetDefinitionUrl);
+                await _assetDefinitionRepository.InsertOrReplaceAsync(AssetDefinition.Create(assetData));
+
+                await _log.WriteInfo("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), "Done");
+            }
+            catch (Exception e)
+            {
+                await _log.WriteError("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), e);
+
+                if (!await _assetDefinitionRepository.IsAssetExistsAsync(context.AssetDefinitionUrl))
+                {
+                    await _assetDefinitionRepository.InsertEmptyAsync(context.AssetDefinitionUrl);
+                }
+            }
+
         }
 
         public void Start()

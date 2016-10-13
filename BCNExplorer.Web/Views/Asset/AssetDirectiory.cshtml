@@ -22,7 +22,7 @@
                 @foreach (var asset in Model.OrderBy(p => p.Name))
             {
                     <tr>
-                        <td><img class="asset-icon" src="@asset.IconUrl" /></td>
+                        <td><img class="asset-icon" src="@(asset.IconUrl??"/images/placeholder.png")" /></td>
                         <td><a href="@Url.Action("Index", new {id=asset.AssetIds.FirstOrDefault()})">@asset.Name</a></td>
                         <td>@asset.Issuer</td>
                         <td>@asset.NameShort</td>

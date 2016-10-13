@@ -30,26 +30,26 @@ namespace AssetScanner.TimerFunctions
 
         public async Task ParseLast([TimerTrigger("23:10:00", RunOnStartup = true)] TimerInfo timer)
         {
-            await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Started");
+            //await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Started");
 
-            var blockPtr = _indexerClient.GetBestBlock().Header;
+            //var blockPtr = _indexerClient.GetBestBlock().Header;
 
-            var chain = _indexerClient.GetMainChain();
+            //var chain = _indexerClient.GetMainChain();
 
-            var blockIds = new List<string>();
+            //var blockIds = new List<string>();
 
 
-            for (int i = 0; i<= chain.Height; i++)
-            {
-                blockIds.Add(chain.GetBlock(i).Header.GetBlockId());
-            }
+            //for (int i = 0; i<= chain.Height; i++)
+            //{
+            //    blockIds.Add(chain.GetBlock(i).Header.GetBlockId());
+            //}
 
-            var chunkSize = 100;
+            //var chunkSize = 100;
 
-            for (int i = 0; blockIds.Skip(i* chunkSize).Take(chunkSize).Any(); i++)
-            {
-                await _parseBlockCommandProducer.CreateParseBlockCommand(blockIds.Skip(i * chunkSize).Take(chunkSize).ToArray());
-            }
+            //for (int i = 0; blockIds.Skip(i* chunkSize).Take(chunkSize).Any(); i++)
+            //{
+            //    await _parseBlockCommandProducer.CreateParseBlockCommand(blockIds.Skip(i * chunkSize).Take(chunkSize).ToArray());
+            //}
 
            
 
