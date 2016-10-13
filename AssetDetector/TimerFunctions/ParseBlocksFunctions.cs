@@ -30,46 +30,26 @@ namespace AssetScanner.TimerFunctions
 
         public async Task ParseLast([TimerTrigger("23:10:00", RunOnStartup = true)] TimerInfo timer)
         {
-            //await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Started");
+            await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Started");
 
-            //var blockPtr = _indexerClient.GetBestBlock().Header;
+            var blockPtr = _indexerClient.GetBestBlock().Header;
 
-            //var chain = _indexerClient.GetMainChain();
+            try
+            {
+                while (blockPtr != null && !(await _assetParsedBlockRepository.IsBlockExistsAsync(AssetParsedBlock.Create(blockPtr.GetBlockId()))))
+                {
+                    await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
 
-            //var blockIds = new List<string>();
+                    blockPtr = _indexerClient.GetBlock(blockPtr.HashPrevBlock).Header;
+                }
 
-
-            //for (int i = 0; i<= chain.Height; i++)
-            //{
-            //    blockIds.Add(chain.GetBlock(i).Header.GetBlockId());
-            //}
-
-            //var chunkSize = 100;
-
-            //for (int i = 0; blockIds.Skip(i* chunkSize).Take(chunkSize).Any(); i++)
-            //{
-            //    await _parseBlockCommandProducer.CreateParseBlockCommand(blockIds.Skip(i * chunkSize).Take(chunkSize).ToArray());
-            //}
-
-           
-
-
-            //try
-            //{
-            //    while (blockPtr != null && !(await _assetParsedBlockRepository.IsBlockExistsAsync(AssetParsedBlock.Create(blockPtr.GetBlockId()))))
-            //    {
-            //        await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
-
-            //        blockPtr = _indexerClient.GetBlock(blockPtr.HashPrevBlock).Header;
-            //    }
-
-            //    await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Done");
-            //}
-            //catch (Exception e)
-            //{
-            //    await _log.WriteError("ParseBlocksFunctions", "ParseLast", (new {blockHash = blockPtr.GetBlockId() }).ToJson(), e);
-            //    throw;
-            //}
+                await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Done");
+            }
+            catch (Exception e)
+            {
+                await _log.WriteError("ParseBlocksFunctions", "ParseLast", (new { blockHash = blockPtr.GetBlockId() }).ToJson(), e);
+                throw;
+            }
         }
     }
 }
