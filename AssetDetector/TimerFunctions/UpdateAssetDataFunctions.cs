@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AzureRepositories.Asset;
 using Common;
@@ -23,29 +24,36 @@ namespace AssetScanner.TimerFunctions
 
         public async Task UpdateAssets([TimerTrigger("00:30:00", RunOnStartup = true)] TimerInfo timer)
         {
-            var assetsToUpdate = await _assetDefinitionRepository.GetAllAsync();
+            try
+            {
+                var assetsToUpdate = await _assetDefinitionRepository.GetAllAsync();
 
-            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", assetsToUpdate.ToJson(), "Started");
+                await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", null, "Started");
 
-            var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();
+                var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();
 
-            await _assetDataCommandProducer.CreateUpdateAssetDataCommand(updUrls);
+                await _assetDataCommandProducer.CreateUpdateAssetDataCommand(updUrls);
 
-            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", assetsToUpdate.ToJson(), "Done");
+                await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", null, "Done");
+            }
+            catch (Exception e)
+            {
+                await _log.WriteError("UpdateAssetDataFunctions", "UpdateAssets", null, e);
+            }
         }
 
-        public async Task UpdateEmptyAssets([TimerTrigger("01:00:00", RunOnStartup = true)] TimerInfo timer)
-        {
-            var assetsToUpdate = await _assetDefinitionRepository.GetAllEmptyAsync();
+        //public async Task UpdateEmptyAssets([TimerTrigger("01:00:00", RunOnStartup = true)] TimerInfo timer)
+        //{
+        //    var assetsToUpdate = await _assetDefinitionRepository.GetAllEmptyAsync();
             
-            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateEmptyAssets", assetsToUpdate.ToJson(), "Started");
+        //    await _log.WriteInfo("AssetUpdaterFunctions", "UpdateEmptyAssets", assetsToUpdate.ToJson(), "Started");
 
-            var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();
+        //    var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();
 
-            await _assetDataCommandProducer.CreateUpdateAssetDataCommand(updUrls);
-            await _assetDefinitionRepository.RemoveEmptyAsync(updUrls);
+        //    await _assetDataCommandProducer.CreateUpdateAssetDataCommand(updUrls);
+        //    await _assetDefinitionRepository.RemoveEmptyAsync(updUrls);
 
-            await _log.WriteInfo("AssetUpdaterFunctions", "UpdateEmptyAssets", assetsToUpdate.ToJson(), "Done");
-        }
+        //    await _log.WriteInfo("AssetUpdaterFunctions", "UpdateEmptyAssets", assetsToUpdate.ToJson(), "Done");
+        //}
     }
 }
