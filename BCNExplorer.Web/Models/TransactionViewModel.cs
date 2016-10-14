@@ -164,12 +164,12 @@ namespace BCNExplorer.Web.Models
 
                 public static In Create(NinjaTransaction.InOut sourceIn, int divisibility,  IEnumerable<NinjaTransaction.InOut> outs, string shortName)
                 {
-                    var l = outs.Select(itm => itm.Quantity - sourceIn.Quantity);
-                    var def = l.FirstOrDefault();
-                    var quantity = (def != 0 ? def : sourceIn.Quantity)*(-1);
+                    //var l = outs.Select(itm => itm.Quantity - sourceIn.Quantity);
+                    //var def = l.FirstOrDefault();
+                    //var quantity = (def != 0 ? def : sourceIn.Quantity)*(-1);
 
                     return new In(
-                        value: BitcoinUtils.CalculateColoredAssetQuantity(quantity, divisibility), 
+                        value: BitcoinUtils.CalculateColoredAssetQuantity(sourceIn.Quantity *(-1), divisibility), 
                         address: sourceIn.Address, 
                         previousTransactionId: sourceIn.TransactionId,
                         shortName: shortName);
