@@ -69,7 +69,7 @@ namespace AssetScanner
 
         private static void InitContainer(DResolver container, BaseSettings settings, ILog log)
         {
-            log.WriteInfo("InitContainer", "App start", null, $"BaseSettings : {settings.ToJson()}").Wait();
+            log.WriteInfo("InitContainer", "Program", null, $"BaseSettings : {settings.ToJson()}").Wait();
             container.IoC.Register<ILog>(log);
 
             container.IoC.BindProviders(settings, log);
