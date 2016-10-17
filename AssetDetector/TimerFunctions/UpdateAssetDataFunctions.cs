@@ -22,7 +22,7 @@ namespace AssetScanner.TimerFunctions
             _assetDataCommandProducer = assetDataCommandProducer;
         }
 
-        public async Task UpdateAssets([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
+        public async Task UpdateAssets([TimerTrigger("00:40:00", RunOnStartup = true)] TimerInfo timer)
         {
             try
             {
