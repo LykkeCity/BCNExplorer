@@ -244,7 +244,7 @@ namespace BCNExplorer.Web.Models
                 Block = BlockViewModel.Create(ninjaTransaction.Block),
                 AssetsCount = ninjaTransaction.TransactionsByAssets.Count(p => p.IsColored),
                 IsConfirmed = ninjaTransaction.Block != null,
-                Bitcoin = BitcoinAsset.Create(ninjaTransaction.Fees, ninjaTransaction.IsCoinBase, bc.TransactionIn, bc.TransactionsOut ),
+                Bitcoin = BitcoinAsset.Create(ninjaTransaction.Fees, ninjaTransaction.IsCoinBase, bc.TransactionIn.Union(colored.SelectMany(p => p.TransactionIn)), bc.TransactionsOut.Union(colored.SelectMany(p=>p.TransactionsOut)) ),
                 ColoredAssets = colored.Select(p => ColoredAsset.Create(p, assetDic))
             };
             
