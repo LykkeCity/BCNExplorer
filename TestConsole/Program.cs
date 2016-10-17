@@ -10,7 +10,10 @@ using Common.IocContainer;
 using Common.Log;
 using Core.Settings;
 using JobsCommon;
+using NBitcoin;
+using NBitcoin.Indexer;
 using Providers;
+using Providers.Helpers;
 
 namespace TestConsole
 {
@@ -22,29 +25,63 @@ namespace TestConsole
      
             var container = new IoC();
             InitContainer(container, settings, new LogToConsole());
-            var detailsUrls = GetDetailsUrls().Result;
 
-            var res = GetDefUrls(detailsUrls).Result;
+            var indexerClient = container.GetObject<IndexerClient>();
 
-            var defUrls = res.Ok.ToList();
-            var failedUrls = res.Failed;
-            while (failedUrls.Any())
+            //var tr = indexerClient.GetTransaction(uint256.Parse("e7f7ee1a7c2e915b236f788c7230faf9cd06e95988996111396345fe9ac4bedd"));
+
+
+            var ordBalances = indexerClient.GetOrderedBalance(new BitcoinColoredAddress("akBGHM9p2SN5NoqvUAqGaRdZmMFjF88MViR")).ToArray();
+
+            var alTx = new List<ColoredChange>();
+
+            foreach (var bl in ordBalances)
             {
-                var t = GetDefUrls(failedUrls).Result;
-                defUrls.AddRange(t.Ok);
+                var deltaChanges = bl.GetColoredChanges(Network.Main);
 
-                failedUrls = t.Failed;
+                Console.WriteLine("TxId: {0} ", bl.TransactionId);
+                Console.WriteLine();
+
+                foreach (var coloredChange in deltaChanges)
+                {
+                    Console.WriteLine("AssetId {0}, Quantity {1}", coloredChange.AssetId, coloredChange.Quantity);
+                    alTx.Add(coloredChange);
+                }
+
+                Console.WriteLine("-----------");
+
+
             }
-            
-            var cmdProducer = container.GetObject<AssetDataCommandProducer>();
-            cmdProducer.CreateUpdateAssetDataCommand(defUrls.ToArray()).Wait();
 
+            foreach (var assetGrouping in alTx.GroupBy(p=>p.AssetId))
+            {
+                Console.WriteLine("Asset {0} Sum {1}", assetGrouping.Key, assetGrouping.Sum(p=>p.Quantity));
+            }
 
-            Console.WriteLine("All done");
 
             Console.ReadLine();
+        }
 
+        private static void ImportAssets()
+        {
+            //var detailsUrls = GetDetailsUrls().Result;
 
+            //var res = GetDefUrls(detailsUrls).Result;
+
+            //var defUrls = res.Ok.ToList();
+            //var failedUrls = res.Failed;
+            //while (failedUrls.Any())
+            //{
+            //    var t = GetDefUrls(failedUrls).Result;
+            //    defUrls.AddRange(t.Ok);
+
+            //    failedUrls = t.Failed;
+            //}
+
+            //var cmdProducer = container.GetObject<AssetDataCommandProducer>();
+            //cmdProducer.CreateUpdateAssetDataCommand(defUrls.ToArray()).Wait();
+
+            //Console.WriteLine("All done");
         }
 
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)

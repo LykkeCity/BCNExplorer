@@ -18,7 +18,7 @@ namespace Providers.Providers.Ninja
             _blockChainReader = blockChainReader;
         }
 
-        public async Task<NinjaTransaction> GetAsync(string id)
+        public async Task<NinjaTransaction> GetAsync(string id, bool calculateInputsWithReturnedChange = true)
         {
             var responce = await _blockChainReader.GetAsync<TransactionContract>($"transactions/{id}?colored=true");
             if (responce == null)
@@ -33,14 +33,17 @@ namespace Providers.Providers.Ninja
 
             #region CalculateInputsWithReturnedChange
 
-            foreach (var input in inputs.Where(inp => outputs.Any(x => x.Address == inp.Address)))
+            if (calculateInputsWithReturnedChange)
             {
-                foreach (var output in outputs.Where(x => x.Address == input.Address && x.AssetId == input.AssetId).ToList())
+                foreach (var input in inputs.Where(inp => outputs.Any(x => x.Address == inp.Address)))
                 {
-                    input.Value -= output.Value;
-                    input.Quantity -= output.Quantity;
+                    foreach (var output in outputs.Where(x => x.Address == input.Address && x.AssetId == input.AssetId).ToList())
+                    {
+                        input.Value -= output.Value;
+                        input.Quantity -= output.Quantity;
 
-                    outputs.Remove(output);
+                        outputs.Remove(output);
+                    }
                 }
             }
 

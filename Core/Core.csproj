@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetBlockChangesContext\IAssetChangesContextRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionRepository.cs" />
     <Compile Include="Asset\IAssetParsedBlockRepository.cs" />
     <Compile Include="GrabDirector\IGrabBlockTask.cs" />
