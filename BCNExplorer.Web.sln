@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobsCommon", "JobsCommon\Jo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{E9662635-933B-403D-9488-FE822BBA6655}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobsHost", "JobsHost\JobsHost.csproj", "{6817FEEB-C5DA-4A8A-91CF-6649ECD7F78D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,14 @@ Global
 		{E9662635-933B-403D-9488-FE822BBA6655}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E9662635-933B-403D-9488-FE822BBA6655}.Release|x64.ActiveCfg = Release|Any CPU
 		{E9662635-933B-403D-9488-FE822BBA6655}.Release|x64.Build.0 = Release|Any CPU
+		{6817FEEB-C5DA-4A8A-91CF-6649ECD7F78D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6817FEEB-C5DA-4A8A-91CF-6649ECD7F78D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6817FEEB-C5DA-4A8A-91CF-6649ECD7F78D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6817FEEB-C5DA-4A8A-91CF-6649ECD7F78D}.Debug|x64.Build.0 = Debug|Any CPU
+		{6817FEEB-C5DA-4A8A-91CF-6649ECD7F78D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6817FEEB-C5DA-4A8A-91CF-6649ECD7F78D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6817FEEB-C5DA-4A8A-91CF-6649ECD7F78D}.Release|x64.ActiveCfg = Release|Any CPU
+		{6817FEEB-C5DA-4A8A-91CF-6649ECD7F78D}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
