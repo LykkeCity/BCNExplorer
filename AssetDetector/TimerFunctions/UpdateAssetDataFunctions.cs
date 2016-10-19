@@ -27,7 +27,7 @@ namespace AssetScanner.TimerFunctions
             try
             {
                 var assetsToUpdate = await _assetDefinitionRepository.GetAllAsync();
-                
+
                 var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();
 
                 await _assetDataCommandProducer.CreateUpdateAssetDataCommand(updUrls);
@@ -43,7 +43,7 @@ namespace AssetScanner.TimerFunctions
         //public async Task UpdateEmptyAssets([TimerTrigger("01:00:00", RunOnStartup = true)] TimerInfo timer)
         //{
         //    var assetsToUpdate = await _assetDefinitionRepository.GetAllEmptyAsync();
-            
+
         //    await _log.WriteInfo("AssetUpdaterFunctions", "UpdateEmptyAssets", assetsToUpdate.ToJson(), "Started");
 
         //    var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();

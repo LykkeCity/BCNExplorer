@@ -99,6 +99,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TimerFunctions\SendMonitorDataFunctions.cs" />
     <Compile Include="TimerFunctions\UpdateAssetDataFunctions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

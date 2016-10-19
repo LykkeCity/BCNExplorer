@@ -30,10 +30,11 @@ namespace AssetScanner.TimerFunctions
 
         public async Task ParseLast([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
         {
-            var blockPtr = _indexerClient.GetBestBlock().Header;
+            BlockHeader blockPtr = null;
 
             try
             {
+                blockPtr = _indexerClient.GetBestBlock().Header;
                 while (blockPtr != null && !(await _assetParsedBlockRepository.IsBlockExistsAsync(AssetParsedBlock.Create(blockPtr.GetBlockId()))))
                 {
                     await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
@@ -45,7 +46,7 @@ namespace AssetScanner.TimerFunctions
             }
             catch (Exception e)
             {
-                await _log.WriteError("ParseBlocksFunctions", "ParseLast", (new { blockHash = blockPtr.GetBlockId() }).ToJson(), e);
+                await _log.WriteError("ParseBlocksFunctions", "ParseLast", (new { blockHash = blockPtr?.GetBlockId() }).ToJson(), e);
                 throw;
             }
         }

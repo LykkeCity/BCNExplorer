@@ -99,6 +99,7 @@
     <Compile Include="JobsQueueNames.cs" />
     <Compile Include="Log\LogToTable.cs" />
     <Compile Include="Log\LogToTableAndConsole.cs" />
+    <Compile Include="Monitoring\ServiceMonitoringRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

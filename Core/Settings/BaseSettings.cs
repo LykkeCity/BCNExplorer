@@ -18,6 +18,7 @@ namespace Core.Settings
     {
         public string LogsConnString { get; set; }
         public string AssetsConnString { get; set; }
+        public string SharedStorageConnString { get; set; }
     }
 
     public class JobsSettings

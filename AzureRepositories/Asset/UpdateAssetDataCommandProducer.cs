@@ -39,20 +39,16 @@ namespace AzureRepositories.Asset
 
         public async Task CreateUpdateAssetDataCommand(params string[] urls)
         {
-            var putInQueryTask = new List<Task>();
-
             foreach (var url in urls)
             {
-                putInQueryTask.Add(_queueExt.PutMessageAsync(new QueueRequestModel<UpdateAssetDataContext>
+                await _queueExt.PutMessageAsync(new QueueRequestModel<UpdateAssetDataContext>
                 {
                     Data = new UpdateAssetDataContext
                     {
                         AssetDefinitionUrl = url
                     }
-                }));
+                });
             }
-
-            await Task.WhenAll(putInQueryTask);
         } 
     }
 }

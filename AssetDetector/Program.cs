@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using AssetScanner.Binders;
 using AssetScanner.QueueHandlers;
+using AssetScanner.TimerFunctions;
 using AzureRepositories;
 using AzureRepositories.Binders;
 using AzureRepositories.Log;
@@ -71,6 +72,8 @@ namespace AssetScanner
         {
             log.WriteInfo("InitContainer", "Program", null, $"BaseSettings : {settings.ToJson()}").Wait();
             container.IoC.Register<ILog>(log);
+
+            container.IoC.RegisterSingleTone<SendMonitorData>();
 
             container.IoC.BindProviders(settings, log);
             container.IoC.Register(settings);
