@@ -27,9 +27,7 @@ namespace AssetScanner.TimerFunctions
             try
             {
                 var assetsToUpdate = await _assetDefinitionRepository.GetAllAsync();
-
-                await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", null, "Started");
-
+                
                 var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();
 
                 await _assetDataCommandProducer.CreateUpdateAssetDataCommand(updUrls);

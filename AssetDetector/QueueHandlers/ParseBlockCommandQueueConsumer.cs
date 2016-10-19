@@ -50,7 +50,6 @@ namespace AssetScanner.QueueHandlers
 
         private async Task ParseBlock(ParseBlockContext context)
         {
-            await _log.WriteInfo("ParseBlockCommandQueueConsumer", "ParseBlock", context.ToJson(), "Started");
             try
             {
                 var block = _indexerClient.GetBlock(context.BlockHash);

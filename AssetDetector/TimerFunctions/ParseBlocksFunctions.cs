@@ -30,8 +30,6 @@ namespace AssetScanner.TimerFunctions
 
         public async Task ParseLast([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
         {
-            await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Started");
-
             var blockPtr = _indexerClient.GetBestBlock().Header;
 
             try
