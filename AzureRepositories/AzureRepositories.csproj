@@ -59,6 +59,10 @@
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.7.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.1\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
@@ -95,6 +99,7 @@
     <Compile Include="Asset\UpdateAssetDataCommandProducer.cs" />
     <Compile Include="AzureRepoFactories.cs" />
     <Compile Include="Binders\AzureRepositoriesBinder.cs" />
+    <Compile Include="CloudConfigurationLoader.cs" />
     <Compile Include="GeneralSettingsReader.cs" />
     <Compile Include="JobsQueueNames.cs" />
     <Compile Include="Log\LogToTable.cs" />
