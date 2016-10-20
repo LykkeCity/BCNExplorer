@@ -29,9 +29,10 @@ namespace BCNExplorer.Web.App_Start
             
             var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
             settings.NinjaUrl = settings.NinjaUrl.AddLastSymbolIfNotExists('/');
-            var log = new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "BCNExplorer.WEB", null));
 
-            GeneralSettingsValidator.Validate(settings, log);
+            GeneralSettingsValidator.Validate(settings);
+
+            var log = new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "BCNExplorer.WEB", null));
 
             dr.IoC.Register<ILog>(log);
             dr.IoC.Register(settings);
