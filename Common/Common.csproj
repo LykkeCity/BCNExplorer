@@ -89,6 +89,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Reactive.Core">
@@ -202,6 +203,8 @@
     <Compile Include="Serializators\JsonSerializator.cs" />
     <Compile Include="UrlUtils.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Validation\GeneralSettingsValidator.cs" />
+    <Compile Include="Validation\ValidationHelper.cs" />
     <Compile Include="WebFormat.cs" />
     <Compile Include="XmlUtils.cs" />
     <Compile Include="XmlXPathReader.cs" />

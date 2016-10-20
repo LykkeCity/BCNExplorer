@@ -9,6 +9,7 @@ using AzureStorage.Tables;
 using Common;
 using Common.IocContainer;
 using Common.Log;
+using Common.Validation;
 using Core.Settings;
 using Providers;
 
@@ -28,10 +29,9 @@ namespace BCNExplorer.Web.App_Start
             
             var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
             settings.NinjaUrl = settings.NinjaUrl.AddLastSymbolIfNotExists('/');
+            var log = new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "BCNExplorer.WEB", null));
 
-            var log =
-                new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "BCNExplorer.WEB",
-                    null));
+            GeneralSettingsValidator.Validate(settings, log);
 
             dr.IoC.Register<ILog>(log);
             dr.IoC.Register(settings);

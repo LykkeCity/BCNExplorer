@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,16 +9,28 @@ namespace Core.Settings
 {
     public class BaseSettings
     {
+        [Required]
         public string NinjaUrl { get; set; }
+
+        [Required]
         public DbSettings Db { get; set; }
+
+        [Required]
         public JobsSettings Jobs { get; set; }
+
+        [Required]
         public NinjaIndexerCredentials NinjaIndexerCredentials { get; set; }
     }
 
     public class DbSettings
     {
+        [Required]
         public string LogsConnString { get; set; }
+
+        [Required]
         public string AssetsConnString { get; set; }
+
+        [Required]
         public string SharedStorageConnString { get; set; }
     }
 
@@ -28,7 +41,10 @@ namespace Core.Settings
 
     public class NinjaIndexerCredentials
     {
+        [Required]
         public string AzureName { get; set; }
+
+        [Required]
         public string AzureKey { get; set; }
     }
 }
