@@ -29,9 +29,7 @@ namespace TestConsole
             var indexerClient = container.GetObject<IndexerClient>();
 
             //var tr = indexerClient.GetTransaction(uint256.Parse("e7f7ee1a7c2e915b236f788c7230faf9cd06e95988996111396345fe9ac4bedd"));
-
-            var chain = indexerClient.GetMainChain();
-            var t = new ConcurrentChain();
+            
             var ordBalances = indexerClient.GetOrderedBalance(new BitcoinColoredAddress("akHtkUURMG3RTbQzgEy58cCaQHKMjQEgngA")).ToArray();
             
             var alTx = new List<ColoredChange>();

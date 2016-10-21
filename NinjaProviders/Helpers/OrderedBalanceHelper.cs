@@ -37,11 +37,6 @@ namespace Providers.Helpers
                 };
             }
         }
-
-        public static IEnumerable<OrderedBalanceChange> GetConfirmed(this IEnumerable<OrderedBalanceChange> )
-        {
-            
-        }
     }
 
     public class ColoredChange
