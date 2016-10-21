@@ -15,8 +15,8 @@ namespace Providers.Helpers
             this OrderedBalanceChange orderedBalanceChange, Network network)
         {
            
-            var coloredTran = orderedBalanceChange?.ColoredTransaction?.Transfers??Enumerable.Empty<ColoredEntry>();
-            foreach (var coloredEntry in coloredTran)
+            var transfers = orderedBalanceChange?.ColoredTransaction?.Transfers??Enumerable.Empty<ColoredEntry>();
+            foreach (var coloredEntry in transfers)
             {
                 
                 yield return new ColoredChange
@@ -25,7 +25,23 @@ namespace Providers.Helpers
                     Quantity = (-1) * coloredEntry.Asset.Quantity
                 };
             }
-        } 
+
+            var issuances = orderedBalanceChange?.ColoredTransaction?.Issuances ?? Enumerable.Empty<ColoredEntry>();
+            foreach (var coloredEntry in issuances)
+            {
+
+                yield return new ColoredChange
+                {
+                    AssetId = coloredEntry.Asset.Id.GetWif(network).ToString(),
+                    Quantity = coloredEntry.Asset.Quantity
+                };
+            }
+        }
+
+        public static IEnumerable<OrderedBalanceChange> GetConfirmed(this IEnumerable<OrderedBalanceChange> )
+        {
+            
+        }
     }
 
     public class ColoredChange

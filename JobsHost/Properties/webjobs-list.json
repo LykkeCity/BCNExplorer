@@ -3,6 +3,9 @@
   "WebJobs": [
     {
       "filePath": "../AssetDetector/AssetScanner.csproj"
+    },
+    {
+      "filePath": "../PingJob/PingJob.csproj"
     }
   ]
 }
