@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AzureRepositories.Asset;
+using AzureRepositories.AssetDefinition;
 using AzureStorage.Queue;
 using Common;
 using Common.Log;
@@ -8,7 +8,7 @@ using Core.Asset;
 using Providers.BlockChainReader;
 using Providers.TransportTypes.Asset;
 
-namespace AssetScanner.QueueHandlers
+namespace AssetDefinitionScanner.QueueHandlers
 {
     public class UpdateAssetDataCommandQueueConsumer:IStarter
     {

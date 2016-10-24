@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Core.Monitoring;
 using Microsoft.Azure.WebJobs;
 
-namespace AssetScanner.TimerFunctions
+namespace AssetDefinitionScanner.TimerFunctions
 {
     public class SendMonitorData
     {

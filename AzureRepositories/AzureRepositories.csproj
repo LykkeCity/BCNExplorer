@@ -93,10 +93,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Asset\AssetDefinitionRepository.cs" />
-    <Compile Include="Asset\AssetParsedBlockRepository.cs" />
-    <Compile Include="Asset\ParseBlockCommandProducer.cs" />
-    <Compile Include="Asset\UpdateAssetDataCommandProducer.cs" />
+    <Compile Include="AssetDefinition\AssetDefinitionRepository.cs" />
+    <Compile Include="AssetDefinition\AssetParsedBlockRepository.cs" />
+    <Compile Include="AssetDefinition\ParseBlockCommandProducer.cs" />
+    <Compile Include="AssetDefinition\UpdateAssetDataCommandProducer.cs" />
     <Compile Include="AzureRepoFactories.cs" />
     <Compile Include="Binders\AzureRepositoriesBinder.cs" />
     <Compile Include="CloudConfigurationLoader.cs" />

@@ -1,15 +1,13 @@
-﻿using AssetScanner.QueueHandlers;
-using AssetScanner.TimerFunctions;
+﻿using AssetDefinitionScanner.QueueHandlers;
+using AssetDefinitionScanner.TimerFunctions;
 using AzureRepositories;
-using AzureRepositories.Asset;
+using AzureRepositories.AssetDefinition;
 using AzureStorage.Queue;
 using Common.IocContainer;
 using Common.Log;
-using Core.Asset;
 using Core.Settings;
-using Providers.BlockChainReader;
 
-namespace AssetScanner.Binders
+namespace AssetDefinitionScanner.Binders
 {
     public static class AssetsFunctionsBinder
     {

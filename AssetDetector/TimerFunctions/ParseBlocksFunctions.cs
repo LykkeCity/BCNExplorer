@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using AzureRepositories.Asset;
+using AzureRepositories.AssetDefinition;
 using Common;
 using Common.Log;
 using Core.Asset;
@@ -11,7 +9,7 @@ using NBitcoin;
 using NBitcoin.Indexer;
 using Providers.Helpers;
 
-namespace AssetScanner.TimerFunctions
+namespace AssetDefinitionScanner.TimerFunctions
 {
     public class ParseBlocksFunctions
     {

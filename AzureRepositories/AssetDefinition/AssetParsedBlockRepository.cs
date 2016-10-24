@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AzureStorage;
 using Core.Asset;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace AzureRepositories.Asset
+namespace AzureRepositories.AssetDefinition
 {
     public class AssetParsedBlockEntity : TableEntity, IAssetParsedBlock
     {

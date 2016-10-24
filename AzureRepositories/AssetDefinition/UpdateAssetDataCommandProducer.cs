@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AzureStorage.Queue;
 using Common.Log;
 
-namespace AzureRepositories.Asset
+namespace AzureRepositories.AssetDefinition
 {
     public interface IAssetDataQueueReader : IQueueReader
     {

@@ -12,7 +12,7 @@ using JobsCommon.Binders;
 using Microsoft.Azure.WebJobs;
 using Providers;
 
-namespace AssetCoinHolders
+namespace AssetCoinHoldersScanner
 {
     class Program
     {

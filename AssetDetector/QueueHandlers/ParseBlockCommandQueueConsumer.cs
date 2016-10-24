@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using AzureRepositories.Asset;
+using AzureRepositories.AssetDefinition;
 using AzureStorage.Queue;
 using Common;
 using Common.Log;
 using Core.Asset;
-using NBitcoin;
 using NBitcoin.Indexer;
 using NBitcoin.OpenAsset;
 using Providers.Helpers;
 
-namespace AssetScanner.QueueHandlers
+namespace AssetDefinitionScanner.QueueHandlers
 {
     public class ParseBlockCommandQueueConsumer : IStarter
     {

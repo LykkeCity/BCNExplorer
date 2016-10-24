@@ -7,7 +7,7 @@ using Common;
 using Core.Asset;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace AzureRepositories.Asset
+namespace AzureRepositories.AssetDefinition
 {
     public class AssetDefinitionEntity:TableEntity, IAsset
     {

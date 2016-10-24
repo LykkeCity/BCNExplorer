@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using AssetScanner.Binders;
-using AssetScanner.QueueHandlers;
-using AssetScanner.TimerFunctions;
+using AssetDefinitionScanner.Binders;
+using AssetDefinitionScanner.QueueHandlers;
+using AssetDefinitionScanner.TimerFunctions;
 using AzureRepositories;
 using AzureRepositories.Binders;
 using AzureRepositories.Log;
-using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common;
 using Common.Log;
@@ -15,7 +14,7 @@ using JobsCommon;
 using Microsoft.Azure.WebJobs;
 using Providers;
 
-namespace AssetScanner
+namespace AssetDefinitionScanner
 {
     class Program
     {

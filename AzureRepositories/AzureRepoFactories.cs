@@ -1,4 +1,4 @@
-﻿using AzureRepositories.Asset;
+﻿using AzureRepositories.AssetDefinition;
 using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common.Log;

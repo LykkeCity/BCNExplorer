@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AzureRepositories.Asset;
-using Common;
+using AzureRepositories.AssetDefinition;
 using Common.Log;
 using Core.Asset;
 using Microsoft.Azure.WebJobs;
 
-namespace AssetScanner.TimerFunctions
+namespace AssetDefinitionScanner.TimerFunctions
 {
     public class UpdateAssetDataFunctions
     {
