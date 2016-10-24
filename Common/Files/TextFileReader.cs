@@ -21,7 +21,5 @@ namespace Common.Files
                 }
             }
         }
-
     }
-
 }

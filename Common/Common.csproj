@@ -138,6 +138,7 @@
     <Compile Include="DictionaryThreadSafe.cs" />
     <Compile Include="EncryptionTools\AESHelper.cs" />
     <Compile Include="Files\CsvWriter.cs" />
+    <Compile Include="Files\ReadWriteHelper.cs" />
     <Compile Include="Files\TextFileReader.cs" />
     <Compile Include="FixProtocol\FixProtocolUtils.cs" />
     <Compile Include="HttpRemoteRequests\HttpRequestClient.cs" />

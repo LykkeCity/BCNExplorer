@@ -89,8 +89,8 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="QBitNinja.Client, Version=1.0.3.29, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QBitNinja.Client.1.0.3.29\lib\net45\QBitNinja.Client.dll</HintPath>
+    <Reference Include="QBitNinja.Client, Version=1.0.3.31, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QBitNinja.Client.1.0.3.31\lib\net45\QBitNinja.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

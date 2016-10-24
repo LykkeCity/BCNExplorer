@@ -7,6 +7,7 @@ using AngleSharp;
 using AzureRepositories;
 using AzureRepositories.Asset;
 using AzureRepositories.Binders;
+using Common.Files;
 using Common.IocContainer;
 using Common.Log;
 using Core.Settings;
@@ -33,8 +34,14 @@ namespace TestConsole
             //var mainChain = indexerClient.GetMainChain();
             //File.WriteAllBytes(fileName,mainChain.ToBytes());
 
-            var mainChain = new ConcurrentChain(File.ReadAllBytes(fileName));
-            
+            var mainChain = new ConcurrentChain(ReadWriteHelper.ReadAllFileAsync(fileName).Result);
+
+            var chainChanges = indexerClient.GetChainChangesUntilFork(mainChain.Tip, false).ToArray();
+
+            chainChanges.UpdateChain(mainChain);
+
+            File.WriteAllBytes(fileName,mainChain.ToBytes());   
+                 
             var balanceId = BalanceIdHelper.Parse("akCk9f5nYnwjaKUvSURWmG9FjxQYaTKUU4T", Network.Main);
             var ordBalances = indexerClient.GetOrderedBalance(balanceId).ToArray();
             var balanceSheet = ordBalances.AsBalanceSheet(mainChain);
