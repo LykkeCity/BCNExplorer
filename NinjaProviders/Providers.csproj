@@ -66,6 +66,9 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="QBitNinja.Client">
+      <HintPath>..\packages\QBitNinja.Client.1.0.3.29\lib\net45\QBitNinja.Client.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -89,6 +92,8 @@
     <Compile Include="Contracts\Ninja\TransactionContract.cs" />
     <Compile Include="Contracts\Ninja\AddressContract.cs" />
     <Compile Include="Contracts\Ninja\WhatIsItContract.cs" />
+    <Compile Include="Helpers\BalanceIdHelper.cs" />
+    <Compile Include="Helpers\BalanceSummaryDetailsHelper.cs" />
     <Compile Include="Helpers\BlockHelper.cs" />
     <Compile Include="Helpers\IndexerClientHelper.cs" />
     <Compile Include="Helpers\OrderedBalanceHelper.cs" />

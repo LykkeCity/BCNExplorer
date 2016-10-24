@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NBitcoin;
 using NBitcoin.Indexer;
-using NBitcoin.OpenAsset;
 
 namespace Providers.Helpers
 {
@@ -14,26 +10,22 @@ namespace Providers.Helpers
         public static IEnumerable<ColoredChange> GetColoredChanges(
             this OrderedBalanceChange orderedBalanceChange, Network network)
         {
-           
-            var transfers = orderedBalanceChange?.ColoredTransaction?.Transfers??Enumerable.Empty<ColoredEntry>();
-            foreach (var coloredEntry in transfers)
+            foreach (var coin in orderedBalanceChange.ReceivedCoins.OfType<ColoredCoin>())
             {
-                
                 yield return new ColoredChange
                 {
-                    AssetId = coloredEntry.Asset.Id.GetWif(network).ToString(),
-                    Quantity = (-1) * coloredEntry.Asset.Quantity
+                    AssetId = coin.AssetId.GetWif(network).ToString(),
+                    Quantity = coin.Asset.Quantity,
+                    BlockHash = orderedBalanceChange.BlockId.ToString()
                 };
             }
-
-            var issuances = orderedBalanceChange?.ColoredTransaction?.Issuances ?? Enumerable.Empty<ColoredEntry>();
-            foreach (var coloredEntry in issuances)
+            foreach (var coin in orderedBalanceChange.SpentCoins.OfType<ColoredCoin>())
             {
-
                 yield return new ColoredChange
                 {
-                    AssetId = coloredEntry.Asset.Id.GetWif(network).ToString(),
-                    Quantity = coloredEntry.Asset.Quantity
+                    AssetId = coin.AssetId.GetWif(network).ToString(),
+                    Quantity = (-1) * coin.Asset.Quantity,
+                    BlockHash = orderedBalanceChange.BlockId.ToString()
                 };
             }
         }
@@ -43,5 +35,7 @@ namespace Providers.Helpers
     {
         public string AssetId { get; set; }
         public long Quantity { get; set; }
+        public long BlockHeight { get; set; }
+        public string BlockHash { get; set; }
     }
 }

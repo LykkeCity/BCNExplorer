@@ -62,7 +62,7 @@ namespace AssetScanner
             }
             catch (Exception e)
             {
-                log?.WriteFatalError("AssetScanner", "Main - App Start", null, e).Wait();
+                log?.WriteFatalError("Program", "Main - App Start", null, e).Wait();
             }
 
             Console.ReadLine();

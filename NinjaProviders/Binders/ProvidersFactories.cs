@@ -14,7 +14,9 @@ namespace Providers.Binders
                 StorageCredentials = new StorageCredentials(baseSettings.NinjaIndexerCredentials.AzureName, baseSettings.NinjaIndexerCredentials.AzureKey)
             };
 
-            return new IndexerClient(indexerConfiguration);
+            var result = new IndexerClient(indexerConfiguration) {ColoredBalance = true};
+
+            return result;
         }
     }
 }
