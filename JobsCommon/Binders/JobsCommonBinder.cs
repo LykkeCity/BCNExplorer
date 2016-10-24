@@ -6,7 +6,7 @@ namespace JobsCommon.Binders
 {
     public static class JobsCommonBinder
     {
-        public static void BindAssetsFunctions(this IoC ioc, BaseSettings baseSettings, ILog log)
+        public static void BindJobsCommon(this IoC ioc, BaseSettings baseSettings, ILog log)
         {
             ioc.RegisterPerCall<MainChainRepository>();
         }

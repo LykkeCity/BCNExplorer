@@ -59,7 +59,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.1\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.2\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -74,8 +74,8 @@
       <HintPath>..\packages\NBitcoin.Indexer.2.0.7.16\lib\net45\NBitcoin.Indexer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NCrontab, Version=3.1.19111.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ncrontab.3.1.0\lib\net45\NCrontab.dll</HintPath>
+    <Reference Include="NCrontab, Version=3.2.20120.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ncrontab.3.2.0\lib\net45\NCrontab.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -106,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DResolver.cs" />
+    <Compile Include="Binders\JobsCommonBinder.cs" />
     <Compile Include="JobsConnectionStringSettings.cs" />
     <Compile Include="MainChainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,6 +119,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{E689375B-0822-47E4-AE16-6AB9F3CF5698}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{1DCF2948-0A67-4169-8C2A-43DA4909E3A1}</Project>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
