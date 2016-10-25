@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AzureRepositories;
 using AzureRepositories.AssetDefinition;
 using AzureStorage.Queue;
 using Common;
@@ -17,19 +18,19 @@ namespace AssetDefinitionScanner.QueueHandlers
         private readonly IParseBlockQueueReader _queueReader;
         private readonly ILog _log;
         private readonly IndexerClient _indexerClient;
-        private readonly IAssetParsedBlockRepository _assetParsedBlockRepository;
+        private readonly IAssetDefinitionParsedBlockRepository _assetDefinitionParsedBlockRepository;
         private readonly AssetDataCommandProducer _assetDataCommandProducer;
 
         public ParseBlockCommandQueueConsumer(ILog log, 
             IParseBlockQueueReader queueReader, 
             IndexerClient indexerClient, 
-            IAssetParsedBlockRepository assetParsedBlockRepository, 
+            IAssetDefinitionParsedBlockRepository assetDefinitionParsedBlockRepository, 
             AssetDataCommandProducer assetDataCommandProducer)
         {
             _log = log;
             _queueReader = queueReader;
             _indexerClient = indexerClient;
-            _assetParsedBlockRepository = assetParsedBlockRepository;
+            _assetDefinitionParsedBlockRepository = assetDefinitionParsedBlockRepository;
             _assetDataCommandProducer = assetDataCommandProducer;
 
             _queueReader.RegisterPreHandler(async data =>
@@ -42,11 +43,11 @@ namespace AssetDefinitionScanner.QueueHandlers
                 return true;
             });
 
-            _queueReader.RegisterHandler<QueueRequestModel<ParseBlockContext>>(
-                ParseBlockContext.Id, itm => ParseBlock(itm.Data));
+            _queueReader.RegisterHandler<QueueRequestModel<AssetDefinitionParseBlockContext>>(
+                AssetDefinitionParseBlockContext.Id, itm => ParseBlock(itm.Data));
         }
 
-        private async Task ParseBlock(ParseBlockContext context)
+        private async Task ParseBlock(AssetDefinitionParseBlockContext context)
         {
             try
             {
@@ -64,7 +65,7 @@ namespace AssetDefinitionScanner.QueueHandlers
 
                 await _log.WriteInfo("ParseBlockCommandQueueConsumer", "ParseBlock", context.ToJson(), "Done");
 
-                await _assetParsedBlockRepository.AddBlockAsync(AssetParsedBlock.Create(context.BlockHash));
+                await _assetDefinitionParsedBlockRepository.AddBlockAsync(AssetDefinitionParsedBlock.Create(context.BlockHash));
             }
             catch (Exception e)
             {

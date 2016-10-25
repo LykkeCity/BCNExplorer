@@ -8,7 +8,7 @@ namespace JobsCommon.Binders
     {
         public static void BindJobsCommon(this IoC ioc, BaseSettings baseSettings, ILog log)
         {
-            ioc.RegisterPerCall<MainChainRepository>();
+            ioc.RegisterSingleTone<MainChainRepository>();
         }
     }
 }

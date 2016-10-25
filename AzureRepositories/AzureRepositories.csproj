@@ -93,9 +93,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetCoinHolders\AssetChangesParseBlockCommandProducer.cs" />
+    <Compile Include="AssetCoinHolders\AssetChangesParsedBlockRepository.cs" />
+    <Compile Include="AssetDefinition\AssetDefinitionParseBlockCommandProducer.cs" />
     <Compile Include="AssetDefinition\AssetDefinitionRepository.cs" />
-    <Compile Include="AssetDefinition\AssetParsedBlockRepository.cs" />
-    <Compile Include="AssetDefinition\ParseBlockCommandProducer.cs" />
+    <Compile Include="AssetDefinition\AssetDefinitionParsedBlockRepository.cs" />
+    <Compile Include="ParseBlockQueueReader.cs" />
     <Compile Include="AssetDefinition\UpdateAssetDataCommandProducer.cs" />
     <Compile Include="AzureRepoFactories.cs" />
     <Compile Include="Binders\AzureRepositoriesBinder.cs" />

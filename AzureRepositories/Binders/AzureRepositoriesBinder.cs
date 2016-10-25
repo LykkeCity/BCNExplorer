@@ -13,10 +13,12 @@ namespace AzureRepositories.Binders
         public static void BindAzureRepositories(this IoC ioc, BaseSettings baseSettings, ILog log)
         {
             ioc.Register<IAssetDefinitionRepository>(AzureRepoFactories.CreateAssetDefinitionsRepository(baseSettings, log));
-            ioc.Register<IAssetParsedBlockRepository>(AzureRepoFactories.CreateAssetParsedBlockRepository(baseSettings, log));
+            ioc.Register<IAssetDefinitionParsedBlockRepository>(AzureRepoFactories.CreateAssetParsedBlockRepository(baseSettings, log));
+            ioc.Register<IAssetChangesParsedBlockRepository>(AzureRepoFactories.CreateAssetChangesParsedBlockRepository(baseSettings, log));
 
             ioc.Register(AzureRepoFactories.CreateUpdateAssetDataCommandProducer(baseSettings, log));
-            ioc.Register(AzureRepoFactories.CreateParseBlockCommandProducer(baseSettings, log));
+            ioc.Register(AzureRepoFactories.CreateAssetDefinitionParseBlockCommandProducer(baseSettings, log));
+            ioc.Register(AzureRepoFactories.CreateAssetChangesParseBlockCommandProducer(baseSettings, log));
 
             ioc.Register<IServiceMonitoringRepository>(
                  new ServiceMonitoringRepository(

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Core.Monitoring;
 using Microsoft.Azure.WebJobs;
 
-namespace AssetDefinitionScanner.TimerFunctions
+namespace AssetCoinHoldersScanner.TimerFunctions
 {
     public class SendMonitorData
     {
@@ -17,7 +17,7 @@ namespace AssetDefinitionScanner.TimerFunctions
         public async Task SendMonitorRecord([TimerTrigger("00:00:30", RunOnStartup = true)] TimerInfo timer)
         {
             await
-                _serviceMonitoringRepository.UpdateOrCreate(new MonitoringRecord("BCNExpoler.AssetDefinitionScanner", DateTime.UtcNow));
+                _serviceMonitoringRepository.UpdateOrCreate(new MonitoringRecord("BCNExpoler.AssetCoinHoldersScanner", DateTime.UtcNow));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AzureRepositories.AssetDefinition;
+﻿using AzureRepositories.AssetCoinHolders;
+using AzureRepositories.AssetDefinition;
 using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common.Log;
@@ -18,14 +19,24 @@ namespace AzureRepositories
             return new AssetDataCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString,  JobsQueueNames.UpdateAssetDataCommands));
         }
 
-        public static ParseBlockCommandProducer CreateParseBlockCommandProducer(BaseSettings baseSettings, ILog log)
+        public static AssetDefinitionParseBlockCommandProducer CreateAssetDefinitionParseBlockCommandProducer(BaseSettings baseSettings, ILog log)
         {
-            return new ParseBlockCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.ParseBlockCommands));
+            return new AssetDefinitionParseBlockCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.AssetDefinitionParseBlockCommands));
         }
-        
-        public static AssetParsedBlockRepository CreateAssetParsedBlockRepository(BaseSettings baseSettings, ILog log)
+
+        public static AssetChangesParseBlockCommandProducer CreateAssetChangesParseBlockCommandProducer(BaseSettings baseSettings, ILog log)
         {
-            return new AssetParsedBlockRepository(new AzureTableStorage<AssetParsedBlockEntity>(baseSettings.Db.AssetsConnString, "AssetParsedBlocks", log));
+            return new AssetChangesParseBlockCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.AssetChangesParseBlockCommands));
+        }
+
+        public static AssetDefinitionParsedBlockRepository CreateAssetParsedBlockRepository(BaseSettings baseSettings, ILog log)
+        {
+            return new AssetDefinitionParsedBlockRepository(new AzureTableStorage<AssetDefinitionParsedBlockEntity>(baseSettings.Db.AssetsConnString, "AssetParsedBlocks", log));
+        }
+
+        public static AssetChangesParsedBlockRepository CreateAssetChangesParsedBlockRepository(BaseSettings baseSettings, ILog log)
+        {
+            return new AssetChangesParsedBlockRepository(new AzureTableStorage<AssetChangesParsedBlockEntity>(baseSettings.Db.AssetsConnString, "AssetChangesParsedBlocks", log));
         }
     }
 }
