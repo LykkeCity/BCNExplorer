@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using AssetCoinHoldersScanner.Binders;
+using AssetCoinHoldersScanner.QueueHandlers;
 using AssetCoinHoldersScanner.TimerFunctions;
 using AzureRepositories;
-using AzureRepositories.AssetCoinHolders;
 using AzureRepositories.Binders;
 using AzureRepositories.Log;
 using AzureStorage.Tables;
@@ -49,6 +50,9 @@ namespace AssetCoinHoldersScanner
                 {
                     config.UseDevelopmentSettings();
                 }
+                
+                var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBlockCommandQueueConsumer>();
+                parseBlockCommandQueueConsumer.Start();
 
                 var host = new JobHost(config);
                 host.RunAndBlock();
@@ -65,13 +69,12 @@ namespace AssetCoinHoldersScanner
         {
             log.WriteInfo("InitContainer", "Program", null, $"BaseSettings : {settings.ToJson()}").Wait();
             container.IoC.Register<ILog>(log);
-            container.IoC.RegisterSingleTone<SendMonitorData>();
-            container.IoC.RegisterSingleTone<ParseBlocksFunctions>();
 
             container.IoC.BindProviders(settings, log);
             container.IoC.Register(settings);
             container.IoC.BindAzureRepositories(settings, log);
             container.IoC.BindJobsCommon(settings, log);
+            container.IoC.BindAssetsCoinHoldersFunctions(settings, log);
         }
     }
 }

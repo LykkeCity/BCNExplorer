@@ -1,5 +1,6 @@
-﻿using AzureRepositories;
-using AzureRepositories.AssetDefinition;
+﻿using AssetCoinHoldersScanner.QueueHandlers;
+using AssetCoinHoldersScanner.TimerFunctions;
+using AzureRepositories;
 using AzureStorage.Queue;
 using Common.IocContainer;
 using Common.Log;
@@ -7,11 +8,14 @@ using Core.Settings;
 
 namespace AssetCoinHoldersScanner.Binders
 {
-    public static class AssetsFunctionsBinder
+    public static class AssetCoinHoldersFunctionsBinder
     {
-        public static void BindAssetsFunctions(this IoC ioc, BaseSettings baseSettings, ILog log)
+        public static void BindAssetsCoinHoldersFunctions(this IoC ioc, BaseSettings baseSettings, ILog log)
         {
             ioc.Register<IParseBlockQueueReader>(AssetFunctionsFactories.CreateUpdateParseBlockCommandQueueReader(baseSettings, log));
+            ioc.RegisterSingleTone<SendMonitorData>();
+            ioc.RegisterSingleTone<ParseBlocksFunctions>();
+            ioc.RegisterSingleTone<ParseBlockCommandQueueConsumer>();
         }
     }
 
