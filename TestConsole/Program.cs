@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp;
 using AzureRepositories;
@@ -54,13 +55,13 @@ namespace TestConsole
             st1.Start();
 
             var counter = coloredAddresses.Length;
-
+            var semaphore = new SemaphoreSlim(100);
             foreach (var address in coloredAddresses)
             {
                 var balanceId = BalanceIdHelper.Parse(address.ToString(), Network.Main);
                 //Console.WriteLine("Started {0}", address.ToString());
 
-                checkTasks.Add(indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain).ContinueWith(
+                checkTasks.Add(indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore).ContinueWith(
                     p =>
                     {
                         counter--;
@@ -107,49 +108,6 @@ namespace TestConsole
 
             Console.WriteLine("Total {0}", block.GetAddresses(Network.Main).Count());
 
-        }
-
-        private static void GetDeltaChanges(IndexerClient indexerClient, ConcurrentChain mainChain, string addr)
-        {
-            var balanceId = BalanceIdHelper.Parse(addr, Network.Main);
-            Console.WriteLine("Started {0}", addr);
-            var st = new Stopwatch();
-            st.Start();
-            var ordBalances = indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain).Result;
-            st.Stop();
-            Console.WriteLine("Getting ord balances done{0}", st.Elapsed.ToString("g"));
-            var alTx = new List<ColoredChange>();
-
-            //var confirmed = BalanceSummaryDetailsHelper.CreateFrom(ordBalances, Network.Main, true);
-
-            foreach (var bl in ordBalances)
-            {
-                var deltaChanges = bl.GetColoredChanges(Network.Main);
-
-                if (deltaChanges.Any())
-                {
-                    //Console.WriteLine("TxId: {0} ", bl.TransactionId);
-                    //Console.WriteLine();
-
-                    foreach (var coloredChange in deltaChanges)
-                    {
-                        //Console.WriteLine("AssetId {0}, Quantity {1}", coloredChange.AssetId, coloredChange.Quantity);
-                        alTx.Add(coloredChange);
-                    }
-
-                    //Console.WriteLine("-----------");
-                }
-            }
-
-
-            //Console.WriteLine("Summary");
-            //foreach (var assetGrouping in alTx.GroupBy(p => p.AssetId))
-            //{
-            //    Console.WriteLine("Asset {0} Calculated {1} Actual {2}",
-            //        assetGrouping.Key,
-            //        assetGrouping.Sum(p => p.Quantity),
-            //        confirmed.Assets.FirstOrDefault(p => p.Asset.ToString() == assetGrouping.Key)?.Quantity);
-            //}
         }
 
     }
