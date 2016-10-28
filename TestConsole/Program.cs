@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,8 +43,37 @@ namespace TestConsole
 
             File.WriteAllBytes(fileName,mainChain.ToBytes());
 
-            GetColoredAddressesFromBlock(indexerClient);
-            //GetDeltaChanges(indexerClient, mainChain, "38DdqhVuqb36jjmxTbvBkiFPXKA8EmW9Ly");
+            var st = new Stopwatch();
+            st.Start();
+
+            var coloredAddresses = GetColoredAddressesFromBlock(indexerClient,
+                "0000000000000000029559b0665cacb4470eda0696a69744263e82e7e4d0f27d").ToArray();
+
+            var checkTasks = new List<Task>();
+            var st1 = new Stopwatch();
+            st1.Start();
+
+            var counter = coloredAddresses.Length;
+
+            foreach (var address in coloredAddresses)
+            {
+                var balanceId = BalanceIdHelper.Parse(address.ToString(), Network.Main);
+                //Console.WriteLine("Started {0}", address.ToString());
+
+                checkTasks.Add(indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain).ContinueWith(
+                    p =>
+                    {
+                        counter--;
+                        Console.WriteLine("elapsed {0}, counter {1}", st.Elapsed.ToString("g"), counter);
+                    }));
+            }
+            //GetDeltaChanges(indexerClient, mainChain, "16LjqTr9qZP2vRkHFR731Gui1uEnBWxgQZ");
+
+            st.Stop();
+
+            Console.WriteLine("_____________________");
+            Console.WriteLine("Done {0}", st.Elapsed.ToString("g"));
+            
 
             Console.ReadLine();
         }
@@ -59,17 +89,11 @@ namespace TestConsole
 
 
 
-        private static void GetColoredAddressesFromBlock(IndexerClient indexerClient)
+        private static IEnumerable<BitcoinAddress> GetColoredAddressesFromBlock(IndexerClient indexerClient, string blockId)
         {
             var block =
-    indexerClient.GetBlock(uint256.Parse("0000000000000000013d252049553e135dfb58a4b5955eaa7928405eb87f4b42"));
-
-            var tx =
-                block.Transactions.FirstOrDefault(
-                    p =>
-                        p.GetHash() == uint256.Parse("8ce980497bfe711b216f9643f28e9393876232e046338fff3fb39c1ca86fa5da"));
-
-
+    indexerClient.GetBlock(uint256.Parse(blockId));
+            
 
             
             Console.WriteLine("Outputs");
@@ -77,6 +101,7 @@ namespace TestConsole
 
             foreach (var bitcoinAddress in block.GetAddresses(Network.Main))
             {
+                yield return bitcoinAddress;
                 Console.WriteLine(bitcoinAddress);
             }
 
@@ -87,15 +112,17 @@ namespace TestConsole
         private static void GetDeltaChanges(IndexerClient indexerClient, ConcurrentChain mainChain, string addr)
         {
             var balanceId = BalanceIdHelper.Parse(addr, Network.Main);
-            Console.WriteLine("Getting ord balances {0}", DateTime.Now.ToString("T"));
-            var ordBalances = indexerClient.GetOrderedBalance(balanceId).ToArray();
-            Console.WriteLine("Getting ord balances done{0}", DateTime.Now.ToString("T"));
-            var balanceSheet = ordBalances.AsBalanceSheet(mainChain);
+            Console.WriteLine("Started {0}", addr);
+            var st = new Stopwatch();
+            st.Start();
+            var ordBalances = indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain).Result;
+            st.Stop();
+            Console.WriteLine("Getting ord balances done{0}", st.Elapsed.ToString("g"));
             var alTx = new List<ColoredChange>();
 
-            var confirmed = BalanceSummaryDetailsHelper.CreateFrom(balanceSheet.Confirmed, Network.Main, true);
+            var confirmed = BalanceSummaryDetailsHelper.CreateFrom(ordBalances, Network.Main, true);
 
-            foreach (var bl in balanceSheet.Confirmed)
+            foreach (var bl in ordBalances)
             {
                 var deltaChanges = bl.GetColoredChanges(Network.Main);
 

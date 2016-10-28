@@ -12,12 +12,12 @@ namespace Providers.Helpers
 {
     public static class BalanceSummaryDetailsHelper
     {
-        public static BalanceSummaryDetails CreateFrom(List<OrderedBalanceChange> changes, Network network, bool colored)
+        public static BalanceSummaryDetails CreateFrom(IEnumerable<OrderedBalanceChange> changes, Network network, bool colored)
         {
             var details = new BalanceSummaryDetails
             {
                 Amount = CalculateAmount(changes),
-                TransactionCount = changes.Count,
+                TransactionCount = changes.Count(),
                 Received = changes.Select(_ => _.Amount < Money.Zero ? Money.Zero : _.Amount).Sum(),
             };
 
