@@ -93,7 +93,6 @@
     <Compile Include="Contracts\Ninja\AddressContract.cs" />
     <Compile Include="Contracts\Ninja\WhatIsItContract.cs" />
     <Compile Include="Helpers\BalanceIdHelper.cs" />
-    <Compile Include="Helpers\BalanceSummaryDetailsHelper.cs" />
     <Compile Include="Helpers\BlockHelper.cs" />
     <Compile Include="Helpers\IndexerClientHelper.cs" />
     <Compile Include="Helpers\OrderedBalanceHelper.cs" />

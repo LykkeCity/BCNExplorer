@@ -120,7 +120,7 @@ namespace TestConsole
             Console.WriteLine("Getting ord balances done{0}", st.Elapsed.ToString("g"));
             var alTx = new List<ColoredChange>();
 
-            var confirmed = BalanceSummaryDetailsHelper.CreateFrom(ordBalances, Network.Main, true);
+            //var confirmed = BalanceSummaryDetailsHelper.CreateFrom(ordBalances, Network.Main, true);
 
             foreach (var bl in ordBalances)
             {
@@ -142,14 +142,14 @@ namespace TestConsole
             }
 
 
-            Console.WriteLine("Summary");
-            foreach (var assetGrouping in alTx.GroupBy(p => p.AssetId))
-            {
-                Console.WriteLine("Asset {0} Calculated {1} Actual {2}",
-                    assetGrouping.Key,
-                    assetGrouping.Sum(p => p.Quantity),
-                    confirmed.Assets.FirstOrDefault(p => p.Asset.ToString() == assetGrouping.Key)?.Quantity);
-            }
+            //Console.WriteLine("Summary");
+            //foreach (var assetGrouping in alTx.GroupBy(p => p.AssetId))
+            //{
+            //    Console.WriteLine("Asset {0} Calculated {1} Actual {2}",
+            //        assetGrouping.Key,
+            //        assetGrouping.Sum(p => p.Quantity),
+            //        confirmed.Assets.FirstOrDefault(p => p.Asset.ToString() == assetGrouping.Key)?.Quantity);
+            //}
         }
 
     }
