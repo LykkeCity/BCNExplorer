@@ -18,6 +18,7 @@ namespace BCNExplorer.Web.Controllers
             _ninjaBlockProvider = ninjaBlockProvider;
         }
 
+        [Route("search")]
         public async Task<ActionResult> Search(string id)
         {
             id = (id ?? "").Trim();
