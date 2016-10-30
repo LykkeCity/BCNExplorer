@@ -58,7 +58,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
         //    }
         //}
 
-        private async Task TestRetrieveChanges([TimerTrigger("00:59:00", RunOnStartup = true)] TimerInfo timer)
+        public async Task TestRetrieveChanges([TimerTrigger("00:59:00", RunOnStartup = true)] TimerInfo timer)
         {
             var st = new Stopwatch();
             var mainchain = await _mainChainRepository.GetMainChainAsync();
