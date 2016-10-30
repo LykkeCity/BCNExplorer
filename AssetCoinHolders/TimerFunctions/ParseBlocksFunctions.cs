@@ -67,7 +67,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
 
             await _log.WriteInfo("TestRetrieveChanges", "TestRetrieveChanges", st.Elapsed.ToString("g"), "Started");
             st.Start();
-            var semaphore = new SemaphoreSlim(100);
+            var semaphore = new SemaphoreSlim(1000);
             foreach (var address in coloredAddresses)
             {
                 var balanceId = BalanceIdHelper.Parse(address.ToString(), Network.Main);
