@@ -92,7 +92,7 @@ namespace AssetCoinHoldersScanner
             var checkTasks = new List<Task>();
 
             await log.WriteInfo("TestRetrieveChanges", "TestRetrieveChanges", st.Elapsed.ToString("g"), "Started");
-
+            st.Start();
             var semaphore = new SemaphoreSlim(100);
             foreach (var address in coloredAddresses)
             {
