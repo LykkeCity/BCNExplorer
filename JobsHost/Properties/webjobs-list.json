@@ -6,6 +6,9 @@
     },
     {
       "filePath": "../AssetDetector/AssetDefinitionScanner.csproj"
+    },
+    {
+      "filePath": "../AssetCoinHolders/AssetCoinHoldersScanner.csproj"
     }
   ]
 }

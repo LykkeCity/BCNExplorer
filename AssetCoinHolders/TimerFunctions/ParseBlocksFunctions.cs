@@ -29,27 +29,27 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             _parsedBlockRepository = parsedBlockRepository;
         }
 
-        public async Task ParseLast([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
-        {
-            BlockHeader blockPtr = null;
+        //public async Task ParseLast([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
+        //{
+        //    BlockHeader blockPtr = null;
 
-            try
-            {
-                blockPtr = _indexerClient.GetBestBlock().Header;
-                while (blockPtr != null && !(await _parsedBlockRepository.IsBlockExistsAsync(AssetChangesParsedBlock.Create(blockPtr.GetBlockId()))))
-                {
-                    await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
+        //    try
+        //    {
+        //        blockPtr = _indexerClient.GetBestBlock().Header;
+        //        while (blockPtr != null && !(await _parsedBlockRepository.IsBlockExistsAsync(AssetChangesParsedBlock.Create(blockPtr.GetBlockId()))))
+        //        {
+        //            await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
 
-                    blockPtr = _indexerClient.GetBlock(blockPtr.HashPrevBlock).Header;
-                }
+        //            blockPtr = _indexerClient.GetBlock(blockPtr.HashPrevBlock).Header;
+        //        }
 
-                await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Done");
-            }
-            catch (Exception e)
-            {
-                await _log.WriteError("ParseBlocksFunctions", "ParseLast", (new { blockHash = blockPtr?.GetBlockId() }).ToJson(), e);
-                throw;
-            }
-        }
+        //        await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Done");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await _log.WriteError("ParseBlocksFunctions", "ParseLast", (new { blockHash = blockPtr?.GetBlockId() }).ToJson(), e);
+        //        throw;
+        //    }
+        //}
     }
 }
