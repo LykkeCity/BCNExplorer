@@ -95,19 +95,11 @@ namespace TestConsole
             var block =
     indexerClient.GetBlock(uint256.Parse(blockId));
             
-
-            
-            Console.WriteLine("Outputs");
-
-
             foreach (var bitcoinAddress in block.GetAddresses(Network.Main))
             {
                 yield return bitcoinAddress;
                 Console.WriteLine(bitcoinAddress);
             }
-
-            Console.WriteLine("Total {0}", block.GetAddresses(Network.Main).Count());
-
         }
 
     }
