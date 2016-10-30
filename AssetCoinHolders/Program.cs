@@ -59,8 +59,6 @@ namespace AssetCoinHoldersScanner
                 
                 //var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBlockCommandQueueConsumer>();
                 //parseBlockCommandQueueConsumer.Start();
-                TestRetrieveChanges(container.IoC.GetObject<MainChainRepository>(), log,
-                    container.IoC.GetObject<IndexerClient>()).Wait();
                 var host = new JobHost(config);
                 host.RunAndBlock();
             }
@@ -84,27 +82,6 @@ namespace AssetCoinHoldersScanner
             container.IoC.BindAssetsCoinHoldersFunctions(settings, log);
         }
 
-        private static async Task TestRetrieveChanges(MainChainRepository mainChainRepository, ILog log, IndexerClient indexerClient)
-        {
-            var st = new Stopwatch();
-            var mainchain = await mainChainRepository.GetMainChainAsync();
-            var coloredAddresses = indexerClient.GetBlock(uint256.Parse("0000000000000000029559b0665cacb4470eda0696a69744263e82e7e4d0f27d")).GetAddresses(Network.Main);
-            var checkTasks = new List<Task>();
 
-            await log.WriteInfo("TestRetrieveChanges", "TestRetrieveChanges", st.Elapsed.ToString("g"), "Started");
-            st.Start();
-            var semaphore = new SemaphoreSlim(100);
-            foreach (var address in coloredAddresses)
-            {
-                var balanceId = BalanceIdHelper.Parse(address.ToString(), Network.Main);
-                checkTasks.Add(indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainchain, semaphore));
-            }
-
-            await Task.WhenAll(checkTasks);
-
-            st.Stop();
-            
-            await log.WriteInfo("TestRetrieveChanges", "TestRetrieveChanges", st.Elapsed.ToString("g"), "Finished");
-        }
     }
 }

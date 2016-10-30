@@ -33,10 +33,10 @@ namespace TestConsole
 
             var indexerClient = container.GetObject<IndexerClient>();
             var fileName = "./chain.dat";
-            //var mainChain = indexerClient.GetMainChain();
-            //File.WriteAllBytes(fileName,mainChain.ToBytes());
+            var mainChain = indexerClient.GetMainChain();
+            File.WriteAllBytes(fileName, mainChain.ToBytes());
 
-            var mainChain = new ConcurrentChain(ReadWriteHelper.ReadAllFileAsync(fileName).Result);
+            mainChain = new ConcurrentChain(ReadWriteHelper.ReadAllFileAsync(fileName).Result);
             Console.WriteLine("Getting chain changes");
             var chainChanges = indexerClient.GetChainChangesUntilFork(mainChain.Tip, false).ToArray();
             Console.WriteLine("Getting chain done");
