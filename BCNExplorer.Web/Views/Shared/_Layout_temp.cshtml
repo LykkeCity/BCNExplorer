@@ -94,10 +94,10 @@
                                             </div>
                                         </li>
                                         <li class="active">
-                                            <a class="dropdown__control" href="">Explorer</a>
+                                            <a class="dropdown__control" href="/">Explorer</a>
                                         </li>
                                     </ul>
-                                    <a href="https://wiki.lykkex.com/start?do=login" class="visible-xs-inline-block visible-sm-inline-block btn">Sign In</a>
+                                    <a href="@Url.Action("Index", "Home")" class="visible-xs-inline-block visible-sm-inline-block btn">Search</a>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
                     </div>
                 </div>
                 <div class="col-sm-3 hidden-xs hidden-sm">
-                    <a href="https://wiki.lykkex.com/start?do=login" class="btn btn-link pull-right">Sign In</a>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-link pull-right"><i class="icon icon--search"></i></a>
                 </div>
             </div>
         </div>
@@ -156,10 +156,11 @@
     <script src="~/js/functions.js"></script>
 
     <script>
-  if ($('.section--search').length) {
-    $('html').addClass('full_height')
-  }
+      if ($('.section--search').length) {
+        $('html').addClass('full_height')
+      }
     </script>
 
+    @RenderSection("scripts", required: false)
 </body>
 </html>

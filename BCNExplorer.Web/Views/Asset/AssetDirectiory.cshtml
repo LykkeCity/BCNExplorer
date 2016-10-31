@@ -1,36 +1,47 @@
 ﻿@model IEnumerable<AssetViewModel>
 @{
     ViewBag.Title = "Asset Directiory";
+    Layout = "../Shared/_Layout_temp.cshtml";
 }
 
-<header class="top-nav-links clearfix">
-    <h1>Assets directory</h1>
-</header>
-<div class="page-content">
-    <div class="table-responsive">
-        <table class="table table-striped table-rounded no-vertical-border">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Asset</th>
-                    <th>Issuer</th>
-                    <th>Ticker</th>
-                    <th>Color address</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var asset in Model.OrderBy(p => p.Name))
-            {
-                    <tr>
-                        <td><img class="asset-icon" src="@(asset.IconUrl??"/images/placeholder.png")" /></td>
-                        <td><a href="@Url.Action("Index", new {id=asset.AssetIds.FirstOrDefault()})">@asset.Name</a></td>
-                        <td>@asset.Issuer</td>
-                        <td>@asset.NameShort</td>
-                        <td>@string.Join(", ", asset.AssetIds)</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<section class="section section--be section--padding">
+    <div class="container container--extend">
+
+        <div class="page__header">
+            <h2 class="page__title">ASSETS DIRECTORY</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table--asstes table--be_info">
+                        <tbody>
+                        <tr>
+                            <th colspan="2">Asset</th>
+                            <th>Issuer</th>
+                            <th>Ticker</th>
+                            <th>Color address</th>
+                        </tr>
+                            @foreach (var asset in Model.OrderBy(p => p.Name))
+                            {
+                                <tr>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(asset.IconUrl))
+                                        {
+                                            <a href="@Url.Action("Index", new {id = asset.AssetIds.FirstOrDefault()})"><img src="@asset.IconUrl" width="48" alt="@asset.Name"></a>
+                                        }
+                                       
+                                    </td>
+                                    <td><a href="@Url.Action("Index", new {id=asset.AssetIds.FirstOrDefault()})">@asset.Name</a></td>
+                                    <td>@asset.Issuer</td>
+                                    <td>@asset.NameShort</td>
+                                    <td>@string.Join(", ", asset.AssetIds)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-  
-</div>
+</section>

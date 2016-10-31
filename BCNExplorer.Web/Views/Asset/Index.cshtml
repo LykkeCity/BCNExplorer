@@ -1,87 +1,78 @@
 ﻿@model AssetViewModel
 @{
     ViewData["Title"] = "Asset - " + string.Join(", ", Model.AssetIds);
-
+    Layout = "../Shared/_Layout_temp.cshtml";
 }
 
-<header class="top-nav-links clearfix">
-    <h1>@Model.Name</h1>
-    <div class="block-h-top">@Model.AssetIds.FirstOrDefault()</div>
-</header>
+<section class="section section--be section--padding">
+    <div class="container container--extend">
 
-<div class="row">
-    <div class="col-md-3">
-        <p class="thumbnail">
-            @if (string.IsNullOrEmpty(Model.ImageUrl))
-            {
-                <img src="/images/placeholder.png" />
-            }
-            else
-            {
-                <img src="@Model.ImageUrl" alt="">
-            }
-        </p>
-    </div>
-    <div class="col-md-9">
-        <div>
-            <table class="table table-striped table-rounded no-vertical-border">
-                <tbody>
-                    <tr>
-                        <td class="no-wrap">Asset ID</td>
-                        <td class="expand-column">@string.Join(", ", Model.AssetIds)</td>
-                    </tr>
-                    <tr>
-                        <td class="no-wrap">Ticker</td>
-                        <td class="expand-column">@Model.NameShort</td>
-                    </tr>
-                    <tr>
-                        <td class="no-wrap">Type</td>
-                        <td class="expand-column">@Model.Type</td>
-                    </tr>
-                    <tr>
-                        <td class="no-wrap">Issuer</td>
-                        <td class="expand-column">
-
-                            @if (Model.Issuer == null)
-                            {
-                                <span>Unknown issuer</span>
-
-                            }
-                            else
-                            {
-                                <span>
-                                    @Model.Issuer
-                                </span>
-                            }
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="no-wrap">Divisibility</td>
-                        <td class="expand-column">
-                            @if (Model.Divisibility == 0)
-                            {
-                                <span>Indivisible</span>
-                            }
-                            else
-                            {
-                                <span>Divisible to @Model.Divisibility places</span>
-                            }
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <h3>Contract Details</h3>
-            <blockquote class="description-block" style="margin-bottom: 70px;">
-                @if (string.IsNullOrEmpty(Model.Description))
-                {
-                    <p>No description is available.</p>
-                }
-                else
-                {
-                    <p>@Model.Description</p>
-                }
-
-            </blockquote>
+        <div class="page__header">
+            <h2 class="page__title">@Model.Name</h2>
+            <div class="page__subtitle h3">@string.Join(", ", Model.AssetIds)</div>
         </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-3">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img class="img-responsive img-thumbnail" src="@Model.ImageUrl" alt="@Model.Name">
+                }
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <div class="table-responsive">
+                    <table class="table table--be_info">
+                        <tbody>
+                            <tr>
+                                <th colspan="2">Advanced details</th>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Asset ID	</td>
+                                <td>@string.Join(", ", Model.AssetIds)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Ticker</td>
+                                <td>@Model.NameShort</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Type</td>
+                                <td>@Model.Type</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Issuer</td>
+                                <td>@Model.Issuer</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Divisibility</td>
+                                <td>
+                                    @if (Model.Divisibility == 0)
+                                    {
+                                        <span>Indivisible</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Divisible to @Model.Divisibility places</span>
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Contract Details</h3>
+
+                <blockquote>
+                    @if (string.IsNullOrEmpty(Model.Description))
+                    {
+                        <p>No description is available.</p>
+                    }
+                    else
+                    {
+                        <p>@Model.Description</p>
+                    }
+                </blockquote>
+            </div>
+        </div>
+
     </div>
-</div>
+</section>

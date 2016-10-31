@@ -3,137 +3,34 @@
     Layout = null;
 }
 
-<ul class="list-group">
-    <li class="list-group-item clearfix intput-output-group-list-item container-fluid">
-        <div class="assetid hd-bt hidden-xs">
-            <h3 class="panel-title ">Bitcoin</h3>
-        </div>
-        <div class="intput-output-group ">
-            <div class="row">
-                <div class="col-sm-1">
-                    <div class="icon dspl-icon " style=" float:left">
-                        <span class="currency-icon thumbnail">
-                            <span class="bg-warning">
-                                <i class="fa fa-btc"></i>
-                            </span>
-                        </span>
-                    </div>
-                    <h3 class="hd-bt hidden-sm hidden-md hidden-lg" style="margin-top: 16px; float:left">Bitcoin</h3>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="inputs">
+@*<div class="transaction_view  transaction_view--colored">
+
+    <div class="table-responsive">
+
+        <div class="transaction_view__table">
+            <table class="table table--transaction_view">
+                <tbody>
+                    <tr class="table__header">
+                        <th colspan="6">
+                            <div class="transaction_view__title">Bitcoin</div>
+                        </th>
+                    </tr>
+                    <tr class="table__content">
+                        <td class="transaction_view__logo"><img src="/img/assets/bitcoin.png" width="48" alt=""></td>
+
                         @if (Model.Bitcoin.IsCoinBase)
                         {
-                            <div class="address-item ">
-                                <div class="amount">
-
-                                </div>
-                                <div class="address">
-                                    <b>Mined coins</b>
-                                </div>
-                            </div>
+                            <td>
+                                <div class="transaction_view__line"><i class="icon icon--info"></i> Mined coins</div>
+                            </td>
                         }
                         else
                         {
-                            foreach (var input in Model.Bitcoin.AggregatedIns)
-                            {
-                                <div class="js-aggregated-transactions-container">
-
-                                    @RenderInOut(input.TitleItem)
-
-                                    @if (input.ShowAggregatedTransactions)
-                                    {
-                                    <div class="hidden-transactions">
-                                        @foreach (var aggregated in input.AggregatedTransactions)
-                                        {
-                                            @RenderInOut(aggregated)
-                                        }
-                                    </div>
-                                    }                                    
-                                </div>
-                            }
-                        }
-                    </div>
-                </div>
-                <div class="col-sm-5">
-                    <div class="outputs">
-                        <div class="outputs-container">
-                            <div class="center-chevron">
-                                <img src="/images/arrow.png" />
-                            </div>
-
-                            @foreach (var output in Model.Bitcoin.AggregatedOuts)
-                            {
-                                <div class="js-aggregated-transactions-container">
-                                    @RenderInOut(output.TitleItem)
-
-                                    @if (output.ShowAggregatedTransactions)
-                                    {
-                                        <div class="hidden-transactions">
-                                            @foreach (var aggregated in output.AggregatedTransactions)
-                                            {
-                                                @RenderInOut(aggregated)
-                                            }
-                                        </div>
-                                    }
-
-                                </div>
-
-                            }
-                            <div class="address-item div-fees">
-                                <div class="amount">
-                                    @Model.Bitcoin.Fees.ToString("0.00######")
-                                </div>
-                                <div class="address">
-                                    <span class="fees-text">Fees</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                   
-                </div>
-            </div>
-        </div>
-    </li>
-
-    @foreach (var coloredAsset in Model.ColoredAssets)
-    {
-        <li class="list-group-item clearfix intput-output-group-list-item container-fluid">
-            <div class="assetid hd-bt hidden-xs">
-                <h3 class="panel-title ">@coloredAsset.Name</h3>
-            </div>
-            <div class="intput-output-group ">
-                <div class="row">
-                    <div class="col-sm-1">
-                        <div class="icon dspl-icon " style=" float:left">
-                            <span class="currency-icon thumbnail">
-                                @if (coloredAsset.IconImageUrl != null)
+                            <td>
+                                @foreach (var input in Model.Bitcoin.AggregatedIns)
                                 {
-                                    <a href="@Url.Action("Index", "Asset", new {id = coloredAsset.AssetId})">
-                                        <img src="@coloredAsset.IconImageUrl" />
-                                    </a>
-                                }
-                                else
-                                {
-                                    <span class="bg-primary">
-                                        <i class="fa fa-money"></i>
-                                    </span>
-                                }
-                            </span>
-                        </div>
-                        <h3 class="hd-bt hidden-sm hidden-md hidden-lg" style="margin-top: 16px; float:left">@coloredAsset.Name</h3>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="inputs">
-
-
-                            @foreach (var input in coloredAsset.AggregatedIns)
-                            {
-                                <div class="js-aggregated-transactions-container">
                                     @RenderInOut(input.TitleItem)
-
-                                    @if (input.ShowAggregatedTransactions)
+                                    if (input.ShowAggregatedTransactions)
                                     {
                                         <div class="hidden-transactions">
                                             @foreach (var aggregated in input.AggregatedTransactions)
@@ -142,43 +39,63 @@
                                             }
                                         </div>
                                     }
-                                </div>
- 
-                            }
-                        </div>
-                    </div>
-                    <div class="col-sm-5">
-                        <div class="outputs">
-                            <div class="outputs-container">
-                                <div class="center-chevron">
-                                    <img src="/images/arrow.png"/>
-                                </div>
-                                @foreach (var output in coloredAsset.AggregatedOuts)
-                                {
-
-                                    <div class="js-aggregated-transactions-container">
-                                        @RenderInOut(output.TitleItem)
-
-                                        @if (output.ShowAggregatedTransactions)
-                                        {
-                                            <div class="hidden-transactions">
-                                                @foreach (var aggregated in output.AggregatedTransactions)
-                                                {
-                                                    @RenderInOut(aggregated)
-                                                }
-                                            </div>
-                                        }
-                                    </div>
 
                                 }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </li>
-    }
-</ul>
+                                <div class="transaction_view__line"><a href=""><i class="icon icon--arrow-left-alt"></i> 1CgfHZpUcKsqBemkiMpvX3YxhcQ9xz3TFK</a>
+                                </div>
+                                <div class="transaction_view__line"><a href=""><i class="icon icon--arrow-left-alt"></i> 1CgfHZpUcKsqBemkiMpvX3YxhcQ9xz3TFK</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="transaction_view__line">-0.0093</div>
+                                <div class="transaction_view__line">-0.002994</div>
+                            </td>
+                        }
+                            <td class="transaction_view__arrow">
+                                <div class="colored_arrow"></div>
+                            </td>
+                            <td>
+                                <div class="transaction_view__line">1NWsQNtndRiumZ93P8vzvE2pVABWeP1RSw</div>
+                                <div class="transaction_view__line">Fees</div>
+                            </td>
+                            <td>
+                                <div class="transaction_view__line">0.012194</div>
+                                <div class="transaction_view__line">0.0001</div>
+                            </td>
+
+
+                    </tr>
+
+                    <tr class="table__header">
+                        <th colspan="6">
+                            <div class="transaction_view__title">Russian Ruble Colored Coin <span>AQNL67PmuN176tiSfb3179oH8DszCRjZuo</span></div>
+                        </th>
+                    </tr>
+                    <tr class="table__content">
+                        <td class="transaction_view__logo"><img src="/img/assets/bitcoin.png" width="48" alt=""></td>
+                        <td>
+                            <div class="transaction_view__line"><a href=""><i class="icon icon--info"></i> Issued assets</a></div>
+                        </td>
+                        <td>
+                            <div class="transaction_view__line">-500</div>
+                        </td>
+                        <td class="transaction_view__arrow">
+                            <div class="colored_arrow"></div>
+                        </td>
+                        <td>
+                            <div class="transaction_view__line"><a href="">1NWsQNtndRiumZ93P8vzvE2pVABWeP1RSw</a></div>
+                        </td>
+                        <td>
+                            <div class="transaction_view__line">500,00</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
 
 
 @helper RenderInOut(IInOutViewModel inOutViewModel)
@@ -188,17 +105,17 @@
             @inOutViewModel.ValueDescription
             @if (inOutViewModel.ShowAggregatedTransactions)
             {
-                <span  class="aggregate-toggle">
+                <span class="aggregate-toggle">
                     (@inOutViewModel.AggregatedTransactionCount)
                     <span class="glyphicon glyphicon-triangle-bottom toggle-indicatior"></span>
                 </span>
             }
         </div>
         <div class="address">
-            @if (inOutViewModel.ShowPreviousTransaction )
+            @if (inOutViewModel.ShowPreviousTransaction)
             {
                 <a href="@Url.Action("Index", "Transaction", new {id = inOutViewModel.PreviousTransactionId})" class="prev-tran">
-                    <img src="~/Images/previ-tran.png"/>
+                    <img src="~/Images/previ-tran.png" />
                 </a>
 
             }
@@ -212,4 +129,4 @@
             }
         </div>
     </div>
-}
+}*@
