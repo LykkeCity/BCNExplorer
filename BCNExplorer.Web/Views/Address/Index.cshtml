@@ -2,6 +2,8 @@
 @model AddressViewModel
 @{
     ViewData["Title"] = "Address - " + Model.AddressId;
+
+    Layout = "../Shared/_Layout_temp.cshtml";
 }
 @section scripts{
     @Scripts.Render("~/bundles/js/transaction")
@@ -11,110 +13,94 @@
 @Html.Hidden("uncolored-address", Model.UncoloredAddress)
 @Html.Hidden("colored-address", Model.ColoredAddress)
 @Html.Hidden("current-address", Model.AddressId)
-<div class="container">
-    <header class="top-nav-links clearfix">
-        <h1>Address</h1>
-        <div class="block-h-top">@Model.AddressId</div>
-    </header>
 
-    <div>
+<section class="section section--be section--padding">
+    <div class="container container--extend">
+
+        <div class="page__header">
+            <h2 class="page__title">ADDRESS</h2>
+            <div class="page__subtitle h3">@Model.AddressId</div>
+
+        </div>
+
         <div class="row">
-            <div class="col-md-7">
-                <table class="table table-rounded ">
-                    <tbody>
+            <div class="col-xs-12 col-md-7">
+                <div class="table-responsive">
+                    <table class="table table--be_info">
+                        <tbody>
+                            <tr>
+                                <td>Address</td>
+                                <td>@Model.AddressId</td>
+                            </tr>
+                            <tr>
+                                <td>Total confirmed transactions</td>
+                                <td>@Model.TotalConfirmedTransactions</td>
+                            </tr>
+                            @if (Model.UncoloredAddress != null)
+                            {
+                                <tr>
+                                    <td>Legacy address</td>
+                                    <td><a href="@Url.Action("Index", "Address", new { id = Model.UncoloredAddress })">@Model.UncoloredAddress</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-5">
+                <div class="table-responsive">
+                    <table class="table table--text_big table--be_info">
+                        <tbody>
+                            <tr>
+                                <th colspan="2">Balance</th>
+                            </tr>
                         <tr>
-                            <td class="no-wrap">Address</td>
-                            <td class="expand-column">@Model.AddressId</td>
+                            <td>
+                                <img src="/img/assets/bitcoin.png" width="48" alt="Bitcoin"> <span>Bitcoin</span>
+                            </td>
+                            <td class="text-right">
+                                @BitcoinUtils.SatoshiToBtc(Model.Balance).ToString("0.####################") BTC
+                            </td>
                         </tr>
-                        <tr>
-                            <td class="no-wrap">Total confirmed transactions</td>
-                            <td class="expand-column">@Model.TotalConfirmedTransactions</td>
-                        </tr>
-                        @if (Model.UncoloredAddress != null)
+
+                        @if (Model.ShowUnconfirmedBalance)
                         {
                             <tr>
-                                <td class="no-wrap">Legacy address</td>
-                                <td class="expand-column"><a href="@Url.Action("Index", "Address", new { id = Model.UncoloredAddress })">@Model.UncoloredAddress</a></td>
+                                <td><span class="text-muted">Unconfirmed Balance</span></td>
+
+                                <td class="text-right"><span class="text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToString("0.####################") BTC</span></td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-5">
-                <div class="panel asset-balances">
-                    <div class="list-group-item clearfix section-header">
-                        <h3 class="panel-title">Balance</h3>
-                    </div>
-                    <ul class="list-group">
-                        <li class="list-group-item clearfix">
-                            <span class="currency-icon thumbnail dspl-icon">
-                                <span class="bg-warning">
-                                    <i class="fa fa-btc"></i>
-                                </span>
-                            </span>
-                            <div class="details-left balance-left">
-                                <h4 class="list-group-item-heading asset-name">Bitcoin</h4>
-                                @if (Model.ShowUnconfirmedBalance)
-                                {
-                                    <p class="list-group-item-text text-muted">UnconfirmedBalance</p>
-                                }
-                            </div>
-                            <div class="details-right text-right">
-                                <h4 class="list-group-item-heading">@BitcoinUtils.SatoshiToBtc(Model.Balance).ToString("0.####################") BTC</h4>
-                                @if (Model.ShowUnconfirmedBalance)
-                                {
-                                    <p class="list-group-item-text text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToString("0.####################") BTC</p>
-                                }
-                            </div>
-                        </li>
 
-                        @if (Model.Assets.Any())
-                        {
-                            <li class="list-group-item clearfix section-header assets-group-header">
-                                <h3 class="panel-title">Assets</h3>
-                            </li>
-                            foreach (var itm in Model.Assets)
+                            @foreach (var itm in Model.Assets)
                             {
                                 var assetDivisibity = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.Divisibility, 0);
                                 var assetShortName = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.NameShort, "");
                                 var assetName = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.Name, itm.AssetId);
                                 var assetIcon = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.IconUrl, null);
 
-                                <li class="list-group-item clearfix asset-list">
-                                    <div class="currency-icon thumbnail dspl-icon">
+                                <tr>
+                                    <td>
                                         @if (assetIcon != null)
                                         {
-                                            <a href="@Url.Action("Index", "Asset", new {id = itm.AssetId})">
-                                                <img src="@assetIcon" />
-                                            </a>
-                                            
-                                        }
-                                        else
-                                        {
-                                            <span class="bg-primary">
-                                                <i class="fa fa-money"></i>
-                                            </span>
-                                        }
+                                            <img src="@assetIcon" width="48" alt="@assetName">
 
-                                    </div>
-                                    <div class="details-left balance-left">
-                                        <h4 class="list-group-item-heading asset-name">@assetName</h4>
-                                    </div>
-
-                                    <div class="details-right text-right">
-                                        <h4 class="list-group-item-heading amount">@BitcoinUtils.CalculateColoredAssetQuantity(itm.Quantity, assetDivisibity).ToString("0.####################") @assetShortName</h4>
-                                    </div>
-                                </li>
+                                        }
+                                        <span>@assetName</span>
+                                    </td>
+                                    <td class="text-right">
+                                        @BitcoinUtils.CalculateColoredAssetQuantity(itm.Quantity, assetDivisibity).ToString("0.####################") @assetShortName
+                                    </td>
+                                </tr>
                             }
-                        }
-
-                    </ul>
-
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
         </div>
-        <hr>
+
+
         @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.TransactionIdList)
+
     </div>
-</div>
+</section>

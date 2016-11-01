@@ -18,10 +18,14 @@
         </li>
     }
 </ul>
-<div class="js-loader">
-    <div class="spinner_container">
-        <div class="spinner">
-            <div class="spinner__inside"></div>
+@if (Model.TotalItems != 0)
+{
+    <div class="js-loader">
+        <div class="spinner_container">
+            <div class="spinner">
+                <div class="spinner__inside"></div>
+            </div>
         </div>
     </div>
-</div>
+}
+
