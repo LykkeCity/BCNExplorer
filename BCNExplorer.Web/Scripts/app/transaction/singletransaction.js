@@ -1,7 +1,9 @@
 ﻿$(function() {
-    $('body').on('click', '.js-toggle-aggregated', function () {
-        var $container = $(this).parents('.js-aggregated-transactions-container');
-        $container.find('.hidden-transactions').slideToggle();
-        $container.find('.toggle-indicatior').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-top');
+    $('.open_hidden_content').on('click', function (ev) {
+        ev.preventDefault();
+        var $this = $(this), id = $this.attr('href');
+
+        $this.toggleClass('active');
+        $(id).slideToggle('fast');
     });
 });

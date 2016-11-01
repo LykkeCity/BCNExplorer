@@ -56,6 +56,7 @@ namespace BCNExplorer.Web.Models
             public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
 
             public double Fees { get; set; }
+            public string FeesDescription => Fees.ToString("0.00######");
 
             public static IEnumerable<In> Group(IEnumerable<In> source)
             {
@@ -218,7 +219,7 @@ namespace BCNExplorer.Web.Models
                 {
                     AssetId = inOutsByAsset.AssetId,
                     Divisibility = divisibility,
-                    Name = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Name, null) ?? inOutsByAsset.AssetId,
+                    Name = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Name, null),
                     IconImageUrl = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.IconUrl, null),
                     AggregatedIns = AssetHelper.GroupByAddress(ins),
                     AggregatedOuts = AssetHelper.GroupByAddress(outs)
@@ -319,5 +320,13 @@ namespace BCNExplorer.Web.Models
         string Address { get; }
         bool ShowPreviousTransaction { get; }
         string PreviousTransactionId { get; }
+    }
+
+    public static class InOutViewModelHelper
+    {
+        public static string GetUniqueHtmlId(this IInOutViewModel inOutViewModel, string transactionId)
+        {
+            return inOutViewModel.ShowAggregatedTransactions ? $"{inOutViewModel.Address}-{transactionId}": null;
+        }
     }
 }

@@ -33,10 +33,10 @@ namespace TestConsole
 
             var indexerClient = container.GetObject<IndexerClient>();
             var fileName = "./chain.dat";
-            var mainChain = indexerClient.GetMainChain();
-            File.WriteAllBytes(fileName, mainChain.ToBytes());
+            //var mainChain = indexerClient.GetMainChain();
+            //File.WriteAllBytes(fileName, mainChain.ToBytes());
 
-            mainChain = new ConcurrentChain(ReadWriteHelper.ReadAllFileAsync(fileName).Result);
+            var mainChain = new ConcurrentChain(ReadWriteHelper.ReadAllFileAsync(fileName).Result);
             Console.WriteLine("Getting chain changes");
             var chainChanges = indexerClient.GetChainChangesUntilFork(mainChain.Tip, false).ToArray();
             Console.WriteLine("Getting chain done");
@@ -92,10 +92,9 @@ namespace TestConsole
 
         private static IEnumerable<BitcoinAddress> GetColoredAddressesFromBlock(IndexerClient indexerClient, string blockId)
         {
-            var block =
-    indexerClient.GetBlock(uint256.Parse(blockId));
+            var block = indexerClient.GetBlock(uint256.Parse(blockId));
             
-            foreach (var bitcoinAddress in block.GetAddresses(Network.Main))
+            foreach (var bitcoinAddress in block.GetAddressesWithColoredMarker(Network.Main))
             {
                 yield return bitcoinAddress;
                 Console.WriteLine(bitcoinAddress);

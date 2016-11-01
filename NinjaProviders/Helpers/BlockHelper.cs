@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NBitcoin;
+using NBitcoin.OpenAsset;
 
 namespace Providers.Helpers
 {
@@ -14,11 +15,11 @@ namespace Providers.Helpers
             return header?.GetHash().AsBitcoinSerializable().Value.ToString();
         }
 
-        public static IEnumerable<BitcoinAddress> GetAddresses(this Block block, Network network)
+        public static IEnumerable<BitcoinAddress> GetAddressesWithColoredMarker(this Block block, Network network)
         {
             var result = new List<BitcoinAddress>();
             
-            foreach (var tx in block.Transactions)
+            foreach (var tx in block.Transactions.Where(p=>p.HasValidColoredMarker()))
             {
                 result.AddRange(tx.GetAddresses(network));
             }

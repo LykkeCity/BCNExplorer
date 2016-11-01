@@ -62,7 +62,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
         {
             var st = new Stopwatch();
             var mainchain = await _mainChainRepository.GetMainChainAsync();
-            var coloredAddresses = _indexerClient.GetBlock(uint256.Parse("0000000000000000029559b0665cacb4470eda0696a69744263e82e7e4d0f27d")).GetAddresses(Network.Main);
+            var coloredAddresses = _indexerClient.GetBlock(uint256.Parse("0000000000000000029559b0665cacb4470eda0696a69744263e82e7e4d0f27d")).GetAddressesWithColoredMarker(Network.Main);
             var checkTasks = new List<Task>();
 
             await _log.WriteInfo("TestRetrieveChanges", "TestRetrieveChanges", st.Elapsed.ToString("g"), "Started");
