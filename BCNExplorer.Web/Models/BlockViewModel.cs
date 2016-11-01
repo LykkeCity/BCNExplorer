@@ -31,7 +31,8 @@ namespace BCNExplorer.Web.Models
                 Nonce = ninjaBlock.Nonce,
                 PreviousBlock = ninjaBlock.PreviousBlock,
                 Time = ninjaBlock.Time,
-                TransactionIdList = new TransactionIdList(ninjaBlock.TransactionIds, PageSize)
+                TransactionIdList = new TransactionIdList(ninjaBlock.TransactionIds, PageSize),
+                TotalTransactions = ninjaBlock.TotalTransactions
             };
         }
     }

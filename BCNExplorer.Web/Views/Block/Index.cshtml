@@ -2,12 +2,82 @@
 
 @{
     ViewBag.Title = "Block - " + Model.Hash;
+    Layout = "../Shared/_Layout_temp.cshtml";
 }
 @section scripts
 {
     @Scripts.Render("~/bundles/js/transaction")
 }
-<div class="container">
+<section class="section section--be section--padding">
+    <div class="container container--extend">
+
+        <div class="page__header">
+            <div class="pull-right page__arrows">
+                <a href="" class="page__arrow page__arrow--prev"><i class="icon icon--chevron-thin-left"></i></a>
+                <a href="" class="page__arrow page__arrow--next"><i class="icon icon--chevron-thin-right"></i></a>
+            </div>
+            <h2 class="page__title">Block @Model.Height</h2>
+            <div class="page__subtitle h3">@Model.Hash</div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-7">
+                <div class="table-responsive">
+                    <table class="table table--be_info">
+                        <tbody>
+                            <tr>
+                                <th colspan="2">Advanced details</th>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Hash</td>
+                                <td><div class="text-overflow">@Model.Hash</div></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Date</td>
+                                <td>@($"{Model.Time:F}")</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Height</td>
+                                <td>@Model.Height</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Total transactions</td>
+                                <td>@Model.TotalTransactions</td>
+                            </tr>
+                            @if (!string.IsNullOrEmpty(Model.PreviousBlock))
+                            {
+                                <tr>
+                                    <td class="text-muted">Previous block</td>
+                                    <td><div class="text-overflow"><a href="@Url.Action("Index", "Block", new { id = Model.PreviousBlock })">@Model.PreviousBlock</a></div></td>
+                                </tr>
+                            }
+
+                            <tr>
+                                <td class="text-muted">Difficulty</td>
+                                <td>@($"{Model.Difficulty:N}")</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Merkle Root</td>
+                                <td>@Model.MerkleRoot</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Nonce</td>
+                                <td>@Model.Nonce</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.TransactionIdList)
+
+    </div>
+</section>
+
+@*<div class="container">
     <header class="top-nav-links clearfix">
         <h1>Block @Model.Height</h1>
         <div class="block-h-top">@Model.Hash</div>
@@ -75,4 +145,4 @@
         @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.TransactionIdList)
     </div>
 
-</div>
+</div>*@

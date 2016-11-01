@@ -92,7 +92,12 @@
                     </tr>
 
                     <tr class="table__content">
-                        <td class="transaction_view__logo"><img src="@coloredAsset.IconImageUrl" width="48" alt="@coloredAsset.AssetId"></td>
+                        <td class="transaction_view__logo">
+                            @if (coloredAsset.IconImageUrl != null)
+                            {
+                                <img src="@coloredAsset.IconImageUrl" width="48" alt="@coloredAsset.AssetId">
+                            }
+                        </td>
                         @if (false)
                         {
                             <td>

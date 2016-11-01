@@ -8,12 +8,20 @@
             class="hidden transactions-container js-transactions-container"
             data-page="@page"
             data-transaction-ids="@Json.Encode(Model.GetPage(page).ToArray())" data-load-url="@Url.Action("List", "Transaction")">
+
             <div class="text-center">
                 @if (Model.CurrentPage != page)
                 {
-                    <a class="btn btn-default load-trans js-load-trans">Show More</a>
+                    <a class="btn btn-default js-load-trans">Show More</a>
                 }
             </div>
         </li>
     }
 </ul>
+<div class="js-loader">
+    <div class="spinner_container">
+        <div class="spinner">
+            <div class="spinner__inside"></div>
+        </div>
+    </div>
+</div>
