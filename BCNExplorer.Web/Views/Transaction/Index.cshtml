@@ -66,33 +66,38 @@
                     <div class="table-responsive">
                         <table class="table table--be_info">
                             <tbody>
-                                <tr>
-                                    <th colspan="2">Transaction confirmed</th>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted">Confirmations</td>
-                                    <td>@Model.Block.Confirmations confirmations</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted">Time</td>
+                            <tr>
+                                <th colspan="2">Transaction confirmed</th>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Confirmations</td>
+                                <td>@Model.Block.Confirmations confirmations</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Time</td>
 
-                                    <td>@($"{Model.Block.Time:F}")</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted">Block</td>
-                                    <td><div class="text-overflow"><a href="@Url.Action("Index", "Block", new {id = Model.Block.BlockId})">@Model.Block.BlockId</a></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted">Height</td>
-                                    <td>@Model.Block.Height</td>
-                                </tr>
+                                <td>@($"{Model.Block.Time:F}")</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Block</td>
+                                <td>
+                                    <div class="text-overflow"><a href="@Url.Action("Index", "Block", new {id = Model.Block.BlockId})">@Model.Block.BlockId</a>
+                                    </div></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Height</td>
+                                <td>@Model.Block.Height</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             }
         </div>
-        @Html.Partial("TransactionDetails", Model)
+        <div class="hide-header">
+            @Html.Partial("TransactionDetails", Model)
+        </div>
+
 
     </div>
 </section>
