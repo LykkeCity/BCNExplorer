@@ -81,7 +81,7 @@
                     <td class="transaction_view__arrow">
                         <div class="colored_arrow"></div>
                     </td>
-                    <td>
+                    <td colspan="2">
                         @foreach (var output in Model.Bitcoin.AggregatedOuts)
                         {
                             var aggregatedContainerId = Guid.NewGuid().ToString("N");
@@ -163,7 +163,7 @@
                         <td class="transaction_view__arrow">
                             <div class="colored_arrow"></div>
                         </td>
-                        <td>
+                        <td colspan="2">
                             @foreach (var output in coloredAsset.AggregatedOuts)
                             {
                                 var aggregatedContainerId = Guid.NewGuid().ToString("N");
