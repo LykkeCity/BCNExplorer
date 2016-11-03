@@ -115,7 +115,12 @@
                 {
                     <tr class="table__header">
                         <th colspan="6">
-                            <div class="transaction_view__title">@coloredAsset.Name <span>@coloredAsset.AssetId</span></div>
+                            <div class="transaction_view__title">
+                                <a href="@Url.Action("Index", "Asset", new {id = coloredAsset.AssetId})">
+                                  @coloredAsset.Name <span>@coloredAsset.AssetId</span>  
+                                </a>
+                                
+                            </div>
                         </th>
                     </tr>
 
@@ -123,7 +128,9 @@
                         <td class="transaction_view__logo">
                             @if (coloredAsset.IconImageUrl != null)
                             {
-                                <img src="@coloredAsset.IconImageUrl" width="48" alt="@coloredAsset.AssetId">
+                                <a href="@Url.Action("Index", "Asset", new {id = coloredAsset.AssetId})">
+                                    <img src="@coloredAsset.IconImageUrl" width="48" alt="@coloredAsset.AssetId">
+                                </a>
                             }
                         </td>
                         @if (false)
