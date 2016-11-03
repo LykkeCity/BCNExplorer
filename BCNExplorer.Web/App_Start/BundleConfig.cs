@@ -14,8 +14,8 @@ namespace BCNExplorer.Web
             //          "~/Scripts/bootstrap.js",
             //          "~/Scripts/respond.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/js/common").Include(
-                      "~/js/app/common/*.js"));
+            //bundles.Add(new ScriptBundle("~/bundles/js/common").Include(
+            //          "~/js/app/common/*.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/transaction").Include(
                       "~/js/app/transaction/*.js"));
