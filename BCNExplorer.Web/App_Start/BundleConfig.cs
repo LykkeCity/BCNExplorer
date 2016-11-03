@@ -7,26 +7,26 @@ namespace BCNExplorer.Web
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/js/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+            //bundles.Add(new ScriptBundle("~/bundles/js/jquery").Include(
+            //            "~/Scripts/jquery-{version}.js"));
             
-            bundles.Add(new ScriptBundle("~/bundles/js/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+            //bundles.Add(new ScriptBundle("~/bundles/js/bootstrap").Include(
+            //          "~/Scripts/bootstrap.js",
+            //          "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/common").Include(
-                      "~/Scripts/app/common/*.js"));
+                      "~/js/app/common/*.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/transaction").Include(
-                      "~/Scripts/app/transaction/*.js"));
+                      "~/js/app/transaction/*.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/address").Include(
-          "~/Scripts/app/address/*.js"));
+          "~/js/app/address/*.js"));
 
-            bundles.Add(new StyleBundle("~/Content/maincss")
-                .Include("~/Content/bootstrap.css", new CssRewriteUrlTransform())
-                .Include("~/Content/site.css", new CssRewriteUrlTransform())
-                .Include("~/Content/font-awesome.css", new CssRewriteUrlTransform()));
+            //bundles.Add(new StyleBundle("~/Content/maincss")
+            //    .Include("~/Content/bootstrap.css", new CssRewriteUrlTransform())
+            //    .Include("~/Content/site.css", new CssRewriteUrlTransform())
+            //    .Include("~/Content/font-awesome.css", new CssRewriteUrlTransform()));
         }
     }
 }

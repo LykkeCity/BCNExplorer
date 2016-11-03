@@ -275,12 +275,9 @@
     <Content Include="js\vendor\jquery.inview.min.js" />
     <Content Include="mstile-150x150.png" />
     <Content Include="safari-pinned-tab.svg" />
-    <Content Include="Scripts\app\address\index.js" />
-    <Content Include="Scripts\app\common\share-social-buttons.js" />
-    <Content Include="Scripts\app\transaction\singletransaction.js" />
-    <Content Include="Scripts\app\transaction\transactionlist.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="js\app\address\index.js" />
+    <Content Include="js\app\transaction\singletransaction.js" />
+    <Content Include="js\app\transaction\transactionlist.js" />
     <Content Include="fonts\icon.eot" />
     <Content Include="fonts\icon.ttf" />
     <Content Include="fonts\icon.woff" />
@@ -302,16 +299,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="manifest.json" />
-    <None Include="Scripts\jquery-3.1.0.intellisense.js" />
-    <Content Include="Scripts\jquery-3.1.0.js" />
-    <Content Include="Scripts\jquery-3.1.0.min.js" />
-    <Content Include="Scripts\jquery-3.1.0.slim.js" />
-    <Content Include="Scripts\jquery-3.1.0.slim.min.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
-    <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -338,16 +325,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="js\app\common\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-3.1.0.slim.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-3.1.0.min.map" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AzureRepositories\AzureRepositories.csproj">
