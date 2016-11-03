@@ -3918,6 +3918,8 @@ body {
     padding: 15px 15px 9px 0;
     border: 0;
     vertical-align: top; }
+    .table--transaction_view.table tr td:nth-child(2) {
+      width: 555px; }
   .table--transaction_view.table tr a {
     color: inherit; }
     .table--transaction_view.table tr a:hover {
@@ -4016,7 +4018,8 @@ body {
     color: rgba(63, 77, 96, 0.8); }
   .transaction_view__logo {
     vertical-align: top !important;
-    border-right: 1px solid #DFE1E5 !important; }
+    border-right: 1px solid #DFE1E5 !important;
+    width: 60px !important; }
     .transaction_view__logo + td {
       padding-left: 15px !important; }
     .transaction_view__logo img {
@@ -4070,6 +4073,9 @@ body {
 
 .img-thumbnail {
   margin-bottom: 30px; }
+
+.hide-header .table__header--main {
+  display: none; }
 
 @media (max-width: 539px) {
   .section--padding {

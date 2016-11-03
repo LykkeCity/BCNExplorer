@@ -11,7 +11,7 @@
             <table class="table table--transaction_view">
                 <tbody>
                 <tr class="table__header table__header--main">
-                    <th colspan="3"><a href="@Url.Action("Index", "Transaction", new {id = Model.TransactionId})">@Model.TransactionId</a></th>
+                    <th colspan="2"><a href="@Url.Action("Index", "Transaction", new {id = Model.TransactionId})">@Model.TransactionId</a></th>
                     <th></th>
                     @if (Model.Block != null)
                     {
@@ -33,7 +33,7 @@
                     </th>
                 </tr>
                 <tr class="table__header">
-                    <th colspan="5">
+                    <th colspan="6">
                         <div class="transaction_view__title">Bitcoin</div>
                     </th>
                 </tr>
