@@ -207,20 +207,6 @@
     <Content Include="fonts\ProximaNova-Semibold.svg" />
     <Content Include="fonts\ProximaNovaRegular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Images\404.png" />
-    <Content Include="Images\ajaxLoader.gif" />
-    <Content Include="Images\arrow.png" />
-    <Content Include="Images\btn-hover.png" />
-    <Content Include="Images\btn.png" />
-    <Content Include="Images\btn_2.png" />
-    <Content Include="Images\fb.png" />
-    <Content Include="Images\line.png" />
-    <Content Include="Images\logo.png" />
-    <Content Include="Images\placeholder.png" />
-    <Content Include="Images\previ-tran.png" />
-    <Content Include="Images\processing-menu.gif" />
-    <Content Include="Images\search-btn.png" />
-    <Content Include="Images\tw.png" />
     <Content Include="img\android-icn.svg" />
     <Content Include="img\app.svg" />
     <Content Include="img\apple-icn.svg" />
@@ -321,7 +307,6 @@
     <Content Include="Views\Asset\Index.cshtml" />
     <Content Include="Views\Search\NotFound.cshtml" />
     <Content Include="Views\Asset\AssetDirectiory.cshtml" />
-    <Content Include="Views\Shared\_Layout_temp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
