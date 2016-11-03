@@ -1,6 +1,7 @@
 ﻿@model TransactionViewModel
 @{
     Layout = null;
+    var hideTransactionHeader = (ViewBag.HideTransactionHeader != null && ViewBag.HideTransactionHeader is bool) ? ViewBag.HideTransactionHeader : false;
 }
 
 <div class="transaction_view @(Model.IsColor?"transaction_view--colored":"")">
@@ -10,28 +11,33 @@
         <div class="transaction_view__table">
             <table class="table table--transaction_view">
                 <tbody>
-                <tr class="table__header table__header--main">
-                    <th colspan="2"><a href="@Url.Action("Index", "Transaction", new {id = Model.TransactionId})">@Model.TransactionId</a></th>
-                    <th></th>
-                    @if (Model.Block != null)
-                    {
-                        <th class="text-muted text-small">
-                           @Model.Block.Time.ToString("f")
+
+                @if (!hideTransactionHeader)
+                {
+                    <tr class="table__header table__header--main">
+                        <th colspan="2"><a href="@Url.Action("Index", "Transaction", new {id = Model.TransactionId})">@Model.TransactionId</a></th>
+                        <th></th>
+                        @if (Model.Block != null)
+                        {
+                            <th class="text-muted text-small">
+                                @Model.Block.Time.ToString("f")
+                            </th>
+                        }
+
+                        <th>
+                            @if (Model.IsConfirmed)
+                            {
+                                <span class="label label--green label--plate">Confirmed</span>
+                            }
+                            else
+                            {
+                                <span class="label label--green label--plate">Unconfirmed</span>
+                            }
+
                         </th>
-                    }
+                    </tr>
+                }
 
-                    <th>
-                        @if (Model.IsConfirmed)
-                        {
-                            <span class="label label--green label--plate">Confirmed</span>
-                        }
-                        else
-                        {
-                            <span class="label label--green label--plate">Unconfirmed</span>
-                        }
-
-                    </th>
-                </tr>
                 <tr class="table__header">
                     <th colspan="5">
                         <div class="transaction_view__title">Bitcoin</div>

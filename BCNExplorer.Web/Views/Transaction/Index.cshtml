@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Transaction - " + Model.TransactionId;
+    ViewBag.HideTransactionHeader = true;
 }
 
 @section scripts
@@ -92,7 +93,7 @@
                 </div>
             }
         </div>
-        <div class="hide-header">
+        <div>
             @Html.Partial("TransactionDetails", Model)
         </div>
 
