@@ -33,7 +33,7 @@
                     </th>
                 </tr>
                 <tr class="table__header">
-                    <th colspan="6">
+                    <th colspan="5">
                         <div class="transaction_view__title">Bitcoin</div>
                     </th>
                 </tr>
@@ -133,7 +133,7 @@
                             <td>
                                 @foreach (var input in coloredAsset.AggregatedIns)
                                 {
-                                    var aggregatedContainerId = input.TitleItem.GetUniqueHtmlId(Model.TransactionId);
+                                    var aggregatedContainerId = Guid.NewGuid().ToString("N");
                                     <text>
                                         @RenderInOut(input.TitleItem, aggregatedContainerId)
                                     </text>
@@ -160,7 +160,7 @@
                         <td>
                             @foreach (var output in coloredAsset.AggregatedOuts)
                             {
-                                var aggregatedContainerId = output.TitleItem.GetUniqueHtmlId(Model.TransactionId);
+                                var aggregatedContainerId = Guid.NewGuid().ToString("N");
                                 <text>
                                     @RenderInOut(output.TitleItem, aggregatedContainerId)
                                 </text>

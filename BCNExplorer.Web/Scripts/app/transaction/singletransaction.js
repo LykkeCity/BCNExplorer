@@ -1,5 +1,5 @@
 ﻿$(function() {
-    $('.open_hidden_content').on('click', function (ev) {
+    $('body').on('click','.open_hidden_content',  function (ev) {
         ev.preventDefault();
         var $this = $(this), id = $this.attr('href');
 

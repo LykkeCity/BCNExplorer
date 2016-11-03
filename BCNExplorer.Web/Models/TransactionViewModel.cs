@@ -321,12 +321,4 @@ namespace BCNExplorer.Web.Models
         bool ShowPreviousTransaction { get; }
         string PreviousTransactionId { get; }
     }
-
-    public static class InOutViewModelHelper
-    {
-        public static string GetUniqueHtmlId(this IInOutViewModel inOutViewModel, string transactionId)
-        {
-            return inOutViewModel.ShowAggregatedTransactions ? $"{inOutViewModel.Address}-{transactionId}": null;
-        }
-    }
 }
