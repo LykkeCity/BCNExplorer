@@ -15,6 +15,9 @@
                         <input class="form-control" type="text" name="id" placeholder="Search transaction, assets, addressed or blocks...">
                         <button type="submit" class="btn btn-md"><i class="icon icon--search"></i> Search</button>
                     </form>
+                    <p>
+                        <small>Last block: <a href="@Url.Action("Index", "Block", new {id = Model.BlockId})">@Model.Height</a></small> - <small><a href="@Url.Action("AssetDirectiory", "Asset")">Asset Directory</a></small>
+                    </p>
                 </div>
             </div>
         </div>
