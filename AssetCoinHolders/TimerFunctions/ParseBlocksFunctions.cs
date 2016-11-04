@@ -71,7 +71,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             foreach (var address in coloredAddresses)
             {
                 var balanceId = BalanceIdHelper.Parse(address.ToString(), Network.Main);
-                checkTasks.Add(_indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainchain, semaphore));
+                //checkTasks.Add(_indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainchain, semaphore));
             }
 
             await Task.WhenAll(checkTasks);
