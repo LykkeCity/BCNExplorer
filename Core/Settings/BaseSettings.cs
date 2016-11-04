@@ -32,6 +32,9 @@ namespace Core.Settings
 
         [Required]
         public string SharedStorageConnString { get; set; }
+
+        [Required]
+        public string SqlConnString { get; set; }
     }
 
     public class JobsSettings

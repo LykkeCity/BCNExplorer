@@ -19,17 +19,19 @@ namespace Providers.Helpers
     public static class ConfirmedBalanceChangesHelper
     {
         public static async Task<IEnumerable<OrderedBalanceChange>> GetConfirmedBalanceChangesAsync(this IndexerClient indexerClient,
-     BalanceId balanceId, ConcurrentChain mainChain, SemaphoreSlim semaphore)
+     BalanceId balanceId, ConcurrentChain mainChain, SemaphoreSlim semaphore, int fromBlockHeight, int toBlock)
         {
 
             await semaphore.WaitAsync();
             try
             {
-                var startBlock = mainChain.GetBlock(mainChain.Tip.Height - 1);
+                var startBlock = mainChain.GetBlock(fromBlockHeight);
+                var stopBlock = mainChain.GetBlock(toBlock);
+
                 var balanceQuery = new BalanceQuery();
                 balanceQuery.RawOrdering = true;
                 balanceQuery.From = new ConfirmedBalanceLocator(startBlock.Height, startBlock.HashBlock);
-                balanceQuery.To = new ConfirmedBalanceLocator(mainChain.Tip.Height, mainChain.Tip.HashBlock);
+                balanceQuery.To = new ConfirmedBalanceLocator(stopBlock.Height, stopBlock.HashBlock);
                 var ordBalances = await Task.WhenAll(indexerClient.GetOrderedBalanceAsync(balanceId, balanceQuery));
 
                 return ordBalances.SelectMany(p => p.ToArray()).AsBalanceSheet(mainChain).Confirmed;
