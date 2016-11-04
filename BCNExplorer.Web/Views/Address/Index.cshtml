@@ -81,10 +81,15 @@
                                     <td>
                                         @if (assetIcon != null)
                                         {
-                                            <img src="@assetIcon" width="48" alt="@assetName">
+                                            <a href="@Url.Action("Index", "Asset", new {id= itm.AssetId})">
+
+                                                <img src="@assetIcon" width="48" alt="@assetName">
+                                            </a>
 
                                         }
-                                        <span>@assetName</span>
+                                        <a href="@Url.Action("Index", "Asset", new {id= itm.AssetId})">
+                                           @assetName
+                                        </a>
                                     </td>
                                     <td class="text-right">
                                         @BitcoinUtils.CalculateColoredAssetQuantity(itm.Quantity, assetDivisibity).ToString("0.####################") @assetShortName
