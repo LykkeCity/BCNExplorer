@@ -7,27 +7,27 @@ using SQLRepositories.DbModels;
 
 namespace SQLRepositories.Repositories
 {
-    public class AddressRepository:IAddressRepository
+    public class TransactionRepository:ITransactionRepository
     {
         private readonly BcnExplolerFactory _bcnExplolerFactory;
 
-        public AddressRepository(BcnExplolerFactory bcnExplolerFactory)
+        public TransactionRepository(BcnExplolerFactory bcnExplolerFactory)
         {
             _bcnExplolerFactory = bcnExplolerFactory;
         }
 
-        public async Task AddAsync(IAddress[] addresses)
+        public async Task AddAsync(ITransaction[] transactions)
         {
             using (var db = _bcnExplolerFactory.GetContext())
             {
-                var existed = await db.Addresses.ToListAsync();
-                var posted =
-                    addresses.Where(p => p != null).Select(AddressEntity.Create).Distinct(AddressEntity.LegacyAddressComparer);
+                var existed = await db.Transactions.ToListAsync();
+                var posted = transactions.Where(p => p != null).Select(TransactionEntity.Create).Distinct(TransactionEntity.TransactionHashComparer);
+
                 //Do not add existed in db 
                 var entitiesToAdd =
-                    posted.Where(p => !existed.Contains(p, AddressEntity.LegacyAddressComparer));
+                    posted.Where(p => !existed.Contains(p, TransactionEntity.TransactionHashComparer));
+                db.Transactions.AddRange(entitiesToAdd);
 
-                db.Addresses.AddRange(entitiesToAdd);
                 await db.SaveChangesAsync();
             }
         }

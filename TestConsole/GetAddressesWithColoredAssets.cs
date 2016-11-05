@@ -62,7 +62,7 @@ namespace TestConsole
 
             var addressRepo = container.GetObject<IAddressRepository>();
 
-            addressRepo.AddAddressesAsync(addressResults.ToArray()).Wait();
+            addressRepo.AddAsync(addressResults.ToArray()).Wait();
 
             //using (var db = SqlRepoFactories.GetBcnExplolerDataContext(baseSettings, log))
             //{

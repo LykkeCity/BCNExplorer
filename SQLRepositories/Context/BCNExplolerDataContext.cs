@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity;
-using System.Data.Entity.Core.EntityClient;
 using SQLRepositories.DbModels;
 
 namespace SQLRepositories.Context
@@ -12,5 +11,7 @@ namespace SQLRepositories.Context
         }
 
         public DbSet<AddressEntity> Addresses { get; set; }
+        public DbSet<TransactionEntity> Transactions { get; set; } 
+        public DbSet<BlockEntity> Blocks { get; set; } 
     }
 }

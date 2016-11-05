@@ -55,8 +55,11 @@
     <Compile Include="Context\BCNExplolerDataContext.cs" />
     <Compile Include="Context\BCNExplolerFactory.cs" />
     <Compile Include="DbModels\AddressEntity.cs" />
+    <Compile Include="DbModels\BlockEntity.cs" />
+    <Compile Include="DbModels\TransactionEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
+    <Compile Include="Repositories\TransactionRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

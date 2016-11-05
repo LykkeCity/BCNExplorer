@@ -21,5 +21,15 @@ namespace SQLRepositories.Binding
         {
             return new AddressRepository(bcnExplolerFactory);
         }
+
+        public static TransactionRepository GetTransactionRepository(BaseSettings baseSettings, ILog log, BcnExplolerFactory bcnExplolerFactory)
+        {
+            return new TransactionRepository(bcnExplolerFactory);
+        }
+
+        public static BlockRepository GetBlockRepository(BaseSettings baseSettings, ILog log, BcnExplolerFactory bcnExplolerFactory)
+        {
+            return new BlockRepository(bcnExplolerFactory);
+        }
     }
 }

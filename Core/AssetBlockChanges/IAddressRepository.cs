@@ -8,8 +8,8 @@ namespace Core.AssetBlockChanges
 {
     public interface IAddress
     {
-        string LegacyAddress { get; set; }
-        string ColoredAddress { get; set; }
+        string LegacyAddress { get; }
+        string ColoredAddress { get;  }
     }
 
     public class Address: IAddress
@@ -20,6 +20,6 @@ namespace Core.AssetBlockChanges
 
     public interface IAddressRepository
     {
-        Task AddAddressesAsync(params IAddress[] addresses);
+        Task AddAsync(params IAddress[] addresses);
     }
 }

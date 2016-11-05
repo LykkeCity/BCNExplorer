@@ -49,6 +49,8 @@
     <Compile Include="AssetBlockChanges\IAddressRepository.cs" />
     <Compile Include="AssetBlockChanges\IAssetChangesContextRepository.cs" />
     <Compile Include="AssetBlockChanges\IBalanceChangesRepository.cs" />
+    <Compile Include="AssetBlockChanges\IBlockRepository.cs" />
+    <Compile Include="AssetBlockChanges\ITransactionRepository.cs" />
     <Compile Include="Asset\IAssetChangesParsedBlockRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionParsedBlockRepository.cs" />
@@ -60,9 +62,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Address\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
