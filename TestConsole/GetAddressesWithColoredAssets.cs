@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Common.IocContainer;
 using Common.Log;
 using Core.Asset;
+using Core.AssetBlockChanges;
 using Core.Settings;
 using NBitcoin;
 using Providers.Helpers;
@@ -58,19 +59,23 @@ namespace TestConsole
 
             Console.WriteLine("Done");
             Console.ReadLine();
-            
-            using (var db = SqlRepoFactories.GetBcnExplolerDataContext(baseSettings, log))
-            {
-                var addresses =
-                    addressResults.Distinct(AddressResult.LegacyAddressColoredAddressComparer).Select(p => new Address
-                    {
-                        ColoredAddress = p.ColoredAddress,
-                        LegacyAddress = p.LegacyAddress
-                    });
 
-                db.Addresses.AddRange(addresses);
-                db.SaveChanges();
-            }
+            var addressRepo = container.GetObject<IAddressRepository>();
+
+            addressRepo.AddAddressesAsync(addressResults.ToArray()).Wait();
+
+            //using (var db = SqlRepoFactories.GetBcnExplolerDataContext(baseSettings, log))
+            //{
+            //    var addresses =
+            //        addressResults.Distinct(AddressResult.LegacyAddressColoredAddressComparer).Select(p => new AddressEntity
+            //        {
+            //            ColoredAddress = p.ColoredAddress,
+            //            LegacyAddress = p.LegacyAddress
+            //        });
+
+            //    db.Addresses.AddRange(addresses);
+            //    db.SaveChanges();
+            //}
         }
 
         public static async Task<IEnumerable<AddressResult>> GetAddresses(string asset)
@@ -94,7 +99,7 @@ namespace TestConsole
             }
         }
 
-        public class AddressResult
+        public class AddressResult:IAddress
         {
             private sealed class LegacyAddressColoredAddressEqualityComparer : IEqualityComparer<AddressResult>
             {

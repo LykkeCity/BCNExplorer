@@ -11,6 +11,6 @@ namespace SQLRepositories.Context
             
         }
 
-        public DbSet<Address> Addresses { get; set; }
+        public DbSet<AddressEntity> Addresses { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using Common.Log;
 using Core.Settings;
 using JobsCommon;
 using Providers;
+using SQLRepositories.Binding;
 
 namespace TestConsole
 {
@@ -29,6 +30,7 @@ namespace TestConsole
             container.BindProviders(settings, log);
             container.Register(settings);
             container.BindAzureRepositories(settings, log);
+            container.BindSqlRepos(settings, log);
         }
 
     }
