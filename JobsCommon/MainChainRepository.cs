@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Common.Files;
 using Common.Log;
@@ -34,16 +35,18 @@ namespace JobsCommon
             }
         }
 
-        private Task<ConcurrentChain> GetFromIndexerAsync()
+        private async Task<ConcurrentChain> GetFromIndexerAsync()
         {
-            return Task.Run(() => _indexerClient.GetMainChain());
+            return _indexerClient.GetMainChain();
         }
 
         private async Task CacheChainAsync(ConcurrentChain chain)
         {
             try
             {
-                await ReadWriteHelper.WriteAsync(FilePath, chain.ToBytes());
+                File.WriteAllBytes(FilePath, chain.ToBytes());
+
+                //await ReadWriteHelper.WriteAsync(FilePath, chain.ToBytes());
             }
             catch (Exception e)
             {
@@ -53,11 +56,19 @@ namespace JobsCommon
 
         public async Task<ConcurrentChain> GetMainChainAsync()
         {
-            var result = await GetFromCacheAsync() ?? await GetFromIndexerAsync();
-            var iniTip = result.Tip.Height;
+            var iniTip = 0;
+            var result = await GetFromCacheAsync();
 
-            var chainChanges = _indexerClient.GetChainChangesUntilFork(result.Tip, false);
-            chainChanges.UpdateChain(result);
+            if (result != null)
+            {
+                iniTip = result.Tip.Height;
+                var chainChanges = _indexerClient.GetChainChangesUntilFork(result.Tip, false);
+                chainChanges.UpdateChain(result);
+            }
+            else
+            {
+                result = await GetFromIndexerAsync();
+            }
 
             if (iniTip != result.Height)
             {

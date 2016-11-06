@@ -12,14 +12,16 @@ namespace Core.AssetBlockChanges
         string AssetId { get; }
         double Change { get; }
         string TransactionHash { get; }
+        string Address { get; }
     }
 
     public class BalanceChange: IBalanceChange
     {
-        public long Id { get; set; }
+        public long Id { get;  }
         public string AssetId { get; set; }
         public double Change { get; set; }
         public string TransactionHash { get; set; }
+        public string Address { get; set; }
     }
 
     public interface IBalanceChangesRepository

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Core.AssetBlockChanges;
 
 namespace SQLRepositories.DbModels
 {
+    [Table("Blocks")]
     public class BlockEntity:IBlock
     {
         #region HashEqualityComparer

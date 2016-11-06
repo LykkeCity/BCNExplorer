@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.AssetBlockChanges;
@@ -20,7 +21,8 @@ namespace SQLRepositories.Repositories
         {
             using (var db = _bcnExplolerFactory.GetContext())
             {
-                var existed = await db.Addresses.ToListAsync();
+                var postedHashes = addresses.Select(p => p.LegacyAddress);
+                var existed = await db.Addresses.Where(p => postedHashes.Contains(p.LegacyAddress)).ToListAsync();
                 var posted =
                     addresses.Where(p => p != null).Select(AddressEntity.Create).Distinct(AddressEntity.LegacyAddressComparer);
                 //Do not add existed in db 
@@ -29,6 +31,14 @@ namespace SQLRepositories.Repositories
 
                 db.Addresses.AddRange(entitiesToAdd);
                 await db.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<IAddress>> GetAllAsync()
+        {
+            using (var db = _bcnExplolerFactory.GetContext())
+            {
+                return await db.Addresses.ToListAsync();
             }
         }
     }

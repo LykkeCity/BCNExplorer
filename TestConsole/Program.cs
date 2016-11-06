@@ -4,6 +4,7 @@ using Common.IocContainer;
 using Common.Log;
 using Core.Settings;
 using JobsCommon;
+using JobsCommon.Binders;
 using Providers;
 using SQLRepositories.Binding;
 
@@ -19,8 +20,8 @@ namespace TestConsole
             InitContainer(container, settings, new LogToConsole());
 
             //TestGettingChainChanges.Run(container);
-            GetAddressesWithColoredAssets.Run(container);
-
+            //GetAddressesWithColoredAssets.Run(container);
+            TestFillBalance.Run(container).Wait();
         }
         
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)
@@ -31,6 +32,7 @@ namespace TestConsole
             container.Register(settings);
             container.BindAzureRepositories(settings, log);
             container.BindSqlRepos(settings, log);
+            container.BindJobsCommon(settings, log);
         }
 
     }

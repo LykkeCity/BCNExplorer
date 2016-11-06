@@ -21,5 +21,6 @@ namespace Core.AssetBlockChanges
     public interface IAddressRepository
     {
         Task AddAsync(params IAddress[] addresses);
+        Task<IEnumerable<IAddress>> GetAllAsync();
     }
 }

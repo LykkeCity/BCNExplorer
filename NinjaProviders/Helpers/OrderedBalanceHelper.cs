@@ -16,7 +16,9 @@ namespace Providers.Helpers
                 {
                     AssetId = coin.AssetId.GetWif(network).ToString(),
                     Quantity = coin.Asset.Quantity,
-                    BlockHash = orderedBalanceChange.BlockId.ToString()
+                    BlockHash = orderedBalanceChange.BlockId.ToString(),
+                    TransactionHash = orderedBalanceChange.TransactionId.ToString()
+
                 };
             }
             foreach (var coin in orderedBalanceChange.SpentCoins.OfType<ColoredCoin>())
@@ -25,7 +27,9 @@ namespace Providers.Helpers
                 {
                     AssetId = coin.AssetId.GetWif(network).ToString(),
                     Quantity = (-1) * coin.Asset.Quantity,
-                    BlockHash = orderedBalanceChange.BlockId.ToString()
+                    BlockHash = orderedBalanceChange.BlockId.ToString(),
+                    TransactionHash = orderedBalanceChange.TransactionId.ToString()
+                    
                 };
             }
         }
@@ -35,7 +39,7 @@ namespace Providers.Helpers
     {
         public string AssetId { get; set; }
         public long Quantity { get; set; }
-        public long BlockHeight { get; set; }
         public string BlockHash { get; set; }
+        public string TransactionHash { get; set; }
     }
 }

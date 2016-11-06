@@ -19,6 +19,8 @@ namespace SQLRepositories.DbModels
         [Required]
         public string TransactionHash { get; set; }
 
+        public string Address { get; set; }
+
         public static BalanceChangeEntity Create(IBalanceChange balanceChange)
         {
             return new BalanceChangeEntity
@@ -26,7 +28,8 @@ namespace SQLRepositories.DbModels
                 AssetId = balanceChange.AssetId,
                 Change = balanceChange.Change,
                 Id = balanceChange.Id,
-                TransactionHash = balanceChange.TransactionHash
+                TransactionHash = balanceChange.TransactionHash,
+                Address = balanceChange.Address
             };
         }
     }

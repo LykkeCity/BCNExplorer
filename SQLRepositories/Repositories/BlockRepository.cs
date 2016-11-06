@@ -20,7 +20,8 @@ namespace SQLRepositories.Repositories
         {
             using (var db = _bcnExplolerFactory.GetContext())
             {
-                var existed = await db.Blocks.ToListAsync();
+                var postedHashes = blocks.Select(p => p.Hash);
+                var existed = await db.Blocks.Where(p => postedHashes.Contains(p.Hash)).ToListAsync();
                 var posted =
                     blocks.Where(p => p != null).Select(BlockEntity.Create).Distinct(BlockEntity.HashComparer);
                 //Do not add existed in db 

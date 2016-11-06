@@ -20,7 +20,8 @@ namespace SQLRepositories.Repositories
         {
             using (var db = _bcnExplolerFactory.GetContext())
             {
-                var existed = await db.Transactions.ToListAsync();
+                var postedHashes = transactions.Select(p => p.Hash);
+                var existed = await db.Transactions.Where(p => postedHashes.Contains(p.Hash)).ToListAsync();
                 var posted = transactions.Where(p => p != null).Select(TransactionEntity.Create).Distinct(TransactionEntity.TransactionHashComparer);
 
                 //Do not add existed in db 
