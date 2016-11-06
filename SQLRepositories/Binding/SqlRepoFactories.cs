@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common.Log;
+﻿using Common.Log;
 using Core.Settings;
 using SQLRepositories.Context;
 using SQLRepositories.Repositories;
@@ -30,6 +25,11 @@ namespace SQLRepositories.Binding
         public static BlockRepository GetBlockRepository(BaseSettings baseSettings, ILog log, BcnExplolerFactory bcnExplolerFactory)
         {
             return new BlockRepository(bcnExplolerFactory);
+        }
+
+        public static BalanceChangesRepository GetBalanceChangesRepository(BaseSettings baseSettings, ILog log, BcnExplolerFactory bcnExplolerFactory)
+        {
+            return new BalanceChangesRepository(bcnExplolerFactory);
         }
     }
 }
