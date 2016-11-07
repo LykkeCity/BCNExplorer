@@ -30,17 +30,31 @@ namespace TestConsole
             var contextFactory = ioc.GetObject<BcnExplolerFactory>();
 
 
-            var addresses = (await addressRepo.GetAllAsync()).OrderBy(p=>p.LegacyAddress).Take(1);
+
+
+            var asset = "ASzmrSxhHjioWMYivoawap9yY4cxAfAMxR";
+
+            Console.WriteLine("Getting Coinprism addresses");
+            var coinprismAddresses = (await GetAddressesWithColoredAssets.GetAddresses(asset)).ToArray();
+            Console.WriteLine("Getting Coinprism Done");
+            Console.WriteLine("Saving addresses");
+            await addressRepo.AddAsync(coinprismAddresses);
+            Console.WriteLine("Saving addresses done");
+            var addresses = (await addressRepo.GetAllAsync()).OrderBy(p => p.LegacyAddress).ToArray();
+
+            var legacyAddresses = coinprismAddresses.Select(x => x.LegacyAddress).ToArray();
+            addresses = addresses.Where(p => legacyAddresses.Contains(p.LegacyAddress)).ToArray();
 
             var mainChain = mainChainRepository.GetMainChainAsync().Result;
 
-            var semaphore = new SemaphoreSlim(20);
+            var semaphore = new SemaphoreSlim(100);
 
             var counter = addresses.Count();
 
             var tasksToAwait = new List<Task>();
             var st = new Stopwatch();
             st.Start();
+            Console.WriteLine("Retrievingbalances");
             foreach (var address in addresses)
             {
                 var balanceId = BalanceIdHelper.Parse(address.LegacyAddress, Network.Main);
@@ -50,7 +64,10 @@ namespace TestConsole
                     {
                         try
                         {
-
+                            if (address.LegacyAddress == "38DdqhVuqb36jjmxTbvBkiFPXKA8EmW9Ly")
+                            {
+                                
+                            }
                             counter--;
                             Console.WriteLine("{0} {1}", st.Elapsed.ToString("g"), counter);
 

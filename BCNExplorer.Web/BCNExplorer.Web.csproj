@@ -180,6 +180,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AssetCoinholdersViewModel.cs" />
     <Compile Include="Models\AssetDictionary.cs" />
     <Compile Include="Models\AssetViewModel.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
@@ -345,6 +346,13 @@
       <Project>{f6a82c81-9e41-4c77-b665-50bfcdba853b}</Project>
       <Name>Providers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SQLRepositories\SQLRepositories.csproj">
+      <Project>{1bdb259d-0c8e-4dc8-b8d3-96769cec785c}</Project>
+      <Name>SQLRepositories</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Asset\Owners.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

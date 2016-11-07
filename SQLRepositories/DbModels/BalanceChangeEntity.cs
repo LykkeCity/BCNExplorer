@@ -25,7 +25,7 @@ namespace SQLRepositories.DbModels
 
         public string Address { get; set; }
         
-        [ForeignKey("TransactionHash")]
+        [ForeignKey("Address")]
         public virtual AddressEntity AddressEntity { get; set; }
 
         [NotMapped]

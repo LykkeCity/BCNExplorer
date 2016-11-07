@@ -12,6 +12,7 @@ using Common.Log;
 using Common.Validation;
 using Core.Settings;
 using Providers;
+using SQLRepositories.Binding;
 
 namespace BCNExplorer.Web.App_Start
 {
@@ -39,7 +40,7 @@ namespace BCNExplorer.Web.App_Start
             
             dr.IoC.BindAzureRepositories(settings, log);
             dr.IoC.BindProviders(settings, log);
-
+            dr.IoC.BindSqlRepos(settings, log);
 
             return dr;
         }

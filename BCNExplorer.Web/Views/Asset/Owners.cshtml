@@ -1,0 +1,56 @@
+﻿@model AssetCoinholdersViewModel
+@{
+    ViewData["Title"] = "Asset Owners - " + string.Join(", ", Model.Asset.AssetIds);
+}
+
+<section class="section section--be section--padding">
+    <div class="container container--extend">
+
+        <div class="page__header">
+            <h2 class="page__title">@Model.Asset.Name</h2>
+            <div class="page__subtitle h3">@string.Join(", ", Model.Asset.AssetIds)</div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-3">
+                @if (!string.IsNullOrEmpty(Model.Asset.ImageUrl))
+                {
+                    <img class="img-responsive img-thumbnail" src="@Model.Asset.ImageUrl" alt="@Model.Asset.Name">
+                }
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <div class="table-responsive">
+                    <table class="table table--be_info">
+                        <tbody>
+                            <tr>
+                                @*<th colspan="2">Advanced details</th>*@
+                                <th>Address</th>
+                                <th>Ownership</th>
+                                <th>Amount</th>
+                            </tr>
+                            @foreach (var addressSum in Model.AddressSummaries.OrderByDescending(p=>p.BalancePercenage))
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("Index", "Address", new {id = addressSum.Address})">@addressSum.Address</a>
+                                    </td>
+                                    <td>
+                                        @addressSum.BalancePercenage.ToString("F2") %
+                                    </td>
+                                    <td>
+                                        @addressSum.Balance.ToString("F2") @Model.Asset.NameShort
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="2">Total</td>
+                                <td>@Model.Total.ToString("F2") @Model.Asset.NameShort</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

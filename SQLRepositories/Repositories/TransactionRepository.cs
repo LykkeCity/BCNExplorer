@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.AssetBlockChanges;
@@ -30,6 +31,7 @@ namespace SQLRepositories.Repositories
                 db.Transactions.AddRange(entitiesToAdd);
 
                 await db.SaveChangesAsync();
+
             }
         }
     }
