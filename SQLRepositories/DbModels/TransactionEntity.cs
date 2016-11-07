@@ -17,7 +17,6 @@ namespace SQLRepositories.DbModels
                 if (ReferenceEquals(x, y)) return true;
                 if (ReferenceEquals(x, null)) return false;
                 if (ReferenceEquals(y, null)) return false;
-                if (x.GetType() != y.GetType()) return false;
                 return string.Equals(x.Hash, y.Hash);
             }
 
@@ -40,6 +39,9 @@ namespace SQLRepositories.DbModels
 
         [Required]
         public string BlockHash { get; set; }
+
+        [ForeignKey("BlockHash")]
+        public virtual BlockEntity Block { get; set; }
 
         public static TransactionEntity Create(ITransaction tr)
         {

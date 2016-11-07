@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Core.AssetBlockChanges;
 
@@ -19,8 +20,21 @@ namespace SQLRepositories.DbModels
         [Required]
         public string TransactionHash { get; set; }
 
-        public string Address { get; set; }
+        [ForeignKey("TransactionHash")]
+        public virtual TransactionEntity Transaction { get; set; }
 
+        public string Address { get; set; }
+        
+        [ForeignKey("TransactionHash")]
+        public virtual AddressEntity AddressEntity { get; set; }
+
+        [NotMapped]
+        public string BlockHash {
+            get
+            {
+                throw new NotImplementedException();
+            } }
+        
         public static BalanceChangeEntity Create(IBalanceChange balanceChange)
         {
             return new BalanceChangeEntity

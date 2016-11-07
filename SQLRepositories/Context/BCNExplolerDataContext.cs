@@ -14,5 +14,6 @@ namespace SQLRepositories.Context
         public DbSet<TransactionEntity> Transactions { get; set; } 
         public DbSet<BlockEntity> Blocks { get; set; } 
         public DbSet<BalanceChangeEntity> BalanceChanges { get; set; } 
+        public DbSet<ParsedAddressBlockEntity> ParsedAddressBlockEntities { get; set; } 
     }
 }

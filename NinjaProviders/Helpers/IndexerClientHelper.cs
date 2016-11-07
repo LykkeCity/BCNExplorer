@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -21,7 +22,7 @@ namespace Providers.Helpers
         public static async Task<IEnumerable<OrderedBalanceChange>> GetConfirmedBalanceChangesAsync(this IndexerClient indexerClient,
      BalanceId balanceId, ConcurrentChain mainChain, SemaphoreSlim semaphore, int fromBlockHeight, int toBlock)
         {
-
+            
             await semaphore.WaitAsync();
             try
             {

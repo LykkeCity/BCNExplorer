@@ -13,6 +13,7 @@ namespace Core.AssetBlockChanges
         double Change { get; }
         string TransactionHash { get; }
         string Address { get; }
+        string BlockHash { get; }
     }
 
     public class BalanceChange: IBalanceChange
@@ -22,10 +23,11 @@ namespace Core.AssetBlockChanges
         public double Change { get; set; }
         public string TransactionHash { get; set; }
         public string Address { get; set; }
+        public string BlockHash { get; set; }
     }
 
     public interface IBalanceChangesRepository
     {
-        Task AddAsync(params IBalanceChange[] balanceChanges);
+        Task AddAsync(string legacyAddress, params IBalanceChange[] balanceChanges);
     }
 }
