@@ -23,11 +23,11 @@ namespace SQLRepositories.Repositories
         {
             try
             {
-                await _lock.WaitAsync().ConfigureAwait(false);
+                await _lock.WaitAsync();
                 using (var db = _bcnExplolerFactory.GetContext())
                 {
                     var postedHashes = addresses.Select(p => p.ColoredAddress);
-                    var existed = await db.Addresses.Where(p => postedHashes.Contains(p.ColoredAddress)).ToListAsync().ConfigureAwait(false);
+                    var existed = await db.Addresses.Where(p => postedHashes.Contains(p.ColoredAddress)).ToListAsync();
                     var posted =
                         addresses.Where(p => p != null).Select(AddressEntity.Create).Distinct(AddressEntity.LegacyAddressComparer);
                     //Do not add existed in db 
@@ -35,7 +35,7 @@ namespace SQLRepositories.Repositories
                         posted.Where(p => !existed.Contains(p, AddressEntity.LegacyAddressComparer));
 
                     db.Addresses.AddRange(entitiesToAdd);
-                    await db.SaveChangesAsync().ConfigureAwait(false);
+                    await db.SaveChangesAsync();
                 }
             }
             finally

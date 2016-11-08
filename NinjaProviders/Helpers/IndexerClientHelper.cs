@@ -23,7 +23,7 @@ namespace Providers.Helpers
      BalanceId balanceId, ConcurrentChain mainChain, SemaphoreSlim semaphore, int fromBlockHeight, int toBlock)
         {
             
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync().ConfigureAwait(false);
             try
             {
                 var startBlock = mainChain.GetBlock(fromBlockHeight);
@@ -33,7 +33,8 @@ namespace Providers.Helpers
                 balanceQuery.RawOrdering = true;
                 balanceQuery.From = new ConfirmedBalanceLocator(startBlock.Height, startBlock.HashBlock);
                 balanceQuery.To = new ConfirmedBalanceLocator(stopBlock.Height, stopBlock.HashBlock);
-                var ordBalances = await Task.WhenAll(indexerClient.GetOrderedBalanceAsync(balanceId, balanceQuery));
+                
+                var ordBalances = await Task.WhenAll(indexerClient.GetOrderedBalanceAsync(balanceId, balanceQuery)).ConfigureAwait(false);
 
                 return ordBalances.SelectMany(p => p.ToArray()).AsBalanceSheet(mainChain).Confirmed;
             }

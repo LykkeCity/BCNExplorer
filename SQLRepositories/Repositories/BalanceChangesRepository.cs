@@ -24,13 +24,13 @@ namespace SQLRepositories.Repositories
         {
             try
             {
-                await _lock.WaitAsync().ConfigureAwait(false);
+                await _lock.WaitAsync();
                 using (var db = _bcnExplolerFactory.GetContext())
                 {
                     var blockHashes = balanceChanges.Select(p => p.BlockHash);
                     var existedParsedAddressBlocks = await db.ParsedAddressBlockEntities
                         .Where(p => p.Address == legacyAddress && blockHashes.Contains(p.BlockHash))
-                        .ToListAsync().ConfigureAwait(false);
+                        .ToListAsync();
 
                     //not to add alredy parsed changes
                     var entities = balanceChanges.Select(BalanceChangeEntity.Create)
@@ -48,7 +48,7 @@ namespace SQLRepositories.Repositories
 
                     db.ParsedAddressBlockEntities.AddRange(postedParsedAddressBlocks);
 
-                    await db.SaveChangesAsync().ConfigureAwait(false);
+                    await db.SaveChangesAsync();
                 }
             }
             finally

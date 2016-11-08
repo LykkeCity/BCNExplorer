@@ -23,7 +23,7 @@ namespace SQLRepositories.Repositories
         {
             try
             {
-                await _lock.WaitAsync().ConfigureAwait(false);
+                await _lock.WaitAsync();
                 using (var db = _bcnExplolerFactory.GetContext())
                 {
                     var posted = blocks.Where(p => p != null)
@@ -32,7 +32,7 @@ namespace SQLRepositories.Repositories
                         .ToList();
 
                     var postedHashes = posted.Select(p => p.Hash).ToList();
-                    var existed = await db.Blocks.Where(p => postedHashes.Contains(p.Hash)).ToListAsync().ConfigureAwait(false);
+                    var existed = await db.Blocks.Where(p => postedHashes.Contains(p.Hash)).ToListAsync();
 
                     //Do not add existed in db 
                     var entitiesToAdd =
@@ -40,7 +40,7 @@ namespace SQLRepositories.Repositories
                         .ToList();
 
                     db.Blocks.AddRange(entitiesToAdd);
-                    await db.SaveChangesAsync().ConfigureAwait(false);
+                    await db.SaveChangesAsync();
                 }
             }
             finally

@@ -24,7 +24,7 @@ namespace SQLRepositories.Repositories
         {
             try
             {
-                await _lock.WaitAsync().ConfigureAwait(false);
+                await _lock.WaitAsync();
                 using (var db = _bcnExplolerFactory.GetContext())
                 {
                     var posted = transactions
@@ -40,7 +40,7 @@ namespace SQLRepositories.Repositories
                         posted.Where(p => !existed.Contains(p, TransactionEntity.TransactionHashComparer))
                         .ToList();
                     db.Transactions.AddRange(entitiesToAdd);
-                    await db.SaveChangesAsync().ConfigureAwait(false);
+                    await db.SaveChangesAsync();
                 }
             }
             finally
