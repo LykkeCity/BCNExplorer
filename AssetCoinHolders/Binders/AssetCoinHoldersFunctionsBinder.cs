@@ -15,7 +15,7 @@ namespace AssetCoinHoldersScanner.Binders
             ioc.Register<IParseBlockQueueReader>(AssetFunctionsFactories.CreateUpdateParseBlockCommandQueueReader(baseSettings, log));
             ioc.RegisterSingleTone<SendMonitorData>();
             ioc.RegisterSingleTone<ParseBlocksFunctions>();
-            ioc.RegisterSingleTone<ParseBlockCommandQueueConsumer>();
+            ioc.RegisterSingleTone<ParseBalanceChangesCommandQueueConsumer>();
         }
     }
 

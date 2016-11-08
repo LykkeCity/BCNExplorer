@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using SQLRepositories.DbModels;
 
 namespace SQLRepositories.Context
@@ -7,7 +8,7 @@ namespace SQLRepositories.Context
     {
         public BcnExplolerDataContext(string connectionString):base(connectionString)
         {
-            
+            ((IObjectContextAdapter)this).ObjectContext.CommandTimeout = 360;
         }
 
         public DbSet<AddressEntity> Addresses { get; set; }

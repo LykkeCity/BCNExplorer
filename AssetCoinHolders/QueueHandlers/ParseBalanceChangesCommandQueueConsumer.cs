@@ -8,20 +8,21 @@ using AzureStorage.Queue;
 using Common;
 using Common.Log;
 using Core.Asset;
+using NBitcoin;
 using NBitcoin.Indexer;
 using NBitcoin.OpenAsset;
 using Providers.Helpers;
 
 namespace AssetCoinHoldersScanner.QueueHandlers
 {
-    public class ParseBlockCommandQueueConsumer : IStarter
+    public class ParseBalanceChangesCommandQueueConsumer : IStarter
     {
         private readonly IParseBlockQueueReader _queueReader;
         private readonly ILog _log;
         private readonly IndexerClient _indexerClient;
         private readonly IAssetDefinitionParsedBlockRepository _assetDefinitionParsedBlockRepository;
 
-        public ParseBlockCommandQueueConsumer(ILog log, 
+        public ParseBalanceChangesCommandQueueConsumer(ILog log, 
             IParseBlockQueueReader queueReader, 
             IndexerClient indexerClient, 
             IAssetDefinitionParsedBlockRepository assetDefinitionParsedBlockRepository)
@@ -35,7 +36,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
             {
                 if (data == null)
                 {
-                    await _log.WriteInfo("ParseBlockCommandQueueConsumer", "InitQueues", null, "Queue had unknown message");
+                    await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "InitQueues", null, "Queue had unknown message");
                     return false;
                 }
                 return true;
@@ -53,13 +54,13 @@ namespace AssetCoinHoldersScanner.QueueHandlers
 
 
 
-                await _log.WriteInfo("ParseBlockCommandQueueConsumer", "ParseBlock", context.ToJson(), "Done");
+                await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), "Done");
 
                 await _assetDefinitionParsedBlockRepository.AddBlockAsync(AssetDefinitionParsedBlock.Create(context.BlockHash));
             }
             catch (Exception e)
             {
-                await _log.WriteError("ParseBlockCommandQueueConsumer", "ParseBlock", context.ToJson(), e);
+                await _log.WriteError("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), e);
             }
         }
         
@@ -67,7 +68,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
         public void Start()
         {
             _queueReader.Start();
-            _log.WriteInfo("ParseBlockCommandQueueConsumer", "Start", null,
+            _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "Start", null,
                 $"Started:{_queueReader.GetComponentName()}");
         }
     }

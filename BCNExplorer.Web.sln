@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetCoinHoldersScanner", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLRepositories", "SQLRepositories\SQLRepositories.csproj", "{1BDB259D-0C8E-4DC8-B8D3-96769CEC785C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{610F820D-9443-453C-ABFD-1A34026B4AE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,14 @@ Global
 		{1BDB259D-0C8E-4DC8-B8D3-96769CEC785C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1BDB259D-0C8E-4DC8-B8D3-96769CEC785C}.Release|x64.ActiveCfg = Release|Any CPU
 		{1BDB259D-0C8E-4DC8-B8D3-96769CEC785C}.Release|x64.Build.0 = Release|Any CPU
+		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Debug|x64.Build.0 = Debug|Any CPU
+		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Release|x64.ActiveCfg = Release|Any CPU
+		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
