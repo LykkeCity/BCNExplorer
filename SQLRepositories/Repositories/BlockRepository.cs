@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBlockChanges;
+using EntityFramework.BulkInsert.Extensions;
 using SQLRepositories.Context;
 using SQLRepositories.DbModels;
 
@@ -39,7 +40,7 @@ namespace SQLRepositories.Repositories
                         posted.Where(p => !existed.Contains(p, BlockEntity.HashComparer))
                         .ToList();
 
-                    db.Blocks.AddRange(entitiesToAdd);
+                    db.BulkInsert(entitiesToAdd);
                     await db.SaveChangesAsync();
                 }
             }

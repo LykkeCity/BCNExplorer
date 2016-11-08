@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBlockChanges;
+using EntityFramework.BulkInsert.Extensions;
 using SQLRepositories.Context;
 using SQLRepositories.DbModels;
 
@@ -35,9 +36,7 @@ namespace SQLRepositories.Repositories
                     //not to add alredy parsed changes
                     var entities = balanceChanges.Select(BalanceChangeEntity.Create)
                         .Where(p => existedParsedAddressBlocks.All(epab => epab.Address != p.Address && epab.BlockHash != p.BlockHash));
-
-                    db.BalanceChanges.AddRange(entities);
-
+                    
                     var postedParsedAddressBlocks = balanceChanges
                         .Select(p => new ParsedAddressBlockEntity
                         {
@@ -45,8 +44,9 @@ namespace SQLRepositories.Repositories
                             BlockHash = p.BlockHash
                         }).Where(p => !existedParsedAddressBlocks.Contains(p, ParsedAddressBlockEntity.AddressBlockHashComparer))
                         .Distinct(ParsedAddressBlockEntity.AddressBlockHashComparer);
-
-                    db.ParsedAddressBlockEntities.AddRange(postedParsedAddressBlocks);
+                    
+                    db.BulkInsert(entities);
+                    db.BulkInsert(postedParsedAddressBlocks);
 
                     await db.SaveChangesAsync();
                 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBlockChanges;
+using EntityFramework.BulkInsert.Extensions;
 using SQLRepositories.Context;
 using SQLRepositories.DbModels;
 
@@ -34,7 +35,7 @@ namespace SQLRepositories.Repositories
                     var entitiesToAdd =
                         posted.Where(p => !existed.Contains(p, AddressEntity.LegacyAddressComparer));
 
-                    db.Addresses.AddRange(entitiesToAdd);
+                    db.BulkInsert(entitiesToAdd);
                     await db.SaveChangesAsync();
                 }
             }
