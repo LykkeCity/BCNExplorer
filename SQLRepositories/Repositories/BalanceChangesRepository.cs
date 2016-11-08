@@ -65,7 +65,7 @@ namespace SQLRepositories.Repositories
                     .GroupBy(p => p.Address)
                     .Select(p=> new
                     {
-                        Address = p.FirstOrDefault().AddressEntity.ColoredAddress,
+                        Address = p.Key,
                         Balance = p.Sum(g => g.Change)
                     }).ToListAsync();
 

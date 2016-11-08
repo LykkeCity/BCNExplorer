@@ -26,8 +26,8 @@ namespace SQLRepositories.Repositories
                 await _lock.WaitAsync().ConfigureAwait(false);
                 using (var db = _bcnExplolerFactory.GetContext())
                 {
-                    var postedHashes = addresses.Select(p => p.LegacyAddress);
-                    var existed = await db.Addresses.Where(p => postedHashes.Contains(p.LegacyAddress)).ToListAsync().ConfigureAwait(false);
+                    var postedHashes = addresses.Select(p => p.ColoredAddress);
+                    var existed = await db.Addresses.Where(p => postedHashes.Contains(p.ColoredAddress)).ToListAsync().ConfigureAwait(false);
                     var posted =
                         addresses.Where(p => p != null).Select(AddressEntity.Create).Distinct(AddressEntity.LegacyAddressComparer);
                     //Do not add existed in db 

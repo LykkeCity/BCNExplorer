@@ -67,10 +67,10 @@ namespace TestConsole
             //using (var db = SqlRepoFactories.GetBcnExplolerDataContext(baseSettings, log))
             //{
             //    var addresses =
-            //        addressResults.Distinct(AddressResult.LegacyAddressColoredAddressComparer).Select(p => new AddressEntity
+            //        addressResults.Distinct(AddressResult.AddressColoredAddressComparer).Select(p => new AddressEntity
             //        {
             //            ColoredAddress = p.ColoredAddress,
-            //            LegacyAddress = p.LegacyAddress
+            //            ColoredAddress = p.ColoredAddress
             //        });
 
             //    db.Addresses.AddRange(addresses);
@@ -92,7 +92,6 @@ namespace TestConsole
                         Newtonsoft.Json.JsonConvert.DeserializeObject<CoinprismAssetContract>(await sr.ReadToEndAsync());
                     return t.owners.Select(p=>new AddressResult
                     {
-                        LegacyAddress   = p.Address,
                         ColoredAddress = GetColoredAddress(p.Address).ToString()
                     });
                 }
@@ -101,7 +100,7 @@ namespace TestConsole
 
         public class AddressResult:IAddress
         {
-            private sealed class LegacyAddressColoredAddressEqualityComparer : IEqualityComparer<AddressResult>
+            private sealed class AddressColoredAddressEqualityComparer : IEqualityComparer<AddressResult>
             {
                 public bool Equals(AddressResult x, AddressResult y)
                 {
@@ -109,26 +108,25 @@ namespace TestConsole
                     if (ReferenceEquals(x, null)) return false;
                     if (ReferenceEquals(y, null)) return false;
                     if (x.GetType() != y.GetType()) return false;
-                    return string.Equals(x.LegacyAddress, y.LegacyAddress) && string.Equals(x.ColoredAddress, y.ColoredAddress);
+                    return string.Equals(x.ColoredAddress, y.ColoredAddress) && string.Equals(x.ColoredAddress, y.ColoredAddress);
                 }
 
                 public int GetHashCode(AddressResult obj)
                 {
                     unchecked
                     {
-                        return ((obj.LegacyAddress != null ? obj.LegacyAddress.GetHashCode() : 0)*397) ^ (obj.ColoredAddress != null ? obj.ColoredAddress.GetHashCode() : 0);
+                        return ((obj.ColoredAddress != null ? obj.ColoredAddress.GetHashCode() : 0)*397) ^ (obj.ColoredAddress != null ? obj.ColoredAddress.GetHashCode() : 0);
                     }
                 }
             }
 
-            private static readonly IEqualityComparer<AddressResult> LegacyAddressColoredAddressComparerInstance = new LegacyAddressColoredAddressEqualityComparer();
+            private static readonly IEqualityComparer<AddressResult> AddressColoredAddressComparerInstance = new AddressColoredAddressEqualityComparer();
 
-            public static IEqualityComparer<AddressResult> LegacyAddressColoredAddressComparer
+            public static IEqualityComparer<AddressResult> AddressColoredAddressComparer
             {
-                get { return LegacyAddressColoredAddressComparerInstance; }
+                get { return AddressColoredAddressComparerInstance; }
             }
 
-            public string LegacyAddress { get; set; }
             public string ColoredAddress { get; set; }
 
         }
@@ -141,7 +139,6 @@ namespace TestConsole
             }
             catch (Exception)
             {
-                
                 return new BitcoinColoredAddress(new BitcoinScriptAddress(legacyAddress, Network.Main));
             }
 

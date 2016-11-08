@@ -32,7 +32,7 @@ namespace TestConsole
 
 
 
-            var asset = "ASzmrSxhHjioWMYivoawap9yY4cxAfAMxR";
+            var asset = "AKi5F8zPm7Vn1FhLqQhvLdoWNvWqtwEaig";
 
             Console.WriteLine("Getting Coinprism addresses");
             var coinprismAddresses = (await GetAddressesWithColoredAssets.GetAddresses(asset)).ToArray();
@@ -40,10 +40,10 @@ namespace TestConsole
             Console.WriteLine("Saving addresses");
             await addressRepo.AddAsync(coinprismAddresses);
             Console.WriteLine("Saving addresses done");
-            var addresses = (await addressRepo.GetAllAsync()).OrderBy(p => p.LegacyAddress).ToArray();
+            var addresses = (await addressRepo.GetAllAsync()).OrderBy(p => p.ColoredAddress).ToArray();
 
-            var legacyAddresses = coinprismAddresses.Select(x => x.LegacyAddress).ToArray();
-            addresses = addresses.Where(p => legacyAddresses.Contains(p.LegacyAddress)).ToArray();
+            var legacyAddresses = coinprismAddresses.Select(x => x.ColoredAddress).ToArray();
+            addresses = addresses.Where(p => legacyAddresses.Contains(p.ColoredAddress)).ToArray();
 
             var mainChain = mainChainRepository.GetMainChainAsync().Result;
 
@@ -57,14 +57,14 @@ namespace TestConsole
             Console.WriteLine("Retrievingbalances");
             foreach (var address in addresses)
             {
-                var balanceId = BalanceIdHelper.Parse(address.LegacyAddress, Network.Main);
+                var balanceId = BalanceIdHelper.Parse(address.ColoredAddress, Network.Main);
 
                 var changesTask = indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0, mainChain.Height).ContinueWith(
                     async task =>
                     {
                         try
                         {
-                            if (address.LegacyAddress == "38DdqhVuqb36jjmxTbvBkiFPXKA8EmW9Ly")
+                            if (address.ColoredAddress == "38DdqhVuqb36jjmxTbvBkiFPXKA8EmW9Ly")
                             {
                                 
                             }
@@ -95,12 +95,12 @@ namespace TestConsole
                                 AssetId = p.AssetId,
                                 Change = p.Quantity,
                                 TransactionHash = p.TransactionHash,
-                                Address = address.LegacyAddress,
+                                Address = address.ColoredAddress,
                                 BlockHash = p.BlockHash
                             }).ToArray();
 
 
-                            await changesRepo.AddAsync(address.LegacyAddress, balanceChanges);
+                            await changesRepo.AddAsync(address.ColoredAddress, balanceChanges);
                         }
                         catch (Exception e )
                         {

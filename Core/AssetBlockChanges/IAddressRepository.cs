@@ -8,13 +8,11 @@ namespace Core.AssetBlockChanges
 {
     public interface IAddress
     {
-        string LegacyAddress { get; }
-        string ColoredAddress { get;  }
+        string ColoredAddress { get; }
     }
 
     public class Address: IAddress
     {
-        public string LegacyAddress { get; set; }
         public string ColoredAddress { get; set; }
     }
 

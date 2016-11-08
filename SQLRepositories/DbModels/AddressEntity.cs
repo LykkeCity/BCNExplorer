@@ -17,12 +17,12 @@ namespace SQLRepositories.DbModels
                 if (ReferenceEquals(x, y)) return true;
                 if (ReferenceEquals(x, null)) return false;
                 if (ReferenceEquals(y, null)) return false;
-                return string.Equals(x.LegacyAddress, y.LegacyAddress);
+                return string.Equals(x.ColoredAddress, y.ColoredAddress);
             }
 
             public int GetHashCode(AddressEntity obj)
             {
-                return (obj.LegacyAddress != null ? obj.LegacyAddress.GetHashCode() : 0);
+                return (obj.ColoredAddress != null ? obj.ColoredAddress.GetHashCode() : 0);
             }
         }
 
@@ -36,17 +36,13 @@ namespace SQLRepositories.DbModels
         #endregion
 
         [Key]
-        public string LegacyAddress { get; set; }
-
-        [Required]
         public string ColoredAddress { get; set; }
-
+        
         public static AddressEntity Create(IAddress address)
         {
             return new AddressEntity
             {
-                ColoredAddress = address.ColoredAddress,
-                LegacyAddress = address.LegacyAddress
+                ColoredAddress = address.ColoredAddress
             };
         }
     }
