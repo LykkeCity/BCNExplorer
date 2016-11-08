@@ -23,6 +23,5 @@ namespace Core.Asset
     public interface IAssetChangesParsedBlockRepository
     {
         Task<bool> IsBlockExistsAsync(IAssetChangesParsedBlock block);
-        Task AddBlockAsync(IAssetChangesParsedBlock block);
     }
 }

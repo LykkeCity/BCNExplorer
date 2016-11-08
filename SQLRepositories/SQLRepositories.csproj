@@ -63,6 +63,7 @@
     <Compile Include="Repositories\AddressRepository.cs" />
     <Compile Include="Repositories\BalanceChangesRepository.cs" />
     <Compile Include="Repositories\BlockRepository.cs" />
+    <Compile Include="Repositories\ParsedAddressBlockRepository.cs" />
     <Compile Include="Repositories\TransactionRepository.cs" />
   </ItemGroup>
   <ItemGroup>

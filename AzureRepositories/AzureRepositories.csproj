@@ -94,7 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetCoinHolders\AssetChangesParseBlockCommandProducer.cs" />
-    <Compile Include="AssetCoinHolders\AssetChangesParsedBlockRepository.cs" />
     <Compile Include="AssetDefinition\AssetDefinitionParseBlockCommandProducer.cs" />
     <Compile Include="AssetDefinition\AssetDefinitionRepository.cs" />
     <Compile Include="AssetDefinition\AssetDefinitionParsedBlockRepository.cs" />

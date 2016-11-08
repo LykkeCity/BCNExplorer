@@ -31,5 +31,10 @@ namespace SQLRepositories.Binding
         {
             return new BalanceChangesRepository(bcnExplolerFactory);
         }
+
+        public static ParsedAddressBlockRepository GetParsedAddressBlockRepository(BaseSettings baseSettings, ILog log, BcnExplolerFactory bcnExplolerFactory)
+        {
+            return new ParsedAddressBlockRepository(bcnExplolerFactory);
+        }
     }
 }

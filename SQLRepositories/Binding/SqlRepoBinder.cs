@@ -1,5 +1,6 @@
 ﻿using Common.IocContainer;
 using Common.Log;
+using Core.Asset;
 using Core.AssetBlockChanges;
 using Core.Settings;
 using SQLRepositories.Context;
@@ -15,6 +16,7 @@ namespace SQLRepositories.Binding
             ioc.Register<ITransactionRepository>(SqlRepoFactories.GetTransactionRepository(baseSettings, log, ioc.GetObject<BcnExplolerFactory>()));
             ioc.Register<IBlockRepository>(SqlRepoFactories.GetBlockRepository(baseSettings, log, ioc.GetObject<BcnExplolerFactory>()));
             ioc.Register<IBalanceChangesRepository>(SqlRepoFactories.GetBalanceChangesRepository(baseSettings, log, ioc.GetObject<BcnExplolerFactory>()));
+            ioc.Register<IAssetChangesParsedBlockRepository>(SqlRepoFactories.GetParsedAddressBlockRepository(baseSettings, log, ioc.GetObject<BcnExplolerFactory>()));
         }
     }
 }

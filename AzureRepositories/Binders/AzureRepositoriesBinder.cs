@@ -14,7 +14,6 @@ namespace AzureRepositories.Binders
         {
             ioc.Register<IAssetDefinitionRepository>(AzureRepoFactories.CreateAssetDefinitionsRepository(baseSettings, log));
             ioc.Register<IAssetDefinitionParsedBlockRepository>(AzureRepoFactories.CreateAssetParsedBlockRepository(baseSettings, log));
-            ioc.Register<IAssetChangesParsedBlockRepository>(AzureRepoFactories.CreateAssetChangesParsedBlockRepository(baseSettings, log));
 
             ioc.Register(AzureRepoFactories.CreateUpdateAssetDataCommandProducer(baseSettings, log));
             ioc.Register(AzureRepoFactories.CreateAssetDefinitionParseBlockCommandProducer(baseSettings, log));

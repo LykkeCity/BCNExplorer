@@ -33,10 +33,5 @@ namespace AzureRepositories
         {
             return new AssetDefinitionParsedBlockRepository(new AzureTableStorage<AssetDefinitionParsedBlockEntity>(baseSettings.Db.AssetsConnString, "AssetParsedBlocks", log));
         }
-
-        public static AssetChangesParsedBlockRepository CreateAssetChangesParsedBlockRepository(BaseSettings baseSettings, ILog log)
-        {
-            return new AssetChangesParsedBlockRepository(new AzureTableStorage<AssetChangesParsedBlockEntity>(baseSettings.Db.AssetsConnString, "AssetChangesParsedBlocks", log));
-        }
     }
 }
