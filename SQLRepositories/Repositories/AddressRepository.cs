@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBlockChanges;
 using SQLRepositories.Context;
@@ -12,6 +13,7 @@ namespace SQLRepositories.Repositories
     {
         private readonly BcnExplolerFactory _bcnExplolerFactory;
 
+        private static readonly SemaphoreSlim _lock = new SemaphoreSlim(initialCount: 1);
         public AddressRepository(BcnExplolerFactory bcnExplolerFactory)
         {
             _bcnExplolerFactory = bcnExplolerFactory;
@@ -19,18 +21,26 @@ namespace SQLRepositories.Repositories
 
         public async Task AddAsync(IAddress[] addresses)
         {
-            using (var db = _bcnExplolerFactory.GetContext())
+            try
             {
-                var postedHashes = addresses.Select(p => p.LegacyAddress);
-                var existed = await db.Addresses.Where(p => postedHashes.Contains(p.LegacyAddress)).ToListAsync();
-                var posted =
-                    addresses.Where(p => p != null).Select(AddressEntity.Create).Distinct(AddressEntity.LegacyAddressComparer);
-                //Do not add existed in db 
-                var entitiesToAdd =
-                    posted.Where(p => !existed.Contains(p, AddressEntity.LegacyAddressComparer));
+                await _lock.WaitAsync().ConfigureAwait(false);
+                using (var db = _bcnExplolerFactory.GetContext())
+                {
+                    var postedHashes = addresses.Select(p => p.LegacyAddress);
+                    var existed = await db.Addresses.Where(p => postedHashes.Contains(p.LegacyAddress)).ToListAsync().ConfigureAwait(false);
+                    var posted =
+                        addresses.Where(p => p != null).Select(AddressEntity.Create).Distinct(AddressEntity.LegacyAddressComparer);
+                    //Do not add existed in db 
+                    var entitiesToAdd =
+                        posted.Where(p => !existed.Contains(p, AddressEntity.LegacyAddressComparer));
 
-                db.Addresses.AddRange(entitiesToAdd);
-                await db.SaveChangesAsync();
+                    db.Addresses.AddRange(entitiesToAdd);
+                    await db.SaveChangesAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                _lock.Release();
             }
         }
 

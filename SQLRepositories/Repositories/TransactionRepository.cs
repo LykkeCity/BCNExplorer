@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBlockChanges;
 using SQLRepositories.Context;
@@ -12,6 +13,8 @@ namespace SQLRepositories.Repositories
     {
         private readonly BcnExplolerFactory _bcnExplolerFactory;
 
+        private static readonly SemaphoreSlim _lock = new SemaphoreSlim(initialCount: 1);
+
         public TransactionRepository(BcnExplolerFactory bcnExplolerFactory)
         {
             _bcnExplolerFactory = bcnExplolerFactory;
@@ -19,19 +22,30 @@ namespace SQLRepositories.Repositories
 
         public async Task AddAsync(ITransaction[] transactions)
         {
-            using (var db = _bcnExplolerFactory.GetContext())
+            try
             {
-                var postedHashes = transactions.Select(p => p.Hash);
-                var existed = await db.Transactions.Where(p => postedHashes.Contains(p.Hash)).ToListAsync();
-                var posted = transactions.Where(p => p != null).Select(TransactionEntity.Create).Distinct(TransactionEntity.TransactionHashComparer);
+                await _lock.WaitAsync().ConfigureAwait(false);
+                using (var db = _bcnExplolerFactory.GetContext())
+                {
+                    var posted = transactions
+                        .Where(p => p != null)
+                        .Select(TransactionEntity.Create)
+                        .Distinct(TransactionEntity.TransactionHashComparer)
+                        .ToList();
 
-                //Do not add existed in db 
-                var entitiesToAdd =
-                    posted.Where(p => !existed.Contains(p, TransactionEntity.TransactionHashComparer));
-                db.Transactions.AddRange(entitiesToAdd);
-
-                await db.SaveChangesAsync();
-
+                    var postedHashes = posted.Select(p => p.Hash).ToList();
+                    var existed = db.Transactions.Where(p => postedHashes.Contains(p.Hash)).ToList();
+                    //Do not add existed in db 
+                    var entitiesToAdd =
+                        posted.Where(p => !existed.Contains(p, TransactionEntity.TransactionHashComparer))
+                        .ToList();
+                    db.Transactions.AddRange(entitiesToAdd);
+                    await db.SaveChangesAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                _lock.Release();
             }
         }
     }

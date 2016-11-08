@@ -1,5 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.AssetBlockChanges;
 using SQLRepositories.Context;
@@ -10,6 +12,7 @@ namespace SQLRepositories.Repositories
     public class BlockRepository:IBlockRepository
     {
         private readonly BcnExplolerFactory _bcnExplolerFactory;
+        private static readonly SemaphoreSlim _lock = new SemaphoreSlim(initialCount: 1);
 
         public BlockRepository(BcnExplolerFactory bcnExplolerFactory)
         {
@@ -18,19 +21,33 @@ namespace SQLRepositories.Repositories
 
         public async Task AddAsync(IBlock[] blocks)
         {
-            using (var db = _bcnExplolerFactory.GetContext())
+            try
             {
-                var postedHashes = blocks.Select(p => p.Hash);
-                var existed = await db.Blocks.Where(p => postedHashes.Contains(p.Hash)).ToListAsync();
-                var posted =
-                    blocks.Where(p => p != null).Select(BlockEntity.Create).Distinct(BlockEntity.HashComparer);
-                //Do not add existed in db 
-                var entitiesToAdd =
-                    posted.Where(p => !existed.Contains(p, BlockEntity.HashComparer));
+                await _lock.WaitAsync().ConfigureAwait(false);
+                using (var db = _bcnExplolerFactory.GetContext())
+                {
+                    var posted = blocks.Where(p => p != null)
+                        .Select(BlockEntity.Create)
+                        .Distinct(BlockEntity.HashComparer)
+                        .ToList();
 
-                db.Blocks.AddRange(entitiesToAdd);
-                await db.SaveChangesAsync();
+                    var postedHashes = posted.Select(p => p.Hash).ToList();
+                    var existed = await db.Blocks.Where(p => postedHashes.Contains(p.Hash)).ToListAsync().ConfigureAwait(false);
+
+                    //Do not add existed in db 
+                    var entitiesToAdd =
+                        posted.Where(p => !existed.Contains(p, BlockEntity.HashComparer))
+                        .ToList();
+
+                    db.Blocks.AddRange(entitiesToAdd);
+                    await db.SaveChangesAsync().ConfigureAwait(false);
+                }
             }
+            finally
+            {
+                _lock.Release();
+            }
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Core.AssetBlockChanges;
@@ -17,7 +18,7 @@ namespace SQLRepositories.DbModels
                 if (ReferenceEquals(x, y)) return true;
                 if (ReferenceEquals(x, null)) return false;
                 if (ReferenceEquals(y, null)) return false;
-                return string.Equals(x.Hash, y.Hash);
+                return string.Equals(x.Hash, y.Hash, StringComparison.InvariantCultureIgnoreCase);
             }
 
             public int GetHashCode(TransactionEntity obj)
