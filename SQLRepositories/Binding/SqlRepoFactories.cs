@@ -9,7 +9,6 @@ namespace SQLRepositories.Binding
     {
         public static BcnExplolerDataContext GetBcnExplolerDataContext(BaseSettings baseSettings, ILog log)
         {
-            baseSettings.Db.SqlConnString = "Data Source=LENOVO-PC;Initial Catalog=BCNExploler;Integrated Security=True;";
             return new BcnExplolerDataContext(baseSettings.Db.SqlConnString);
         }
 
