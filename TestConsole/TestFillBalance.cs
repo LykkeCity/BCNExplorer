@@ -34,7 +34,7 @@ namespace TestConsole
 
 
 
-            var asset = "AKi5F8zPm7Vn1FhLqQhvLdoWNvWqtwEaig";
+            //var asset = "AKi5F8zPm7Vn1FhLqQhvLdoWNvWqtwEaig";
 
             //Console.WriteLine("Getting Coinprism addresses");
             //var coinprismAddresses = (await GetAddressesWithColoredAssets.GetAddresses(asset)).ToArray();
@@ -61,7 +61,7 @@ namespace TestConsole
             IEnumerable<AddressEntity> addr;
             using (var db = contextFactory.GetContext())
             {
-                addr = db.Addresses.Where(p => !p.ParsedAddressBlockEntities.Any()).Where(p => p.ColoredAddress == "akaAkcynb6iJxHGaduJrFDBikU4grykKi9o").ToList();
+                addr = db.Addresses.Where(p => !p.ParsedAddressBlockEntities.Any()).ToList();
             }
             var counter = addr.Count();
             Console.WriteLine("Addr Count {0}", addr.Count());
