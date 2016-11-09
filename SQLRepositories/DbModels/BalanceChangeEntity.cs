@@ -14,8 +14,10 @@ namespace SQLRepositories.DbModels
         [Required]
         public string AssetId { get; set; }
 
+        [NotMapped]
         [Required]
         public double Change { get; set; }
+            
 
         [Required]
         public string TransactionHash { get; set; }

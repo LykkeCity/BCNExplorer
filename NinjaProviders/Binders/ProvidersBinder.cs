@@ -19,7 +19,8 @@ namespace Providers
             ioc.BindNinjaProviders();
             ioc.BindLykkeProviders();
             ioc.BindCommonProviders();
-            ioc.RegisterFactoryPerCall(()=> ProvidersFactories.CreateNinjaIndexerClient(baseSettings, log));
+            //ioc.RegisterFactoryPerCall(()=> ProvidersFactories.CreateNinjaIndexerClient(baseSettings, log));
+            ioc.RegisterSingleTone<IndexerClientFactory>();
         }
 
         private static void BindCommon(this IoC ioc)

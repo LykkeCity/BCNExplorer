@@ -8,6 +8,7 @@ using Core.Asset;
 using Microsoft.Azure.WebJobs;
 using NBitcoin;
 using NBitcoin.Indexer;
+using Providers;
 using Providers.Helpers;
 
 namespace AssetDefinitionScanner.TimerFunctions
@@ -16,10 +17,10 @@ namespace AssetDefinitionScanner.TimerFunctions
     {
         private readonly ILog _log;
         private readonly AssetDefinitionParseBlockCommandProducer _parseBlockCommandProducer;
-        private readonly IndexerClient _indexerClient;
+        private readonly IndexerClientFactory _indexerClient;
         private readonly IAssetDefinitionParsedBlockRepository _assetDefinitionParsedBlockRepository;
 
-        public ParseBlocksFunctions(ILog log, AssetDefinitionParseBlockCommandProducer parseBlockCommandProducer, IndexerClient indexerClient, IAssetDefinitionParsedBlockRepository assetDefinitionParsedBlockRepository)
+        public ParseBlocksFunctions(ILog log, AssetDefinitionParseBlockCommandProducer parseBlockCommandProducer, IndexerClientFactory indexerClient, IAssetDefinitionParsedBlockRepository assetDefinitionParsedBlockRepository)
         {
             _log = log;
             _parseBlockCommandProducer = parseBlockCommandProducer;
@@ -33,12 +34,13 @@ namespace AssetDefinitionScanner.TimerFunctions
 
             try
             {
-                blockPtr = _indexerClient.GetBestBlock().Header;
+                var client = _indexerClient.GetIndexerClient();
+                blockPtr = client.GetBestBlock().Header;
                 while (blockPtr != null && !(await _assetDefinitionParsedBlockRepository.IsBlockExistsAsync(AssetDefinitionParsedBlock.Create(blockPtr.GetBlockId()))))
                 {
                     await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
 
-                    blockPtr = _indexerClient.GetBlock(blockPtr.HashPrevBlock).Header;
+                    blockPtr = client.GetBlock(blockPtr.HashPrevBlock).Header;
                 }
 
                 await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Done");

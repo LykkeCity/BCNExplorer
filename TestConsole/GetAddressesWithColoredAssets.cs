@@ -58,11 +58,12 @@ namespace TestConsole
             }
 
             Console.WriteLine("Done");
-            Console.ReadLine();
+            //Console.ReadLine();
 
             var addressRepo = container.GetObject<IAddressRepository>();
 
             addressRepo.AddAsync(addressResults.ToArray()).Wait();
+            Console.WriteLine("save Done");
 
             //using (var db = SqlRepoFactories.GetBcnExplolerDataContext(baseSettings, log))
             //{

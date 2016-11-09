@@ -5,17 +5,18 @@ using Common.Files;
 using Common.Log;
 using NBitcoin;
 using NBitcoin.Indexer;
+using Providers;
 
 namespace JobsCommon
 {
     public class MainChainRepository
     {
-        private readonly IndexerClient _indexerClient;
+        private readonly IndexerClientFactory _indexerClient;
         private readonly ILog _log;
 
         private const string FilePath = "./chain.dat";
 
-        public MainChainRepository(IndexerClient indexerClient, ILog log)
+        public MainChainRepository(IndexerClientFactory indexerClient, ILog log)
         {
             _indexerClient = indexerClient;
             _log = log;
@@ -37,7 +38,7 @@ namespace JobsCommon
 
         private async Task<ConcurrentChain> GetFromIndexerAsync()
         {
-            return _indexerClient.GetMainChain();
+            return _indexerClient.GetIndexerClient().GetMainChain();
         }
 
         private async Task CacheChainAsync(ConcurrentChain chain)
@@ -62,7 +63,7 @@ namespace JobsCommon
             if (result != null)
             {
                 iniTip = result.Tip.Height;
-                var chainChanges = _indexerClient.GetChainChangesUntilFork(result.Tip, false);
+                var chainChanges = _indexerClient.GetIndexerClient().GetChainChangesUntilFork(result.Tip, false);
                 chainChanges.UpdateChain(result);
             }
             else

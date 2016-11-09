@@ -9,9 +9,11 @@ using Core.AssetBlockChanges;
 using JobsCommon;
 using NBitcoin;
 using NBitcoin.Indexer;
+using Providers;
 using Providers.Helpers;
 using Services.Binders;
 using SQLRepositories.Context;
+using SQLRepositories.DbModels;
 using IBlockRepository = Core.AssetBlockChanges.IBlockRepository;
 using ITransactionRepository = Core.AssetBlockChanges.ITransactionRepository;
 
@@ -25,7 +27,7 @@ namespace TestConsole
             var blockRepo = ioc.GetObject<IBlockRepository>();
             var transactionRepo = ioc.GetObject<ITransactionRepository>();
             var changesRepo = ioc.GetObject<IBalanceChangesRepository>();
-            var indexerClient = ioc.GetObject<IndexerClient>();
+            var indexerClientFactory = ioc.GetObject<IndexerClientFactory>();
             var mainChainRepository = ioc.GetObject<MainChainRepository>();
             var contextFactory = ioc.GetObject<BcnExplolerFactory>();
             var balanceChangesService = ioc.GetObject<BalanceChangesService>();
@@ -34,136 +36,141 @@ namespace TestConsole
 
             var asset = "AKi5F8zPm7Vn1FhLqQhvLdoWNvWqtwEaig";
 
-            Console.WriteLine("Getting Coinprism addresses");
-            var coinprismAddresses = (await GetAddressesWithColoredAssets.GetAddresses(asset)).ToArray();
-            Console.WriteLine("Getting Coinprism Done");
-            Console.WriteLine("Saving addresses");
-            await addressRepo.AddAsync(coinprismAddresses);
-            Console.WriteLine("Saving addresses done");
-            var addresses = (await addressRepo.GetAllAsync()).OrderBy(p => p.ColoredAddress).ToArray();
+            //Console.WriteLine("Getting Coinprism addresses");
+            //var coinprismAddresses = (await GetAddressesWithColoredAssets.GetAddresses(asset)).ToArray();
+            //Console.WriteLine("Getting Coinprism Done");
+            //Console.WriteLine("Saving addresses");
+            //await addressRepo.AddAsync(coinprismAddresses);
+            //Console.WriteLine("Saving addresses done");
+            //var addresses = (await addressRepo.GetAllAsync()).OrderByDescending(p => p.ColoredAddress).ToArray();
 
-            var legacyAddresses = coinprismAddresses.Select(x => x.ColoredAddress).ToArray();
-            addresses = addresses.Where(p => legacyAddresses.Contains(p.ColoredAddress)).ToArray();
+            //var legacyAddresses = coinprismAddresses.Select(x => x.ColoredAddress).ToArray();
+            //addresses = addresses.Where(p => legacyAddresses.Contains(p.ColoredAddress)).ToArray();
 
             var mainChain = mainChainRepository.GetMainChainAsync().Result;
 
             var semaphore = new SemaphoreSlim(100);
 
-            var counter = addresses.Count();
-            
+
             var tasksToAwait = new List<Task>();
             var st = new Stopwatch();
             st.Start();
             Console.WriteLine("Retrievingbalances");
-            await balanceChangesService.SaveAddressChangesAsync(0, addresses.Select(p => p.ColoredAddress).ToArray());
-            //foreach (var address in addresses)
-            //{
-            //    var balanceId = BalanceIdHelper.Parse(address.ColoredAddress, Network.Main);
+            //await balanceChangesService.SaveAddressChangesAsync(0, addresses.Select(p => p.ColoredAddress).ToArray());
 
-            //    var changesTask = indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0, mainChain.Height).ContinueWith(
-            //        async task =>
-            //        {
-            //            try
-            //            {
-            //                counter--;
-            //                Console.WriteLine("{0} {1}", st.Elapsed.ToString("g"), counter);
+            IEnumerable<AddressEntity> addr;
+            using (var db = contextFactory.GetContext())
+            {
+                addr = db.Addresses.Where(p => !p.ParsedAddressBlockEntities.Any()).Where(p => p.ColoredAddress == "akaAkcynb6iJxHGaduJrFDBikU4grykKi9o").ToList();
+            }
+            var counter = addr.Count();
+            Console.WriteLine("Addr Count {0}", addr.Count());
 
-            //                var coloredChanges = task.Result.SelectMany(p => p.GetColoredChanges(Network.Main)).ToList();
+            foreach (var address in addr.Select(p=>p.ColoredAddress).Distinct().ToList())
+            {
+                var balanceId = BalanceIdHelper.Parse(address, Network.Main);
+                Console.WriteLine("t");
+                var changesTask = indexerClientFactory.GetIndexerClient().GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0, mainChain.Height).ContinueWith(
+                    async task =>
+                    {
+                        try
+                        {
+                            counter--;
+                            var counterTemp = counter;
+                            Console.WriteLine("Continue started {0} {1}", st.Elapsed.ToString("g"), counter);
 
-            //                var blocks =
-            //                    coloredChanges.Select(p => p.BlockHash).Select(p => new Core.AssetBlockChanges.Block
-            //                    {
-            //                        Hash = p,
-            //                        Height = mainChain.GetBlock(uint256.Parse(p)).Height
-            //                    }).ToArray();
+                            var coloredChanges = task.Result.SelectMany(p => p.GetColoredChanges(Network.Main)).ToList();
 
-            //                await blockRepo.AddAsync(blocks);
+                            var blocks =
+                                coloredChanges.Select(p => p.BlockHash).Select(p => new Core.AssetBlockChanges.Block
+                                {
+                                    Hash = p,
+                                    Height = mainChain.GetBlock(uint256.Parse(p)).Height
+                                }).ToArray();
 
-            //                var transactions = coloredChanges.Select(p => new Core.AssetBlockChanges.Transaction
-            //                {
-            //                    Hash = p.TransactionHash,
-            //                    BlockHash = p.BlockHash
-            //                }).ToArray();
+                            await blockRepo.AddAsync(blocks);
 
-            //                await transactionRepo.AddAsync(transactions);
+                            var transactions = coloredChanges.Select(p => new Core.AssetBlockChanges.Transaction
+                            {
+                                Hash = p.TransactionHash,
+                                BlockHash = p.BlockHash
+                            }).ToArray();
 
-            //                var balanceChanges = coloredChanges.Select(p => new BalanceChange
-            //                {
-            //                    AssetId = p.AssetId,
-            //                    Change = p.Quantity,
-            //                    TransactionHash = p.TransactionHash,
-            //                    Address = address.ColoredAddress,
-            //                    BlockHash = p.BlockHash
-            //                }).ToArray();
+                            await transactionRepo.AddAsync(transactions);
 
-
-            //                await changesRepo.AddAsync(address.ColoredAddress, balanceChanges);
-            //                Console.WriteLine("Done");
-            //            }
-            //            catch (Exception e)
-            //            {
-            //                Console.WriteLine(e.ToString());
-            //            }
-            //        });
-
-            //    tasksToAwait.Add(changesTask.Unwrap());
+                            var balanceChanges = coloredChanges.Select(p => new BalanceChange
+                            {
+                                AssetId = p.AssetId,
+                                Change = p.Quantity,
+                                TransactionHash = p.TransactionHash,
+                                Address = address,
+                                BlockHash = p.BlockHash
+                            }).ToArray();
 
 
+                            await changesRepo.AddAsync(address, balanceChanges);
+                            Console.WriteLine(" Continue Done {0} {1}", counterTemp, DateTime.Now.ToString("t"));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.ToString());
+                        }
+                    });
+
+                tasksToAwait.Add(changesTask.Unwrap());
 
 
-            //    //counter--;
-
-            //    //if (counter == 14)
-            //    //{
-
-            //    //}
-            //    //Console.WriteLine("started {0} {1}", st.Elapsed.ToString("g"), counter);
-            //    //var balance =
-            //    //    await
-            //    //        indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0,
-            //    //            mainChain.Height);
-            //    //var coloredChanges = balance.SelectMany(p => p.GetColoredChanges(Network.Main)).ToList();
-
-            //    //var blocks =
-            //    //    coloredChanges.Select(p => p.BlockHash).Select(p => new Core.AssetBlockChanges.Block
-            //    //    {
-            //    //        Hash = p,
-            //    //        Height = mainChain.GetBlock(uint256.Parse(p)).Height
-            //    //    }).ToArray();
-
-            //    //Console.WriteLine("Saving blocks");
-            //    //await blockRepo.AddAsync(blocks);
-
-            //    //var transactions = coloredChanges.Select(p => new Core.AssetBlockChanges.Transaction
-            //    //{
-            //    //    Hash = p.TransactionHash,
-            //    //    BlockHash = p.BlockHash
-            //    //}).ToArray();
-
-            //    //Console.WriteLine("Saving transactions");
-            //    //await transactionRepo.AddAsync(transactions);
-
-            //    //var balanceChanges = coloredChanges.Select(p => new BalanceChange
-            //    //{
-            //    //    AssetId = p.AssetId,
-            //    //    Change = p.Quantity,
-            //    //    TransactionHash = p.TransactionHash,
-            //    //    Address = address.ColoredAddress,
-            //    //    BlockHash = p.BlockHash
-            //    //}).ToArray();
 
 
-            //    //Console.WriteLine("Saving balanceChanges");
-            //    //await changesRepo.AddAsync(address.ColoredAddress, balanceChanges);
-            //    //Console.WriteLine("Done");
-            //}
+                //counter--;
 
-            //await Task.WhenAll(tasksToAwait);
+                //if (counter == 14)
+                //{
 
-            ////foreach (var task in tasksToAwait)
-            ////{
-            ////    Console.WriteLine(task.Status);
-            ////}
+                //}
+                //Console.WriteLine("started {0} {1}", st.Elapsed.ToString("g"), counter);
+                //var balance =
+                //    await
+                //        indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0,
+                //            mainChain.Height);
+                //var coloredChanges = balance.SelectMany(p => p.GetColoredChanges(Network.Main)).ToList();
+
+                //var blocks =
+                //    coloredChanges.Select(p => p.BlockHash).Select(p => new Core.AssetBlockChanges.Block
+                //    {
+                //        Hash = p,
+                //        Height = mainChain.GetBlock(uint256.Parse(p)).Height
+                //    }).ToArray();
+
+                //Console.WriteLine("Saving blocks");
+                //await blockRepo.AddAsync(blocks);
+
+                //var transactions = coloredChanges.Select(p => new Core.AssetBlockChanges.Transaction
+                //{
+                //    Hash = p.TransactionHash,
+                //    BlockHash = p.BlockHash
+                //}).ToArray();
+
+                //Console.WriteLine("Saving transactions");
+                //await transactionRepo.AddAsync(transactions);
+
+                //var balanceChanges = coloredChanges.Select(p => new BalanceChange
+                //{
+                //    AssetId = p.AssetId,
+                //    Change = p.Quantity,
+                //    TransactionHash = p.TransactionHash,
+                //    Address = address.ColoredAddress,
+                //    BlockHash = p.BlockHash
+                //}).ToArray();
+
+
+                //Console.WriteLine("Saving balanceChanges");
+                //await changesRepo.AddAsync(address.ColoredAddress, balanceChanges);
+                //Console.WriteLine("Done");
+            }
+
+            await Task.WhenAll(tasksToAwait);
+
 
             Console.WriteLine("All done {0}", st.Elapsed.ToString("g"));
             Console.ReadLine();

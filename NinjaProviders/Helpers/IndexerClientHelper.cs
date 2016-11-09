@@ -22,25 +22,29 @@ namespace Providers.Helpers
         public static async Task<IEnumerable<OrderedBalanceChange>> GetConfirmedBalanceChangesAsync(this IndexerClient indexerClient,
      BalanceId balanceId, ConcurrentChain mainChain, SemaphoreSlim semaphore, int fromBlockHeight, int toBlock)
         {
-            
-            await semaphore.WaitAsync().ConfigureAwait(false);
+
+            //await semaphore.WaitAsync().ConfigureAwait(false);
             try
             {
                 var startBlock = mainChain.GetBlock(fromBlockHeight);
                 var stopBlock = mainChain.GetBlock(toBlock);
-
                 var balanceQuery = new BalanceQuery();
                 balanceQuery.RawOrdering = true;
                 balanceQuery.From = new ConfirmedBalanceLocator(startBlock.Height, startBlock.HashBlock);
                 balanceQuery.To = new ConfirmedBalanceLocator(stopBlock.Height, stopBlock.HashBlock);
                 
-                var ordBalances = await Task.WhenAll(indexerClient.GetOrderedBalanceAsync(balanceId, balanceQuery)).ConfigureAwait(false);
+                //return indexerClient.GetOrderedBalance(balanceId, balanceQuery)
+                //    .TakeWhile(_ => _.BlockId == null || _.Height >= stopBlock.Height || _.Height <= stopBlock.Height)
+                //    .AsBalanceSheet(mainChain).Confirmed;
 
-                return ordBalances.SelectMany(p => p.ToArray()).AsBalanceSheet(mainChain).Confirmed;
+                var ordBalances = await Task.WhenAll(indexerClient.GetOrderedBalanceAsync(balanceId, balanceQuery)).ConfigureAwait(false);
+                return ordBalances
+                    .SelectMany(p => p.ToArray())
+                    .AsBalanceSheet(mainChain).Confirmed;
             }
             finally
             {
-                semaphore.Release();
+                //semaphore.Release();
             }
 
         }

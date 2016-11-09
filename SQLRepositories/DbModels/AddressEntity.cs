@@ -38,6 +38,8 @@ namespace SQLRepositories.DbModels
         [Key]
         public string ColoredAddress { get; set; }
         
+        public virtual ICollection<ParsedAddressBlockEntity> ParsedAddressBlockEntities { get; set; } 
+
         public static AddressEntity Create(IAddress address)
         {
             return new AddressEntity

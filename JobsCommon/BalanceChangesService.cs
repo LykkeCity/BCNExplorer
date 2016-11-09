@@ -9,6 +9,7 @@ using Core.AssetBlockChanges;
 using JobsCommon;
 using NBitcoin;
 using NBitcoin.Indexer;
+using Providers;
 using Providers.Helpers;
 using IBlockRepository = Core.AssetBlockChanges.IBlockRepository;
 using ITransactionRepository = Core.AssetBlockChanges.ITransactionRepository;
@@ -21,7 +22,7 @@ namespace Services.Binders
         private readonly IBlockRepository _blockRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IBalanceChangesRepository _balanceChangesRepository;
-        private readonly IndexerClient _indexerClient;
+        private readonly IndexerClientFactory _indexerClient;
         private readonly MainChainRepository _mainChainRepository;
         private readonly ILog _log;
 
@@ -29,8 +30,8 @@ namespace Services.Binders
         public BalanceChangesService(IAddressRepository addressRepository, 
             IBlockRepository blockRepository, 
             ITransactionRepository transactionRepository, 
-            IBalanceChangesRepository balanceChangesRepository, 
-            IndexerClient indexerClient,
+            IBalanceChangesRepository balanceChangesRepository,
+            IndexerClientFactory indexerClient,
             MainChainRepository mainChainRepository, ILog log)
         {
             _addressRepository = addressRepository;
@@ -47,11 +48,12 @@ namespace Services.Binders
             var semaphore = new SemaphoreSlim(100);
             var tasksToAwait = new List<Task>();
             var mainChain = await _mainChainRepository.GetMainChainAsync();
-            foreach (var address in addresses)
+            //await _addressRepository.AddAsync(addresses.Select(p => new Address {ColoredAddress = p}).ToArray());
+            foreach (var address in addresses.Distinct())
             {
                 var balanceId = BalanceIdHelper.Parse(address, Network.Main);
 
-                var changesTask = _indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, fromBlockHeight, mainChain.Height).ContinueWith(
+                var changesTask = _indexerClient.GetIndexerClient().GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, fromBlockHeight, mainChain.Height).ContinueWith(
                     async task =>
                     {
                         try

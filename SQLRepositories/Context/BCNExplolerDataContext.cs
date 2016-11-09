@@ -15,6 +15,13 @@ namespace SQLRepositories.Context
         public DbSet<TransactionEntity> Transactions { get; set; } 
         public DbSet<BlockEntity> Blocks { get; set; } 
         public DbSet<BalanceChangeEntity> BalanceChanges { get; set; } 
-        public DbSet<ParsedAddressBlockEntity> ParsedAddressBlockEntities { get; set; } 
+        public DbSet<ParsedAddressBlockEntity> ParsedAddressBlockEntities { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<BalanceChangeEntity>().Property(p=>p.T).HasPrecision();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

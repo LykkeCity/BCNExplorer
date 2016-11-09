@@ -27,10 +27,10 @@ namespace SQLRepositories.Repositories
                 await _lock.WaitAsync();
                 using (var db = _bcnExplolerFactory.GetContext())
                 {
-                    var postedHashes = addresses.Select(p => p.ColoredAddress);
+                    var posted = addresses.Where(p => p != null).Select(AddressEntity.Create).Distinct(AddressEntity.LegacyAddressComparer).ToList();
+                    var postedHashes = posted.Select(p => p.ColoredAddress).ToList();
                     var existed = await db.Addresses.Where(p => postedHashes.Contains(p.ColoredAddress)).ToListAsync();
-                    var posted =
-                        addresses.Where(p => p != null).Select(AddressEntity.Create).Distinct(AddressEntity.LegacyAddressComparer);
+
                     //Do not add existed in db 
                     var entitiesToAdd =
                         posted.Where(p => !existed.Contains(p, AddressEntity.LegacyAddressComparer));

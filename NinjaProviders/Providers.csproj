@@ -97,6 +97,7 @@
     <Compile Include="Helpers\IndexerClientHelper.cs" />
     <Compile Include="Helpers\OrderedBalanceHelper.cs" />
     <Compile Include="Helpers\TransactionHelper.cs" />
+    <Compile Include="IndexerClientFactory.cs" />
     <Compile Include="Providers\Asset\AssetIndexer.cs" />
     <Compile Include="Providers\Common\SearchProvider.cs" />
     <Compile Include="Providers\Asset\AssetProvider.cs" />
