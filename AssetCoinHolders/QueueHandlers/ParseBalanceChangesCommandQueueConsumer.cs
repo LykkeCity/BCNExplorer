@@ -1,16 +1,15 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AzureRepositories;
 using AzureRepositories.AssetCoinHolders;
-using AzureRepositories.AssetDefinition;
 using AzureStorage.Queue;
 using Common;
 using Common.Log;
-using Core.Asset;
-using NBitcoin;
-using NBitcoin.Indexer;
-using NBitcoin.OpenAsset;
+using Core.Settings;
+using JobsCommon;
+using Providers;
 using Providers.Helpers;
 
 namespace AssetCoinHoldersScanner.QueueHandlers
@@ -19,15 +18,24 @@ namespace AssetCoinHoldersScanner.QueueHandlers
     {
         private readonly IParseBlockQueueReader _queueReader;
         private readonly ILog _log;
-        private readonly IndexerClient _indexerClient;
+        private readonly IndexerClientFactory _indexerClient;
+        private readonly MainChainRepository _mainChainRepository;
+        private readonly BaseSettings _baseSettings;
+        private readonly BalanceChangesService _balanceChangesService;
 
         public ParseBalanceChangesCommandQueueConsumer(ILog log, 
-            IParseBlockQueueReader queueReader, 
-            IndexerClient indexerClient)
+            IParseBlockQueueReader queueReader,
+            IndexerClientFactory indexerClient, 
+            MainChainRepository mainChainRepository, 
+            BaseSettings baseSettings, 
+            BalanceChangesService balanceChangesService)
         {
             _log = log;
             _queueReader = queueReader;
             _indexerClient = indexerClient;
+            _mainChainRepository = mainChainRepository;
+            _baseSettings = baseSettings;
+            _balanceChangesService = balanceChangesService;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -45,10 +53,21 @@ namespace AssetCoinHoldersScanner.QueueHandlers
 
         private async Task ParseBlock(AssetChangesParseBlockContext context)
         {
+            await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), "Started");
+
             try
             {
-                await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), "Done");
-                
+                var st = new Stopwatch();
+                st.Start();
+                var mainChain = await _mainChainRepository.GetMainChainAsync();
+
+                var block = _indexerClient.GetIndexerClient().GetBlock(mainChain.GetBlock(context.BlockHeight).HashBlock);
+                var addressesToTrack = block.GetAddressesWithColoredMarker(_baseSettings.UsedNetwork()).ToArray();
+
+                await _balanceChangesService.SaveAddressChangesAsync(context.BlockHeight - 1, context.BlockHeight, addressesToTrack);
+
+                await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), $"Done {st.Elapsed.ToString("g")}");
+                //await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), "Done");
             }
             catch (Exception e)
             {

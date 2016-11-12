@@ -1,7 +1,6 @@
 ﻿using Common.IocContainer;
 using Common.Log;
 using Core.Settings;
-using Services.Binders;
 
 namespace JobsCommon.Binders
 {

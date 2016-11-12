@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Log;
 using Core.AssetBlockChanges;
-using JobsCommon;
+using Core.Settings;
 using NBitcoin;
-using NBitcoin.Indexer;
 using Providers;
 using Providers.Helpers;
 using IBlockRepository = Core.AssetBlockChanges.IBlockRepository;
 using ITransactionRepository = Core.AssetBlockChanges.ITransactionRepository;
 
-namespace Services.Binders
+namespace JobsCommon
 {
     public class BalanceChangesService
     {
@@ -25,6 +23,7 @@ namespace Services.Binders
         private readonly IndexerClientFactory _indexerClient;
         private readonly MainChainRepository _mainChainRepository;
         private readonly ILog _log;
+        private readonly Network _network;
 
 
         public BalanceChangesService(IAddressRepository addressRepository, 
@@ -32,7 +31,9 @@ namespace Services.Binders
             ITransactionRepository transactionRepository, 
             IBalanceChangesRepository balanceChangesRepository,
             IndexerClientFactory indexerClient,
-            MainChainRepository mainChainRepository, ILog log)
+            MainChainRepository mainChainRepository, 
+            ILog log,
+            BaseSettings baseSettings)
         {
             _addressRepository = addressRepository;
             _blockRepository = blockRepository;
@@ -41,9 +42,10 @@ namespace Services.Binders
             _indexerClient = indexerClient;
             _mainChainRepository = mainChainRepository;
             _log = log;
+            _network = baseSettings.UsedNetwork();
         }
 
-        public async Task SaveAddressChangesAsync(int fromBlockHeight, string[] addresses)
+        public async Task SaveAddressChangesAsync(int fromBlockHeight, int toBlockHeight, BitcoinAddress[] addresses)
         {
             var semaphore = new SemaphoreSlim(100);
             var tasksToAwait = new List<Task>();
@@ -51,15 +53,15 @@ namespace Services.Binders
             //await _addressRepository.AddAsync(addresses.Select(p => new Address {ColoredAddress = p}).ToArray());
             foreach (var address in addresses.Distinct())
             {
-                var balanceId = BalanceIdHelper.Parse(address, Network.Main);
+                var balanceId = BalanceIdHelper.Parse(address.ToString(), _network);
 
-                var changesTask = _indexerClient.GetIndexerClient().GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, fromBlockHeight, mainChain.Height).ContinueWith(
+                var changesTask = _indexerClient.GetIndexerClient().GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, fromBlockHeight, toBlockHeight).ContinueWith(
                     async task =>
                     {
                         try
                         {
 
-                            var coloredChanges = task.Result.SelectMany(p => p.GetColoredChanges(Network.Main)).ToList();
+                            var coloredChanges = task.Result.SelectMany(p => p.GetColoredChanges(_network)).ToList();
 
                             var blocks =
                                 coloredChanges.Select(p => p.BlockHash).Select(p => new Core.AssetBlockChanges.Block
@@ -83,16 +85,15 @@ namespace Services.Binders
                                 AssetId = p.AssetId,
                                 Change = p.Quantity,
                                 TransactionHash = p.TransactionHash,
-                                Address = address,
+                                Address = address.ToString(),
                                 BlockHash = p.BlockHash
                             }).ToArray();
 
-
-                            await _balanceChangesRepository.AddAsync(address, balanceChanges);
+                            await _balanceChangesRepository.AddAsync(address.ToString(), balanceChanges);
                         }
                         catch (Exception e)
                         {
-                            await _log.WriteFatalError("BalanceChangesService", "SaveAddressChangesAsync", address, e);
+                            await _log.WriteFatalError("BalanceChangesService", "SaveAddressChangesAsync", address.ToString(), e);
                         }
                     });
 

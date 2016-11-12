@@ -11,7 +11,6 @@ using NBitcoin;
 using NBitcoin.Indexer;
 using Providers;
 using Providers.Helpers;
-using Services.Binders;
 using SQLRepositories.Context;
 using SQLRepositories.DbModels;
 using IBlockRepository = Core.AssetBlockChanges.IBlockRepository;

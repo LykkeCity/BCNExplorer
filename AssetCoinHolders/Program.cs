@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 using AssetCoinHoldersScanner.Binders;
 using AssetCoinHoldersScanner.QueueHandlers;
-using AssetCoinHoldersScanner.TimerFunctions;
 using AzureRepositories;
 using AzureRepositories.Binders;
 using AzureRepositories.Log;
@@ -16,10 +12,8 @@ using Core.Settings;
 using JobsCommon;
 using JobsCommon.Binders;
 using Microsoft.Azure.WebJobs;
-using NBitcoin;
-using NBitcoin.Indexer;
 using Providers;
-using Providers.Helpers;
+using SQLRepositories.Binding;
 
 namespace AssetCoinHoldersScanner
 {
@@ -56,9 +50,9 @@ namespace AssetCoinHoldersScanner
                 {
                     config.UseDevelopmentSettings();
                 }
-                
-                //var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBalanceChangesCommandQueueConsumer>();
-                //parseBlockCommandQueueConsumer.Start();
+
+                var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBalanceChangesCommandQueueConsumer>();
+                parseBlockCommandQueueConsumer.Start();
                 var host = new JobHost(config);
                 host.RunAndBlock();
             }
@@ -77,6 +71,7 @@ namespace AssetCoinHoldersScanner
 
             container.IoC.BindProviders(settings, log);
             container.IoC.Register(settings);
+            container.IoC.BindSqlRepos(settings, log);
             container.IoC.BindAzureRepositories(settings, log);
             container.IoC.BindJobsCommon(settings, log);
             container.IoC.BindAssetsCoinHoldersFunctions(settings, log);

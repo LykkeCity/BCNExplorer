@@ -11,6 +11,7 @@ using JobsCommon;
 using Microsoft.Azure.WebJobs;
 using NBitcoin;
 using NBitcoin.Indexer;
+using Providers;
 using Providers.Helpers;
 
 namespace AssetCoinHoldersScanner.TimerFunctions
@@ -19,40 +20,43 @@ namespace AssetCoinHoldersScanner.TimerFunctions
     {
         private readonly ILog _log;
         private readonly AssetChangesParseBlockCommandProducer _parseBlockCommandProducer;
-        private readonly IndexerClient _indexerClient;
         private readonly IAssetChangesParsedBlockRepository _parsedBlockRepository;
         private readonly MainChainRepository _mainChainRepository;
 
         public ParseBlocksFunctions(ILog log,
             AssetChangesParseBlockCommandProducer parseBlockCommandProducer,
-            IndexerClient indexerClient,
-            IAssetChangesParsedBlockRepository parsedBlockRepository, MainChainRepository mainChainRepository)
+            IAssetChangesParsedBlockRepository parsedBlockRepository, 
+            MainChainRepository mainChainRepository)
         {
             _log = log;
             _parseBlockCommandProducer = parseBlockCommandProducer;
-            _indexerClient = indexerClient;
             _parsedBlockRepository = parsedBlockRepository;
             _mainChainRepository = mainChainRepository;
         }
 
-        public async Task ParseLast([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
+        public async Task ParseLastBlock([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
         {
             try
             {
+                await _log.WriteInfo("ParseBlocksFunctions", "ParseLastBlock", null, "Started");
+
                 var mainChain = await _mainChainRepository.GetMainChainAsync();
 
                 var lastParsedBlockHeight = await _parsedBlockRepository.GetLastParsetBlockHeightAsync();
-                var startParseBlock = lastParsedBlockHeight != 0 ? (lastParsedBlockHeight - 2) : 0; // to put notconfirmed tx-s (at last parse block iteration) in prev block. Now this tx have to be confirmed
+                // to put notconfirmed tx-s (at last parse block iteration) in prev block. Now this tx have to be confirmed
+                var startParseBlock = lastParsedBlockHeight != 0 ? (lastParsedBlockHeight - 2) : 0;
                 for (var i = startParseBlock; i <= mainChain.Tip.Height; i++)
                 {
                     await _parseBlockCommandProducer.CreateParseBlockCommand(i);
-                    await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Add parse block command");
+                    await _log.WriteInfo("ParseBlocksFunctions", "ParseLastBlock", i.ToString(), "Add parse block command done");
                 }
+
+                await _log.WriteInfo("ParseBlocksFunctions", "ParseLastBlock", null, "Done");
             }
             catch (Exception e)
             {
                 await
-                    _log.WriteError("ParseBlocksFunctions", "ParseLast", null, e);
+                    _log.WriteError("ParseBlocksFunctions", "ParseLastBlock", null, e);
             }
         }
 

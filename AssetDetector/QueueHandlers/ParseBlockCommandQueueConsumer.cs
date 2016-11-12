@@ -9,6 +9,7 @@ using Common.Log;
 using Core.Asset;
 using NBitcoin.Indexer;
 using NBitcoin.OpenAsset;
+using Providers;
 using Providers.Helpers;
 
 namespace AssetDefinitionScanner.QueueHandlers
@@ -17,19 +18,21 @@ namespace AssetDefinitionScanner.QueueHandlers
     {
         private readonly IParseBlockQueueReader _queueReader;
         private readonly ILog _log;
-        private readonly IndexerClient _indexerClient;
+        private readonly IndexerClientFactory _indexerClient;
         private readonly IAssetDefinitionParsedBlockRepository _assetDefinitionParsedBlockRepository;
         private readonly AssetDataCommandProducer _assetDataCommandProducer;
 
         public ParseBlockCommandQueueConsumer(ILog log, 
-            IParseBlockQueueReader queueReader, 
-            IndexerClient indexerClient, 
-            AssetDataCommandProducer assetDataCommandProducer)
+            IParseBlockQueueReader queueReader,
+            IndexerClientFactory indexerClient, 
+            AssetDataCommandProducer assetDataCommandProducer, 
+            IAssetDefinitionParsedBlockRepository assetDefinitionParsedBlockRepository)
         {
             _log = log;
             _queueReader = queueReader;
             _indexerClient = indexerClient;
             _assetDataCommandProducer = assetDataCommandProducer;
+            _assetDefinitionParsedBlockRepository = assetDefinitionParsedBlockRepository;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -49,7 +52,7 @@ namespace AssetDefinitionScanner.QueueHandlers
         {
             try
             {
-                var block = _indexerClient.GetBlock(context.BlockHash);
+                var block = _indexerClient.GetIndexerClient().GetBlock(context.BlockHash);
 
                 foreach (var transaction in block.Transactions.Where(p => p.HasValidColoredMarker()))
                 {
