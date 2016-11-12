@@ -2,10 +2,10 @@
   "$schema": "http://schemastore.org/schemas/json/webjobs-list.json",
   "WebJobs": [
     {
-      "filePath": "../PingJob/PingJob.csproj"
+      "filePath": "../AssetDetector/AssetDefinitionScanner.csproj"
     },
     {
-      "filePath": "../AssetDetector/AssetDefinitionScanner.csproj"
+      "filePath": "../PingJob/PingJob.csproj"
     },
     {
       "filePath": "../AssetCoinHolders/AssetCoinHoldersScanner.csproj"
