@@ -66,7 +66,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
 
                 await _balanceChangesService.SaveAddressChangesAsync(context.BlockHeight - 1, context.BlockHeight, addressesToTrack);
 
-                await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), $"Done {st.Elapsed.ToString("g")}");
+                await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), $"Done {st.Elapsed.ToString("g")}. Addr to track {addressesToTrack.Length}");
                 //await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), "Done");
             }
             catch (Exception e)
