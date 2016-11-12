@@ -68,8 +68,8 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Properties\webjobs-list.json" />
-    <None Include="Properties\PublishProfiles\bcnexplorer-test-jobs - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\bcnexplorer-test-jobs - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\bcnexplorer-jobs - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\bcnexplorer-jobs - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
