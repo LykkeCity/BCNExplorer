@@ -38,7 +38,11 @@ namespace JobsCommon
                     return memoryCached;
                 }
 
-                return new ConcurrentChain(await ReadWriteHelper.ReadAllFileAsync(FilePath));
+                var result =  new ConcurrentChain(await ReadWriteHelper.ReadAllFileAsync(FilePath));
+
+                Cache.Set(CacheKey, result, ObjectCache.InfiniteAbsoluteExpiration);
+
+                return result;
             }
             catch (Exception e)
             {
