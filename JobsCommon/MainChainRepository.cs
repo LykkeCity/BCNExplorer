@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Caching;
 using System.Threading.Tasks;
+using Common.Cache;
 using Common.Files;
 using Common.Log;
 using NBitcoin;
@@ -16,6 +18,9 @@ namespace JobsCommon
 
         private const string FilePath = "./chain.dat";
 
+        private ObjectCache Cache => MemoryCache.Default;
+        private const string CacheKey = "MainChain";
+
         public MainChainRepository(IndexerClientFactory indexerClient, ILog log)
         {
             _indexerClient = indexerClient;
@@ -26,6 +31,13 @@ namespace JobsCommon
         {
             try
             {
+                var memoryCached = Cache[CacheKey] as ConcurrentChain;
+
+                if (memoryCached != null)
+                {
+                    return memoryCached;
+                }
+
                 return new ConcurrentChain(await ReadWriteHelper.ReadAllFileAsync(FilePath));
             }
             catch (Exception e)
@@ -45,6 +57,7 @@ namespace JobsCommon
         {
             try
             {
+                Cache.Set(CacheKey, chain, ObjectCache.InfiniteAbsoluteExpiration);
                 File.WriteAllBytes(FilePath, chain.ToBytes());
 
                 //await ReadWriteHelper.WriteAsync(FilePath, chain.ToBytes());
