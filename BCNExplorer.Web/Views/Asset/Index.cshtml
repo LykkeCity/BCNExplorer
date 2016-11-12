@@ -17,6 +17,10 @@
                 {
                     <img class="img-responsive img-thumbnail" src="@Model.ImageUrl" alt="@Model.Name">
                 }
+                <div class="list-group text-center">
+
+                    <a href="@Url.Action("Owners", new {id=Model.AssetIds.FirstOrDefault()})" class="btn">Owners</a>
+                </div>
             </div>
             <div class="col-xs-12 col-sm-9">
                 <div class="table-responsive">

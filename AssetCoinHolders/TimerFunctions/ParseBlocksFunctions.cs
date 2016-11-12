@@ -37,29 +37,22 @@ namespace AssetCoinHoldersScanner.TimerFunctions
 
         public async Task ParseLast([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
         {
-            BlockHeader blockPtr = null;
-
             try
             {
-                blockPtr = _indexerClient.GetBestBlock().Header;
-                while (blockPtr != null &&
-                       !(await
-                           _parsedBlockRepository.IsBlockExistsAsync(
-                               AssetChangesParsedBlock.Create(blockPtr.GetBlockId()))))
+                var mainChain = await _mainChainRepository.GetMainChainAsync();
+
+                var lastParsedBlockHeight = await _parsedBlockRepository.GetLastParsetBlockHeightAsync();
+                var startParseBlock = lastParsedBlockHeight != 0 ? (lastParsedBlockHeight - 2) : 0; // to put notconfirmed tx-s (at last parse block iteration) in prev block. Now this tx have to be confirmed
+                for (var i = startParseBlock; i <= mainChain.Tip.Height; i++)
                 {
-                    await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
-
-                    blockPtr = _indexerClient.GetBlock(blockPtr.HashPrevBlock).Header;
+                    await _parseBlockCommandProducer.CreateParseBlockCommand(i);
+                    await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Add parse block command");
                 }
-
-                await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Done");
             }
             catch (Exception e)
             {
                 await
-                    _log.WriteError("ParseBlocksFunctions", "ParseLast",
-                        (new {blockHash = blockPtr?.GetBlockId()}).ToJson(), e);
-                throw;
+                    _log.WriteError("ParseBlocksFunctions", "ParseLast", null, e);
             }
         }
 

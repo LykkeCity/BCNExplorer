@@ -52,8 +52,8 @@
     <Compile Include="AssetBlockChanges\IBlockRepository.cs" />
     <Compile Include="AssetBlockChanges\ITransactionRepository.cs" />
     <Compile Include="Asset\IAssetChangesParsedBlockRepository.cs" />
-    <Compile Include="Asset\IAssetDefinitionRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionParsedBlockRepository.cs" />
+    <Compile Include="Asset\IAssetDefinitionRepository.cs" />
     <Compile Include="GrabDirector\IGrabBlockTask.cs" />
     <Compile Include="Monitoring\Monitoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -148,7 +148,7 @@ namespace TestConsole
                 //var transactions = coloredChanges.Select(p => new Core.AssetBlockChanges.Transaction
                 //{
                 //    Hash = p.TransactionHash,
-                //    BlockHash = p.BlockHash
+                //    BlockHash = p.BlockHeight
                 //}).ToArray();
 
                 //Console.WriteLine("Saving transactions");
@@ -160,7 +160,7 @@ namespace TestConsole
                 //    Change = p.Quantity,
                 //    TransactionHash = p.TransactionHash,
                 //    Address = address.ColoredAddress,
-                //    BlockHash = p.BlockHash
+                //    BlockHash = p.BlockHeight
                 //}).ToArray();
 
 

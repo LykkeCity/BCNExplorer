@@ -24,13 +24,11 @@ namespace AssetDefinitionScanner.QueueHandlers
         public ParseBlockCommandQueueConsumer(ILog log, 
             IParseBlockQueueReader queueReader, 
             IndexerClient indexerClient, 
-            IAssetDefinitionParsedBlockRepository assetDefinitionParsedBlockRepository, 
             AssetDataCommandProducer assetDataCommandProducer)
         {
             _log = log;
             _queueReader = queueReader;
             _indexerClient = indexerClient;
-            _assetDefinitionParsedBlockRepository = assetDefinitionParsedBlockRepository;
             _assetDataCommandProducer = assetDataCommandProducer;
 
             _queueReader.RegisterPreHandler(async data =>

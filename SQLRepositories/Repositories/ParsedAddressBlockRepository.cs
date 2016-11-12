@@ -18,11 +18,12 @@ namespace SQLRepositories.Repositories
             _bcnExplolerFactory = bcnExplolerFactory;
         }
 
-        public async Task<bool> IsBlockExistsAsync(IAssetChangesParsedBlock block)
+  
+        public async Task<int> GetLastParsetBlockHeightAsync()
         {
             using (var db = _bcnExplolerFactory.GetContext())
             {
-                return await db.ParsedAddressBlockEntities.AnyAsync(p => p.BlockHash == block.BlockHash);
+                return await db.ParsedAddressBlockEntities.MaxAsync(p => p.BlockEntity.Height);
             }
         }
     }

@@ -49,5 +49,8 @@ namespace SQLRepositories.DbModels
 
         [ForeignKey("Address")]
         public virtual AddressEntity AddressEntity { get; set; }
+
+        [ForeignKey("BlockHash")]
+        public virtual BlockEntity BlockEntity { get; set; }
     }
 }

@@ -95,8 +95,8 @@
   <ItemGroup>
     <Compile Include="AssetCoinHolders\AssetChangesParseBlockCommandProducer.cs" />
     <Compile Include="AssetDefinition\AssetDefinitionParseBlockCommandProducer.cs" />
-    <Compile Include="AssetDefinition\AssetDefinitionRepository.cs" />
     <Compile Include="AssetDefinition\AssetDefinitionParsedBlockRepository.cs" />
+    <Compile Include="AssetDefinition\AssetDefinitionRepository.cs" />
     <Compile Include="ParseBlockQueueReader.cs" />
     <Compile Include="AssetDefinition\UpdateAssetDataCommandProducer.cs" />
     <Compile Include="AzureRepoFactories.cs" />

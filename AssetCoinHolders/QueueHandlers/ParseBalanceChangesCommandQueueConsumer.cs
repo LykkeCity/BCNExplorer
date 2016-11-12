@@ -20,17 +20,14 @@ namespace AssetCoinHoldersScanner.QueueHandlers
         private readonly IParseBlockQueueReader _queueReader;
         private readonly ILog _log;
         private readonly IndexerClient _indexerClient;
-        private readonly IAssetDefinitionParsedBlockRepository _assetDefinitionParsedBlockRepository;
 
         public ParseBalanceChangesCommandQueueConsumer(ILog log, 
             IParseBlockQueueReader queueReader, 
-            IndexerClient indexerClient, 
-            IAssetDefinitionParsedBlockRepository assetDefinitionParsedBlockRepository)
+            IndexerClient indexerClient)
         {
             _log = log;
             _queueReader = queueReader;
             _indexerClient = indexerClient;
-            _assetDefinitionParsedBlockRepository = assetDefinitionParsedBlockRepository;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -50,13 +47,8 @@ namespace AssetCoinHoldersScanner.QueueHandlers
         {
             try
             {
-                var block = _indexerClient.GetBlock(context.BlockHash);
-
-
-
                 await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), "Done");
-
-                await _assetDefinitionParsedBlockRepository.AddBlockAsync(AssetDefinitionParsedBlock.Create(context.BlockHash));
+                
             }
             catch (Exception e)
             {
