@@ -51,9 +51,9 @@ namespace JobsCommon
             var tasksToAwait = new List<Task>();
             var mainChain = await _mainChainRepository.GetMainChainAsync();
             //await _addressRepository.AddAsync(addresses.Select(p => new Address {ColoredAddress = p}).ToArray());
-            foreach (var address in addresses.Distinct())
+            foreach (var address in addresses.Select(p=> new BitcoinColoredAddress(p).ToString()))
             {
-                var balanceId = BalanceIdHelper.Parse(address.ToString(), _network);
+                var balanceId = BalanceIdHelper.Parse(address, _network);
 
                 var changesTask = _indexerClient.GetIndexerClient().GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, fromBlockHeight, toBlockHeight).ContinueWith(
                     async task =>
@@ -85,11 +85,11 @@ namespace JobsCommon
                                 AssetId = p.AssetId,
                                 Change = p.Quantity,
                                 TransactionHash = p.TransactionHash,
-                                Address = address.ToString(),
+                                Address = address,
                                 BlockHash = p.BlockHash
                             }).ToArray();
 
-                            await _balanceChangesRepository.AddAsync(address.ToString(), balanceChanges);
+                            await _balanceChangesRepository.AddAsync(address, balanceChanges);
                         }
                         catch (Exception e)
                         {
@@ -101,6 +101,20 @@ namespace JobsCommon
             }
 
             await Task.WhenAll(tasksToAwait);
+        }
+
+
+        private BitcoinColoredAddress GetColoredAddress(string legacyAddress)
+        {
+            try
+            {
+                return new BitcoinColoredAddress(new BitcoinPubKeyAddress(legacyAddress));
+            }
+            catch (Exception)
+            {
+                return new BitcoinColoredAddress(new BitcoinScriptAddress(legacyAddress, Network.Main));
+            }
+
         }
     }
 }
