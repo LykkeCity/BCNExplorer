@@ -18,7 +18,7 @@ namespace BCNExplorer.Web.Models
             return new AssetCoinholdersViewModel
             {
                 Asset = asset,
-                AddressSummaries = balanceSummary.AddressSummaries.Select(p => BalanceAddressSummary.Create(p, total, asset.Divisibility)),
+                AddressSummaries = balanceSummary.AddressSummaries.Select(p => BalanceAddressSummary.Create(p, total, asset.Divisibility)).Where(p=>p.Balance != 0),
                 Total = BitcoinUtils.CalculateColoredAssetQuantity(total, asset.Divisibility)
             };
         }
