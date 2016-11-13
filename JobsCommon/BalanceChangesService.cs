@@ -51,7 +51,7 @@ namespace JobsCommon
             var tasksToAwait = new List<Task>();
             var mainChain = await _mainChainRepository.GetMainChainAsync();
             //await _addressRepository.AddAsync(addresses.Select(p => new Address {ColoredAddress = p}).ToArray());
-            foreach (var address in addresses.Select(p=> new BitcoinColoredAddress(p).ToString()))
+            foreach (var address in addresses.Select(p=> new BitcoinColoredAddress(p).ToString()).Distinct())
             {
                 var balanceId = BalanceIdHelper.Parse(address, _network);
 

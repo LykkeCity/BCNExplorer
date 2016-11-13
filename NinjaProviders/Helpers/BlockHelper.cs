@@ -18,8 +18,9 @@ namespace Providers.Helpers
         public static IEnumerable<BitcoinAddress> GetAddressesWithColoredMarker(this Block block, Network network)
         {
             var result = new List<BitcoinAddress>();
-            
-            foreach (var tx in block.Transactions.Where(p=>p.HasValidColoredMarker()))
+            var coloredTxs = block.Transactions.Where(p => p.HasValidColoredMarker());
+
+            foreach (var tx in coloredTxs)
             {
                 result.AddRange(tx.GetAddresses(network));
             }

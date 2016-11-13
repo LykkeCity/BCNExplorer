@@ -21,7 +21,8 @@ namespace TestConsole
 
             //TestGettingChainChanges.Run(container);
             //GetAddressesWithColoredAssets.Run(container);
-            TestFillBalance.Run(container).Wait();
+            //TestFillBalance.Run(container).Wait();
+            CheckBalance.Run(container).Wait();
         }
         
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)

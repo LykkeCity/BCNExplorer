@@ -128,6 +128,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckBalance.cs" />
     <Compile Include="GetAddressesWithColoredAssets.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -146,6 +147,10 @@
     <ProjectReference Include="..\AzureStorage\AzureStorage.csproj">
       <Project>{b3642177-0525-48a7-844e-7e5054fef3b5}</Project>
       <Name>AzureStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BCNExplorer.Web\BCNExplorer.Web.csproj">
+      <Project>{A9E6EC52-A2A1-40DF-A135-F2B458414783}</Project>
+      <Name>BCNExplorer.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{e689375b-0822-47e4-ae16-6ab9f3cf5698}</Project>

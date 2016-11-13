@@ -37,7 +37,7 @@ namespace Providers.Providers.Ninja
                 }
             });
 
-            var fillSummaryTask = GetAddressSummaryAsync(id).ContinueWith(p =>
+            var fillSummaryTask = GetAddressBalanceAsync(id).ContinueWith(p =>
             {
                 if (p.Result != null)
                 {
@@ -70,7 +70,7 @@ namespace Providers.Providers.Ninja
             return await _blockChainReader.GetAsync<AddressTransactionListContract>($"/balances/{id}");
         }
 
-        private async Task<AddressSummaryContract> GetAddressSummaryAsync(string id)
+        private async Task<AddressSummaryContract> GetAddressBalanceAsync(string id)
         {
             return await _blockChainReader.GetAsync<AddressSummaryContract>($"/balances/{id}/summary?colored=true");
         }
