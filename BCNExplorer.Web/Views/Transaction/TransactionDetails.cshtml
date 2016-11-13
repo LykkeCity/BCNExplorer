@@ -208,7 +208,7 @@
         <div class="transaction_view__line col-sm-8">
             @if (inOutViewModel.ShowPreviousTransaction)
             {
-                <a href="@Url.Action("Index", "Address", new {id = inOutViewModel.Address})"><i class="icon icon--arrow-left-alt"></i></a>
+                <a href="@Url.Action("Index", "Transaction", new {id = inOutViewModel.PreviousTransactionId})"><i class="icon icon--arrow-left-alt"></i></a>
             }
             @if (inOutViewModel.IsUnrecoginzedAddress)
             {
