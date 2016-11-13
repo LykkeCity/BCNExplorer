@@ -88,7 +88,7 @@ namespace JobsCommon
                                 Address = address,
                                 BlockHash = p.BlockHash
                             }).ToArray();
-
+                            
                             await _balanceChangesRepository.AddAsync(address, balanceChanges);
                         }
                         catch (Exception e)

@@ -64,7 +64,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
                 var block = _indexerClient.GetIndexerClient().GetBlock(mainChain.GetBlock(context.BlockHeight).HashBlock);
                 var addressesToTrack = block.GetAddressesWithColoredMarker(_baseSettings.UsedNetwork()).ToArray();
 
-                await _balanceChangesService.SaveAddressChangesAsync(context.BlockHeight - 1, context.BlockHeight, addressesToTrack);
+                await _balanceChangesService.SaveAddressChangesAsync(context.BlockHeight, context.BlockHeight, addressesToTrack);
 
                 await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), $"Done {st.Elapsed.ToString("g")}. Addr to track {addressesToTrack.Length}");
                 //await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), "Done");

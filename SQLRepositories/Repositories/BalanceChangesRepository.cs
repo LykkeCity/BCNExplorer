@@ -28,7 +28,7 @@ namespace SQLRepositories.Repositories
                 await _lock.WaitAsync();
                 using (var db = _bcnExplolerFactory.GetContext())
                 {
-                    var blockHashes = balanceChanges.Select(p => p.BlockHash);
+                    var blockHashes = balanceChanges.Select(p => p.BlockHash).Distinct();
                     var existedParsedAddressBlocks = await db.ParsedAddressBlockEntities
                         .Where(p => p.Address == legacyAddress && blockHashes.Contains(p.BlockHash))
                         .ToListAsync();
