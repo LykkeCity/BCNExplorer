@@ -36,7 +36,7 @@ namespace TestConsole
             //var asset = "AKi5F8zPm7Vn1FhLqQhvLdoWNvWqtwEaig";
 
             //Console.WriteLine("Getting Coinprism addresses");
-            //var coinprismAddresses = (await GetAddressesWithColoredAssets.GetAddresses(asset)).ToArray();
+            //var coinprismAddresses = (await GetAddressesWithColoredAssets.GetOutputAddresses(asset)).ToArray();
             //Console.WriteLine("Getting Coinprism Done");
             //Console.WriteLine("Saving addresses");
             //await addressRepo.AddAsync(coinprismAddresses);

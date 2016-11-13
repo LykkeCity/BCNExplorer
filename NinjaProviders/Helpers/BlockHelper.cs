@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NBitcoin;
+using NBitcoin.Indexer;
 using NBitcoin.OpenAsset;
 
 namespace Providers.Helpers
@@ -15,20 +16,20 @@ namespace Providers.Helpers
             return header?.GetHash().AsBitcoinSerializable().Value.ToString();
         }
 
-        public static IEnumerable<BitcoinAddress> GetAddressesWithColoredMarker(this Block block, Network network)
+        public static async Task<IEnumerable<BitcoinAddress>> GetAddressesWithColoredMarkerAsync(this Block block, Network network, IndexerClient indexerClient)
         {
             var result = new List<BitcoinAddress>();
             var coloredTxs = block.Transactions.Where(p => p.HasValidColoredMarker());
-
-            foreach (var tx in coloredTxs)
+            foreach (var transaction in coloredTxs)
             {
-                result.AddRange(tx.GetAddresses(network));
+                result.AddRange(transaction.GetOutputAddresses(network));
             }
-
+            var loadedTxs = await indexerClient.GetTransactionsAsync(true, coloredTxs.Select(p => p.GetHash()).ToArray());
+            result.AddRange(loadedTxs.SelectMany(p=>p.GetInputAddresses(network)));
             return result;
         }
 
-        public static IEnumerable<BitcoinAddress> GetAddresses(this Transaction transaction, Network network)
+        public static IEnumerable<BitcoinAddress> GetOutputAddresses(this Transaction transaction, Network network)
         {
             foreach (var txOut in transaction.Outputs)
             {
@@ -36,6 +37,18 @@ namespace Providers.Helpers
                 if (addr != null)
                 {
                     yield return addr;
+                }
+            }
+        }
+
+        private static IEnumerable<BitcoinAddress> GetInputAddresses(this TransactionEntry tx, Network network)
+        {
+            for (int i = 0; i < tx.Transaction.Inputs.Count; i++)
+            {
+                var address = tx.SpentCoins[i].TxOut.ScriptPubKey.GetDestinationAddress(network);
+                if (address != null)
+                {
+                    yield return address;
                 }
             }
         }

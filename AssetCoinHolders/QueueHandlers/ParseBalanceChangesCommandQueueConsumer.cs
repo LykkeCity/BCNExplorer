@@ -62,7 +62,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
                 var mainChain = await _mainChainRepository.GetMainChainAsync();
 
                 var block = _indexerClient.GetIndexerClient().GetBlock(mainChain.GetBlock(context.BlockHeight).HashBlock);
-                var addressesToTrack = block.GetAddressesWithColoredMarker(_baseSettings.UsedNetwork()).ToArray();
+                var addressesToTrack = await block.GetAddressesWithColoredMarkerAsync(_baseSettings.UsedNetwork(), _indexerClient.GetIndexerClient()).ToArray();
 
                 await _balanceChangesService.SaveAddressChangesAsync(context.BlockHeight, context.BlockHeight, addressesToTrack);
 

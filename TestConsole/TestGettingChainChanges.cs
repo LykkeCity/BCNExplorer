@@ -72,11 +72,12 @@ namespace TestConsole
         {
             var block = indexerClient.GetBlock(uint256.Parse(blockId));
 
-            foreach (var bitcoinAddress in block.GetAddressesWithColoredMarker(Network.Main))
-            {
-                yield return bitcoinAddress;
-                Console.WriteLine(bitcoinAddress);
-            }
+            throw new NotImplementedException();
+            //foreach (var bitcoinAddress in block.GetAddressesWithColoredMarker(Network.Main))
+            //{
+            //    yield return bitcoinAddress;
+            //    Console.WriteLine(bitcoinAddress);
+            //}
         }
     }
 }
