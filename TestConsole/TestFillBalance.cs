@@ -61,6 +61,7 @@ namespace TestConsole
             using (var db = contextFactory.GetContext())
             {
                 addr = db.Addresses.Where(p => !p.ParsedAddressBlockEntities.Any()).ToList();
+                //addr = db.Addresses.Where(p => p.ColoredAddress== "akYc7BCwLpf1JWTnQdj8WN94Gajokn8MEhT").ToList();
             }
             var counter = addr.Count();
             Console.WriteLine("Addr Count {0}", addr.Count());

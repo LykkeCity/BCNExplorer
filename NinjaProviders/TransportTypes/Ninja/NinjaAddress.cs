@@ -17,6 +17,7 @@ namespace Providers.TransportTypes.Ninja
         {
             public string AssetId { get; set; }
             public double Quantity { get; set; }
+            public double UnconfirmedQuantityDelta { get; set; }
         }
     }
 }

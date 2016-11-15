@@ -19,39 +19,49 @@ namespace Providers.Providers.Ninja
         public async Task<NinjaAddress> GetAddressAsync(string id)
         {
             var ninjaAddress = new Lazy<NinjaAddress>( () => new NinjaAddress());
-            var fillMainInfoTask = GetAddressMainInfoAsync(id).ContinueWith(p =>
+            var fillMainInfoTask = GetAddressMainInfoAsync(id).ContinueWith(task =>
             {
-                if (p.Result != null)
+                if (task.Result != null)
                 {
                     ninjaAddress.Value.AddressId = id;
-                    ninjaAddress.Value.ColoredAddress = p.Result.ColoredAddress;
-                    ninjaAddress.Value.UncoloredAddress = p.Result.UncoloredAddress;
+                    ninjaAddress.Value.ColoredAddress = task.Result.ColoredAddress;
+                    ninjaAddress.Value.UncoloredAddress = task.Result.UncoloredAddress;
                 }
             });
 
-            var fillTransactionsTask = GetTransactionsForAddressAsync(id).ContinueWith(p =>
+            var fillTransactionsTask = GetTransactionsForAddressAsync(id).ContinueWith(task =>
             {
-                if (p.Result != null)
+                if (task.Result != null)
                 {
-                    ninjaAddress.Value.TransactionIds = p.Result.Transactions.Select(tr => tr.TxId);
+                    ninjaAddress.Value.TransactionIds = task.Result.Transactions.Select(tr => tr.TxId);
                 }
             });
 
-            var fillSummaryTask = GetAddressBalanceAsync(id).ContinueWith(p =>
+            var fillSummaryTask = GetAddressBalanceAsync(id).ContinueWith(task =>
             {
-                if (p.Result != null)
+                if (task.Result != null)
                 {
-                    ninjaAddress.Value.Balance = p.Result.Confirmed.Balance;
-                    ninjaAddress.Value.TotalTransactions = p.Result.Confirmed.TotalTransactions;
+                    ninjaAddress.Value.Balance = task.Result.Confirmed.Balance;
+                    ninjaAddress.Value.TotalTransactions = task.Result.Confirmed.TotalTransactions;
 
-                    ninjaAddress.Value.UnconfirmedBalanceDelta = p.Result.Unconfirmed.Balance;
+                    ninjaAddress.Value.UnconfirmedBalanceDelta = task.Result.Unconfirmed.Balance;
+                    var unconfirmedAssets = task.Result.Unconfirmed.Assets ?? Enumerable.Empty<AddressAssetContract>();
 
-                    var assets = p.Result.Confirmed.Assets ?? Enumerable.Empty<AddressAssetContract>();
-                    ninjaAddress.Value.Assets = assets.Select(a => new NinjaAddress.Asset
-                    {
-                        AssetId = a.AssetId,
-                        Quantity = a.Quantity
-                    });
+                    ninjaAddress.Value.Assets = (task.Result.Confirmed.Assets ?? Enumerable.Empty<AddressAssetContract>())
+                        .Select(a =>
+                        {
+                            var ninjaAsset =  new NinjaAddress.Asset
+                            {
+                                AssetId = a.AssetId,
+                                Quantity = a.Quantity
+                            };
+                            var unconfirmedAsset = unconfirmedAssets.FirstOrDefault(p => p.AssetId == ninjaAsset.AssetId);
+                            if (unconfirmedAsset != null)
+                            {
+                                ninjaAsset.UnconfirmedQuantityDelta = unconfirmedAsset.Quantity;
+                            }
+                            return ninjaAsset;
+                        });
                 }
             });
 

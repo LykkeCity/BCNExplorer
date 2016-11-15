@@ -38,7 +38,8 @@ namespace BCNExplorer.Web.Models
                 Assets = (ninjaAddress.Assets ?? Enumerable.Empty<NinjaAddress.Asset>()).Select(p => new Asset
                 {
                     AssetId = p.AssetId,
-                    Quantity = p.Quantity
+                    Quantity = p.Quantity,
+                    UnconfirmedQuantityDelta = p.UnconfirmedQuantityDelta
                 }),
                 UnconfirmedBalanceDelta = ninjaAddress.UnconfirmedBalanceDelta,
                 AssetDic = AssetDictionary.Create(assetDictionary)
@@ -49,6 +50,9 @@ namespace BCNExplorer.Web.Models
         {
             public string AssetId { get; set; }
             public double Quantity { get; set; }
+            public double UnconfirmedQuantityDelta { get; set; }
+            public bool ShowUnconfirmedBalance => UnconfirmedQuantityDelta != 0;
+            public double UnconfirmedQuantity => Quantity + UnconfirmedQuantityDelta;
         }
     }
 }

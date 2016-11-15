@@ -70,29 +70,39 @@
                             </tr>
                         }
 
-                            @foreach (var itm in Model.Assets)
+                            @foreach (var asset in Model.Assets)
                             {
-                                var assetDivisibity = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.Divisibility, 0);
-                                var assetShortName = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.NameShort, "");
-                                var assetName = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.Name, itm.AssetId);
-                                var assetIcon = Model.AssetDic.GetAssetProp(itm.AssetId, p => p.IconUrl, null);
+                                var assetDivisibity = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Divisibility, 0);
+                                var assetShortName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.NameShort, "");
+                                var assetName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Name, asset.AssetId);
+                                var assetIcon = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.IconUrl, null);
 
                                 <tr>
                                     <td>
                                         @if (assetIcon != null)
                                         {
-                                            <a href="@Url.Action("Index", "Asset", new {id= itm.AssetId})">
+                                            <a href="@Url.Action("Index", "Asset", new {id = asset.AssetId})">
 
                                                 <img src="@assetIcon" width="48" alt="@assetName">
                                             </a>
 
                                         }
-                                        <a href="@Url.Action("Index", "Asset", new {id= itm.AssetId})">
-                                           @assetName
+                                        <a href="@Url.Action("Index", "Asset", new {id = asset.AssetId})">
+                                            @assetName
                                         </a>
+                                        @if (asset.ShowUnconfirmedBalance)
+                                        {
+                                            <br/>
+                                            <span class="text-muted">Unconfirmed Balance</span>
+                                        }
                                     </td>
                                     <td class="text-right">
-                                        @BitcoinUtils.CalculateColoredAssetQuantity(itm.Quantity, assetDivisibity).ToString("0.####################") @assetShortName
+                                        @BitcoinUtils.CalculateColoredAssetQuantity(asset.Quantity, assetDivisibity).ToString("0.####################") @assetShortName
+                                        @if (asset.ShowUnconfirmedBalance)
+                                        {
+                                            <br />
+                                            <span class="text-muted">@BitcoinUtils.SatoshiToBtc(asset.UnconfirmedQuantity).ToString("0.####################") @assetShortName</span>
+                                        }
                                     </td>
                                 </tr>
                             }
