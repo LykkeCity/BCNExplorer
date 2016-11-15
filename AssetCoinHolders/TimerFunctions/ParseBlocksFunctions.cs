@@ -34,7 +34,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             _mainChainRepository = mainChainRepository;
         }
 
-        public async Task ParseLastBlock([TimerTrigger("00:03:33", RunOnStartup = true)] TimerInfo timer)
+        public async Task ParseLastBlock([TimerTrigger("00:05:00", RunOnStartup = true)] TimerInfo timer)
         {
             try
             {
