@@ -20,5 +20,10 @@ namespace BCNExplorer.Web.Controllers
 
             return View(LastBlockViewModel.Create(lastBlock));
         }
+
+        public string Version()
+        {
+            return Product.Version;
+        }
     }
 }
