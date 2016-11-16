@@ -1,6 +1,6 @@
 # Bcn Exploler
 
-A website exploler the blockchain and shows information about blocks, transactions, assets, address balances etc.
+A website explores the blockchain and shows information about blocks, transactions, assets, address balances etc.
 
 #Project structure
 * The project contaion 2 main parts:
@@ -22,7 +22,6 @@ A website exploler the blockchain and shows information about blocks, transactio
 		"AssetsConnString":"",
 		"SharedStorageConnString":"",
 		"SqlConnString":"",
-		"SlackQueueConnString " :""
 		
 	},
 	"NinjaIndexerCredentials": {
@@ -39,5 +38,5 @@ A website exploler the blockchain and shows information about blocks, transactio
   *  LogsConnString - Connection string that points to the table storage with logging information
   *  AssetsConnString - Connection string that points to the table storage with asset definition information
   *  SqlConnString - Connection string that points to the MS SQL Server database with asset balance changes information
-  *  SlackQueueConnString - Connection string that points to the queue which handles slack notifications.
+  *  SharedStorageConnString - Connection string that points to the queue which handles slack notifications.
   *  NinjaIndexerCredentials - Connection credentials that points to Azure Table Storage with NbitCoin ninja blockchain info
