@@ -101,7 +101,7 @@
                                         @if (asset.ShowUnconfirmedBalance)
                                         {
                                             <br />
-                                            <span class="text-muted">@BitcoinUtils.SatoshiToBtc(asset.UnconfirmedQuantity).ToString("0.####################") @assetShortName</span>
+                                            <span class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(asset.UnconfirmedQuantity, assetDivisibity).ToString("0.####################") @assetShortName</span>
                                         }
                                     </td>
                                 </tr>
