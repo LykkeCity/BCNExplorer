@@ -22,6 +22,10 @@ A website explores the blockchain and shows information about blocks, transactio
 		"AssetsConnString":"",
 		"SharedStorageConnString":"",
 		"SqlConnString":"",
+		"AssetBalanceChanges" : {
+			"ConnectionString":"",		
+			"DbName":"",		
+		}
 		
 	},
 	"NinjaIndexerCredentials": {

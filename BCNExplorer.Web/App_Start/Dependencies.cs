@@ -21,7 +21,7 @@ namespace BCNExplorer.Web.App_Start
         public static class WebSiteSettings
         {
 
-            public static string ConnectionString => ConfigurationManager.AppSettings["ConnectionString"] ?? "UseDevelopmentStorage=true";
+            public static string ConnectionString => !string.IsNullOrEmpty(ConfigurationManager.AppSettings["ConnectionString"]) ? ConfigurationManager.AppSettings["ConnectionString"]: "UseDevelopmentStorage=true";
         }
 
         public static IDependencyResolver CreateDepencencyResolver()

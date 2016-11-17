@@ -9,6 +9,8 @@ namespace JobsCommon
 {
     public static class JobsConnectionStringSettings
     {
-        public static string ConnectionString => ConfigurationManager.AppSettings["ConnectionString"] ?? "UseDevelopmentStorage=true";
+        public static string ConnectionString => !string.IsNullOrEmpty(ConfigurationManager.AppSettings["ConnectionString"]) 
+            ? ConfigurationManager.AppSettings["ConnectionString"] 
+            : "UseDevelopmentStorage=true";
     }
 }

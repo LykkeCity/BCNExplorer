@@ -4,6 +4,7 @@ using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common.Log;
 using Core.Settings;
+using MongoDB.Driver;
 
 namespace AzureRepositories
 {
@@ -32,6 +33,12 @@ namespace AzureRepositories
         public static AssetDefinitionParsedBlockRepository CreateAssetParsedBlockRepository(BaseSettings baseSettings, ILog log)
         {
             return new AssetDefinitionParsedBlockRepository(new AzureTableStorage<AssetDefinitionParsedBlockEntity>(baseSettings.Db.AssetsConnString, "AssetParsedBlocks", log));
+        }
+
+        public static AssetBalanceChangesRepository CreateAssetBalanceChangesRepository(BaseSettings baseSettings, ILog log)
+        {
+            var client = new MongoClient(baseSettings.Db.AssetBalanceChanges.ConnectionString);
+            return new AssetBalanceChangesRepository(client.GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName));
         }
     }
 }
