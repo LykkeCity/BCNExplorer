@@ -19,9 +19,9 @@ namespace AzureRepositories.AssetCoinHolders
             _db = db;
         }
 
-        public Task AddAsync(IEnumerable<BalanceChange> balanceChanges)
+        public async Task AddAsync(IEnumerable<IBalanceChanges> balanceChanges)
         {
-            throw new NotImplementedException();
+
         }
     }
     
