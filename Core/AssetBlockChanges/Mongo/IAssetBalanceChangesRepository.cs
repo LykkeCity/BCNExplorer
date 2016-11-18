@@ -50,5 +50,6 @@ namespace Core.AssetBlockChanges.Mongo
     {
         Task AddAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges);
         Task<BalanceSummary> GetSummaryAsync(params string[] assetIds);
+        Task<int> GetLastParsedBlockHeightAsync();
     }
 }

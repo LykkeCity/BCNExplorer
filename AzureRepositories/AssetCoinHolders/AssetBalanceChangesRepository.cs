@@ -130,6 +130,12 @@ namespace AzureRepositories.AssetCoinHolders
                     })
             };
         }
+
+        public async Task<int> GetLastParsedBlockHeightAsync()
+        {
+            var result =  await _mongoCollection.Find(x => true).SortByDescending(d => d.BlockHeight).Limit(1).FirstOrDefaultAsync();
+            return result != null ? result.BlockHeight : 0;
+        }
     }
 
     [BsonIgnoreExtraElements]
