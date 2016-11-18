@@ -67,27 +67,6 @@ namespace AzureRepositories.AssetCoinHolders
 
         private async Task AddInnerAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges)
         {
-            //foreach (var balanceChange in balanceChanges.GroupBy(p => p.AssetId))
-            //{
-            //    var assetBalance = await _mongoCollection.Find(p => p.AssetId == balanceChange.Key).FirstOrDefaultAsync()
-            //        ?? new AssetBalanceMongoEntity { AssetId = balanceChange.Key };
-
-            //    var addressBalanceChanges = assetBalance.AddressBalanceChanges
-            //        .FirstOrDefault(p => p.ColoredAddress == coloredAddress);
-
-            //    if (addressBalanceChanges == null)
-            //    {
-            //        addressBalanceChanges = new AddressAssetBalanceChangesMongoEntity { ColoredAddress = coloredAddress };
-            //        assetBalance.AddressBalanceChanges.Add(addressBalanceChanges);
-            //    }
-            //    var parsedBlockHashes = addressBalanceChanges.BalanceChanges.Select(p => p.BlockHash).Distinct();
-
-            //    var mappedChanges = balanceChanges.Where(p => !parsedBlockHashes.Contains(p.BlockHash)).Select(BalanceChangesMongoEntity.Create).ToList();
-            //    addressBalanceChanges.BalanceChanges.AddRange(mappedChanges);
-
-            //    await _mongoCollection.ReplaceOneAsync(p => p.AssetId == balanceChange.Key, assetBalance, new UpdateOptions { IsUpsert = true });
-            //}
-
             foreach (var groupedByAssetId in balanceChanges.GroupBy(p => p.AssetId))
             {
                 var parsedBlockHashes = await _mongoCollection.AsQueryable()
