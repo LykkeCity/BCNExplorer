@@ -34,8 +34,21 @@ namespace Core.AssetBlockChanges.Mongo
         }
     }
 
+    public class BalanceSummary
+    {
+        public string AssetId { get; set; }
+        public IEnumerable<BalanceAddressSummary> AddressSummaries { get; set; }
+
+        public class BalanceAddressSummary
+        {
+            public string Address { get; set; }
+            public double Balance { get; set; }
+        }
+    }
+
     public interface IAssetBalanceChangesRepository
     {
-        Task AddAsync(IEnumerable<IBalanceChanges> balanceChanges);
+        Task AddAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges);
+        Task<BalanceSummary> GetSummaryAsync(params string[] assetIds);
     }
 }

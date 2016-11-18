@@ -38,7 +38,7 @@ namespace AzureRepositories
         public static AssetBalanceChangesRepository CreateAssetBalanceChangesRepository(BaseSettings baseSettings, ILog log)
         {
             var client = new MongoClient(baseSettings.Db.AssetBalanceChanges.ConnectionString);
-            return new AssetBalanceChangesRepository(client.GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName));
+            return new AssetBalanceChangesRepository(client.GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName), log);
         }
     }
 }

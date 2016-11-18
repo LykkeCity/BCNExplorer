@@ -29,7 +29,12 @@ namespace TestConsole
 
             using (var db = contextFactory.GetContext())
             {
-                addr = db.Addresses.Take(5).ToList();
+                //addr = db.Addresses.Take(1).ToList();
+                addr =
+                    db.BalanceChanges.Where(p => p.AssetId == "AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog")
+                        .Select(p => p.AddressEntity)
+                        .Distinct()
+                        .ToList();
                 //addr = db.Addresses.Where(p => p.ColoredAddress== "akYc7BCwLpf1JWTnQdj8WN94Gajokn8MEhT").ToList();
             }
 
@@ -48,19 +53,21 @@ namespace TestConsole
                     .ContinueWith(
                         async task =>
                         {
-                            await Task.Delay(1);
                             counter--;
                             var counterTemp = counter;
                             Console.WriteLine("Continue started {0} {1}", st.Elapsed.ToString("g"), counter);
-
+                            
                             var coloredChanges = task.Result.SelectMany(p => p.GetColoredChanges(Network.Main)).ToList();
-                            var balanceChanges = coloredChanges.Select(p => AssetBalanceChanges.Create(p.AssetId,
-                                p.Quantity,
-                                p.BlockHash,
-                                mainChain.GetBlock(uint256.Parse(p.BlockHash)).Height, 
-                                p.TransactionHash));
+                            if (coloredChanges.Any())
+                            {
+                                var balanceChanges = coloredChanges.Select(p => AssetBalanceChanges.Create(p.AssetId,
+                                   p.Quantity,
+                                   p.BlockHash,
+                                   mainChain.GetBlock(uint256.Parse(p.BlockHash)).Height,
+                                   p.TransactionHash));
 
-                            await balanceChangesRepo.AddAsync(balanceChanges);
+                                await balanceChangesRepo.AddAsync(address, balanceChanges);
+                            }
 
                             Console.WriteLine(" Continue Done {0} {1} {2}", counterTemp, st.Elapsed.ToString("g"), DateTime.Now.ToString("t"));
                         });

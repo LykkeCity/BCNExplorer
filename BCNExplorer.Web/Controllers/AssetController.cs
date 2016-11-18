@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using Core.AssetBlockChanges;
+using Core.AssetBlockChanges.Mongo;
 using Providers.Providers.Asset;
 
 namespace BCNExplorer.Web.Controllers
@@ -10,9 +11,9 @@ namespace BCNExplorer.Web.Controllers
     public class AssetController : Controller
     {
         private readonly AssetProvider _assetProvider;
-        private readonly IBalanceChangesRepository _balanceChangesRepository;
+        private readonly IAssetBalanceChangesRepository _balanceChangesRepository;
 
-        public AssetController(AssetProvider assetProvider, IBalanceChangesRepository balanceChangesRepository)
+        public AssetController(AssetProvider assetProvider, IAssetBalanceChangesRepository balanceChangesRepository)
         {
             _assetProvider = assetProvider;
             _balanceChangesRepository = balanceChangesRepository;

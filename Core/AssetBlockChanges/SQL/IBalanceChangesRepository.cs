@@ -15,19 +15,7 @@ namespace Core.AssetBlockChanges
         string Address { get; }
         string BlockHash { get; }
     }
-
-    public class BalanceSummary
-    {
-        public string AssetId { get; set; }
-        public IEnumerable<BalanceAddressSummary> AddressSummaries { get; set; }
-
-        public class BalanceAddressSummary
-        {
-            public string Address { get; set; }
-            public double Balance { get; set; }
-        }
-    }
-
+    
     public class BalanceChange: IBalanceChange
     {
         public long Id { get;  }
@@ -41,6 +29,5 @@ namespace Core.AssetBlockChanges
     public interface IBalanceChangesRepository
     {
         Task AddAsync(string legacyAddress, params IBalanceChange[] balanceChanges);
-        Task<BalanceSummary> GetSummaryAsync(params string[] assetIds);
     }
 }

@@ -102,19 +102,5 @@ namespace JobsCommon
 
             await Task.WhenAll(tasksToAwait);
         }
-
-
-        private BitcoinColoredAddress GetColoredAddress(string legacyAddress)
-        {
-            try
-            {
-                return new BitcoinColoredAddress(new BitcoinPubKeyAddress(legacyAddress));
-            }
-            catch (Exception)
-            {
-                return new BitcoinColoredAddress(new BitcoinScriptAddress(legacyAddress, Network.Main));
-            }
-
-        }
     }
 }
