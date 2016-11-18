@@ -7,6 +7,7 @@ using AzureRepositories.AssetCoinHolders;
 using Common;
 using Common.Log;
 using Core.Asset;
+using Core.AssetBlockChanges.Mongo;
 using JobsCommon;
 using Microsoft.Azure.WebJobs;
 using NBitcoin;
@@ -20,12 +21,12 @@ namespace AssetCoinHoldersScanner.TimerFunctions
     {
         private readonly ILog _log;
         private readonly AssetChangesParseBlockCommandProducer _parseBlockCommandProducer;
-        private readonly IAssetChangesParsedBlockRepository _parsedBlockRepository;
+        private readonly IAssetBalanceChangesRepository _parsedBlockRepository;
         private readonly MainChainRepository _mainChainRepository;
 
         public ParseBlocksFunctions(ILog log,
             AssetChangesParseBlockCommandProducer parseBlockCommandProducer,
-            IAssetChangesParsedBlockRepository parsedBlockRepository, 
+            IAssetBalanceChangesRepository parsedBlockRepository, 
             MainChainRepository mainChainRepository)
         {
             _log = log;
@@ -42,7 +43,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
 
                 var mainChain = await _mainChainRepository.GetMainChainAsync();
 
-                var lastParsedBlockHeight = await _parsedBlockRepository.GetLastParsetBlockHeightAsync();
+                var lastParsedBlockHeight = await _parsedBlockRepository.GetLastParsedBlockHeightAsync();
                 // to put notconfirmed tx-s (at last parse block iteration) in prev block. Now this tx have to be confirmed
                 var startParseBlock = lastParsedBlockHeight != 0 ? (lastParsedBlockHeight - 2) : 0;
 
@@ -52,7 +53,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
                     await _log.WriteInfo("ParseBlocksFunctions", "ParseLastBlock", i.ToString(), "Add parse block command done");
                 }
 
-                await _log.WriteInfo("ParseBlocksFunctions", "ParseLastBlock", null, "Done");
+                await _log.WriteInfo("ParseBlocksFunctions", "ParseLastBlock", new { lastParsedBlockHeight }.ToJson(), "Done");
             }
             catch (Exception e)
             {

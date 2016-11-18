@@ -181,6 +181,10 @@
       <Project>{f6a82c81-9e41-4c77-b665-50bfcdba853b}</Project>
       <Name>Providers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Services\Services.csproj">
+      <Project>{610f820d-9443-453c-abfd-1a34026b4ae5}</Project>
+      <Name>Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SQLRepositories\SQLRepositories.csproj">
       <Project>{1bdb259d-0c8e-4dc8-b8d3-96769cec785c}</Project>
       <Name>SQLRepositories</Name>

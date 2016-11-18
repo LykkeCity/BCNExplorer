@@ -30,6 +30,11 @@ namespace AzureRepositories.AssetCoinHolders
 
         public async Task AddAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges)
         {
+            if (!balanceChanges.Any())
+            {
+                return;
+            }
+
             const int attemptCountMax = 10;
             var attemptCount = 0;
             bool isDone = false;
