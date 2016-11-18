@@ -31,7 +31,7 @@ namespace TestConsole
             {
                 //addr = db.Addresses.Take(1).ToList();
                 addr =
-                    db.BalanceChanges.Where(p => p.AssetId == "AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog")
+                    db.BalanceChanges.Where(p => p.AssetId == "ARPZWUujqxUzahzmmJC7s4Xn8Qa2oeh1VB")
                         .Select(p => p.AddressEntity)
                         .Distinct()
                         .ToList();
