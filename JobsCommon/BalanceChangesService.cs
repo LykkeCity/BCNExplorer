@@ -50,8 +50,9 @@ namespace JobsCommon
             var semaphore = new SemaphoreSlim(100);
             var tasksToAwait = new List<Task>();
             var mainChain = await _mainChainRepository.GetMainChainAsync();
-            //await _addressRepository.AddAsync(addresses.Select(p => new Address {ColoredAddress = p}).ToArray());
-            foreach (var address in addresses.Select(p=> new BitcoinColoredAddress(p).ToString()).Distinct())
+            var coloredAddresses = addresses.Select(p => new BitcoinColoredAddress(p).ToString()).Distinct();
+            await _addressRepository.AddAsync(coloredAddresses.Select(p => new Address {ColoredAddress = p}).ToArray());
+            foreach (var address in coloredAddresses)
             {
                 var balanceId = BalanceIdHelper.Parse(address, _network);
 
