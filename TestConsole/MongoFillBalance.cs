@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,14 +30,15 @@ namespace TestConsole
 
             using (var db = contextFactory.GetContext())
             {
-                //addr = db.Addresses.Take(1).ToList();
-                addr =
-                    db.BalanceChanges.Where(p => p.AssetId == "ARPZWUujqxUzahzmmJC7s4Xn8Qa2oeh1VB")
-                        .Select(p => p.AddressEntity)
-                        .Distinct()
-                        .ToList();
+                addr = db.Addresses.ToList();
+                //addr =
+                //    db.BalanceChanges.Where(p => p.AssetId == "ARPZWUujqxUzahzmmJC7s4Xn8Qa2oeh1VB")
+                //        .Select(p => p.AddressEntity)
+                //        .Distinct()
+                //        .ToList();
                 //addr = db.Addresses.Where(p => p.ColoredAddress== "akYc7BCwLpf1JWTnQdj8WN94Gajokn8MEhT").ToList();
             }
+            var file = "./errors.txt";
 
             var semaphore = new SemaphoreSlim(100);
             var tasksToAwait = new List<Task>();
@@ -44,32 +46,44 @@ namespace TestConsole
             var st = new Stopwatch();
             st.Start();
             var mainChain = await mainChainRepository.GetMainChainAsync();
-            foreach (var address in addr.Select(p => p.ColoredAddress).Distinct().ToList())
+            
+            File.AppendAllLines(file, new[] { mainChain.Height.ToString(),  "----------------" });
+            foreach (var address in addr.Select(p => p.ColoredAddress).Distinct().ToList().OrderBy(p=>p))
             {
                 var balanceId = BalanceIdHelper.Parse(address, Network.Main);
-                Console.WriteLine("t");
+                Console.WriteLine(address);
                 var changesTask = indexerClientFactory.GetIndexerClient()
                     .GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0, mainChain.Height)
                     .ContinueWith(
                         async task =>
                         {
-                            counter--;
-                            var counterTemp = counter;
-                            Console.WriteLine("Continue started {0} {1}", st.Elapsed.ToString("g"), counter);
-                            
-                            var coloredChanges = task.Result.SelectMany(p => p.GetColoredChanges(Network.Main)).ToList();
-                            if (coloredChanges.Any())
+                            try
                             {
-                                var balanceChanges = coloredChanges.Select(p => AssetBalanceChanges.Create(p.AssetId,
-                                   p.Quantity,
-                                   p.BlockHash,
-                                   mainChain.GetBlock(uint256.Parse(p.BlockHash)).Height,
-                                   p.TransactionHash));
+                                counter--;
+                                var counterTemp = counter;
+                                Console.WriteLine("-Continue started {0} {1}", st.Elapsed.ToString("g"), counter);
 
-                                await balanceChangesRepo.AddAsync(address, balanceChanges);
+                                var coloredChanges = task.Result.SelectMany(p => p.GetColoredChanges(Network.Main)).ToList();
+                                if (coloredChanges.Any())
+                                {
+                                    var balanceChanges = coloredChanges.Select(p => AssetBalanceChanges.Create(p.AssetId,
+                                       p.Quantity,
+                                       p.BlockHash,
+                                       mainChain.GetBlock(uint256.Parse(p.BlockHash)).Height,
+                                       p.TransactionHash));
+
+                                    await balanceChangesRepo.AddAsync(address, balanceChanges);
+                                }
+
+                                Console.WriteLine("--Continue Done {0} {1} {2}", counterTemp, st.Elapsed.ToString("g"), DateTime.Now.ToString("t"));
+                            }
+                            catch (Exception e)
+                            {
+
+                                Console.WriteLine(e.ToString());
+                                File.AppendAllLines(file, new[] { address, e.ToString(), "----------------" });
                             }
 
-                            Console.WriteLine(" Continue Done {0} {1} {2}", counterTemp, st.Elapsed.ToString("g"), DateTime.Now.ToString("t"));
                         });
 
                 tasksToAwait.Add(changesTask.Unwrap());
