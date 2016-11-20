@@ -22,13 +22,17 @@ namespace AssetCoinHoldersScanner.QueueHandlers
         private readonly MainChainRepository _mainChainRepository;
         private readonly BaseSettings _baseSettings;
         private readonly BalanceChangesService _balanceChangesService;
+        private readonly AssetChangesParseBlockCommandProducer _parseBlockCommandProducer;
+
+        private const int attemptCount = 10;
 
         public ParseBalanceChangesCommandQueueConsumer(ILog log, 
             IParseBlockQueueReader queueReader,
             IndexerClientFactory indexerClient, 
             MainChainRepository mainChainRepository, 
             BaseSettings baseSettings, 
-            BalanceChangesService balanceChangesService)
+            BalanceChangesService balanceChangesService, 
+            AssetChangesParseBlockCommandProducer parseBlockCommandProducer)
         {
             _log = log;
             _queueReader = queueReader;
@@ -36,6 +40,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
             _mainChainRepository = mainChainRepository;
             _baseSettings = baseSettings;
             _balanceChangesService = balanceChangesService;
+            _parseBlockCommandProducer = parseBlockCommandProducer;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -72,6 +77,10 @@ namespace AssetCoinHoldersScanner.QueueHandlers
             catch (Exception e)
             {
                 await _log.WriteError("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), e);
+                if (context.Attempt <= attemptCount)
+                {
+                    await _parseBlockCommandProducer.CreateParseBlockCommand(context.BlockHeight, ++context.Attempt);
+                }
             }
         }
         

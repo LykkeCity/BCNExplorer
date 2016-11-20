@@ -13,6 +13,7 @@ using Core.Settings;
 using JobsCommon;
 using Microsoft.Azure.WebJobs;
 using Providers;
+using Services.Binders;
 
 namespace AssetDefinitionScanner
 {
@@ -78,6 +79,7 @@ namespace AssetDefinitionScanner
             container.IoC.Register(settings);
             container.IoC.BindAzureRepositories(settings, log);
             container.IoC.BindAssetsFunctions(settings, log);
+            container.IoC.BindServices(settings, log);
         }
     }
 }

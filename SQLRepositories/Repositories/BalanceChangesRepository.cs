@@ -57,28 +57,28 @@ namespace SQLRepositories.Repositories
             }
         }
 
-        public async Task<BalanceSummary> GetSummaryAsync(params string[] assetIds)
-        {
-            using (var db = _bcnExplolerFactory.GetContext())
-            {
-                var balances = await db.BalanceChanges.Where(p => assetIds.Contains(p.AssetId))
-                    .GroupBy(p => p.Address)
-                    .Select(p=> new
-                    {
-                        Address = p.Key,
-                        Balance = p.Sum(g => g.Change)
-                    }).ToListAsync();
+        //public async Task<BalanceSummary> GetSummaryAsync(params string[] assetIds)
+        //{
+        //    using (var db = _bcnExplolerFactory.GetContext())
+        //    {
+        //        var balances = await db.BalanceChanges.Where(p => assetIds.Contains(p.AssetId))
+        //            .GroupBy(p => p.Address)
+        //            .Select(p=> new
+        //            {
+        //                Address = p.Key,
+        //                Balance = p.Sum(g => g.Change)
+        //            }).ToListAsync();
 
-                return new BalanceSummary
-                {
-                    AssetId = assetIds.FirstOrDefault(),
-                    AddressSummaries = balances.Select(p => new BalanceSummary.BalanceAddressSummary
-                    {
-                        Address = p.Address,
-                        Balance = p.Balance
-                    })
-                };
-            }
-        }
+        //        return new BalanceSummary
+        //        {
+        //            AssetId = assetIds.FirstOrDefault(),
+        //            AddressSummaries = balances.Select(p => new BalanceSummary.BalanceAddressSummary
+        //            {
+        //                Address = p.Address,
+        //                Balance = p.Balance
+        //            })
+        //        };
+        //    }
+        //}
     }
 }

@@ -8,6 +8,7 @@ using BCNExplorer.Web.Models;
 using Common;
 using Common.IocContainer;
 using Core.AssetBlockChanges;
+using Core.AssetBlockChanges.Mongo;
 using Providers.Providers.Asset;
 using Providers.Providers.Ninja;
 using SQLRepositories.Context;
@@ -21,7 +22,7 @@ namespace TestConsole
             var db = container.GetObject<BcnExplolerFactory>();
             var _assetProvider = container.GetObject<AssetProvider>();
             var _addressProvider = container.GetObject<NinjaAddressProvider>();
-            var _balanceChangesRepository = container.GetObject<IBalanceChangesRepository>();
+            var _balanceChangesRepository = container.GetObject<IAssetBalanceChangesRepository>();
             var id = "AXkedGbAH1XGDpAypVzA5eyjegX4FaCnvM";
             var asset = await _assetProvider.GetAssetAsync(id);
 

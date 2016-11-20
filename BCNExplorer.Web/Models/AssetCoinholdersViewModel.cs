@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Common;
-using Core.AssetBlockChanges;
+using Core.AssetBlockChanges.Mongo;
 
 namespace BCNExplorer.Web.Models
 {

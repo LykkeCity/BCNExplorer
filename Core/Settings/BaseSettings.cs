@@ -35,6 +35,9 @@ namespace Core.Settings
 
         [Required]
         public string SqlConnString { get; set; }
+
+        [Required]
+        public AssetBalanceChangesDb AssetBalanceChanges { get; set; }
     }
 
     public class JobsSettings
@@ -49,5 +52,14 @@ namespace Core.Settings
 
         [Required]
         public string AzureKey { get; set; }
+    }
+
+    public class AssetBalanceChangesDb
+    {
+        [Required]
+        public string ConnectionString { get; set; }
+
+        [Required]
+        public string DbName { get; set; }
     }
 }

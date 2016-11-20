@@ -19,7 +19,7 @@ namespace Providers.Helpers
         public static async Task<IEnumerable<BitcoinAddress>> GetAddressesWithColoredMarkerAsync(this Block block, Network network, IndexerClient indexerClient)
         {
             var result = new List<BitcoinAddress>();
-            var coloredTxs = block.Transactions.Where(p => p.HasValidColoredMarker());
+            var coloredTxs = block?.Transactions?.Where(p => p.HasValidColoredMarker());
             foreach (var transaction in coloredTxs)
             {
                 result.AddRange(transaction.GetOutputAddresses(network));

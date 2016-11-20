@@ -3,6 +3,7 @@ using AzureStorage.Tables;
 using Common.IocContainer;
 using Common.Log;
 using Core.Asset;
+using Core.AssetBlockChanges.Mongo;
 using Core.Monitoring;
 using Core.Settings;
 
@@ -19,6 +20,8 @@ namespace AzureRepositories.Binders
             ioc.Register(AzureRepoFactories.CreateAssetDefinitionParseBlockCommandProducer(baseSettings, log));
             ioc.Register(AzureRepoFactories.CreateAssetChangesParseBlockCommandProducer(baseSettings, log));
 
+            ioc.Register<IAssetBalanceChangesRepository>(AzureRepoFactories.CreateAssetBalanceChangesRepository(baseSettings, log));
+            
             ioc.Register<IServiceMonitoringRepository>(
                  new ServiceMonitoringRepository(
                      new AzureTableStorage<MonitoringRecordEntity>(baseSettings.Db.SharedStorageConnString, "Monitoring", log)));

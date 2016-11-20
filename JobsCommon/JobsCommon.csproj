@@ -123,11 +123,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BalanceChangesService.cs" />
     <Compile Include="DResolver.cs" />
-    <Compile Include="Binders\JobsCommonBinder.cs" />
     <Compile Include="JobsConnectionStringSettings.cs" />
-    <Compile Include="MainChainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
