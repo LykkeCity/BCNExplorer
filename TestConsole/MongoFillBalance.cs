@@ -5,9 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AzureRepositories;
+using AzureRepositories.AssetCoinHolders;
 using Common.IocContainer;
+using Common.Log;
 using Core.AssetBlockChanges.Mongo;
+using Core.Settings;
 using JobsCommon;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using NBitcoin;
 using Providers;
 using Providers.Helpers;
@@ -23,14 +29,22 @@ namespace TestConsole
             var balanceChangesRepo = ioc.GetObject<IAssetBalanceChangesRepository>();
             var indexerClientFactory = ioc.GetObject<IndexerClientFactory>();
             var contextFactory = ioc.GetObject<BcnExplolerFactory>();
+            var baseSettings = ioc.GetObject<BaseSettings>();
+            var log = ioc.GetObject<ILog>();
 
             var mainChainRepository = ioc.GetObject<MainChainRepository>();
 
             IEnumerable<AddressEntity> addr;
+            var collection = 
+                new MongoClient(baseSettings.Db.AssetBalanceChanges.ConnectionString)
+                .GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName)
+                .GetCollection<AddressAssetBalanceChangeMongoEntity>("asset-balances");
 
+            var parsedAddresses =
+                (await collection.Find(p => true).Project(p => p.ColoredAddress).Limit(int.MaxValue).ToListAsync()).Distinct();
             using (var db = contextFactory.GetContext())
             {
-                addr = db.Addresses.ToList();
+                addr = db.Addresses.ToList().Where(p=>!parsedAddresses.Contains(p.ColoredAddress));
                 //addr =
                 //    db.BalanceChanges.Where(p => p.AssetId == "ARPZWUujqxUzahzmmJC7s4Xn8Qa2oeh1VB")
                 //        .Select(p => p.AddressEntity)
