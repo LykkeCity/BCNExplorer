@@ -39,7 +39,6 @@ namespace TestConsole
                 new MongoClient(baseSettings.Db.AssetBalanceChanges.ConnectionString)
                 .GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName)
                 .GetCollection<AddressAssetBalanceChangeMongoEntity>("asset-balances");
-
             var parsedAddresses =
                 (await collection.Find(p => true).Project(p => p.ColoredAddress).Limit(int.MaxValue).ToListAsync()).Distinct();
             using (var db = contextFactory.GetContext())
@@ -60,14 +59,16 @@ namespace TestConsole
             var st = new Stopwatch();
             st.Start();
             var mainChain = await mainChainRepository.GetMainChainAsync();
-            
-            File.AppendAllLines(file, new[] { mainChain.Height.ToString(),  "----------------" });
+            var to = mainChain.Height;
+            to = 439808;
+            File.AppendAllLines(file, new[] { to.ToString(),  "----------------" });
+            Console.WriteLine(addr.Count());
             foreach (var address in addr.Select(p => p.ColoredAddress).Distinct().ToList().OrderBy(p=>p))
             {
                 var balanceId = BalanceIdHelper.Parse(address, Network.Main);
                 Console.WriteLine(address);
                 var changesTask = indexerClientFactory.GetIndexerClient()
-                    .GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0, mainChain.Height)
+                    .GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0, to)
                     .ContinueWith(
                         async task =>
                         {

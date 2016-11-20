@@ -9,6 +9,7 @@ namespace AzureRepositories.AssetCoinHolders
         public const string Id = "AssetCoinHoldersParseBlockContext";
 
         public int BlockHeight { get; set; }
+        public int Attempt { get; set; }
     }
 
     public class AssetChangesParseBlockCommandProducer
@@ -21,18 +22,16 @@ namespace AzureRepositories.AssetCoinHolders
             _queueExt.RegisterTypes(QueueType.Create(AssetChangesParseBlockContext.Id, typeof(QueueRequestModel<AssetChangesParseBlockContext>)));
         }
 
-        public async Task CreateParseBlockCommand(params int[] blockHeights)
+        public async Task CreateParseBlockCommand(int blockHeight, int attempt = 0)
         {
-            foreach (var blockHash in blockHeights)
+            await _queueExt.PutMessageAsync(new QueueRequestModel<AssetChangesParseBlockContext>
             {
-                await _queueExt.PutMessageAsync(new QueueRequestModel<AssetChangesParseBlockContext>
+                Data = new AssetChangesParseBlockContext
                 {
-                    Data = new AssetChangesParseBlockContext
-                    {
-                        BlockHeight = blockHash
-                    }
-                });
-            }
+                    BlockHeight = blockHeight,
+                    Attempt = attempt
+                }
+            });
         }
     }
 }
