@@ -45,7 +45,7 @@ namespace TestConsole
             {
                 addr = db.Addresses.ToList().Where(p=>!parsedAddresses.Contains(p.ColoredAddress));
                 //addr =
-                //    db.BalanceChanges.Where(p => p.AssetId == "ARPZWUujqxUzahzmmJC7s4Xn8Qa2oeh1VB")
+                //    db.BalanceChanges.Where(p => p.AssetId == "AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog")
                 //        .Select(p => p.AddressEntity)
                 //        .Distinct()
                 //        .ToList();
