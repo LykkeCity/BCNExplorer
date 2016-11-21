@@ -25,7 +25,7 @@ namespace AzureRepositories.AssetCoinHolders
         public AssetBalanceChangesRepository(IMongoDatabase db, ILog log)
         {
             _log = log;
-            _mongoCollection = db.GetCollection<AddressAssetBalanceChangeMongoEntity>("asset-balances");
+            _mongoCollection = db.GetCollection<AddressAssetBalanceChangeMongoEntity>("asset-balance-changes");
         }
 
         public async Task AddAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges)
@@ -69,9 +69,9 @@ namespace AzureRepositories.AssetCoinHolders
         {
             foreach (var groupedByAssetId in balanceChanges.GroupBy(p => p.AssetId))
             {
-                var parsedBlockHashes = await _mongoCollection.AsQueryable()
-                        .Where(p => p.AssetId == groupedByAssetId.Key && p.ColoredAddress == coloredAddress)
-                        .Select(p => p.BlockHash).ToListAsync();
+                var parsedBlockHashes = await _mongoCollection
+                        .Find(p => p.AssetId == groupedByAssetId.Key && p.ColoredAddress == coloredAddress)
+                        .Project(p => p.BlockHash).Limit(int.MaxValue).ToListAsync();
                 var balanceChangesToInsert =
                     groupedByAssetId.ToList().Where(p => !parsedBlockHashes.Contains(p.BlockHash)).ToList();
 
