@@ -101,7 +101,7 @@ namespace AzureRepositories.AssetCoinHolders
 
         public async Task<BalanceSummary> GetSummaryAsync(params string[] assetIds)
         {
-            var addressBalanceChanges = await _mongoCollection.Find(p => assetIds.Contains(p.AssetId)).Project(p=> new {p.ColoredAddress, p.BalanceChanges}).ToListAsync();
+            var addressBalanceChanges = await _mongoCollection.Find(p => assetIds.Contains(p.AssetId)).Project(p=> new {p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc=>bc.Quantity)}).ToListAsync();
 
             return new BalanceSummary
             {
@@ -110,7 +110,7 @@ namespace AzureRepositories.AssetCoinHolders
                     addressBalanceChanges.GroupBy(p=>p.ColoredAddress).Select(bc => new BalanceSummary.BalanceAddressSummary
                     {
                         Address = bc.Key,
-                        Balance = bc.SelectMany(p => p.BalanceChanges).Sum(p => p.Quantity)
+                        Balance = bc.Sum(p=>p.Balance)
                     })
             };
         }
