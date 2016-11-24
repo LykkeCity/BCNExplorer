@@ -140,13 +140,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CheckBalance.cs" />
-    <Compile Include="GetAddressesWithColoredAssetsFromCoinPrism.cs" />
-    <Compile Include="MongoFillBalance.cs" />
+    <Compile Include="Coninholders\AddAddressesFromBlockChain.cs" />
+    <Compile Include="Coninholders\CheckBalance.cs" />
+    <Compile Include="Coninholders\GetAddressesWithColoredAssetsFromCoinPrism.cs" />
+    <Compile Include="Coninholders\MongoFillBalance.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestFillBalance.cs" />
-    <Compile Include="TestGettingChainChanges.cs" />
+    <Compile Include="Coninholders\TestFillBalance.cs" />
+    <Compile Include="Coninholders\TestGettingChainChanges.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

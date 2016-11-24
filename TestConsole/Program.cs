@@ -20,10 +20,11 @@ namespace TestConsole
             InitContainer(container, settings, new LogToConsole());
 
             //TestGettingChainChanges.Run(container);
-            GetAddressesWithColoredAssetsFromCoinPrism.Run(container);
+            //GetAddressesWithColoredAssetsFromCoinPrism.Run(container);
             //TestFillBalance.Run(container).Wait();
             //CheckBalance.Run(container).Wait();
             //MongoFillBalance.Run(container).Wait();
+            AddAddressesFromBlockChain.Run(container).Wait();
         }
         
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)
