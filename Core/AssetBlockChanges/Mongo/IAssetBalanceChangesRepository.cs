@@ -38,11 +38,13 @@ namespace Core.AssetBlockChanges.Mongo
     {
         public string AssetId { get; set; }
         public IEnumerable<BalanceAddressSummary> AddressSummaries { get; set; }
-
+        public IEnumerable<int> ChangedAtHeights { get; set; }
+        public int? AtBlockHeight { get; set; }
         public class BalanceAddressSummary
         {
             public string Address { get; set; }
             public double Balance { get; set; }
+            public double ChangeAtBlock { get; set; }
         }
     }
 
@@ -50,6 +52,7 @@ namespace Core.AssetBlockChanges.Mongo
     {
         Task AddAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges);
         Task<BalanceSummary> GetSummaryAsync(params string[] assetIds);
+        Task<BalanceSummary> GetSummaryAsync(int? atBlock, params string[] assetIds);
         Task<int> GetLastParsedBlockHeightAsync();
     }
 }

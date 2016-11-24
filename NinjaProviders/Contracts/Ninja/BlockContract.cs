@@ -15,7 +15,7 @@ namespace Providers.Contracts.Ninja
     internal class AdditionalInformationContract
     {
         [JsonProperty("height")]
-        public long Height { get; set; }
+        public int Height { get; set; }
         [JsonProperty("blockTime")]
         public DateTime Time { get; set; }
         [JsonProperty("confirmations")]

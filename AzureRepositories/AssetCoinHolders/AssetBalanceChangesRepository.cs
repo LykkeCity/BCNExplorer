@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Log;
@@ -65,6 +66,52 @@ namespace AzureRepositories.AssetCoinHolders
 
         }
 
+        public Task<BalanceSummary> GetSummaryAsync(params string[] assetIds)
+        {
+            return GetSummaryAsync(null, assetIds);
+        }
+
+        public async Task<BalanceSummary> GetSummaryAsync(int? atBlock, params string[] assetIds)
+        {
+            var fullBalanceQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId));
+            var stopAtBlockQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight <= atBlock.Value);
+
+            var getBlockChangesTask = fullBalanceQuery.Project(p => p.BlockHeight).ToListAsync(); 
+            var addressBalanceChangesTask = (atBlock != null? stopAtBlockQuery: fullBalanceQuery).Project(p => new { p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc => bc.Quantity) }).ToListAsync();
+            Task<Dictionary<string, double>> changeAtBlockTask;
+
+            if (atBlock != null)
+            {
+                changeAtBlockTask = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight == atBlock.Value)
+                    .Project(p => new { p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc => bc.Quantity), t = p.BalanceChanges })
+                    .ToListAsync()
+                    .ContinueWith(tsk =>
+                    {
+                        return tsk.Result.ToDictionary(p => p.ColoredAddress, p => p.t.Sum(x=>x.Quantity));
+                    });
+            }
+            else
+            {
+                changeAtBlockTask = Task.FromResult(new Dictionary<string, double>());
+            }
+
+            await Task.WhenAll(getBlockChangesTask, addressBalanceChangesTask, changeAtBlockTask);
+
+            return new BalanceSummary
+            {
+                AssetId = assetIds.FirstOrDefault(),
+                ChangedAtHeights = getBlockChangesTask.Result.Distinct().ToList(),
+                AtBlockHeight = atBlock,
+                AddressSummaries =
+                    addressBalanceChangesTask.Result.GroupBy(p => p.ColoredAddress).Select(bc => new BalanceSummary.BalanceAddressSummary
+                    {
+                        Address = bc.Key,
+                        Balance = bc.Sum(p => p.Balance),
+                        ChangeAtBlock = changeAtBlockTask.Result.ContainsKey(bc.Key)? changeAtBlockTask.Result[bc.Key] : 0
+                    })
+            };
+        }
+
         private async Task AddInnerAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges)
         {
             foreach (var groupedByAssetId in balanceChanges.GroupBy(p => p.AssetId))
@@ -99,21 +146,7 @@ namespace AzureRepositories.AssetCoinHolders
             }
         }
 
-        public async Task<BalanceSummary> GetSummaryAsync(params string[] assetIds)
-        {
-            var addressBalanceChanges = await _mongoCollection.Find(p => assetIds.Contains(p.AssetId)).Project(p=> new {p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc=>bc.Quantity)}).ToListAsync();
 
-            return new BalanceSummary
-            {
-                AssetId = assetIds.FirstOrDefault(),
-                AddressSummaries =
-                    addressBalanceChanges.GroupBy(p=>p.ColoredAddress).Select(bc => new BalanceSummary.BalanceAddressSummary
-                    {
-                        Address = bc.Key,
-                        Balance = bc.Sum(p=>p.Balance)
-                    })
-            };
-        }
 
         public async Task<int> GetLastParsedBlockHeightAsync()
         {

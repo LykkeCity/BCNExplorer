@@ -11,6 +11,22 @@
             <div class="page__subtitle h3">@string.Join(", ", Model.Asset.AssetIds)</div>
         </div>
 
+        <div >
+
+            @*@string.Join(",", Model.Pagination.ChangedAtHeights)*@
+            <div class="pull-right">
+                @if (Model.Pagination.ShowPrev)
+                {
+                    <a href="@Url.Action("Owners", new {at=Model.Pagination.PrevBlock})"><i class="icon icon--arrow-left-alt"></i></a>
+                }
+                <span class="badge">@Model.Pagination.AtBlock</span>
+                @if (Model.Pagination.ShowNext)
+                {
+                    <a href="@Url.Action("Owners", new {at=Model.Pagination.NextBlock})"><i class="icon icon--arrow-right-alt"></i></a>
+                }
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-xs-12 col-sm-3">
                 @if (!string.IsNullOrEmpty(Model.Asset.ImageUrl))
@@ -35,16 +51,27 @@
                                         <a href="@Url.Action("Index", "Address", new {id = addressSum.Address})">@addressSum.Address</a>
                                     </td>
                                     <td>
-                                        @addressSum.BalancePercenage.ToString("F2") %
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="70"
+                                                 aria-valuemin="0" aria-valuemax="100" style="width:@addressSum.BalancePercenage%">
+                                                <span style="color: #3F4D60;">@addressSum.BalancePercenage.ToString("F2") %</span>
+                                            </div>
+                                        </div>
+                                        
                                     </td>
                                     <td>
-                                        @addressSum.Balance.ToString("F2") @Model.Asset.NameShort
+                                        @addressSum.Balance.ToString("N2") @Model.Asset.NameShort
+                                        @if (addressSum.ChangeAtBlock != 0)
+                                        {
+                                            <span class="label @(addressSum.ChangeAtBlock>0?"label-success":"label-danger")">@addressSum.ChangeAtBlock.ToString("N2")</span>
+                                        }
+
                                     </td>
                                 </tr>
                             }
                             <tr>
                                 <td colspan="2">Total</td>
-                                <td>@Model.Total.ToString("F2") @Model.Asset.NameShort</td>
+                                <td>@Model.Total.ToString("N2") @Model.Asset.NameShort</td>
                             </tr>
                         </tbody>
                     </table>

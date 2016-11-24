@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
-using Core.AssetBlockChanges;
 using Core.AssetBlockChanges.Mongo;
 using Providers.Providers.Asset;
 
@@ -13,7 +13,8 @@ namespace BCNExplorer.Web.Controllers
         private readonly AssetProvider _assetProvider;
         private readonly IAssetBalanceChangesRepository _balanceChangesRepository;
 
-        public AssetController(AssetProvider assetProvider, IAssetBalanceChangesRepository balanceChangesRepository)
+        public AssetController(AssetProvider assetProvider, 
+            IAssetBalanceChangesRepository balanceChangesRepository)
         {
             _assetProvider = assetProvider;
             _balanceChangesRepository = balanceChangesRepository;
@@ -35,18 +36,20 @@ namespace BCNExplorer.Web.Controllers
         public async Task<ActionResult> AssetDirectiory()
         {
             var result = (await _assetProvider.GetAssetsAsync()).Select(AssetViewModel.Create);
+
             return View(result);
         }
 
         [Route("asset/{id}/owners")]
-        public async Task<ActionResult> Owners(string id)
+        public async Task<ActionResult> Owners(string id, int? at)
         {
             var asset = await _assetProvider.GetAssetAsync(id);
+            
             if (asset != null)
             {
                 var result = AssetCoinholdersViewModel.Create(
                     AssetViewModel.Create(asset),
-                    await _balanceChangesRepository.GetSummaryAsync(asset.AssetIds.ToArray()));
+                    await _balanceChangesRepository.GetSummaryAsync(at, asset.AssetIds.ToArray()));
 
                 return View(result);
             }

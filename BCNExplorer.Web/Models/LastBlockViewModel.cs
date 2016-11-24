@@ -6,7 +6,7 @@ namespace BCNExplorer.Web.Models
     public class LastBlockViewModel
     {
         public string BlockId { get; set;}
-        public double Height { get; set; }
+        public int Height { get; set; }
 
         public static LastBlockViewModel Create(NinjaBlockHeader header)
         {

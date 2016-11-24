@@ -20,7 +20,7 @@ namespace Providers.TransportTypes.Ninja
     public class NinjaBlockHeader
     {
         public string Hash { get; set; }
-        public long Height { get; set; }
+        public int Height { get; set; }
         public DateTime Time { get; set; }
         public long Confirmations { get; set; }
     }
