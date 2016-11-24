@@ -141,7 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckBalance.cs" />
-    <Compile Include="GetAddressesWithColoredAssets.cs" />
+    <Compile Include="GetAddressesWithColoredAssetsFromCoinPrism.cs" />
     <Compile Include="MongoFillBalance.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

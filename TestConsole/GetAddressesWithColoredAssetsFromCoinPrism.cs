@@ -17,7 +17,7 @@ using SQLRepositories.DbModels;
 
 namespace TestConsole
 {
-    public static class GetAddressesWithColoredAssets
+    public static class GetAddressesWithColoredAssetsFromCoinPrism
     {
         public static void Run(IoC container)
         {
@@ -64,19 +64,6 @@ namespace TestConsole
 
             addressRepo.AddAsync(addressResults.ToArray()).Wait();
             Console.WriteLine("save Done");
-
-            //using (var db = SqlRepoFactories.GetBcnExplolerDataContext(baseSettings, log))
-            //{
-            //    var addresses =
-            //        addressResults.Distinct(AddressResult.AddressColoredAddressComparer).Select(p => new AddressEntity
-            //        {
-            //            ColoredAddress = p.ColoredAddress,
-            //            ColoredAddress = p.ColoredAddress
-            //        });
-
-            //    db.Addresses.AddRange(addresses);
-            //    db.SaveChanges();
-            //}
         }
 
         public static async Task<IEnumerable<AddressResult>> GetAddresses(string asset)

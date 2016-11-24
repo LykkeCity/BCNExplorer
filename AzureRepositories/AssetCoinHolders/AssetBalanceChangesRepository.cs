@@ -51,7 +51,7 @@ namespace AzureRepositories.AssetCoinHolders
                 {
                     Console.WriteLine("attempt {0}", attemptCount);
                     attemptCount++;
-                    //await _log.WriteError("AssetBalanceChangesRepository", "AddAsync", coloredAddress, e);
+                    await _log.WriteError("AssetBalanceChangesRepository", "AddAsync", coloredAddress, e);
                     if (attemptCount >= attemptCountMax)
                     {
                         throw;
@@ -83,11 +83,11 @@ namespace AzureRepositories.AssetCoinHolders
             if (atBlock != null)
             {
                 changeAtBlockTask = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight == atBlock.Value)
-                    .Project(p => new { p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc => bc.Quantity), t = p.BalanceChanges })
+                    .Project(p => new { p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc => bc.Quantity) })
                     .ToListAsync()
                     .ContinueWith(tsk =>
                     {
-                        return tsk.Result.ToDictionary(p => p.ColoredAddress, p => p.t.Sum(x=>x.Quantity));
+                        return tsk.Result.ToDictionary(p => p.ColoredAddress, p => p.Balance);
                     });
             }
             else
