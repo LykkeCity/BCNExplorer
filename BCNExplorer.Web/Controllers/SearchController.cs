@@ -26,19 +26,19 @@ namespace BCNExplorer.Web.Controllers
             var type = await _searchProvider.GetTypeAsync(id);
             switch (type)
             {
-                case NinjaType.Block:
+                case SearchResultType.Block:
                 {
                     return RedirectToAction("Index", "Block", new {id = id});
                 }
-                case NinjaType.Transaction:
+                case SearchResultType.Transaction:
                 {
                     return RedirectToAction("Index", "Transaction", new { id = id });
                 }
-                case NinjaType.Address:
+                case SearchResultType.Address:
                 {
                     return RedirectToAction("Index", "Address", new { id = id });
                 }
-                case NinjaType.Asset:
+                case SearchResultType.Asset:
                 {
                     return RedirectToAction("Index", "Asset", new { id = id });
                 }

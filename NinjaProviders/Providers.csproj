@@ -112,7 +112,7 @@
     <Compile Include="TransportTypes\Asset\AssetDefinition.cs" />
     <Compile Include="TransportTypes\Ninja\NinjaAddress.cs" />
     <Compile Include="TransportTypes\Ninja\BlockDTO.cs" />
-    <Compile Include="TransportTypes\Ninja\NinjaType.cs" />
+    <Compile Include="TransportTypes\Ninja\SearchResultType.cs" />
     <Compile Include="TransportTypes\Ninja\NinjaTransaction.cs" />
   </ItemGroup>
   <ItemGroup>

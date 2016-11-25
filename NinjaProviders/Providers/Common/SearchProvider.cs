@@ -16,14 +16,14 @@ namespace Providers.Providers.Common
             _assetProvider = assetProvider;
         }
 
-        public async Task<NinjaType?> GetTypeAsync(string id)
+        public async Task<SearchResultType?> GetTypeAsync(string id)
         {
             var result = await _searchProvider.GetTypeAsync(id);
 
             if (result == null)
             {
                 var asset = await _assetProvider.GetAssetAsync(id);
-                result = asset != null ? (NinjaType?)NinjaType.Asset : null;
+                result = asset != null ? (SearchResultType?)SearchResultType.Asset : null;
             }
 
             return result;

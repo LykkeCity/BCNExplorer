@@ -15,21 +15,21 @@ namespace Providers.Providers.Ninja
             _blockChainReader = blockChainReader;
         }
 
-        public async Task<NinjaType?> GetTypeAsync(string id)
+        public async Task<SearchResultType?> GetTypeAsync(string id)
         {
             var responce = await _blockChainReader.GetAsync($"whatisit/{id}");
 
             if (IsBlock(responce))
             {
-                return NinjaType.Block;
+                return SearchResultType.Block;
             }
             if (IsTransaction(responce))
             {
-                return NinjaType.Transaction;
+                return SearchResultType.Transaction;
             }
             if (IsAddress(responce))
             {
-                return NinjaType.Address;
+                return SearchResultType.Address;
             }
 
             return null;
