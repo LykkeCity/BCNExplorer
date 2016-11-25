@@ -37,6 +37,8 @@ namespace BCNExplorer.Web.Models
             public double ChangeAtBlock { get; set; }
             public double BalancePercenage { get; set; }
 
+            public string BalancePercentageDescription => BalancePercenage > 0.01 ? BalancePercenage.ToString("F2") : "<0.01";
+
             public static BalanceAddressSummary Create(BalanceSummary.BalanceAddressSummary summary, double total, int divisibility)
             {
                 var coloredTotal = BitcoinUtils.CalculateColoredAssetQuantity(total, divisibility);
@@ -48,7 +50,7 @@ namespace BCNExplorer.Web.Models
                 {
                     Address = summary.Address,
                     Balance = coloredSummaryPerAddress,
-                    BalancePercenage = Math.Round((coloredSummaryPerAddress / coloredTotal) * 100),
+                    BalancePercenage = Math.Round((coloredSummaryPerAddress / coloredTotal) * 100, 2),
                     ChangeAtBlock = coloredChangeAtBlock
                 };
             }

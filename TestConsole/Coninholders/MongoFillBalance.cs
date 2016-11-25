@@ -44,15 +44,14 @@ namespace TestConsole
                 (await collection.Find(p => true).Project(p => p.ColoredAddress).Limit(int.MaxValue).ToListAsync()).Distinct();
             using (var db = contextFactory.GetContext())
             {
-                //addr = db.Addresses.ToList()
-                    //.Where(p=>!parsedAddresses.Contains(p.ColoredAddress))
+                addr = db.Addresses.ToList()
+                    .Where(p => !parsedAddresses.Contains(p.ColoredAddress))
                     ;
-                addr =
-                    db.BalanceChanges.Where(p => p.AssetId == "AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog")
-                        .Select(p => p.AddressEntity)
-                        .Distinct()
-                        .ToList()
-                        .Where(p => !parsedAddresses.Contains(p.ColoredAddress));
+                //addr =
+                //    db.BalanceChanges.Where(p => p.AssetId == "AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog")
+                //        .Select(p => p.AddressEntity)
+                //        .Distinct()
+                //        .ToList();
                 //addr = db.Addresses.Where(p => p.ColoredAddress== "akYc7BCwLpf1JWTnQdj8WN94Gajokn8MEhT").ToList();
             }
             var file = "./errors.txt";
