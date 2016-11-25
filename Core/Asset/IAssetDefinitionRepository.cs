@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Core.Asset
@@ -31,7 +32,12 @@ namespace Core.Asset
 
         string Version { get; }
         string AssetDefinitionUrl { get; }
+
+        bool IsVerified { get; }
     }
+
+
+
 
     public class Compare : IEqualityComparer<IAsset>
     {

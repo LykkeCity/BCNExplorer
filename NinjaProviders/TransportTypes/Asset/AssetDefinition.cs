@@ -34,6 +34,7 @@ namespace Providers.TransportTypes.Asset
         
         public string Version { get; set; }
         public string AssetDefinitionUrl { get; set; }
+        public bool IsVerified { get; }
 
         public static AssetDefinition Create(AssetContract source)
         {

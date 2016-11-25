@@ -210,6 +210,7 @@
     <Content Include="favicon-48x48.png" />
     <Content Include="favicon-64x64.png" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\icon.svg" />
     <Content Include="fonts\ProximaNova-Black.svg" />
     <Content Include="fonts\ProximaNova-Light.svg" />
@@ -357,6 +358,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Asset\Owners.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -21,7 +21,7 @@
                             <th>Ticker</th>
                             <th>Color address</th>
                         </tr>
-                            @foreach (var asset in Model.OrderBy(p => p.Name))
+                            @foreach (var asset in Model.OrderByDescending(p => p.IsVerified).ThenBy(p=>p.Name))
                             {
                                 <tr>
                                     <td>
@@ -32,7 +32,10 @@
                                        
                                     </td>
                                     <td><a href="@Url.Action("Index", new {id=asset.AssetIds.FirstOrDefault()})">@asset.Name</a></td>
-                                    <td>@asset.Issuer</td>
+                                    <td>
+                                        <span class="glyphicon glyphicon-@(asset.IsVerified ? "ok-sign" : "remove-sign")"></span>
+                                        @asset.Issuer
+                                    </td>
                                     <td>@asset.NameShort</td>
                                     <td>@string.Join(", ", asset.AssetIds)</td>
                                 </tr>
