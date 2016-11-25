@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NBitcoin;
 using Providers.BlockChainReader;
@@ -7,40 +8,43 @@ using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
 {
-    public class NinjaBlockProvider
+    public class BlockProvider
     {
         private readonly NinjaBlockChainReader _blockChainReader;
+        private readonly IndexerClientFactory _indexerClientFactory;
 
-        public NinjaBlockProvider(NinjaBlockChainReader blockChainReader)
+        public BlockProvider(NinjaBlockChainReader blockChainReader, IndexerClientFactory indexerClientFactory)
         {
             _blockChainReader = blockChainReader;
+            _indexerClientFactory = indexerClientFactory;
         }
 
-        public async Task<NinjaBlock> GetAsync(string id)
+        public async Task<BlockDTO> GetAsync(string id)
         {
-            var blockResponse = await _blockChainReader.GetAsync<BlockContract>($"blocks/{id}");
-            if (blockResponse == null)
+            var header = await GetHeaderAsync(id);
+            if (header != null)
             {
-                return null;
+                var result = new BlockDTO
+                {
+                    Confirmations = header.Confirmations,
+                    Height = header.Height,
+                    Time = header.Time,
+                    Hash = header.Hash
+                };
+
+                var block = _indexerClientFactory.GetIndexerClient().GetBlock(uint256.Parse(result.Hash));
+
+                result.TotalTransactions = block.Transactions.Count;
+                result.Difficulty = block.Header.Bits.Difficulty;
+                result.MerkleRoot = block.Header.HashMerkleRoot.ToString();
+                result.PreviousBlock = block.Header.HashPrevBlock.ToString();
+                result.Nonce = block.Header.Nonce;
+                result.TransactionIds = block.Transactions.Select(p => p.GetHash().ToString());
+          
+                return result;
             }
 
-            var block = Block.Parse(blockResponse.Hex);
-            
-            var result = new NinjaBlock
-            {
-                Confirmations = blockResponse.AdditionalInformation.Confirmations,
-                Time = blockResponse.AdditionalInformation.Time,
-                Height = blockResponse.AdditionalInformation.Height,
-                Hash = blockResponse.AdditionalInformation.BlockId,
-                TotalTransactions = block.Transactions.Count,
-                Difficulty = block.Header.Bits.Difficulty,
-                MerkleRoot = block.Header.HashMerkleRoot.ToString(),
-                PreviousBlock = block.Header.HashPrevBlock.ToString(),
-                Nonce = block.Header.Nonce,
-                TransactionIds = block.Transactions.Select(p=>p.GetHash().ToString())
-            };
-
-            return result;
+            return null;
         }
 
         public async Task<NinjaBlockHeader> GetHeaderAsync(string id)

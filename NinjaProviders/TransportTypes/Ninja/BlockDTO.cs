@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Providers.TransportTypes.Ninja
 {
-    public class NinjaBlock
+    public class BlockDTO
     {
         public string Hash { get; set; }
         public long Height { get; set; }

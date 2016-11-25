@@ -7,18 +7,18 @@ namespace Providers.Providers.Common
 {
     public class SearchProvider
     {
-        private readonly NinjaSearchProvider _ninjaSearchProvider;
+        private readonly Ninja.SearchProvider _searchProvider;
         private readonly AssetProvider _assetProvider;
 
-        public SearchProvider(NinjaSearchProvider ninjaSearchProvider, AssetProvider assetProvider)
+        public SearchProvider(Ninja.SearchProvider searchProvider, AssetProvider assetProvider)
         {
-            _ninjaSearchProvider = ninjaSearchProvider;
+            _searchProvider = searchProvider;
             _assetProvider = assetProvider;
         }
 
         public async Task<NinjaType?> GetTypeAsync(string id)
         {
-            var result = await _ninjaSearchProvider.GetTypeAsync(id);
+            var result = await _searchProvider.GetTypeAsync(id);
 
             if (result == null)
             {

@@ -6,11 +6,11 @@ using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
 {
-    public class NinjaSearchProvider
+    public class SearchProvider
     {
         private readonly NinjaBlockChainReader _blockChainReader;
 
-        public NinjaSearchProvider(NinjaBlockChainReader blockChainReader)
+        public SearchProvider(NinjaBlockChainReader blockChainReader)
         {
             _blockChainReader = blockChainReader;
         }

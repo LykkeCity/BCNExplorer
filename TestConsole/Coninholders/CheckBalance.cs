@@ -21,7 +21,7 @@ namespace TestConsole
         {
             var db = container.GetObject<BcnExplolerFactory>();
             var _assetProvider = container.GetObject<AssetProvider>();
-            var _addressProvider = container.GetObject<NinjaAddressProvider>();
+            var _addressProvider = container.GetObject<AddressProvider>();
             var _balanceChangesRepository = container.GetObject<IAssetBalanceChangesRepository>();
             var id = "AXkedGbAH1XGDpAypVzA5eyjegX4FaCnvM";
             var asset = await _assetProvider.GetAssetAsync(id);

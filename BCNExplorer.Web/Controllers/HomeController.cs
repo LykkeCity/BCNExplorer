@@ -7,16 +7,16 @@ namespace BCNExplorer.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly NinjaBlockProvider _ninjaBlockProvider;
+        private readonly BlockProvider _blockProvider;
 
-        public HomeController(NinjaBlockProvider ninjaBlockProvider)
+        public HomeController(BlockProvider blockProvider)
         {
-            _ninjaBlockProvider = ninjaBlockProvider;
+            _blockProvider = blockProvider;
         }
 
         public async Task<ActionResult> Index()
         {
-            var lastBlock = await _ninjaBlockProvider.GetLastBlockAsync();
+            var lastBlock = await _blockProvider.GetLastBlockAsync();
 
             return View(LastBlockViewModel.Create(lastBlock));
         }

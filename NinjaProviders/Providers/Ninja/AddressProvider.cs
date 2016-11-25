@@ -7,11 +7,11 @@ using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
 {
-    public class NinjaAddressProvider
+    public class AddressProvider
     {
         private readonly NinjaBlockChainReader _blockChainReader;
 
-        public NinjaAddressProvider(NinjaBlockChainReader blockChainReader)
+        public AddressProvider(NinjaBlockChainReader blockChainReader)
         {
             _blockChainReader = blockChainReader;
         }

@@ -13,7 +13,7 @@ namespace BCNExplorer.Web.Models
 
         public TransactionIdList(IEnumerable<string> source, int pageSize)
         {
-            _transactionIds = source;
+            _transactionIds = source ?? Enumerable.Empty<string>();
             _pageSize = pageSize;
         }
 

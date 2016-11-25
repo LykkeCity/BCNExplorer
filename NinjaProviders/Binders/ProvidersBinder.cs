@@ -8,6 +8,7 @@ using Providers.BlockChainReader;
 using Providers.Providers.Asset;
 using Providers.Providers.Common;
 using Providers.Providers.Ninja;
+using SearchProvider = Providers.Providers.Ninja.SearchProvider;
 
 namespace Providers
 {
@@ -42,16 +43,16 @@ namespace Providers
 
         private static void BindNinjaProviders(this IoC ioc)
         {
-            ioc.RegisterPerCall<NinjaBlockProvider>();
-            ioc.RegisterPerCall<NinjaTransactionProvider>();
+            ioc.RegisterPerCall<BlockProvider>();
+            ioc.RegisterPerCall<TransactionProvider>();
             ioc.RegisterPerCall<NinjaBlockChainReader>();
-            ioc.RegisterPerCall<NinjaSearchProvider>();
-            ioc.RegisterPerCall<NinjaAddressProvider>();
+            ioc.RegisterPerCall<SearchProvider>();
+            ioc.RegisterPerCall<AddressProvider>();
         }
 
         private static void BindCommonProviders(this IoC ioc)
         {
-            ioc.RegisterPerCall<SearchProvider>();
+            ioc.RegisterPerCall<Providers.Common.SearchProvider>();
         }
     }
 }

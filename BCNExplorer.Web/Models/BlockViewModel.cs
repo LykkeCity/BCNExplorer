@@ -19,20 +19,20 @@ namespace BCNExplorer.Web.Models
         public TransactionIdList TransactionIdList { get; set; }
         private const int PageSize = 20;
 
-        public static BlockViewModel Create(NinjaBlock ninjaBlock)
+        public static BlockViewModel Create(BlockDTO blockDto)
         {
             return new BlockViewModel
             {
-                Confirmations = ninjaBlock.Confirmations,
-                Difficulty = ninjaBlock.Difficulty,
-                Hash = ninjaBlock.Hash,
-                Height = ninjaBlock.Height,
-                MerkleRoot = ninjaBlock.MerkleRoot,
-                Nonce = ninjaBlock.Nonce,
-                PreviousBlock = ninjaBlock.PreviousBlock,
-                Time = ninjaBlock.Time,
-                TransactionIdList = new TransactionIdList(ninjaBlock.TransactionIds, PageSize),
-                TotalTransactions = ninjaBlock.TotalTransactions
+                Confirmations = blockDto.Confirmations,
+                Difficulty = blockDto.Difficulty,
+                Hash = blockDto.Hash,
+                Height = blockDto.Height,
+                MerkleRoot = blockDto.MerkleRoot,
+                Nonce = blockDto.Nonce,
+                PreviousBlock = blockDto.PreviousBlock,
+                Time = blockDto.Time,
+                TransactionIdList = new TransactionIdList(blockDto.TransactionIds, PageSize),
+                TotalTransactions = blockDto.TotalTransactions
             };
         }
     }

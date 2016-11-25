@@ -4,18 +4,19 @@ using BCNExplorer.Web.Models;
 using Providers.Providers.Common;
 using Providers.Providers.Ninja;
 using Providers.TransportTypes.Ninja;
+using SearchProvider = Providers.Providers.Common.SearchProvider;
 
 namespace BCNExplorer.Web.Controllers
 {
     public class SearchController : Controller
     {
         private readonly SearchProvider _searchProvider;
-        private readonly NinjaBlockProvider _ninjaBlockProvider;
+        private readonly BlockProvider _blockProvider;
 
-        public SearchController(SearchProvider searchProvider, NinjaBlockProvider ninjaBlockProvider)
+        public SearchController(SearchProvider searchProvider, BlockProvider blockProvider)
         {
             _searchProvider = searchProvider;
-            _ninjaBlockProvider = ninjaBlockProvider;
+            _blockProvider = blockProvider;
         }
 
         [Route("search")]
@@ -43,7 +44,7 @@ namespace BCNExplorer.Web.Controllers
                 }
                 default:
                 {
-                    var lastBlock = await _ninjaBlockProvider.GetLastBlockAsync();
+                    var lastBlock = await _blockProvider.GetLastBlockAsync();
                     return View("NotFound", LastBlockViewModel.Create(lastBlock));
                 }
             }

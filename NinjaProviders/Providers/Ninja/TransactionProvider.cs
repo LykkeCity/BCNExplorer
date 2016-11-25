@@ -9,11 +9,11 @@ using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
 {
-    public class NinjaTransactionProvider
+    public class TransactionProvider
     {
         private readonly NinjaBlockChainReader _blockChainReader;
 
-        public NinjaTransactionProvider(NinjaBlockChainReader blockChainReader)
+        public TransactionProvider(NinjaBlockChainReader blockChainReader)
         {
             _blockChainReader = blockChainReader;
         }

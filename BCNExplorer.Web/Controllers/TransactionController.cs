@@ -11,19 +11,19 @@ namespace BCNExplorer.Web.Controllers
 {
     public class TransactionController:Controller
     {
-        private readonly NinjaTransactionProvider _ninjaTransactionProvider;
+        private readonly TransactionProvider _transactionProvider;
         private readonly AssetProvider _assetProvider;
 
-        public TransactionController(NinjaTransactionProvider ninjaTransactionProvider, AssetProvider assetProvider)
+        public TransactionController(TransactionProvider transactionProvider, AssetProvider assetProvider)
         {
-            _ninjaTransactionProvider = ninjaTransactionProvider;
+            _transactionProvider = transactionProvider;
             _assetProvider = assetProvider;
         }
 
         [Route("transaction/{id}")]
         public async Task<ActionResult> Index(string id, bool change = true)
         {
-            var ninjaTransaction = await _ninjaTransactionProvider.GetAsync(id, change);
+            var ninjaTransaction = await _transactionProvider.GetAsync(id, change);
 
             if (ninjaTransaction != null)
             {
@@ -43,7 +43,7 @@ namespace BCNExplorer.Web.Controllers
 
             var assetDictionary = await _assetProvider.GetAssetDictionaryAsync();
 
-            var loadTransactionTasks = ids.Select(id => _ninjaTransactionProvider.GetAsync(id).ContinueWith(task =>
+            var loadTransactionTasks = ids.Select(id => _transactionProvider.GetAsync(id).ContinueWith(task =>
             {
                 if (task.Result != null)
                 {
