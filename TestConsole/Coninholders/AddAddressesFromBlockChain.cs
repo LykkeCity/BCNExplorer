@@ -37,13 +37,13 @@ namespace TestConsole
 
             var okFile = "./AddAddressesFromBlockChain-ok.txt";
             var failFile = "./AddAddressesFromBlockChain-fail.txt";
-            var startBlock = 300072;
-            var toBlock = 439808;
+            var startBlock = 268000;
+            var toBlock = 300072;
             var st = new Stopwatch();
             st.Start();
             Console.WriteLine(startBlock);
             var mainChain = await mainChainRepository.GetMainChainAsync();
-
+            
             var tasks = new List<Task>();
             foreach (var i in Enumerable.Range(startBlock, toBlock- startBlock))
             {

@@ -26,7 +26,7 @@ namespace AzureRepositories.AssetCoinHolders
         public AssetBalanceChangesRepository(IMongoDatabase db, ILog log)
         {
             _log = log;
-            _mongoCollection = db.GetCollection<AddressAssetBalanceChangeMongoEntity>("asset-balances");
+            _mongoCollection = db.GetCollection<AddressAssetBalanceChangeMongoEntity>(AddressAssetBalanceChangeMongoEntity.CollectionName);
         }
 
         public async Task AddAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges)
@@ -73,16 +73,16 @@ namespace AzureRepositories.AssetCoinHolders
 
         public async Task<BalanceSummary> GetSummaryAsync(int? atBlock, params string[] assetIds)
         {
-            var fullBalanceQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId));
-            var stopAtBlockQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight <= atBlock.Value);
+            var fullBalanceQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.TotalChanged != 0);
+            var stopAtBlockQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight <= atBlock.Value && p.TotalChanged != 0);
 
             var getBlockChangesTask = fullBalanceQuery.Project(p => p.BlockHeight).ToListAsync(); 
-            var addressBalanceChangesTask = (atBlock != null? stopAtBlockQuery: fullBalanceQuery).Project(p => new { p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc => bc.Quantity) }).ToListAsync();
+            var addressBalanceChangesTask = (atBlock != null? stopAtBlockQuery: fullBalanceQuery).Project(p => new { p.ColoredAddress, Balance = p.TotalChanged }).ToListAsync();
             Task<Dictionary<string, double>> changeAtBlockTask;
 
             if (atBlock != null)
             {
-                changeAtBlockTask = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight == atBlock.Value)
+                changeAtBlockTask = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight == atBlock.Value && p.TotalChanged != 0)
                     .Project(p => new { p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc => bc.Quantity) })
                     .ToListAsync()
                     .ContinueWith(tsk =>
@@ -138,7 +138,7 @@ namespace AzureRepositories.AssetCoinHolders
                             blockChangesDictionary.Add(assetBalanceChange.BlockHash, assetBalanceChange);
                         }
 
-                        assetBalanceChange.BalanceChanges.Add(BalanceChangeMongoEntity.Create(balanceChange.Quantity, balanceChange.TransactionHash));
+                        assetBalanceChange.AddBalanceChanges(BalanceChangeMongoEntity.Create(balanceChange.Quantity, balanceChange.TransactionHash));
                     }
 
                     await _mongoCollection.InsertManyAsync(blockChangesDictionary.Values);
@@ -158,6 +158,9 @@ namespace AzureRepositories.AssetCoinHolders
     [BsonIgnoreExtraElements]
     public class AddressAssetBalanceChangeMongoEntity
     {
+
+        public static string CollectionName => "block-changes";
+
         public AddressAssetBalanceChangeMongoEntity()
         {
             BalanceChanges = new List<BalanceChangeMongoEntity>();
@@ -176,6 +179,7 @@ namespace AzureRepositories.AssetCoinHolders
                 BlockHeight = blockHeight
             };
         }
+        
 
         [BsonId]
         public string Id { get; set; }
@@ -192,8 +196,17 @@ namespace AzureRepositories.AssetCoinHolders
         [BsonElement("address")]
         public string ColoredAddress { get; set; }
 
+        [BsonElement("totalchanged")]
+        public double TotalChanged { get; set; }
+
         [BsonElement("changes")]
         public List<BalanceChangeMongoEntity> BalanceChanges { get; set; }
+
+        public void AddBalanceChanges(params BalanceChangeMongoEntity[] balanceChanges)
+        {
+            BalanceChanges.AddRange(balanceChanges);
+            TotalChanged = BalanceChanges.Sum(p => p.Quantity);
+        }
 
         public static string CreateIdKey(string assetId, string address, string blockHash)
         {

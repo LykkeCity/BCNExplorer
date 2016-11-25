@@ -57,6 +57,7 @@ namespace BCNExplorer.Web.Models
         public class BlockPagination
         {
             public int[] ChangedAtHeights { get; set; }
+            public bool ShowCurrentBlock { get; set; }
 
             public int AtBlock;
 
@@ -75,7 +76,8 @@ namespace BCNExplorer.Web.Models
                 return new BlockPagination
                 {
                     ChangedAtHeights = ordered,
-                    AtBlock = atBlock ?? ordered.LastOrDefault()
+                    AtBlock = atBlock ?? ordered.LastOrDefault(),
+                    ShowCurrentBlock = atBlock != null
                 };
             }
         }
