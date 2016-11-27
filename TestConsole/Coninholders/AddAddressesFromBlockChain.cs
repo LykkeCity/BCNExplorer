@@ -37,8 +37,8 @@ namespace TestConsole
 
             var okFile = "./AddAddressesFromBlockChain-ok.txt";
             var failFile = "./AddAddressesFromBlockChain-fail.txt";
-            var startBlock = 268000;
-            var toBlock = 300072;
+            var startBlock = 416434;
+            var toBlock = 439808;
             var st = new Stopwatch();
             st.Start();
             Console.WriteLine(startBlock);
@@ -55,7 +55,7 @@ namespace TestConsole
                         {
                             Console.WriteLine(st.Elapsed.ToString("g"));
                             var addr = x.Result.Select(p => new BitcoinColoredAddress(p).ToString()).Select(p=> new Address {ColoredAddress = p}).ToArray();
-                            File.AppendAllLines(okFile, new[] { i.ToString(), string.Join(",", addr.Select(p => p.ColoredAddress)), "--------" });
+                            //File.AppendAllLines(okFile, new[] { i.ToString(), string.Join(",", addr.Select(p => p.ColoredAddress)), "--------" });
 
                             await addressRepo.AddAsync(addr);
                             Console.WriteLine("{0} done", i);

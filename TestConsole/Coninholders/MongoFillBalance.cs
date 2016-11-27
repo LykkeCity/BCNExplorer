@@ -12,6 +12,7 @@ using Common.Log;
 using Core.AssetBlockChanges.Mongo;
 using Core.Settings;
 using JobsCommon;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using NBitcoin;
@@ -35,17 +36,28 @@ namespace TestConsole
             var mainChainRepository = ioc.GetObject<MainChainRepository>();
 
             IEnumerable<AddressEntity> addr;
-            var collection = 
+            var collection =
                 new MongoClient(baseSettings.Db.AssetBalanceChanges.ConnectionString)
                 .GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName)
                 .GetCollection<AddressAssetBalanceChangeMongoEntity>(AddressAssetBalanceChangeMongoEntity.CollectionName);
 
+            var parsedAddressesCollection = new MongoClient(baseSettings.Db.AssetBalanceChanges.ConnectionString)
+                .GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName)
+                .GetCollection<ParsedAddressMongoDbEntity>("parsed-addresses");
+
+            Start:
             var parsedAddresses =
-                (await collection.Find(p => true).Project(p => p.ColoredAddress).Limit(int.MaxValue).ToListAsync()).Distinct();
+                (await parsedAddressesCollection.Find(p => true).Project(p => p.Address).Limit(int.MaxValue).ToListAsync()).Distinct().ToDictionary(p => p);
+
+            //await parsedAddressesCollection.InsertManyAsync(parsedAddresses.Values.Select(p=> new ParsedAddressMongoDbEntity(p)));
+
+            Console.WriteLine("parsedAddresses " + parsedAddresses.Count);
             using (var db = contextFactory.GetContext())
             {
-                addr = db.Addresses.ToList()
-                    .Where(p => !parsedAddresses.Contains(p.ColoredAddress))
+                addr = db.Addresses.OrderByDescending(p => p.ColoredAddress).ToList()
+                    .Where(p => !parsedAddresses.ContainsKey(p.ColoredAddress))
+                    //.Take(20000)
+                    .ToList()
                     ;
                 //addr =
                 //    db.BalanceChanges.Where(p => p.AssetId == "AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog")
@@ -64,14 +76,23 @@ namespace TestConsole
             var mainChain = await mainChainRepository.GetMainChainAsync();
             var to = mainChain.Height;
             to = 439808;
-            File.AppendAllLines(file, new[] { to.ToString(),  "----------------" });
+            var from = 274250;
+
+
+            File.AppendAllLines(file, new[] { to.ToString(), "----------------" });
             Console.WriteLine(addr.Count());
-            foreach (var address in addr.Select(p => p.ColoredAddress).Distinct().ToList().OrderBy(p=>p))
+            foreach (var address in addr.Select(p => p.ColoredAddress).ToList())
             {
+                var t = (await parsedAddressesCollection.Find(p => p.Address == address).Project(p => p.Address).Limit(int.MaxValue).ToListAsync()).Distinct().ToDictionary(p => p);
+                if (t.Count != 0)
+                {
+                    break;
+
+                }
                 var balanceId = BalanceIdHelper.Parse(address, Network.Main);
-                Console.WriteLine(address);
+                Console.WriteLine(address + " " + t.Count);
                 var changesTask = indexerClientFactory.GetIndexerClient()
-                    .GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0, to)
+                    .GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, from, to)
                     .ContinueWith(
                         async task =>
                         {
@@ -92,7 +113,7 @@ namespace TestConsole
 
                                     await balanceChangesRepo.AddAsync(address, balanceChanges);
                                 }
-
+                                await parsedAddressesCollection.InsertOneAsync(new ParsedAddressMongoDbEntity(address));
                                 Console.WriteLine("--Continue Done {0} {1} {2}", counterTemp, st.Elapsed.ToString("g"), DateTime.Now.ToString("t"));
                             }
                             catch (Exception e)
@@ -112,4 +133,15 @@ namespace TestConsole
             Console.ReadLine();
         }
     }
+}
+
+public class ParsedAddressMongoDbEntity
+{
+    public ParsedAddressMongoDbEntity(string adddr)
+    {
+        Address = adddr;
+    }
+
+    [BsonId]
+    public string Address { get; set; }
 }
