@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Core.SearchService;
 using Providers.BlockChainReader;
 using Providers.Contracts.Ninja;
-using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
 {
-    public class SearchProvider
+    public class NinjaSearchProvider
     {
         private readonly NinjaBlockChainReader _blockChainReader;
 
-        public SearchProvider(NinjaBlockChainReader blockChainReader)
+        public NinjaSearchProvider(NinjaBlockChainReader blockChainReader)
         {
             _blockChainReader = blockChainReader;
         }

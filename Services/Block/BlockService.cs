@@ -6,7 +6,6 @@ using Core.Block;
 using NBitcoin;
 using Providers;
 using Providers.Providers.Ninja;
-using Providers.TransportTypes.Ninja;
 
 namespace Services.BlockChain
 {
@@ -77,32 +76,84 @@ namespace Services.BlockChain
             return null;
         }
 
-        public async Task<IBlock> GetBlockAsync(string id)
+        public Task<IBlock> GetBlockAsync(string id)
         {
-            var header = await _ninjaBlockProvider.GetHeaderAsync(id);
+            uint256 hash;
+            int height;
+
+            if (uint256.TryParse(id, out hash))
+            {
+                return GetBlockAsync(hash);
+            }
+            if (int.TryParse(id, out height))
+            {
+                return GetBlockAsync(height);
+            }
+
+            return null;
+        }
+
+        public async Task<IBlock> GetBlockAsync(uint256 hash)
+        {
+            var result = new Lazy<Block>(()=> new Block());
+
+            var fillHeaderTask = _ninjaBlockProvider.GetHeaderAsync(hash.ToString())
+                .ContinueWith(tsk =>
+            {
+                if (tsk.Result != null)
+                {
+                    FillHeaderData(tsk.Result, result.Value);
+                }
+            });
+
+            var fillDbDataTask = Task.Run(() =>
+            {
+                var block =_indexerClientFactory.GetIndexerClient().GetBlock(hash);
+                if (block != null)
+                {
+                    FillBlockDataFromDb(block, result.Value);
+                }
+            });
+
+            await Task.WhenAll(fillHeaderTask, fillDbDataTask);
+            
+            return result.IsValueCreated? result.Value: null;
+        }
+
+        private async Task<IBlock> GetBlockAsync(int height)
+        {
+            var header = await _ninjaBlockProvider.GetHeaderAsync(height.ToString());
             if (header != null)
             {
-                var result = new Block
-                {
-                    Confirmations = header.Confirmations,
-                    Height = header.Height
-                };
-
+                var result = new Block();
                 var block = _indexerClientFactory.GetIndexerClient().GetBlock(uint256.Parse(header.Hash));
 
-                result.Time = block.Header.BlockTime.DateTime;
-                result.Hash = block.Header.GetHash().ToString();
-                result.TotalTransactions = block.Transactions.Count;
-                result.Difficulty = block.Header.Bits.Difficulty;
-                result.MerkleRoot = block.Header.HashMerkleRoot.ToString();
-                result.PreviousBlock = block.Header.HashPrevBlock.ToString();
-                result.Nonce = block.Header.Nonce;
-                result.TransactionIds = block.Transactions.Select(p => p.GetHash().ToString()).ToList();
+                FillHeaderData(header, result);
+                FillBlockDataFromDb(block, result);
 
                 return result;
             }
 
             return null;
+        }
+
+        private void FillHeaderData(NinjaBlockHeader header, Block result)
+        {
+            result.Confirmations = header.Confirmations;
+            result.Height = header.Height;
+        }
+
+        private void FillBlockDataFromDb(NBitcoin.Block block, Block result)
+        {
+
+            result.Time = block.Header.BlockTime.DateTime;
+            result.Hash = block.Header.GetHash().ToString();
+            result.TotalTransactions = block.Transactions.Count;
+            result.Difficulty = block.Header.Bits.Difficulty;
+            result.MerkleRoot = block.Header.HashMerkleRoot.ToString();
+            result.PreviousBlock = block.Header.HashPrevBlock.ToString();
+            result.Nonce = block.Header.Nonce;
+            result.TransactionIds = block.Transactions.Select(p => p.GetHash().ToString()).ToList();
         }
     }
 }

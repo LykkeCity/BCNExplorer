@@ -3,12 +3,8 @@ using Common.IocContainer;
 using Common.Log;
 using Core.Asset;
 using Core.Settings;
-using Providers.Binders;
 using Providers.BlockChainReader;
-using Providers.Providers.Asset;
-using Providers.Providers.Common;
 using Providers.Providers.Ninja;
-using SearchProvider = Providers.Providers.Ninja.SearchProvider;
 
 namespace Providers
 {
@@ -33,12 +29,7 @@ namespace Providers
         {
             ioc.RegisterPerCall<AssetReader>();
 
-            ioc.RegisterFactorySingleTone(() =>
-                new CachedDataDictionary<string, IAsset>(
-                    async () => AssetIndexer.IndexAssets(await ioc.GetObject<IAssetDefinitionRepository>().GetAllAsync())
-                    , validDataInSeconds: 1*10*60));
 
-            ioc.RegisterPerCall<AssetProvider>();
         }
 
         private static void BindNinjaProviders(this IoC ioc)
@@ -46,13 +37,13 @@ namespace Providers
             ioc.RegisterPerCall<NinjaBlockProvider>();
             ioc.RegisterPerCall<NinjaTransactionProvider>();
             ioc.RegisterPerCall<NinjaBlockChainReader>();
-            ioc.RegisterPerCall<SearchProvider>();
-            ioc.RegisterPerCall<AddressProvider>();
+            ioc.RegisterPerCall<NinjaSearchProvider>();
+            ioc.RegisterPerCall<NinjaAddressProvider>();
         }
 
         private static void BindCommonProviders(this IoC ioc)
         {
-            ioc.RegisterPerCall<Providers.Common.SearchProvider>();
+
         }
     }
 }

@@ -4,21 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
+using Core.Asset;
 using Core.Transaction;
-using Providers.Providers.Asset;
-using Providers.Providers.Ninja;
 
 namespace BCNExplorer.Web.Controllers
 {
     public class TransactionController:Controller
     {
         private readonly ITransactionService _transactionService;
-        private readonly AssetProvider _assetProvider;
+        private readonly IAssetService _assetService;
 
-        public TransactionController(ITransactionService transactionService, AssetProvider assetProvider)
+        public TransactionController(ITransactionService transactionService, IAssetService assetService)
         {
             _transactionService = transactionService;
-            _assetProvider = assetProvider;
+            _assetService = assetService;
         }
 
         [Route("transaction/{id}")]
@@ -28,7 +27,7 @@ namespace BCNExplorer.Web.Controllers
 
             if (ninjaTransaction != null)
             {
-                var result = TransactionViewModel.Create(ninjaTransaction, await _assetProvider.GetAssetDictionaryAsync());
+                var result = TransactionViewModel.Create(ninjaTransaction, await _assetService.GetAssetDictionaryAsync());
 
                 return View(result);
             }
@@ -42,7 +41,7 @@ namespace BCNExplorer.Web.Controllers
         {
             var result = new ConcurrentStack<TransactionViewModel>();
 
-            var assetDictionary = await _assetProvider.GetAssetDictionaryAsync();
+            var assetDictionary = await _assetService.GetAssetDictionaryAsync();
 
             var loadTransactionTasks = ids.Select(id => _transactionService.GetAsync(id).ContinueWith(task =>
             {

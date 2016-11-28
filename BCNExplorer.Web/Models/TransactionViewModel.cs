@@ -4,9 +4,6 @@ using System.Linq;
 using Common;
 using Core.Asset;
 using Core.Transaction;
-using Providers.TransportTypes;
-using Providers.TransportTypes.Asset;
-using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Models
 {

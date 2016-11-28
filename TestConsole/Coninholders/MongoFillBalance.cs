@@ -18,6 +18,7 @@ using MongoDB.Driver.Linq;
 using NBitcoin;
 using Providers;
 using Providers.Helpers;
+using Services.MainChain;
 using SQLRepositories.Context;
 using SQLRepositories.DbModels;
 

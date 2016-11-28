@@ -135,6 +135,11 @@ namespace Services.Transaction
         public async Task<ITransaction> GetAsync(string id, bool calculateInputsWithReturnedChange = true)
         {
             var responce = await _ninjaTransactionProvider.GetAsync(id, calculateInputsWithReturnedChange);
+            if (responce == null)
+            {
+                return null;
+            }
+
             var transactionInfo = NBitcoin.Transaction.Parse(responce.Hex);
 
             var inputs = responce.Inputs.ToList();

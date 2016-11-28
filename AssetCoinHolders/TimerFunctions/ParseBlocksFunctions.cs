@@ -14,6 +14,7 @@ using NBitcoin;
 using NBitcoin.Indexer;
 using Providers;
 using Providers.Helpers;
+using Services.MainChain;
 
 namespace AssetCoinHoldersScanner.TimerFunctions
 {

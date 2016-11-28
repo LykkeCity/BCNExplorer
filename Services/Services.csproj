@@ -111,11 +111,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BalanceChangesService.cs" />
+    <Compile Include="Address\AddressService.cs" />
+    <Compile Include="Asset\AssetIndexer.cs" />
+    <Compile Include="Asset\AssetService.cs" />
+    <Compile Include="BalanceChanges\BalanceChangesService.cs" />
     <Compile Include="Binders\ServicesBinder.cs" />
     <Compile Include="Block\BlockService.cs" />
-    <Compile Include="MainChainRepository.cs" />
+    <Compile Include="MainChain\MainChainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\SearchService.cs" />
     <Compile Include="Transaction\TransactionService.cs" />
   </ItemGroup>
   <ItemGroup>

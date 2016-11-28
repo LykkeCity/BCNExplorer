@@ -11,6 +11,8 @@ using NBitcoin;
 using NBitcoin.Indexer;
 using Providers;
 using Providers.Helpers;
+using Services.BalanceChanges;
+using Services.MainChain;
 using SQLRepositories.Context;
 using SQLRepositories.DbModels;
 using ITransactionRepository = Core.AssetBlockChanges.ITransactionRepository;

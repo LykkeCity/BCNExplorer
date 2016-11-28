@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using NBitcoin;
 using Providers.BlockChainReader;
 using Providers.Contracts.Ninja;
-using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
 {

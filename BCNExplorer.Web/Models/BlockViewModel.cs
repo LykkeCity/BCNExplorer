@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using Core.AssetBlockChanges;
 using Core.Block;
-using Providers.Providers.Ninja;
-using Providers.TransportTypes;
-using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Models
 {

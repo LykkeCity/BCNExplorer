@@ -99,18 +99,13 @@
     <Compile Include="Helpers\OrderedBalanceHelper.cs" />
     <Compile Include="Helpers\TransactionHelper.cs" />
     <Compile Include="IndexerClientFactory.cs" />
-    <Compile Include="Providers\Asset\AssetIndexer.cs" />
-    <Compile Include="Providers\Common\SearchProvider.cs" />
-    <Compile Include="Providers\Asset\AssetProvider.cs" />
-    <Compile Include="Providers\Asset\Constants.cs" />
-    <Compile Include="Providers\Ninja\AddressProvider.cs" />
+    <Compile Include="Providers\Ninja\NinjaAddressProvider.cs" />
     <Compile Include="Providers\Ninja\NinjaBlockProvider.cs" />
     <Compile Include="Binders\ProvidersBinder.cs" />
-    <Compile Include="Providers\Ninja\SearchProvider.cs" />
+    <Compile Include="Providers\Ninja\NinjaSearchProvider.cs" />
     <Compile Include="Providers\Ninja\NinjaTransactionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransportTypes\Asset\AssetDefinition.cs" />
-    <Compile Include="TransportTypes\Ninja\NinjaAddress.cs" />
     <Compile Include="TransportTypes\Ninja\SearchResultType.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +125,10 @@
       <Project>{1dcf2948-0a67-4169-8c2a-43da4909e3a1}</Project>
       <Name>Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Providers\Asset\" />
+    <Folder Include="Providers\Common\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,6 +11,8 @@ using Core.Settings;
 using JobsCommon;
 using Providers;
 using Providers.Helpers;
+using Services.BalanceChanges;
+using Services.MainChain;
 
 namespace AssetCoinHoldersScanner.QueueHandlers
 {

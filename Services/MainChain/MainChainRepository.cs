@@ -2,14 +2,13 @@
 using System.IO;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
-using Common.Cache;
 using Common.Files;
 using Common.Log;
 using NBitcoin;
 using NBitcoin.Indexer;
 using Providers;
 
-namespace JobsCommon
+namespace Services.MainChain
 {
     public class MainChainRepository
     {

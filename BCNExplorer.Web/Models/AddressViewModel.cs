@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using Core.AddressService;
 using Core.Asset;
-using Providers.TransportTypes;
-using Providers.TransportTypes.Asset;
-using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Models
 {
@@ -25,23 +22,23 @@ namespace BCNExplorer.Web.Models
 
         public AssetDictionary AssetDic { get; set; }
 
-        public static AddressViewModel Create(NinjaAddress ninjaAddress, IDictionary<string, IAsset> assetDictionary)
+        public static AddressViewModel Create(IAddressBalance balance, IDictionary<string, IAsset> assetDictionary)
         {
             return new AddressViewModel
             {
-                AddressId = ninjaAddress.AddressId,
-                TransactionIdList = new TransactionIdList(ninjaAddress.TransactionIds, PageSize),
-                UncoloredAddress = ninjaAddress.UncoloredAddress,
-                ColoredAddress = ninjaAddress.ColoredAddress,
-                TotalConfirmedTransactions = ninjaAddress.TotalTransactions,
-                Balance = ninjaAddress.Balance,
-                Assets = (ninjaAddress.Assets ?? Enumerable.Empty<NinjaAddress.Asset>()).Select(p => new Asset
+                AddressId = balance.AddressId,
+                TransactionIdList = new TransactionIdList(balance.TransactionIds, PageSize),
+                UncoloredAddress = balance.UncoloredAddress,
+                ColoredAddress = balance.ColoredAddress,
+                TotalConfirmedTransactions = balance.TotalTransactions,
+                Balance = balance.Balance,
+                Assets = balance.ColoredBalances.Select(p => new Asset
                 {
                     AssetId = p.AssetId,
                     Quantity = p.Quantity,
                     UnconfirmedQuantityDelta = p.UnconfirmedQuantityDelta
                 }),
-                UnconfirmedBalanceDelta = ninjaAddress.UnconfirmedBalanceDelta,
+                UnconfirmedBalanceDelta = balance.UnconfirmedBalanceDelta,
                 AssetDic = AssetDictionary.Create(assetDictionary)
             };
         }

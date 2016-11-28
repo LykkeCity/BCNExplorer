@@ -15,6 +15,7 @@ using MongoDB.Driver;
 using NBitcoin;
 using Providers;
 using Providers.Helpers;
+using Services.MainChain;
 using SQLRepositories.Context;
 
 namespace TestConsole

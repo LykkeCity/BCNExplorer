@@ -34,25 +34,26 @@ namespace Core.AssetBlockChanges.Mongo
         }
     }
 
-    public class BalanceSummary
+    public interface IBalanceSummary
     {
-        public string AssetId { get; set; }
-        public IEnumerable<BalanceAddressSummary> AddressSummaries { get; set; }
-        public IEnumerable<int> ChangedAtHeights { get; set; }
-        public int? AtBlockHeight { get; set; }
-        public class BalanceAddressSummary
-        {
-            public string Address { get; set; }
-            public double Balance { get; set; }
-            public double ChangeAtBlock { get; set; }
-        }
+        string AssetId { get;  }
+        IEnumerable<IBalanceAddressSummary> AddressSummaries { get;  }
+        IEnumerable<int> ChangedAtHeights { get;  }
+        int? AtBlockHeight { get;  }
+    }
+
+    public interface IBalanceAddressSummary
+    {
+        string Address { get; }
+        double Balance { get; }
+        double ChangeAtBlock { get; }
     }
 
     public interface IAssetBalanceChangesRepository
     {
         Task AddAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges);
-        Task<BalanceSummary> GetSummaryAsync(params string[] assetIds);
-        Task<BalanceSummary> GetSummaryAsync(int? atBlock, params string[] assetIds);
+        Task<IBalanceSummary> GetSummaryAsync(params string[] assetIds);
+        Task<IBalanceSummary> GetSummaryAsync(int? atBlock, params string[] assetIds);
         Task<int> GetLastParsedBlockHeightAsync();
     }
 }

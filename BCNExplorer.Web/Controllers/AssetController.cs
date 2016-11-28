@@ -3,27 +3,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
+using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
 using Providers.Providers.Asset;
+using Services.Asset;
 
 namespace BCNExplorer.Web.Controllers
 {
     public class AssetController : Controller
     {
-        private readonly AssetProvider _assetProvider;
+        private readonly IAssetService _assetService;
         private readonly IAssetBalanceChangesRepository _balanceChangesRepository;
 
-        public AssetController(AssetProvider assetProvider, 
+        public AssetController(IAssetService assetService, 
             IAssetBalanceChangesRepository balanceChangesRepository)
         {
-            _assetProvider = assetProvider;
+            _assetService = assetService;
             _balanceChangesRepository = balanceChangesRepository;
         }
 
         [Route("asset/{id}")]
         public async Task<ActionResult> Index(string id)
         {
-            var result = await _assetProvider.GetAssetAsync(id);
+            var result = await _assetService.GetAssetAsync(id);
             if (result != null)
             {
                 return View(AssetViewModel.Create(result));
@@ -35,7 +37,7 @@ namespace BCNExplorer.Web.Controllers
         [Route("assets")]
         public async Task<ActionResult> AssetDirectiory()
         {
-            var result = (await _assetProvider.GetAssetsAsync()).Select(AssetViewModel.Create);
+            var result = (await _assetService.GetAssetsAsync()).Select(AssetViewModel.Create);
 
             return View(result);
         }
@@ -43,7 +45,7 @@ namespace BCNExplorer.Web.Controllers
         [Route("asset/{id}/owners")]
         public async Task<ActionResult> Owners(string id, int? at)
         {
-            var asset = await _assetProvider.GetAssetAsync(id);
+            var asset = await _assetService.GetAssetAsync(id);
             
             if (asset != null)
             {

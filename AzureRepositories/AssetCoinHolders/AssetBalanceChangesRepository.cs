@@ -13,6 +13,22 @@ using MongoDB.Driver.Linq;
 
 namespace AzureRepositories.AssetCoinHolders
 {
+
+    public class BalanceSummary : IBalanceSummary
+    {
+        public string AssetId { get; set; }
+        public IEnumerable<IBalanceAddressSummary> AddressSummaries { get; set; }
+        public IEnumerable<int> ChangedAtHeights { get; set; }
+        public int? AtBlockHeight { get; set; }
+    }
+
+    public class BalanceAddressSummary : IBalanceAddressSummary
+    {
+        public string Address { get; set; }
+        public double Balance { get; set; }
+        public double ChangeAtBlock { get; set; }
+    }
+
     public class AssetBalanceChangesRepository: IAssetBalanceChangesRepository
     {
         private readonly ILog _log;
@@ -66,12 +82,12 @@ namespace AzureRepositories.AssetCoinHolders
 
         }
 
-        public Task<BalanceSummary> GetSummaryAsync(params string[] assetIds)
+        public Task<IBalanceSummary> GetSummaryAsync(params string[] assetIds)
         {
             return GetSummaryAsync(null, assetIds);
         }
 
-        public async Task<BalanceSummary> GetSummaryAsync(int? atBlock, params string[] assetIds)
+        public async Task<IBalanceSummary> GetSummaryAsync(int? atBlock, params string[] assetIds)
         {
             var fullBalanceQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.TotalChanged != 0);
             var stopAtBlockQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight <= atBlock.Value && p.TotalChanged != 0);
@@ -103,7 +119,7 @@ namespace AzureRepositories.AssetCoinHolders
                 ChangedAtHeights = getBlockChangesTask.Result.Distinct().ToList(),
                 AtBlockHeight = atBlock,
                 AddressSummaries =
-                    addressBalanceChangesTask.Result.GroupBy(p => p.ColoredAddress).Select(bc => new BalanceSummary.BalanceAddressSummary
+                    addressBalanceChangesTask.Result.GroupBy(p => p.ColoredAddress).Select(bc => new BalanceAddressSummary
                     {
                         Address = bc.Key,
                         Balance = bc.Sum(p => p.Balance),

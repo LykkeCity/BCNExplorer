@@ -34,34 +34,38 @@ namespace Providers.Contracts.Ninja
 
     #region AddressSummaryContract
 
-    internal class AddressSummaryContract
+    public class AddressSummaryContract
     {
         [JsonProperty("confirmed")]
         public AddressSummaryInnerContract Confirmed { get; set; }
 
         [JsonProperty("unConfirmed")]
         public AddressSummaryInnerContract Unconfirmed { get; set; }
+
+        public class AddressSummaryInnerContract
+        {
+            [JsonProperty("transactionCount")]
+            public int TotalTransactions { get; set; }
+            [JsonProperty("amount")]
+            public long Balance { get; set; }
+            [JsonProperty("assets")]
+            public AddressAssetContract[] Assets { get; set; }
+
+            public class AddressAssetContract
+            {
+                [JsonProperty("asset")]
+                public string AssetId { get; set; }
+                [JsonProperty("quantity")]
+                public long Quantity { get; set; }
+                [JsonProperty("received")]
+                public long Received { get; set; }
+            }
+        }
     }
 
-    public class AddressSummaryInnerContract
-    {
-        [JsonProperty("transactionCount")]
-        public int TotalTransactions { get; set; }
-        [JsonProperty("amount")]
-        public long Balance { get; set; }
-        [JsonProperty("assets")]
-        public AddressAssetContract[] Assets { get; set; }
-    }
 
-    public class AddressAssetContract
-    {
-        [JsonProperty("asset")]
-        public string AssetId { get; set; }
-        [JsonProperty("quantity")]
-        public long Quantity { get; set; }
-        [JsonProperty("received")]
-        public long Received { get; set; }
-    }
+
+
 
     #endregion
 }

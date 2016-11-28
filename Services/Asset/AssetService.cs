@@ -3,16 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common;
 using Core.Asset;
-using Providers.Contracts.Asset;
-using Providers.TransportTypes.Asset;
 
-namespace Providers.Providers.Asset
+namespace Services.Asset
 {
-    public class AssetProvider
+    public class AssetService:IAssetService
     {
         private readonly CachedDataDictionary<string, IAsset> _cacheDictionary;
 
-        public AssetProvider(CachedDataDictionary<string, IAsset> cacheDictionary)
+        public AssetService(CachedDataDictionary<string, IAsset> cacheDictionary)
         {
             _cacheDictionary = cacheDictionary;
         }

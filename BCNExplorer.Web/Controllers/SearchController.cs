@@ -2,21 +2,19 @@
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using Core.Block;
-using Providers.Providers.Common;
-using Providers.Providers.Ninja;
-using Providers.TransportTypes.Ninja;
-using SearchProvider = Providers.Providers.Common.SearchProvider;
+using Core.SearchService;
+using Services.Search;
 
 namespace BCNExplorer.Web.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly SearchProvider _searchProvider;
+        private readonly ISearchService _searchService;
         private readonly IBlockService _blockService;
 
-        public SearchController(SearchProvider searchProvider, IBlockService blockService)
+        public SearchController(ISearchService searchService, IBlockService blockService)
         {
-            _searchProvider = searchProvider;
+            _searchService = searchService;
             _blockService = blockService;
         }
 
@@ -24,7 +22,7 @@ namespace BCNExplorer.Web.Controllers
         public async Task<ActionResult> Search(string id)
         {
             id = (id ?? "").Trim();
-            var type = await _searchProvider.GetTypeAsync(id);
+            var type = await _searchService.GetTypeAsync(id);
             switch (type)
             {
                 case SearchResultType.Block:

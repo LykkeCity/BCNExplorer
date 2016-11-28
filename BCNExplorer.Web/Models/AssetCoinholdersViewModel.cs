@@ -16,7 +16,7 @@ namespace BCNExplorer.Web.Models
         
         public BlockPagination Pagination { get; set; }
         
-        public static AssetCoinholdersViewModel Create(AssetViewModel asset, BalanceSummary balanceSummary)
+        public static AssetCoinholdersViewModel Create(AssetViewModel asset, IBalanceSummary balanceSummary)
         {
             var total = balanceSummary.AddressSummaries.Sum(p => p.Balance);
             
@@ -39,7 +39,7 @@ namespace BCNExplorer.Web.Models
 
             public string BalancePercentageDescription => BalancePercenage > 0.01 ? BalancePercenage.ToString("F2") : "<0.01";
 
-            public static BalanceAddressSummary Create(BalanceSummary.BalanceAddressSummary summary, double total, int divisibility)
+            public static BalanceAddressSummary Create(IBalanceAddressSummary summary, double total, int divisibility)
             {
                 var coloredTotal = BitcoinUtils.CalculateColoredAssetQuantity(total, divisibility);
                 var coloredSummaryPerAddress = BitcoinUtils.CalculateColoredAssetQuantity(summary.Balance, divisibility);

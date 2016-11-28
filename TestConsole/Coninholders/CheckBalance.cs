@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using BCNExplorer.Web.Models;
 using Common;
 using Common.IocContainer;
-using Core.AssetBlockChanges;
+using Core.AddressService;
+using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
-using Providers.Providers.Asset;
-using Providers.Providers.Ninja;
 using SQLRepositories.Context;
 
 namespace TestConsole
@@ -20,8 +17,8 @@ namespace TestConsole
         public static async Task Run(IoC container)
         {
             var db = container.GetObject<BcnExplolerFactory>();
-            var _assetProvider = container.GetObject<AssetProvider>();
-            var _addressProvider = container.GetObject<AddressProvider>();
+            var _assetProvider = container.GetObject<IAssetService>();
+            var _addressProvider = container.GetObject<IAddressService>();
             var _balanceChangesRepository = container.GetObject<IAssetBalanceChangesRepository>();
             var id = "AXkedGbAH1XGDpAypVzA5eyjegX4FaCnvM";
             var asset = await _assetProvider.GetAssetAsync(id);
@@ -38,8 +35,8 @@ namespace TestConsole
                 {
                     Console.WriteLine(counter);
                     counter--;
-                    var ninjablance = await _addressProvider.GetAddressAsync(sum.Address);
-                    var assetQuntity = ninjablance.Assets.Single(p => p.AssetId == id).Quantity;
+                    var ninjablance = await _addressProvider.GetBalanceAsync(sum.Address);
+                    var assetQuntity = ninjablance.ColoredBalances.Single(p => p.AssetId == id).Quantity;
                     var assetBalance = BitcoinUtils.CalculateColoredAssetQuantity(assetQuntity, asset.Divisibility);
                     if (assetBalance != sum.Balance)
                     {
