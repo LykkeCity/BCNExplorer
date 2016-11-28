@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Core.Asset;
+using Core.Transaction;
 using Providers.TransportTypes;
 using Providers.TransportTypes.Asset;
 using Providers.TransportTypes.Ninja;
@@ -31,7 +32,7 @@ namespace BCNExplorer.Web.Models
             public double Height { get; set; }
             public string BlockId { get; set; }
 
-            public static BlockViewModel Create(NinjaTransaction.BlockMinInfo blockMinInfo)
+            public static BlockViewModel Create(IBlockMinInfo blockMinInfo)
             {
                 if (blockMinInfo != null)
                 {
@@ -72,8 +73,8 @@ namespace BCNExplorer.Web.Models
 
             public static BitcoinAsset Create(double fees,
                 bool isCoinBase,
-                IEnumerable<NinjaTransaction.InOut> ninjaIn,
-                IEnumerable<NinjaTransaction.InOut> ninjaOuts)
+                IEnumerable<IInOut> ninjaIn,
+                IEnumerable<IInOut> ninjaOuts)
             {
                 var ins = In.Create(ninjaIn);
                 var outs = Out.Create(ninjaOuts);
@@ -102,7 +103,7 @@ namespace BCNExplorer.Web.Models
                 
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
                 
-                public static IEnumerable<In> Create(IEnumerable<NinjaTransaction.InOut> ins)
+                public static IEnumerable<In> Create(IEnumerable<IInOut> ins)
                 {
                     return ins.Where(p => p.Value != 0)
                         .Select(p => new In(
@@ -126,7 +127,7 @@ namespace BCNExplorer.Web.Models
                 
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
                 
-                public static IEnumerable<Out> Create(IEnumerable<NinjaTransaction.InOut> outs)
+                public static IEnumerable<Out> Create(IEnumerable<IInOut> outs)
                 {
                     return outs.Where(p => p.Value != 0).Select(p => new Out(value: BitcoinUtils.SatoshiToBtc(p.Value), address:p.Address));
                 }
@@ -163,7 +164,7 @@ namespace BCNExplorer.Web.Models
 
                 public string ShortName { get; set; }
 
-                public static In Create(NinjaTransaction.InOut sourceIn, int divisibility,  IEnumerable<NinjaTransaction.InOut> outs, string shortName)
+                public static In Create(IInOut sourceIn, int divisibility,  IEnumerable<IInOut> outs, string shortName)
                 {
                     //var l = outs.Select(itm => itm.Quantity - sourceIn.Quantity);
                     //var def = l.FirstOrDefault();
@@ -196,7 +197,7 @@ namespace BCNExplorer.Web.Models
 
                 public string ShortName { get; set; }
 
-                public static Out Create(NinjaTransaction.InOut sourceOut, int divisibility, string shortName)
+                public static Out Create(IInOut sourceOut, int divisibility, string shortName)
                 {
                     return new Out(
                         value: BitcoinUtils.CalculateColoredAssetQuantity(sourceOut.Quantity, divisibility), 
@@ -207,7 +208,7 @@ namespace BCNExplorer.Web.Models
             
             #endregion
 
-            public static ColoredAsset Create(NinjaTransaction.InOutsByAsset inOutsByAsset, AssetDictionary assetDictionary)
+            public static ColoredAsset Create(IInOutsByAsset inOutsByAsset, AssetDictionary assetDictionary)
             {
                 var divisibility = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Divisibility, 0);
                 var assetShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null);
@@ -231,7 +232,7 @@ namespace BCNExplorer.Web.Models
 
         #endregion
 
-        public static TransactionViewModel Create(NinjaTransaction ninjaTransaction, IDictionary<string, IAsset> assetDictionary)
+        public static TransactionViewModel Create(ITransaction ninjaTransaction, IDictionary<string, IAsset> assetDictionary)
         {
             var bc = ninjaTransaction.TransactionsByAssets.First(p => !p.IsColored);
             var colored = ninjaTransaction.TransactionsByAssets.Where(p => p.IsColored).OrderBy(p => p.AssetId);

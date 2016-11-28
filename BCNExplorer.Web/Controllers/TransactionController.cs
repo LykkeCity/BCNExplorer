@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
+using Core.Transaction;
 using Providers.Providers.Asset;
 using Providers.Providers.Ninja;
 
@@ -11,19 +12,19 @@ namespace BCNExplorer.Web.Controllers
 {
     public class TransactionController:Controller
     {
-        private readonly TransactionProvider _transactionProvider;
+        private readonly ITransactionService _transactionService;
         private readonly AssetProvider _assetProvider;
 
-        public TransactionController(TransactionProvider transactionProvider, AssetProvider assetProvider)
+        public TransactionController(ITransactionService transactionService, AssetProvider assetProvider)
         {
-            _transactionProvider = transactionProvider;
+            _transactionService = transactionService;
             _assetProvider = assetProvider;
         }
 
         [Route("transaction/{id}")]
         public async Task<ActionResult> Index(string id, bool change = true)
         {
-            var ninjaTransaction = await _transactionProvider.GetAsync(id, change);
+            var ninjaTransaction = await _transactionService.GetAsync(id, change);
 
             if (ninjaTransaction != null)
             {
@@ -43,7 +44,7 @@ namespace BCNExplorer.Web.Controllers
 
             var assetDictionary = await _assetProvider.GetAssetDictionaryAsync();
 
-            var loadTransactionTasks = ids.Select(id => _transactionProvider.GetAsync(id).ContinueWith(task =>
+            var loadTransactionTasks = ids.Select(id => _transactionService.GetAsync(id).ContinueWith(task =>
             {
                 if (task.Result != null)
                 {

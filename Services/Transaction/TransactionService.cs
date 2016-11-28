@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Providers.Contracts.Ninja;
+using System.Threading.Tasks;
+using Core.Transaction;
+using NBitcoin.OpenAsset;
+using Providers.Providers.Ninja;
 
-namespace Providers.TransportTypes.Ninja
+namespace Services.Transaction
 {
-    public class NinjaTransaction
+    public class Transaction : ITransaction
     {
         public string TransactionId { get; set; }
 
@@ -13,12 +16,12 @@ namespace Providers.TransportTypes.Ninja
         public bool IsColor { get; set; }
         public string Hex { get; set; }
         public double Fees { get; set; }
-        public BlockMinInfo Block { get; set; }
-        public IEnumerable<InOutsByAsset> TransactionsByAssets { get; set; } 
-        
+        public IBlockMinInfo Block { get; set; }
+        public IEnumerable<IInOutsByAsset> TransactionsByAssets { get; set; }
+
         #region Classes 
 
-        public class InOut
+        public class InOut : IInOut
         {
             public string TransactionId { get; set; }
             public string Address { get; set; }
@@ -27,7 +30,7 @@ namespace Providers.TransportTypes.Ninja
             public string AssetId { get; set; }
             public double Quantity { get; set; }
 
-            public static IEnumerable<InOut> Create(IEnumerable<TransactionContract.BitCoinInOutContract> inOut)
+            public static IEnumerable<InOut> Create(IEnumerable<NinjaTransaction.InOut> inOut)
             {
                 return inOut.Select(x => new InOut()
                 {
@@ -38,17 +41,17 @@ namespace Providers.TransportTypes.Ninja
                     AssetId = x.AssetId ?? "",
                     Quantity = x.Quantity
                 });
-            } 
+            }
         }
 
-        public class BlockMinInfo
+        public class BlockMinInfo : IBlockMinInfo
         {
             public string BlockId { get; set; }
             public double Height { get; set; }
             public DateTime Time { get; set; }
             public double Confirmations { get; set; }
 
-            public static BlockMinInfo Create(TransactionContract.BlockContract blockContract)
+            public static BlockMinInfo Create(NinjaTransaction.BlockMinInfo blockContract)
             {
                 if (blockContract != null)
                 {
@@ -63,19 +66,20 @@ namespace Providers.TransportTypes.Ninja
 
                 return null;
             }
+
         }
 
-        public class InOutsByAsset
+        public class InOutsByAsset : IInOutsByAsset
         {
             public bool IsColored { get; set; }
             public string AssetId { get; set; }
-            public IEnumerable<InOut> TransactionIn { get; set; }
-            public IEnumerable<InOut> TransactionsOut { get; set; }
+            public IEnumerable<IInOut> TransactionIn { get; set; }
+            public IEnumerable<IInOut> TransactionsOut { get; set; }
 
             //TODO рефакторить (копипаст со старого проекта)
-            public static IEnumerable<InOutsByAsset> Create(
-                IEnumerable<TransactionContract.BitCoinInOutContract> transactionsIns,
-                IEnumerable<TransactionContract.BitCoinInOutContract> transactionsOut)
+            public static IEnumerable<IInOutsByAsset> Create(
+                IEnumerable<NinjaTransaction.InOut> transactionsIns,
+                IEnumerable<NinjaTransaction.InOut> transactionsOut)
             {
                 var inputs = InOut.Create(transactionsIns);
                 var outputs = InOut.Create(transactionsOut);
@@ -116,5 +120,56 @@ namespace Providers.TransportTypes.Ninja
         }
 
         #endregion
+
+    }
+
+    public class TransactionService : ITransactionService
+    {
+        private readonly NinjaTransactionProvider _ninjaTransactionProvider;
+
+        public TransactionService(NinjaTransactionProvider ninjaTransactionProvider)
+        {
+            _ninjaTransactionProvider = ninjaTransactionProvider;
+        }
+
+        public async Task<ITransaction> GetAsync(string id, bool calculateInputsWithReturnedChange = true)
+        {
+            var responce = await _ninjaTransactionProvider.GetAsync(id, calculateInputsWithReturnedChange);
+            var transactionInfo = NBitcoin.Transaction.Parse(responce.Hex);
+
+            var inputs = responce.Inputs.ToList();
+            var outputs = responce.Outputs.ToList();
+
+            #region CalculateInputsWithReturnedChange
+
+            if (calculateInputsWithReturnedChange)
+            {
+                foreach (var input in inputs.Where(inp => outputs.Any(x => x.Address == inp.Address)))
+                {
+                    foreach (var output in outputs.Where(x => x.Address == input.Address && x.AssetId == input.AssetId).ToList())
+                    {
+                        input.Value -= output.Value;
+                        input.Quantity -= output.Quantity;
+
+                        outputs.Remove(output);
+                    }
+                }
+            }
+
+            #endregion
+
+            var result = new Transaction
+            {
+                TransactionId = responce.TransactionId,
+                Hex = transactionInfo.ToHex(),
+                IsCoinBase = transactionInfo.IsCoinBase,
+                IsColor = transactionInfo.HasValidColoredMarker(),
+                Block = Transaction.BlockMinInfo.Create(responce.Block),
+                Fees = responce.Fees,
+                TransactionsByAssets = Transaction.InOutsByAsset.Create(inputs, outputs)
+            };
+
+            return result;
+        }
     }
 }
