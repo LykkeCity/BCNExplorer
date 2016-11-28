@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using NBitcoin;
@@ -8,38 +10,60 @@ using Providers.TransportTypes.Ninja;
 
 namespace Providers.Providers.Ninja
 {
-    public class BlockProvider
+    public class NinjaBlock
+    {
+        public string Hash { get; set; }
+        public long Height { get; set; }
+        public DateTime Time { get; set; }
+        public long Confirmations { get; set; }
+        public double Difficulty { get; set; }
+        public string MerkleRoot { get; set; }
+        public long Nonce { get; set; }
+        public int TotalTransactions { get; set; }
+        public string PreviousBlock { get; set; }
+        public IEnumerable<string> TransactionIds { get; set; }
+    }
+
+    public class NinjaBlockHeader
+    {
+        public string Hash { get; set; }
+        public int Height { get; set; }
+        public DateTime Time { get; set; }
+        public long Confirmations { get; set; }
+    }
+
+    public class NinjaBlockProvider
     {
         private readonly NinjaBlockChainReader _blockChainReader;
         private readonly IndexerClientFactory _indexerClientFactory;
 
-        public BlockProvider(NinjaBlockChainReader blockChainReader, IndexerClientFactory indexerClientFactory)
+        public NinjaBlockProvider(NinjaBlockChainReader blockChainReader, IndexerClientFactory indexerClientFactory)
         {
             _blockChainReader = blockChainReader;
             _indexerClientFactory = indexerClientFactory;
         }
 
-        public async Task<BlockDTO> GetAsync(string id)
+        public async Task<NinjaBlock> GetAsync(string id)
         {
             var header = await GetHeaderAsync(id);
             if (header != null)
             {
-                var result = new BlockDTO
+                var result = new NinjaBlock
                 {
                     Confirmations = header.Confirmations,
-                    Height = header.Height,
-                    Time = header.Time,
-                    Hash = header.Hash
+                    Height = header.Height
                 };
 
-                var block = _indexerClientFactory.GetIndexerClient().GetBlock(uint256.Parse(result.Hash));
+                var block = _indexerClientFactory.GetIndexerClient().GetBlock(uint256.Parse(header.Hash));
 
+                result.Time = block.Header.BlockTime.DateTime;
+                result.Hash = block.Header.GetHash().ToString();
                 result.TotalTransactions = block.Transactions.Count;
                 result.Difficulty = block.Header.Bits.Difficulty;
                 result.MerkleRoot = block.Header.HashMerkleRoot.ToString();
                 result.PreviousBlock = block.Header.HashPrevBlock.ToString();
                 result.Nonce = block.Header.Nonce;
-                result.TransactionIds = block.Transactions.Select(p => p.GetHash().ToString());
+                result.TransactionIds = block.Transactions.Select(p => p.GetHash().ToString()).ToList();
           
                 return result;
             }

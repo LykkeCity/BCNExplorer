@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="BalanceChangesService.cs" />
     <Compile Include="Binders\ServicesBinder.cs" />
+    <Compile Include="BlockChain\BlockService.cs" />
     <Compile Include="MainChainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

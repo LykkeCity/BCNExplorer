@@ -1,4 +1,6 @@
-﻿using Providers.TransportTypes;
+﻿using Core.Block;
+using Providers.Providers.Ninja;
+using Providers.TransportTypes;
 using Providers.TransportTypes.Ninja;
 
 namespace BCNExplorer.Web.Models
@@ -8,7 +10,7 @@ namespace BCNExplorer.Web.Models
         public string BlockId { get; set;}
         public int Height { get; set; }
 
-        public static LastBlockViewModel Create(NinjaBlockHeader header)
+        public static LastBlockViewModel Create(IBlockHeader header)
         {
             return new LastBlockViewModel
             {

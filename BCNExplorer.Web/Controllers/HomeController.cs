@@ -1,22 +1,23 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
+using Core.Block;
 using Providers.Providers.Ninja;
 
 namespace BCNExplorer.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly BlockProvider _blockProvider;
+        private readonly IBlockService _blockService;
 
-        public HomeController(BlockProvider blockProvider)
+        public HomeController(IBlockService blockService)
         {
-            _blockProvider = blockProvider;
+            _blockService = blockService;
         }
 
         public async Task<ActionResult> Index()
         {
-            var lastBlock = await _blockProvider.GetLastBlockAsync();
+            var lastBlock = await _blockService.GetLastBlockHeaderAsync();
 
             return View(LastBlockViewModel.Create(lastBlock));
         }

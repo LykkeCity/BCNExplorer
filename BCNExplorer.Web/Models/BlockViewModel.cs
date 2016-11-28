@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.AssetBlockChanges;
+using Core.Block;
+using Providers.Providers.Ninja;
 using Providers.TransportTypes;
 using Providers.TransportTypes.Ninja;
 
@@ -19,20 +22,20 @@ namespace BCNExplorer.Web.Models
         public TransactionIdList TransactionIdList { get; set; }
         private const int PageSize = 20;
 
-        public static BlockViewModel Create(BlockDTO blockDto)
+        public static BlockViewModel Create(IBlock ninjaBlock)
         {
             return new BlockViewModel
             {
-                Confirmations = blockDto.Confirmations,
-                Difficulty = blockDto.Difficulty,
-                Hash = blockDto.Hash,
-                Height = blockDto.Height,
-                MerkleRoot = blockDto.MerkleRoot,
-                Nonce = blockDto.Nonce,
-                PreviousBlock = blockDto.PreviousBlock,
-                Time = blockDto.Time,
-                TransactionIdList = new TransactionIdList(blockDto.TransactionIds, PageSize),
-                TotalTransactions = blockDto.TotalTransactions
+                Confirmations = ninjaBlock.Confirmations,
+                Difficulty = ninjaBlock.Difficulty,
+                Hash = ninjaBlock.Hash,
+                Height = ninjaBlock.Height,
+                MerkleRoot = ninjaBlock.MerkleRoot,
+                Nonce = ninjaBlock.Nonce,
+                PreviousBlock = ninjaBlock.PreviousBlock,
+                Time = ninjaBlock.Time,
+                TransactionIdList = new TransactionIdList(ninjaBlock.TransactionIds, PageSize),
+                TotalTransactions = ninjaBlock.TotalTransactions
             };
         }
     }

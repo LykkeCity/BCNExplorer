@@ -21,10 +21,8 @@ namespace SQLRepositories.Repositories
   
         public async Task<int> GetLastParsetBlockHeightAsync()
         {
-            using (var db = _bcnExplolerFactory.GetContext())
-            {
-                return await db.ParsedAddressBlockEntities.MaxAsync(p => p.BlockEntity.Height);
-            }
+            throw new NotImplementedException();
+
         }
     }
 }

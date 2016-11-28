@@ -1,28 +1,29 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
+using Core.Block;
 using Providers.Providers.Ninja;
 
 namespace BCNExplorer.Web.Controllers
 {
     public class BlockController : Controller
     {
-        private readonly BlockProvider _blockProvider;
+        private readonly IBlockService _blockService;
 
-        public BlockController(BlockProvider blockProvider)
+        public BlockController(IBlockService blockService)
         {
-            _blockProvider = blockProvider;
+            _blockService = blockService;
         }
 
         [Route("block/{id}")]
         [OutputCache(Duration = 10 * 60, VaryByParam = "*")]
         public async Task<ActionResult> Index(string id)
         {
-            var ninjaBlock = await _blockProvider.GetAsync(id);
+            var block = await _blockService.GetBlockAsync(id);
 
-            if (ninjaBlock != null)
+            if (block != null)
             {
-                var result = BlockViewModel.Create(ninjaBlock);
+                var result = BlockViewModel.Create(block);
 
                 return View(result);
             }

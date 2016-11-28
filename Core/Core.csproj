@@ -50,11 +50,11 @@
     <Compile Include="AssetBlockChanges\SQL\IAddressRepository.cs" />
     <Compile Include="AssetBlockChanges\SQL\IAssetChangesContextRepository.cs" />
     <Compile Include="AssetBlockChanges\SQL\IBalanceChangesRepository.cs" />
-    <Compile Include="AssetBlockChanges\SQL\IBlockRepository.cs" />
     <Compile Include="AssetBlockChanges\SQL\ITransactionRepository.cs" />
     <Compile Include="Asset\IAssetChangesParsedBlockRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionParsedBlockRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionRepository.cs" />
+    <Compile Include="Block\IBlockService.cs" />
     <Compile Include="GrabDirector\IGrabBlockTask.cs" />
     <Compile Include="Monitoring\Monitoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

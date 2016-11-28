@@ -22,11 +22,6 @@ namespace SQLRepositories.Binding
             return new TransactionRepository(bcnExplolerFactory);
         }
 
-        public static BlockRepository GetBlockRepository(BaseSettings baseSettings, ILog log, BcnExplolerFactory bcnExplolerFactory)
-        {
-            return new BlockRepository(bcnExplolerFactory);
-        }
-
         public static BalanceChangesRepository GetBalanceChangesRepository(BaseSettings baseSettings, ILog log, BcnExplolerFactory bcnExplolerFactory)
         {
             return new BalanceChangesRepository(bcnExplolerFactory);

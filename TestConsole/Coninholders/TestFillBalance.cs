@@ -13,7 +13,6 @@ using Providers;
 using Providers.Helpers;
 using SQLRepositories.Context;
 using SQLRepositories.DbModels;
-using IBlockRepository = Core.AssetBlockChanges.IBlockRepository;
 using ITransactionRepository = Core.AssetBlockChanges.ITransactionRepository;
 
 namespace TestConsole
@@ -78,14 +77,14 @@ namespace TestConsole
 
                             var coloredChanges = task.Result.SelectMany(p => p.GetColoredChanges(Network.Main)).ToList();
 
-                            var blocks =
-                                coloredChanges.Select(p => p.BlockHash).Select(p => new Core.AssetBlockChanges.Block
-                                {
-                                    Hash = p,
-                                    Height = mainChain.GetBlock(uint256.Parse(p)).Height
-                                }).ToArray();
+                            //var blocks =
+                            //    coloredChanges.Select(p => p.BlockHash).Select(p => new Core.AssetBlockChanges.Block
+                            //    {
+                            //        Hash = p,
+                            //        Height = mainChain.GetBlock(uint256.Parse(p)).Height
+                            //    }).ToArray();
 
-                            await blockRepo.AddAsync(blocks);
+                            //await blockRepo.AddAsync(blocks);
 
                             var transactions = coloredChanges.Select(p => new Core.AssetBlockChanges.Transaction
                             {

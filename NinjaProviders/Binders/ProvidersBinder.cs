@@ -43,7 +43,7 @@ namespace Providers
 
         private static void BindNinjaProviders(this IoC ioc)
         {
-            ioc.RegisterPerCall<BlockProvider>();
+            ioc.RegisterPerCall<NinjaBlockProvider>();
             ioc.RegisterPerCall<TransactionProvider>();
             ioc.RegisterPerCall<NinjaBlockChainReader>();
             ioc.RegisterPerCall<SearchProvider>();

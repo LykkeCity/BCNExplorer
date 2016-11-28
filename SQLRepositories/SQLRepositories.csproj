@@ -64,13 +64,11 @@
     <Compile Include="Context\BCNExplolerFactory.cs" />
     <Compile Include="DbModels\AddressEntity.cs" />
     <Compile Include="DbModels\BalanceChangeEntity.cs" />
-    <Compile Include="DbModels\BlockEntity.cs" />
     <Compile Include="DbModels\ParsedAddressBlockEntity.cs" />
     <Compile Include="DbModels\TransactionEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
     <Compile Include="Repositories\BalanceChangesRepository.cs" />
-    <Compile Include="Repositories\BlockRepository.cs" />
     <Compile Include="Repositories\ParsedAddressBlockRepository.cs" />
     <Compile Include="Repositories\TransactionRepository.cs" />
   </ItemGroup>

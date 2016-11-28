@@ -41,9 +41,6 @@ namespace SQLRepositories.DbModels
         [Required]
         public string BlockHash { get; set; }
 
-        [ForeignKey("BlockHash")]
-        public virtual BlockEntity Block { get; set; }
-
         public static TransactionEntity Create(ITransaction tr)
         {
             return new TransactionEntity

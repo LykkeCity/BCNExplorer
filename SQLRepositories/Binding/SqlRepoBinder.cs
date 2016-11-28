@@ -14,7 +14,6 @@ namespace SQLRepositories.Binding
             ioc.RegisterSingleTone<BcnExplolerFactory>();
             ioc.Register<IAddressRepository>(SqlRepoFactories.GetAddressRepository(baseSettings, log, ioc.GetObject<BcnExplolerFactory>()));
             ioc.Register<ITransactionRepository>(SqlRepoFactories.GetTransactionRepository(baseSettings, log, ioc.GetObject<BcnExplolerFactory>()));
-            ioc.Register<IBlockRepository>(SqlRepoFactories.GetBlockRepository(baseSettings, log, ioc.GetObject<BcnExplolerFactory>()));
             ioc.Register<IBalanceChangesRepository>(SqlRepoFactories.GetBalanceChangesRepository(baseSettings, log, ioc.GetObject<BcnExplolerFactory>()));
             ioc.Register<IAssetChangesParsedBlockRepository>(SqlRepoFactories.GetParsedAddressBlockRepository(baseSettings, log, ioc.GetObject<BcnExplolerFactory>()));
         }
