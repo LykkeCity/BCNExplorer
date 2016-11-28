@@ -47,10 +47,7 @@ namespace TestConsole
             //addresses = addresses.Where(p => legacyAddresses.Contains(p.ColoredAddress)).ToArray();
 
             var mainChain = mainChainRepository.GetMainChainAsync().Result;
-
-            var semaphore = new SemaphoreSlim(100);
-
-
+            
             var tasksToAwait = new List<Task>();
             var st = new Stopwatch();
             st.Start();
@@ -70,7 +67,7 @@ namespace TestConsole
             {
                 var balanceId = BalanceIdHelper.Parse(address, Network.Main);
                 Console.WriteLine("t");
-                var changesTask = indexerClientFactory.GetIndexerClient().GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, 0, mainChain.Height).ContinueWith(
+                var changesTask = indexerClientFactory.GetIndexerClient().GetConfirmedBalanceChangesAsync(balanceId, mainChain, 0, mainChain.Height).ContinueWith(
                     async task =>
                     {
                         try

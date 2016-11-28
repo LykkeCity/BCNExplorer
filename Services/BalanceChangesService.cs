@@ -37,14 +37,13 @@ namespace JobsCommon
 
         public async Task SaveAddressChangesAsync(int fromBlockHeight, int toBlockHeight, BitcoinAddress[] addresses)
         {
-            var semaphore = new SemaphoreSlim(100);
             var tasksToAwait = new List<Task>();
             var mainChain = await _mainChainRepository.GetMainChainAsync();
             foreach (var coloredAddress in addresses.Select(p=> new BitcoinColoredAddress(p).ToString()).Distinct())
             {
                 var balanceId = BalanceIdHelper.Parse(coloredAddress, _network);
 
-                var changesTask = _indexerClient.GetIndexerClient().GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, fromBlockHeight, toBlockHeight).ContinueWith(
+                var changesTask = _indexerClient.GetIndexerClient().GetConfirmedBalanceChangesAsync(balanceId, mainChain, fromBlockHeight, toBlockHeight).ContinueWith(
                     async task =>
                     {
                         try

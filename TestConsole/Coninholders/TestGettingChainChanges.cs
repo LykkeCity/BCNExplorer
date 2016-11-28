@@ -43,13 +43,12 @@ namespace TestConsole
             st1.Start();
 
             var counter = coloredAddresses.Length;
-            var semaphore = new SemaphoreSlim(100);
             foreach (var address in coloredAddresses)
             {
                 var balanceId = BalanceIdHelper.Parse(address.ToString(), Network.Main);
                 //Console.WriteLine("Started {0}", address.ToString());
 
-                checkTasks.Add(indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, block.Height-1, block.Height).ContinueWith(
+                checkTasks.Add(indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainChain,  block.Height-1, block.Height).ContinueWith(
                     p =>
                     {
                         counter--;

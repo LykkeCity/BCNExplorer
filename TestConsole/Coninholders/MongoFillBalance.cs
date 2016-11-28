@@ -67,8 +67,7 @@ namespace TestConsole
                 //addr = db.Addresses.Where(p => p.ColoredAddress== "akYc7BCwLpf1JWTnQdj8WN94Gajokn8MEhT").ToList();
             }
             var file = "./errors.txt";
-
-            var semaphore = new SemaphoreSlim(100);
+            
             var tasksToAwait = new List<Task>();
             var counter = addr.Count();
             var st = new Stopwatch();
@@ -92,7 +91,7 @@ namespace TestConsole
                 var balanceId = BalanceIdHelper.Parse(address, Network.Main);
                 Console.WriteLine(address + " " + t.Count);
                 var changesTask = indexerClientFactory.GetIndexerClient()
-                    .GetConfirmedBalanceChangesAsync(balanceId, mainChain, semaphore, from, to)
+                    .GetConfirmedBalanceChangesAsync(balanceId, mainChain, from, to)
                     .ContinueWith(
                         async task =>
                         {

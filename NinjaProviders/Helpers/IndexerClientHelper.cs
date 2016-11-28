@@ -20,7 +20,7 @@ namespace Providers.Helpers
     public static class ConfirmedBalanceChangesHelper
     {
         public static async Task<IEnumerable<OrderedBalanceChange>> GetConfirmedBalanceChangesAsync(this IndexerClient indexerClient,
-     BalanceId balanceId, ConcurrentChain mainChain, SemaphoreSlim semaphore, int fromBlockHeight, int toBlock)
+     BalanceId balanceId, ConcurrentChain mainChain, int fromBlockHeight, int toBlock)
         {
 
             //await semaphore.WaitAsync().ConfigureAwait(false);
