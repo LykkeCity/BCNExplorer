@@ -17,8 +17,8 @@
             <div class="pull-right">
                 @if (Model.Pagination.ShowPrev)
                 {
-                    <a title="First block" href="@Url.Action("Owners", new {at=Model.Pagination.Start})"><i class="icon icon--arrow-left-alt"></i></a>
-                    <a title="Previous change" href="@Url.Action("Owners", new {at=Model.Pagination.PrevBlock})"><i class="icon icon--arrow-left-alt"></i></a>
+                    <a title="First block" href="@Url.Action("OwnersHistory", new {at=Model.Pagination.Start})"><i class="icon icon--arrow-left-alt"></i></a>
+                    <a title="Previous change" href="@Url.Action("OwnersHistory", new {at=Model.Pagination.PrevBlock})"><i class="icon icon--arrow-left-alt"></i></a>
                 }
                 @if (Model.Pagination.ShowCurrentBlock)
                 {
@@ -27,7 +27,7 @@
 
                 @if (Model.Pagination.ShowNext)
                 {
-                    <a title="Next change" href="@Url.Action("Owners", new {at = Model.Pagination.NextBlock})"><i class="icon icon--arrow-right-alt"></i></a>
+                    <a title="Next change" href="@Url.Action("OwnersHistory", new {at = Model.Pagination.NextBlock})"><i class="icon icon--arrow-right-alt"></i></a>
                     <a title="Last block" href="@Url.Action("Owners")"><i class="icon icon--arrow-right-alt"></i></a>
                 }
             </div>
