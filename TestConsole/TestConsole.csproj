@@ -142,6 +142,7 @@
   <ItemGroup>
     <Compile Include="Coninholders\AddAddressesFromBlockChain.cs" />
     <Compile Include="Coninholders\CheckBalance.cs" />
+    <Compile Include="Coninholders\CopyData.cs" />
     <Compile Include="Coninholders\GetAddressesWithColoredAssetsFromCoinPrism.cs" />
     <Compile Include="Coninholders\MongoFillBalance.cs" />
     <Compile Include="Program.cs" />

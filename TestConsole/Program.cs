@@ -7,6 +7,7 @@ using JobsCommon;
 using Providers;
 using Services.Binders;
 using SQLRepositories.Binding;
+using TestConsole.Coninholders;
 
 namespace TestConsole
 {
@@ -23,8 +24,9 @@ namespace TestConsole
             //GetAddressesWithColoredAssetsFromCoinPrism.Run(container);
             //TestFillBalance.Run(container).Wait();
             //CheckBalance.Run(container).Wait();
-            MongoFillBalance.Run(container).Wait();
+            //MongoFillBalance.Run(container).Wait();
             //AddAddressesFromBlockChain.Run(container).Wait();
+            CopyMongoData.Run(container).Wait();
         }
         
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)

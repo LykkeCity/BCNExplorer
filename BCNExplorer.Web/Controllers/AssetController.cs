@@ -1,13 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.UI;
 using BCNExplorer.Web.Models;
 using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
-using Providers.Providers.Asset;
-using Services.Asset;
 
 namespace BCNExplorer.Web.Controllers
 {
@@ -46,25 +42,19 @@ namespace BCNExplorer.Web.Controllers
 
         [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         [Route("asset/{id}/owners")]
-        public async Task<ActionResult> Owners(string id)
+        public Task<ActionResult> Owners(string id)
         {
-            var asset = await _assetService.GetAssetAsync(id);
-            
-            if (asset != null)
-            {
-                var result = AssetCoinholdersViewModel.Create(
-                    AssetViewModel.Create(asset),
-                    await _balanceChangesRepository.GetSummaryAsync(null, asset.AssetIds.ToArray()));
-
-                return View(result);
-            }
-
-            return View("NotFound");
+            return _OwnersInner(id);
         }
 
         [OutputCache(Duration = 60*60, VaryByParam = "*")]
         [Route("asset/{id}/owners/{at}")]
-        public async Task<ActionResult> OwnersHistory(string id, int? at)
+        public Task<ActionResult> OwnersHistory(string id, int? at)
+        {
+            return _OwnersInner(id, at);
+        }
+
+        private async Task<ActionResult> _OwnersInner(string id, int? at = null)
         {
             var asset = await _assetService.GetAssetAsync(id);
 
@@ -78,6 +68,6 @@ namespace BCNExplorer.Web.Controllers
             }
 
             return View("NotFound");
-        }
+        } 
     }
 }

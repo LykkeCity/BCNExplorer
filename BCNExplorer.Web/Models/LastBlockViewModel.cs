@@ -9,11 +9,16 @@ namespace BCNExplorer.Web.Models
 
         public static LastBlockViewModel Create(IBlockHeader header)
         {
-            return new LastBlockViewModel
+            if (header != null)
             {
-                BlockId = header.Hash,
-                Height = header.Height
-            };
+                return new LastBlockViewModel
+                {
+                    BlockId = header.Hash,
+                    Height = header.Height
+                };
+            }
+
+            return null;
         }
     }
 }
