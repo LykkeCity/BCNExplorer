@@ -40,14 +40,14 @@ namespace BCNExplorer.Web.Controllers
         }
 
 
-        //[OutputCache(Duration = 1 * 60, VaryByParam = "*")]
+        [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         [Route("asset/{id}/owners")]
         public Task<ActionResult> Owners(string id)
         {
             return _OwnersInner(id);
         }
 
-        //[OutputCache(Duration = 60*60, VaryByParam = "*")]
+        [OutputCache(Duration = 60*60, VaryByParam = "*")]
         [Route("asset/{id}/owners/{at}")]
         public Task<ActionResult> OwnersHistory(string id, int? at)
         {
