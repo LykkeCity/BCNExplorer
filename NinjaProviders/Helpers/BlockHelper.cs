@@ -20,7 +20,7 @@ namespace Providers.Helpers
         {
             var result = new List<BitcoinAddress>();
             var coloredTxs = block?.Transactions?.Where(p => p.HasValidColoredMarker());
-            foreach (var transaction in coloredTxs)
+            foreach (var transaction in coloredTxs??Enumerable.Empty<Transaction>())
             {
                 result.AddRange(transaction.GetOutputAddresses(network));
             }
