@@ -66,12 +66,12 @@
       <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NBitcoin, Version=3.0.0.72, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NBitcoin.3.0.0.72\lib\net45\NBitcoin.dll</HintPath>
+    <Reference Include="NBitcoin, Version=3.0.0.77, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NBitcoin.3.0.0.77\lib\net45\NBitcoin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NBitcoin.Indexer, Version=2.0.7.16, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NBitcoin.Indexer.2.0.7.16\lib\net45\NBitcoin.Indexer.dll</HintPath>
+    <Reference Include="NBitcoin.Indexer, Version=2.0.7.19, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NBitcoin.Indexer.2.0.7.19\lib\net45\NBitcoin.Indexer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NCrontab, Version=3.2.20120.0, Culture=neutral, processorArchitecture=MSIL">
@@ -82,8 +82,8 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="QBitNinja.Client, Version=1.0.3.31, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QBitNinja.Client.1.0.3.31\lib\net45\QBitNinja.Client.dll</HintPath>
+    <Reference Include="QBitNinja.Client, Version=1.0.3.33, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QBitNinja.Client.1.0.3.33\lib\net45\QBitNinja.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
