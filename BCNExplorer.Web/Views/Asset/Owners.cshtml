@@ -1,4 +1,5 @@
-﻿@model AssetCoinholdersViewModel
+﻿@using Common
+@model AssetCoinholdersViewModel
 @{
     ViewData["Title"] = "Asset Owners - " + string.Join(", ", Model.Asset.AssetIds);
 }
@@ -65,10 +66,10 @@
                                         
                                     </td>
                                     <td>
-                                        @addressSum.Balance.ToString("N2") @Model.Asset.NameShort
+                                        @addressSum.Balance.ToStringBtcFormat() @Model.Asset.NameShort
                                         @if (addressSum.ChangeAtBlock != 0)
                                         {
-                                            <span class="label @(addressSum.ChangeAtBlock>0?"label-success":"label-danger")">@addressSum.ChangeAtBlock.ToString("N2")</span>
+                                            <span class="label @(addressSum.ChangeAtBlock>0?"label-success":"label-danger")">@addressSum.ChangeAtBlock.ToStringBtcFormat()</span>
                                         }
 
                                     </td>
@@ -76,7 +77,7 @@
                             }
                             <tr>
                                 <td colspan="2">Total</td>
-                                <td>@Model.Total.ToString("N2") @Model.Asset.NameShort</td>
+                                <td>@Model.Total.ToStringBtcFormat() @Model.Asset.NameShort</td>
                             </tr>
                         </tbody>
                     </table>

@@ -54,7 +54,7 @@ namespace BCNExplorer.Web.Models
             public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
 
             public double Fees { get; set; }
-            public string FeesDescription => Fees.ToString("0.00######");
+            public string FeesDescription => Fees.ToStringBtcFormat();
 
             public static IEnumerable<In> Group(IEnumerable<In> source)
             {
@@ -96,7 +96,7 @@ namespace BCNExplorer.Web.Models
 
                 public override string PreviousTransactionId { get; }
 
-                public override string ValueDescription => Value.ToString("0.00######");
+                public override string ValueDescription => Value.ToStringBtcFormat();
                 
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
                 
@@ -120,7 +120,7 @@ namespace BCNExplorer.Web.Models
 
                 public override string PreviousTransactionId => null;
 
-                public override string ValueDescription => Value.ToString("0.00######");
+                public override string ValueDescription => Value.ToStringBtcFormat();
                 
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
                 
@@ -155,7 +155,7 @@ namespace BCNExplorer.Web.Models
 
                 public override string PreviousTransactionId { get; }
 
-                public override string ValueDescription => $"{Value.ToString("0.########")} {ShortName}";
+                public override string ValueDescription => $"{Value.ToStringBtcFormat()} {ShortName}";
                 
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
 
@@ -186,7 +186,7 @@ namespace BCNExplorer.Web.Models
 
                 public override string PreviousTransactionId => null;
 
-                public override string ValueDescription => $"{Value.ToString("0.########")} {ShortName}";
+                public override string ValueDescription => $"{Value.ToStringBtcFormat()} {ShortName}";
 
 
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;

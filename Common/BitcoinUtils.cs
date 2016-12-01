@@ -17,5 +17,10 @@ namespace Common
         {
             return quantity*Math.Pow(10, - divisibility);
         }
+
+        public static string ToStringBtcFormat(this double quantity)
+        {
+            return quantity.ToString("### ### ### ### ##0.#################");
+        }
     }
 }

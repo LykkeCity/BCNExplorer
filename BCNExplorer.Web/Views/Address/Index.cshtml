@@ -57,7 +57,7 @@
                                 <img src="/img/assets/bitcoin.png" width="48" alt="Bitcoin"> <span>Bitcoin</span>
                             </td>
                             <td class="text-right">
-                                @BitcoinUtils.SatoshiToBtc(Model.Balance).ToString("0.####################") BTC
+                                @BitcoinUtils.SatoshiToBtc(Model.Balance).ToStringBtcFormat() BTC
                             </td>
                         </tr>
 
@@ -66,7 +66,7 @@
                             <tr>
                                 <td><span class="text-muted">Unconfirmed Balance</span></td>
 
-                                <td class="text-right"><span class="text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToString("0.####################") BTC</span></td>
+                                <td class="text-right"><span class="text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToStringBtcFormat() BTC</span></td>
                             </tr>
                         }
 
@@ -97,11 +97,11 @@
                                         }
                                     </td>
                                     <td class="text-right">
-                                        @BitcoinUtils.CalculateColoredAssetQuantity(asset.Quantity, assetDivisibity).ToString("0.####################") @assetShortName
+                                        @BitcoinUtils.CalculateColoredAssetQuantity(asset.Quantity, assetDivisibity).ToStringBtcFormat() @assetShortName
                                         @if (asset.ShowUnconfirmedBalance)
                                         {
                                             <br />
-                                            <span class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(asset.UnconfirmedQuantity, assetDivisibity).ToString("0.####################") @assetShortName</span>
+                                            <span class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(asset.UnconfirmedQuantity, assetDivisibity).ToStringBtcFormat() @assetShortName</span>
                                         }
                                     </td>
                                 </tr>
