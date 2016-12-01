@@ -11,9 +11,6 @@ using Core.Asset;
 using Core.AssetBlockChanges;
 using Core.Settings;
 using NBitcoin;
-using Providers.Helpers;
-using SQLRepositories.Binding;
-using SQLRepositories.DbModels;
 
 namespace TestConsole
 {

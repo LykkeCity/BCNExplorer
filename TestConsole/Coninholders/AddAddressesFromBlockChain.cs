@@ -10,13 +10,11 @@ using Common.IocContainer;
 using Core.AssetBlockChanges;
 using Core.AssetBlockChanges.Mongo;
 using Core.Settings;
-using JobsCommon;
 using MongoDB.Driver;
 using NBitcoin;
 using Providers;
 using Providers.Helpers;
 using Services.MainChain;
-using SQLRepositories.Context;
 
 namespace TestConsole
 {
@@ -33,7 +31,6 @@ namespace TestConsole
                 .GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName)
                 .GetCollection<AddressAssetBalanceChangeMongoEntity>("asset-balances");
             var indexerClientFactory = ioc.GetObject<IndexerClientFactory>();
-            var contextFactory = ioc.GetObject<BcnExplolerFactory>();
             var mainChainRepository = ioc.GetObject<MainChainRepository>();
 
             var okFile = "./AddAddressesFromBlockChain-ok.txt";

@@ -13,7 +13,6 @@ using JobsCommon;
 using Microsoft.Azure.WebJobs;
 using Providers;
 using Services.Binders;
-using SQLRepositories.Binding;
 
 namespace AssetCoinHoldersScanner
 {
@@ -71,7 +70,6 @@ namespace AssetCoinHoldersScanner
 
             container.IoC.BindProviders(settings, log);
             container.IoC.Register(settings);
-            container.IoC.BindSqlRepos(settings, log);
             container.IoC.BindAzureRepositories(settings, log);
             container.IoC.BindServices(settings, log);
             container.IoC.BindAssetsCoinHoldersFunctions(settings, log);

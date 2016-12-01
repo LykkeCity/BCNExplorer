@@ -8,7 +8,6 @@ using Common.IocContainer;
 using Core.AddressService;
 using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
-using SQLRepositories.Context;
 
 namespace TestConsole
 {
@@ -16,7 +15,6 @@ namespace TestConsole
     {
         public static async Task Run(IoC container)
         {
-            var db = container.GetObject<BcnExplolerFactory>();
             var _assetProvider = container.GetObject<IAssetService>();
             var _addressProvider = container.GetObject<IAddressService>();
             var _balanceChangesRepository = container.GetObject<IAssetBalanceChangesRepository>();
