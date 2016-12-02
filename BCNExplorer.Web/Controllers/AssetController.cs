@@ -34,7 +34,12 @@ namespace BCNExplorer.Web.Controllers
         [Route("assets")]
         public async Task<ActionResult> AssetDirectiory()
         {
-            var result = (await _assetService.GetAssetDefinitionsAsync()).Select(AssetViewModel.Create);
+            var assetDefinitions = _assetService.GetAssetDefinitionsAsync();
+            var assetCoinholdersIndexes = _assetService.GetAssetCoinholdersIndexAsync();
+
+            await Task.WhenAll(assetCoinholdersIndexes, assetDefinitions);
+
+            var result = AssetDirectoryViewModel.Create(assetDefinitions.Result, assetCoinholdersIndexes.Result);
 
             return View(result);
         }
