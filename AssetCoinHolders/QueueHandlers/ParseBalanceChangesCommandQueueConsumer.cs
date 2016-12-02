@@ -2,13 +2,12 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using AzureRepositories;
 using AzureRepositories.AssetCoinHolders;
+using AzureRepositories.QueueReaders;
 using AzureStorage.Queue;
 using Common;
 using Common.Log;
 using Core.Settings;
-using JobsCommon;
 using Providers;
 using Providers.Helpers;
 using Services.BalanceChanges;

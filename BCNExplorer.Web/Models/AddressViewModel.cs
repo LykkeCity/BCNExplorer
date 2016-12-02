@@ -22,7 +22,7 @@ namespace BCNExplorer.Web.Models
 
         public AssetDictionary AssetDic { get; set; }
 
-        public static AddressViewModel Create(IAddressBalance balance, IDictionary<string, IAsset> assetDictionary)
+        public static AddressViewModel Create(IAddressBalance balance, IDictionary<string, IAssetDefinition> assetDictionary)
         {
             return new AddressViewModel
             {

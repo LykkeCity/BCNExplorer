@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-using AzureRepositories.AssetDefinition;
-using AzureStorage.Queue;
+﻿using AzureStorage.Queue;
 using Common.Log;
 
-namespace AzureRepositories
+namespace AzureRepositories.QueueReaders
 {
     public interface IParseBlockQueueReader : IQueueReader
     {

@@ -229,7 +229,7 @@ namespace BCNExplorer.Web.Models
 
         #endregion
 
-        public static TransactionViewModel Create(ITransaction ninjaTransaction, IDictionary<string, IAsset> assetDictionary)
+        public static TransactionViewModel Create(ITransaction ninjaTransaction, IDictionary<string, IAssetDefinition> assetDictionary)
         {
             var bc = ninjaTransaction.TransactionsByAssets.First(p => !p.IsColored);
             var colored = ninjaTransaction.TransactionsByAssets.Where(p => p.IsColored).OrderBy(p => p.AssetId);

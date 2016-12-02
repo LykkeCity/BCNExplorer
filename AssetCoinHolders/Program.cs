@@ -52,6 +52,10 @@ namespace AssetCoinHoldersScanner
 
                 var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBalanceChangesCommandQueueConsumer>();
                 parseBlockCommandQueueConsumer.Start();
+
+                var updateCoinholersIndexesQueueConsumer = container.IoC.CreateInstance<AssetCoinholderIndexesCommandsQueueConsumer>();
+                updateCoinholersIndexesQueueConsumer.Start();
+
                 var host = new JobHost(config);
                 host.RunAndBlock();
             }

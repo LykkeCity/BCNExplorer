@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Core.Asset
 {
-    public interface IAsset
+    public interface IAssetDefinition
     {
         IEnumerable<string> AssetIds { get; }
 
@@ -39,22 +39,22 @@ namespace Core.Asset
 
 
 
-    public class Compare : IEqualityComparer<IAsset>
+    public class Compare : IEqualityComparer<IAssetDefinition>
     {
-        public bool Equals(IAsset x, IAsset y)
+        public bool Equals(IAssetDefinition x, IAssetDefinition y)
         {
             throw new System.NotImplementedException();
         }
 
-        public int GetHashCode(IAsset obj)
+        public int GetHashCode(IAssetDefinition obj)
         {
             throw new System.NotImplementedException();
         }
     }
 
-    public sealed class AssetDefinitionUrlEqualityComparer : IEqualityComparer<IAsset>
+    public sealed class AssetDefinitionUrlEqualityComparer : IEqualityComparer<IAssetDefinition>
     {
-        public bool Equals(IAsset x, IAsset y)
+        public bool Equals(IAssetDefinition x, IAssetDefinition y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null)) return false;
@@ -63,7 +63,7 @@ namespace Core.Asset
             return string.Equals(x.AssetDefinitionUrl, y.AssetDefinitionUrl);
         }
 
-        public int GetHashCode(IAsset obj)
+        public int GetHashCode(IAssetDefinition obj)
         {
             return (obj.AssetDefinitionUrl != null ? obj.AssetDefinitionUrl.GetHashCode() : 0);
         }
@@ -71,11 +71,12 @@ namespace Core.Asset
 
     public interface IAssetDefinitionRepository
     {
-        Task<IEnumerable<IAsset>> GetAllAsync();
-        Task<IEnumerable<IAsset>> GetAllEmptyAsync();
-        Task InsertOrReplaceAsync(params IAsset[] assets);
+        Task<IEnumerable<IAssetDefinition>> GetAllAsync();
+        Task<IEnumerable<IAssetDefinition>> GetAllEmptyAsync();
+        Task InsertOrReplaceAsync(params IAssetDefinition[] assetsDefinition);
         Task InsertEmptyAsync(string defUrl);
         Task<bool> IsAssetExistsAsync(string defUrl);
         Task RemoveEmptyAsync(params string[] defUrls);
+        Task UpdateAssetAsync(IAssetDefinition assetDefinition);
     }
 }

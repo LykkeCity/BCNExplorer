@@ -36,7 +36,8 @@ namespace Core.AssetBlockChanges.Mongo
 
     public interface IBalanceSummary
     {
-        string AssetId { get;  }
+
+        IEnumerable<string> AssetIds { get; }
         IEnumerable<IBalanceAddressSummary> AddressSummaries { get;  }
         IEnumerable<int> ChangedAtHeights { get;  }
         int? AtBlockHeight { get;  }

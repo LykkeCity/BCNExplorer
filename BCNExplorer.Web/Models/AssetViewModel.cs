@@ -35,7 +35,7 @@ namespace BCNExplorer.Web.Models
 
         public bool IsVerified { get; set; }
 
-        public static AssetViewModel Create(IAsset source)
+        public static AssetViewModel Create(IAssetDefinition source)
         {
             return new AssetViewModel
             {

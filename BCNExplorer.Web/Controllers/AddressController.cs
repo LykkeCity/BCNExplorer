@@ -23,7 +23,7 @@ namespace BCNExplorer.Web.Controllers
             var result = await _addressProvider.GetBalanceAsync(id);
             if (result != null)
             {
-                return View(AddressViewModel.Create(result, await _assetService.GetAssetDictionaryAsync()));
+                return View(AddressViewModel.Create(result, await _assetService.GetAssetDefinitionDictionaryAsync()));
             }
 
             return View("NotFound");

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AzureRepositories;
 using AzureRepositories.AssetDefinition;
+using AzureRepositories.QueueReaders;
 using AzureStorage.Queue;
 using Common;
 using Common.Log;
 using Core.Asset;
-using NBitcoin.Indexer;
 using NBitcoin.OpenAsset;
 using Providers;
 using Providers.Helpers;

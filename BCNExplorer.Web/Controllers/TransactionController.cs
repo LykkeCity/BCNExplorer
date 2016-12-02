@@ -27,7 +27,7 @@ namespace BCNExplorer.Web.Controllers
 
             if (ninjaTransaction != null)
             {
-                var result = TransactionViewModel.Create(ninjaTransaction, await _assetService.GetAssetDictionaryAsync());
+                var result = TransactionViewModel.Create(ninjaTransaction, await _assetService.GetAssetDefinitionDictionaryAsync());
 
                 return View(result);
             }
@@ -41,7 +41,7 @@ namespace BCNExplorer.Web.Controllers
         {
             var result = new ConcurrentStack<TransactionViewModel>();
 
-            var assetDictionary = await _assetService.GetAssetDictionaryAsync();
+            var assetDictionary = await _assetService.GetAssetDefinitionDictionaryAsync();
 
             var loadTransactionTasks = ids.Select(id => _transactionService.GetAsync(id).ContinueWith(task =>
             {

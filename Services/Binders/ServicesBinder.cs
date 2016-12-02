@@ -31,8 +31,13 @@ namespace Services.Binders
             ioc.RegisterPerCall<ISearchService, SearchService>();
 
             ioc.RegisterFactorySingleTone(() =>
-                new CachedDataDictionary<string, IAsset>(
-                    async () => AssetIndexer.IndexAssets(await ioc.GetObject<IAssetDefinitionRepository>().GetAllAsync())
+                new CachedDataDictionary<string, IAssetDefinition>(
+                    async () => AssetIndexer.IndexAssetsDefinitions(await ioc.GetObject<IAssetDefinitionRepository>().GetAllAsync())
+                    , validDataInSeconds: 1 * 10 * 60));
+
+            ioc.RegisterFactorySingleTone(() =>
+                new CachedDataDictionary<string, IAssetCoinholdersIndex>(
+                    async () => AssetIndexer.IndexAssetCoinholders(await ioc.GetObject<IAssetCoinholdersIndexRepository>().GetAllAsync())
                     , validDataInSeconds: 1 * 10 * 60));
 
             ioc.RegisterPerCall<IAssetService, AssetService>();

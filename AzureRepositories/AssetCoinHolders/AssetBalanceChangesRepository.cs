@@ -16,7 +16,7 @@ namespace AzureRepositories.AssetCoinHolders
 
     public class BalanceSummary : IBalanceSummary
     {
-        public string AssetId { get; set; }
+        public IEnumerable<string> AssetIds { get; set; }
         public IEnumerable<IBalanceAddressSummary> AddressSummaries { get; set; }
         public IEnumerable<int> ChangedAtHeights { get; set; }
         public int? AtBlockHeight { get; set; }
@@ -115,7 +115,7 @@ namespace AzureRepositories.AssetCoinHolders
 
             return new BalanceSummary
             {
-                AssetId = assetIds.FirstOrDefault(),
+                AssetIds = assetIds,
                 ChangedAtHeights = getBlockChangesTask.Result.Distinct().ToList(),
                 AtBlockHeight = atBlock,
                 AddressSummaries =

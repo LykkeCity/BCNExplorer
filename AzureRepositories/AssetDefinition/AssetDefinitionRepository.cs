@@ -9,7 +9,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AzureRepositories.AssetDefinition
 {
-    public class AssetDefinitionEntity:TableEntity, IAsset
+    public class AssetDefinitionDefinitionEntity:TableEntity, IAssetDefinition
     {
         public static string GeneratePartitionKey()
         {
@@ -26,7 +26,7 @@ namespace AzureRepositories.AssetDefinition
             return string.Join("_", assetIds);
         }
 
-        IEnumerable<string> IAsset.AssetIds => Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(AssetIds);
+        IEnumerable<string> IAssetDefinition.AssetIds => Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(AssetIds);
         public string AssetIds { get; set; }
         public string ContactUrl { get; set; }
         public string NameShort { get; set; }
@@ -43,9 +43,9 @@ namespace AzureRepositories.AssetDefinition
         public string AssetDefinitionUrl { get; set; }
         public bool IsVerified => AssetHelper.IsVerified(this);
 
-        public static AssetDefinitionEntity Create(IAsset data)
+        public static AssetDefinitionDefinitionEntity Create(IAssetDefinition data)
         {
-            return new AssetDefinitionEntity
+            return new AssetDefinitionDefinitionEntity
             {
                 PartitionKey = GeneratePartitionKey(),
                 RowKey = GenerateRowKey(data.AssetIds),
@@ -66,9 +66,9 @@ namespace AzureRepositories.AssetDefinition
             };
         }
 
-        public static AssetDefinitionEntity CreateEmpty(string url)
+        public static AssetDefinitionDefinitionEntity CreateEmpty(string url)
         {
-            return new AssetDefinitionEntity
+            return new AssetDefinitionDefinitionEntity
             {
                 PartitionKey = GenerateEmptyPartitionKey(),
                 RowKey = Guid.NewGuid().ToString(),
@@ -79,9 +79,9 @@ namespace AzureRepositories.AssetDefinition
 
     public static class AssetHelper
     {
-        public static bool IsVerified(IAsset asset)
+        public static bool IsVerified(IAssetDefinition assetDefinition)
         {
-            var url = asset.AssetDefinitionUrl ?? "";
+            var url = assetDefinition.AssetDefinitionUrl ?? "";
             Uri uriResult;
             var isHttps = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
@@ -94,31 +94,31 @@ namespace AzureRepositories.AssetDefinition
 
     public class AssetDefinitionRepository:IAssetDefinitionRepository
     {
-        private readonly INoSQLTableStorage<AssetDefinitionEntity> _assetTableStorage;
+        private readonly INoSQLTableStorage<AssetDefinitionDefinitionEntity> _assetTableStorage;
 
-        public AssetDefinitionRepository(INoSQLTableStorage<AssetDefinitionEntity> assetTableStorage)
+        public AssetDefinitionRepository(INoSQLTableStorage<AssetDefinitionDefinitionEntity> assetTableStorage)
         {
             _assetTableStorage = assetTableStorage;
         }
 
-        public async Task<IEnumerable<IAsset>> GetAllEmptyAsync()
+        public async Task<IEnumerable<IAssetDefinition>> GetAllEmptyAsync()
         {
-            return await _assetTableStorage.GetDataAsync(AssetDefinitionEntity.GenerateEmptyPartitionKey());
+            return await _assetTableStorage.GetDataAsync(AssetDefinitionDefinitionEntity.GenerateEmptyPartitionKey());
         }
 
-        public async Task InsertOrReplaceAsync(IAsset[] assets)
+        public async Task InsertOrReplaceAsync(IAssetDefinition[] assetsDefinition)
         {
-            await _assetTableStorage.InsertOrReplaceBatchAsync(assets.Select(AssetDefinitionEntity.Create));
+            await _assetTableStorage.InsertOrReplaceBatchAsync(assetsDefinition.Select(AssetDefinitionDefinitionEntity.Create));
         }
 
         public async Task InsertEmptyAsync(string defUrl)
         {
-            await _assetTableStorage.InsertOrReplaceAsync(AssetDefinitionEntity.CreateEmpty(defUrl));
+            await _assetTableStorage.InsertOrReplaceAsync(AssetDefinitionDefinitionEntity.CreateEmpty(defUrl));
         }
 
-        public async Task<IEnumerable<IAsset>> GetAllAsync()
+        public async Task<IEnumerable<IAssetDefinition>> GetAllAsync()
         {
-            return await _assetTableStorage.GetDataAsync(AssetDefinitionEntity.GeneratePartitionKey());
+            return await _assetTableStorage.GetDataAsync(AssetDefinitionDefinitionEntity.GeneratePartitionKey());
         }
 
         public async Task<bool> IsAssetExistsAsync(string defUrl)
@@ -130,8 +130,13 @@ namespace AzureRepositories.AssetDefinition
         {
             foreach (var defUrl in defUrls)
             {
-                await _assetTableStorage.DeleteAsync(AssetDefinitionEntity.CreateEmpty(defUrl));
+                await _assetTableStorage.DeleteAsync(AssetDefinitionDefinitionEntity.CreateEmpty(defUrl));
             }
-        } 
+        }
+
+        public async Task UpdateAssetAsync(IAssetDefinition assetDefinition)
+        {
+            await _assetTableStorage.InsertOrReplaceAsync(AssetDefinitionDefinitionEntity.Create(assetDefinition));
+        }
     }
 }

@@ -107,9 +107,11 @@
     <Compile Include="Binders\AssetCoinHoldersFunctionsBinder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueueHandlers\AssetCoinholderIndexesCommandsQueueConsumer.cs" />
     <Compile Include="QueueHandlers\ParseBalanceChangesCommandQueueConsumer.cs" />
     <Compile Include="TimerFunctions\ParseBlocksFunctions.cs" />
     <Compile Include="TimerFunctions\SendMonitorDataFunctions.cs" />
+    <Compile Include="TimerFunctions\UpdateAssetIndexDataFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

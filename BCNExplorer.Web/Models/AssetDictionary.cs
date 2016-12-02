@@ -31,7 +31,7 @@ namespace BCNExplorer.Web.Models
             return defaultValue;
         }
 
-        public static AssetDictionary Create(IDictionary<string, IAsset> source)
+        public static AssetDictionary Create(IDictionary<string, IAssetDefinition> source)
         {
             return new AssetDictionary
             {

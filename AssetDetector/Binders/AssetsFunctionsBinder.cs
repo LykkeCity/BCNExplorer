@@ -2,10 +2,12 @@
 using AssetDefinitionScanner.TimerFunctions;
 using AzureRepositories;
 using AzureRepositories.AssetDefinition;
+using AzureRepositories.QueueReaders;
 using AzureStorage.Queue;
 using Common.IocContainer;
 using Common.Log;
 using Core.Settings;
+using JobsCommon;
 
 namespace AssetDefinitionScanner.Binders
 {

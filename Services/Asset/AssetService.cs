@@ -8,26 +8,39 @@ namespace Services.Asset
 {
     public class AssetService:IAssetService
     {
-        private readonly CachedDataDictionary<string, IAsset> _cacheDictionary;
+        private readonly CachedDataDictionary<string, IAssetDefinition> _assetDefinitionCachedDictionary;
+        private readonly CachedDataDictionary<string, IAssetCoinholdersIndex> _assetCoinholdersIndexesDictionary;
 
-        public AssetService(CachedDataDictionary<string, IAsset> cacheDictionary)
+        public AssetService(CachedDataDictionary<string, IAssetDefinition> assetDefinitionCachedDictionary, 
+            CachedDataDictionary<string, IAssetCoinholdersIndex> assetCoinholdersIndexesDictionary)
         {
-            _cacheDictionary = cacheDictionary;
+            _assetDefinitionCachedDictionary = assetDefinitionCachedDictionary;
+            _assetCoinholdersIndexesDictionary = assetCoinholdersIndexesDictionary;
         }
 
-        public async Task<IAsset> GetAssetAsync(string assetId)
+        public async Task<IAssetDefinition> GetAssetAsync(string assetId)
         {
-            return await _cacheDictionary.GetItemAsync(assetId);
+            return await _assetDefinitionCachedDictionary.GetItemAsync(assetId);
         }
 
-        public async Task<IDictionary<string, IAsset>> GetAssetDictionaryAsync()
+        public async Task<IAssetDefinition> GetAssetDefinitionByDefUrlAsync(string url)
         {
-            return await _cacheDictionary.GetDictionaryAsync();
+            return (await _assetDefinitionCachedDictionary.Values()).FirstOrDefault(p => p.AssetDefinitionUrl == url);
         }
 
-        public async Task<IEnumerable<IAsset>> GetAssetsAsync()
+        public async Task<IDictionary<string, IAssetDefinition>> GetAssetDefinitionDictionaryAsync()
         {
-            return (await _cacheDictionary.GetDictionaryAsync()).Values.Distinct(new AssetDefinitionUrlEqualityComparer());
+            return await _assetDefinitionCachedDictionary.GetDictionaryAsync();
+        }
+
+        public async Task<IDictionary<string, IAssetCoinholdersIndex>> GetAssetCoinholdersIndexAsync()
+        {
+            return await _assetCoinholdersIndexesDictionary.GetDictionaryAsync();
+        }
+
+        public async Task<IEnumerable<IAssetDefinition>> GetAssetDefinitionsAsync()
+        {
+            return (await _assetDefinitionCachedDictionary.GetDictionaryAsync()).Values.Distinct(new AssetDefinitionUrlEqualityComparer());
         }
     }
 }

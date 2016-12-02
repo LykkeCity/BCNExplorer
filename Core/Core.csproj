@@ -53,10 +53,10 @@
     <Compile Include="AssetBlockChanges\SQL\IBalanceChangesRepository.cs" />
     <Compile Include="AssetBlockChanges\SQL\ITransactionRepository.cs" />
     <Compile Include="Asset\IAssetChangesParsedBlockRepository.cs" />
+    <Compile Include="Asset\IAssetCoinholdersIndexRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionParsedBlockRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionRepository.cs" />
     <Compile Include="Block\IBlockService.cs" />
-    <Compile Include="GrabDirector\IGrabBlockTask.cs" />
     <Compile Include="Asset\IAssetService.cs" />
     <Compile Include="Monitoring\Monitoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

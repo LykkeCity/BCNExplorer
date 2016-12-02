@@ -11,9 +11,9 @@ namespace Providers.Providers.Asset
 {
     public class AssetIndexer
     {
-        public static Dictionary<string, IAsset> IndexAssets(IEnumerable<IAsset> assets)
+        public static Dictionary<string, IAssetDefinition> IndexAssetsDefinitions(IEnumerable<IAssetDefinition> assets)
         {
-            var result = new Dictionary<string, IAsset>(StringComparer.OrdinalIgnoreCase);
+            var result = new Dictionary<string, IAssetDefinition>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var asset in assets)
             {
@@ -29,9 +29,25 @@ namespace Providers.Providers.Asset
             return result;
         }
 
-        public static Dictionary<string, IAsset> IndexAssets(IEnumerable<AssetContract> assets)
+        public static Dictionary<string, IAssetDefinition> IndexAssetsDefinitions(IEnumerable<AssetContract> assets)
         {
-            return IndexAssets(assets.Select(AssetDefinition.Create));
+            return IndexAssetsDefinitions(assets.Select(AssetDefinitionDefinition.Create));
+        }
+
+        public static Dictionary<string, IAssetCoinholdersIndex> IndexAssetCoinholders(IEnumerable<IAssetCoinholdersIndex> assets)
+        {
+            var result = new Dictionary<string, IAssetCoinholdersIndex>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var asset in assets)
+            {
+
+                foreach (var assetId in asset.AssetIds ?? Enumerable.Empty<string>())
+                {
+                    result[assetId] = asset;
+                }
+            }
+
+            return result;
         }
     }
 }

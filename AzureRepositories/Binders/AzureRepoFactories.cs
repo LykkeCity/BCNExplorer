@@ -6,13 +6,13 @@ using Common.Log;
 using Core.Settings;
 using MongoDB.Driver;
 
-namespace AzureRepositories
+namespace AzureRepositories.Binders
 {
     public static class AzureRepoFactories
     {
         public static AssetDefinitionRepository CreateAssetDefinitionsRepository(BaseSettings baseSettings, ILog log)
         {
-            return new AssetDefinitionRepository(new AzureTableStorage<AssetDefinitionEntity>(baseSettings.Db.AssetsConnString, "AssetDefinitions", log));
+            return new AssetDefinitionRepository(new AzureTableStorage<AssetDefinitionDefinitionEntity>(baseSettings.Db.AssetsConnString, "AssetDefinitions", log));
         }
 
         public static AssetDataCommandProducer CreateUpdateAssetDataCommandProducer(BaseSettings baseSettings, ILog log)
@@ -30,9 +30,19 @@ namespace AzureRepositories
             return new AssetChangesParseBlockCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.AssetChangesParseBlockCommands));
         }
 
+        public static AssetCoinholdersIndexesCommandProducer CreateAssetCoinholdersIndexesCommandProducer(BaseSettings baseSettings, ILog log)
+        {
+            return new AssetCoinholdersIndexesCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.AssetCoinhodersIndexesCommands));
+        }
+
         public static AssetDefinitionParsedBlockRepository CreateAssetParsedBlockRepository(BaseSettings baseSettings, ILog log)
         {
             return new AssetDefinitionParsedBlockRepository(new AzureTableStorage<AssetDefinitionParsedBlockEntity>(baseSettings.Db.AssetsConnString, "AssetParsedBlocks", log));
+        }
+
+        public static AssetCoinholdersIndexRepository CreateAssetCoinholdersIndexRepository(BaseSettings baseSettings, ILog log)
+        {
+            return new AssetCoinholdersIndexRepository(new AzureTableStorage<AssetCoinholdersIndexEntity>(baseSettings.Db.AssetsConnString, "AssetCoinholdersIndexes", log));
         }
 
         public static AssetBalanceChangesRepository CreateAssetBalanceChangesRepository(BaseSettings baseSettings, ILog log)

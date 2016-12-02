@@ -111,16 +111,19 @@
   <ItemGroup>
     <Compile Include="AssetCoinHolders\AssetBalanceChangesRepository.cs" />
     <Compile Include="AssetCoinHolders\AssetChangesParseBlockCommandProducer.cs" />
+    <Compile Include="AssetCoinHolders\AssetCoinholdersIndexesCommandProducer.cs" />
+    <Compile Include="AssetCoinHolders\AssetCoinholdersIndexRepository.cs" />
     <Compile Include="AssetDefinition\AssetDefinitionParseBlockCommandProducer.cs" />
     <Compile Include="AssetDefinition\AssetDefinitionParsedBlockRepository.cs" />
     <Compile Include="AssetDefinition\AssetDefinitionRepository.cs" />
-    <Compile Include="ParseBlockQueueReader.cs" />
+    <Compile Include="JobsQueueNames.cs" />
+    <Compile Include="QueueReaders\CoinholderIndexesQueueReader.cs" />
+    <Compile Include="QueueReaders\ParseBlockQueueReader.cs" />
     <Compile Include="AssetDefinition\UpdateAssetDataCommandProducer.cs" />
-    <Compile Include="AzureRepoFactories.cs" />
+    <Compile Include="Binders\AzureRepoFactories.cs" />
     <Compile Include="Binders\AzureRepositoriesBinder.cs" />
     <Compile Include="CloudConfigurationLoader.cs" />
     <Compile Include="GeneralSettingsReader.cs" />
-    <Compile Include="JobsQueueNames.cs" />
     <Compile Include="Log\LogToTable.cs" />
     <Compile Include="Log\LogToTableAndConsole.cs" />
     <Compile Include="Monitoring\ServiceMonitoringRepository.cs" />

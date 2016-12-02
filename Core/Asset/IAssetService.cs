@@ -5,8 +5,9 @@ namespace Core.Asset
 {
     public interface IAssetService
     {
-        Task<IAsset> GetAssetAsync(string assetId);
-        Task<IDictionary<string, IAsset>> GetAssetDictionaryAsync();
-        Task<IEnumerable<IAsset>> GetAssetsAsync();
+        Task<IAssetDefinition> GetAssetAsync(string assetId);
+        Task<IAssetDefinition> GetAssetDefinitionByDefUrlAsync(string url);
+        Task<IDictionary<string, IAssetDefinition>> GetAssetDefinitionDictionaryAsync();
+        Task<IEnumerable<IAssetDefinition>> GetAssetDefinitionsAsync();
     }
 }

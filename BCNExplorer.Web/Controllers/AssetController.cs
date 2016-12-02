@@ -34,7 +34,7 @@ namespace BCNExplorer.Web.Controllers
         [Route("assets")]
         public async Task<ActionResult> AssetDirectiory()
         {
-            var result = (await _assetService.GetAssetsAsync()).Select(AssetViewModel.Create);
+            var result = (await _assetService.GetAssetDefinitionsAsync()).Select(AssetViewModel.Create);
 
             return View(result);
         }
