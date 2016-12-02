@@ -124,7 +124,7 @@ namespace AzureRepositories.AssetCoinHolders
                         Address = bc.Key,
                         Balance = bc.Sum(p => p.Balance),
                         ChangeAtBlock = changeAtBlockTask.Result.ContainsKey(bc.Key)? changeAtBlockTask.Result[bc.Key] : 0
-                    })
+                    }).Where(p => p.Balance != 0 || p.ChangeAtBlock != 0)
             };
         }
 
