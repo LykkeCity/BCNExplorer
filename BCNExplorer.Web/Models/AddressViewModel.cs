@@ -32,7 +32,7 @@ namespace BCNExplorer.Web.Models
                 ColoredAddress = balance.ColoredAddress,
                 TotalConfirmedTransactions = balance.TotalTransactions,
                 Balance = balance.Balance,
-                Assets = balance.ColoredBalances.Select(p => new Asset
+                Assets = (balance.ColoredBalances??Enumerable.Empty<IColoredBalance>()).Select(p => new Asset
                 {
                     AssetId = p.AssetId,
                     Quantity = p.Quantity,

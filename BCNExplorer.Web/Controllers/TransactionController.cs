@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,9 +46,15 @@ namespace BCNExplorer.Web.Controllers
 
             var loadTransactionTasks = ids.Select(id => _transactionService.GetAsync(id).ContinueWith(task =>
             {
-                if (task.Result != null)
+                try
                 {
-                    result.Push(TransactionViewModel.Create(task.Result, assetDictionary));
+                    if (task.Result != null)
+                    {
+                        result.Push(TransactionViewModel.Create(task.Result, assetDictionary));
+                    }
+                }
+                catch (Exception e)
+                {
                 }
             }));
 
