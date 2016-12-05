@@ -8,7 +8,8 @@ namespace Core.Asset
     public class AssetCoinholdersIndex: IAssetCoinholdersIndex
     {
         public IEnumerable<string> AssetIds { get; set; }
-        public IDictionary<string, double> BalanceAddressDictionary { get; set; } 
+        public IDictionary<string, double> BalanceAddressDictionary { get; set; }
+        public double Spread { get; }
 
         public static AssetCoinholdersIndex Create(IBalanceSummary balanceSummary)
         {
@@ -24,6 +25,7 @@ namespace Core.Asset
     {
         IEnumerable<string> AssetIds { get; }
         IDictionary<string, double> BalanceAddressDictionary { get;}
+        double Spread { get; }
     }
 
     public interface IAssetCoinholdersIndexRepository

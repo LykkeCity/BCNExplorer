@@ -23,7 +23,7 @@
                             <th>Coinholders</th>
                             <th>Coins issued</th>
                         </tr>
-                            @foreach (var asset in Model.Assets.OrderByDescending(p => p.IsVerified).ThenBy(p=>p.Name))
+                            @foreach (var asset in Model.Assets)
                             {
                                 <tr>
                                     <td>
@@ -32,6 +32,7 @@
                                             <a href="@Url.Action("Index", new {id = asset.AssetIds.FirstOrDefault()})"><img src="@asset.IconUrl" width="48" alt="@asset.Name"></a>
                                         }
                                         <p class="text-muted">@string.Join(", ", asset.AssetIds)</p>
+                                        @*<p>@asset.Spread</p>*@
                                        
                                     </td>
                                     <td><a href="@Url.Action("Index", new {id=asset.AssetIds.FirstOrDefault()})">@asset.Name</a></td>
@@ -44,9 +45,9 @@
                                     <td>
                                         @if (asset.TotalColored != null)
                                         {
-                                            @asset.TotalColored.Value.ToStringBtcFormat() @asset.NameShort
+                                            <span>@asset.TotalColored.Value.ToStringBtcFormat()</span>
+                                            <span>@asset.NameShort</span>
                                         }
-                                        
                                     </td>
                                 </tr>
                             }

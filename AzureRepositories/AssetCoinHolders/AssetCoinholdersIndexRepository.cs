@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
 using Common;
@@ -13,6 +14,8 @@ namespace AzureRepositories.AssetCoinHolders
     {
         IEnumerable<string> IAssetCoinholdersIndex.AssetIds => JsonConvert.DeserializeObject<List<string>>(AssetIds);
         IDictionary<string, double> IAssetCoinholdersIndex.BalanceAddressDictionary => JsonConvert.DeserializeObject<Dictionary<string, double>>(BalanceAddressDictionary);
+
+        public double Spread => CalculateSpread(this);
         public string BalanceAddressDictionary { get; set; }
         public string AssetIds { get; set; }
 
@@ -33,8 +36,13 @@ namespace AzureRepositories.AssetCoinHolders
                 AssetIds = source.AssetIds.ToJson(),
                 RowKey = GenerateRowKey(source.AssetIds),
                 PartitionKey = GeneratePartitionKey(),
-                BalanceAddressDictionary = source.BalanceAddressDictionary.ToJson()
+                BalanceAddressDictionary = source.BalanceAddressDictionary.ToJson(),
             };
+        }
+
+        private static double CalculateSpread(IAssetCoinholdersIndex asset)
+        {
+            return 0;
         }
     }
 
@@ -49,16 +57,7 @@ namespace AzureRepositories.AssetCoinHolders
 
         public async Task InserOrReplaceAsync(IAssetCoinholdersIndex index)
         {
-            try
-            {
-                await _tableStorage.InsertOrReplaceAsync(AssetCoinholdersIndexEntity.Create(index));
-            }
-            catch (Exception)
-            {
-                
-                throw;
-            }
-
+            await _tableStorage.InsertOrReplaceAsync(AssetCoinholdersIndexEntity.Create(index));
         }
 
         public async Task<IEnumerable<IAssetCoinholdersIndex>> GetAllAsync()
