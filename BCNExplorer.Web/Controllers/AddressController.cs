@@ -28,5 +28,10 @@ namespace BCNExplorer.Web.Controllers
 
             return View("NotFound");
         }
+
+        public async Task<ActionResult> Transactions(string id)
+        {
+            return View(AddressTransactionsViewModel.Create(await _addressProvider.GetTransactions(id)));
+        } 
     }
 }

@@ -17,11 +17,7 @@ namespace BCNExplorer.Web.Models
         public bool ShowUnconfirmedBalance => UnconfirmedBalanceDelta != 0;
         public double TotalConfirmedTransactions { get; set; }
         public IEnumerable<Asset> Assets { get; set; }
-        public TransactionIdList AllTransactionIdList { get; set; }
-        public TransactionIdList SendTransactionIdList { get; set; }
-        public TransactionIdList ReceivedTransactionIdList { get; set; }
-        private const int PageSize = 20;
-
+        
         public AssetDictionary AssetDic { get; set; }
 
         public static AddressViewModel Create(IAddressBalance balance, IDictionary<string, IAssetDefinition> assetDictionary)
@@ -29,9 +25,7 @@ namespace BCNExplorer.Web.Models
             return new AddressViewModel
             {
                 AddressId = balance.AddressId,
-                AllTransactionIdList = new TransactionIdList(balance.AllTransactionIds?.Select(p=>p.TransactionId), PageSize),
-                SendTransactionIdList = new TransactionIdList(balance.SendTransactionIds?.Select(p => p.TransactionId), PageSize),
-                ReceivedTransactionIdList = new TransactionIdList(balance.ReceivedTransactionIds?.Select(p => p.TransactionId), PageSize),
+
                 UncoloredAddress = balance.UncoloredAddress,
                 ColoredAddress = balance.ColoredAddress,
                 TotalConfirmedTransactions = balance.TotalTransactions,
@@ -46,7 +40,7 @@ namespace BCNExplorer.Web.Models
                 AssetDic = AssetDictionary.Create(assetDictionary)
             };
         }
-
+        
         public class Asset
         {
             public string AssetId { get; set; }
@@ -54,6 +48,25 @@ namespace BCNExplorer.Web.Models
             public double UnconfirmedQuantityDelta { get; set; }
             public bool ShowUnconfirmedBalance => UnconfirmedQuantityDelta != 0;
             public double UnconfirmedQuantity => Quantity + UnconfirmedQuantityDelta;
+        }
+    }
+
+    public class AddressTransactionsViewModel
+    {
+        public TransactionIdList AllTransactionIdList { get; set; }
+        public TransactionIdList SendTransactionIdList { get; set; }
+        public TransactionIdList ReceivedTransactionIdList { get; set; }
+
+        private const int PageSize = 20;
+
+        public static AddressTransactionsViewModel Create(IAddressTransactions source)
+        {
+            return new AddressTransactionsViewModel
+            {
+                AllTransactionIdList = new TransactionIdList(source.All?.Select(p => p.TransactionId), PageSize),
+                SendTransactionIdList = new TransactionIdList(source.Send?.Select(p => p.TransactionId), PageSize),
+                ReceivedTransactionIdList = new TransactionIdList(source.Received?.Select(p => p.TransactionId), PageSize),
+            };
         }
     }
 }

@@ -6,15 +6,19 @@ namespace Core.AddressService
     public interface IAddressBalance
     {
         string AddressId { get; }
-        IEnumerable<IAddressTransaction> AllTransactionIds { get; }
-        IEnumerable<IAddressTransaction> SendTransactionIds { get; }
-        IEnumerable<IAddressTransaction> ReceivedTransactionIds { get; }
         int TotalTransactions { get; }
         string UncoloredAddress { get; }
         string ColoredAddress { get; }
         double Balance { get; }
         double UnconfirmedBalanceDelta { get; }
         IEnumerable<IColoredBalance> ColoredBalances { get; }
+    }
+
+    public interface IAddressTransactions
+    {
+        IEnumerable<IAddressTransaction> All { get; }
+        IEnumerable<IAddressTransaction> Send { get; }
+        IEnumerable<IAddressTransaction> Received { get; }
     }
 
     public interface IAddressTransaction
@@ -32,5 +36,7 @@ namespace Core.AddressService
     public interface IAddressService
     {
         Task<IAddressBalance> GetBalanceAsync(string id);
+
+        Task<IAddressTransactions> GetTransactions(string id);
     }
 }

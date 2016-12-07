@@ -110,28 +110,15 @@
                     </table>
                 </div>
             </div>
-
-            <div class="pull-right">
-                <div class="btn-group js-tx-toggle-container toggle-container">
-                    <a class="js-tx-toggle btn active" href="#js-all-tx">All (@Model.AllTransactionIdList.TotalItems)</a>
-                    <a class="js-tx-toggle btn" href="#js-send-tx">Send (@Model.SendTransactionIdList.TotalItems)</a>
-                    <a class="js-tx-toggle btn" href="#js-received-tx">Received (@Model.ReceivedTransactionIdList.TotalItems)</a>
-                </div>               
-            </div>
-
         </div>
-        <div id="js-tx-select-result-container">
-            <div id="js-all-tx" class="js-select-result">
-                @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.AllTransactionIdList)
+        <div id="js-address-transactions" data-load-url="@Url.Action("Transactions", "Address", new {id = Model.AddressId})">
+            <div class="js-loader">
+                <div class="spinner_container">
+                    <div class="spinner">
+                        <div class="spinner__inside"></div>
+                    </div>
+                </div>
             </div>
-
-            <div id="js-send-tx" class="hidden js-select-result">
-                @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.SendTransactionIdList)
-            </div>
-
-            <div id="js-received-tx" class="hidden js-select-result">
-                @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.ReceivedTransactionIdList)
-            </div>       
         </div>
     </div>
 </section>

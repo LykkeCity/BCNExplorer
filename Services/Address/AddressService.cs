@@ -11,9 +11,6 @@ namespace Services.Address
     public class AddressBalance:IAddressBalance
     {
         public string AddressId { get; set; }
-        public IEnumerable<IAddressTransaction> AllTransactionIds { get; set; }
-        public IEnumerable<IAddressTransaction> SendTransactionIds { get; set; }
-        public IEnumerable<IAddressTransaction> ReceivedTransactionIds { get; set; }
         public int TotalTransactions { get; set; }
         public string UncoloredAddress { get; set; }
         public string ColoredAddress { get; set; }
@@ -23,11 +20,21 @@ namespace Services.Address
 
         public AddressBalance()
         {
-            AllTransactionIds = Enumerable.Empty<IAddressTransaction>();
-            SendTransactionIds = Enumerable.Empty<IAddressTransaction>();
-            ReceivedTransactionIds = Enumerable.Empty<IAddressTransaction>();
-
             ColoredBalances = Enumerable.Empty<IColoredBalance>();
+        }
+    }
+
+    public class AddressTransactions : IAddressTransactions
+    {
+        public IEnumerable<IAddressTransaction> All { get; set; }
+        public IEnumerable<IAddressTransaction> Send { get; set; }
+        public IEnumerable<IAddressTransaction> Received { get; set; }
+
+        public AddressTransactions()
+        {
+            All = Enumerable.Empty<IAddressTransaction>();
+            Send = Enumerable.Empty<IAddressTransaction>();
+            Received = Enumerable.Empty<IAddressTransaction>();
         }
     }
 
@@ -74,16 +81,6 @@ namespace Services.Address
                 }
             });
 
-            var fillTransactionsTask = _ninjaAddressProvider.GetTransactionsForAddressAsync(id).ContinueWith(task =>
-            {
-                if (task.Result != null)
-                {
-                    ninjaAddress.Value.AllTransactionIds = task.Result.AllTransactions.Select(AddressTransaction.Create);
-                    ninjaAddress.Value.SendTransactionIds = task.Result.SendTransactions.Select(AddressTransaction.Create);
-                    ninjaAddress.Value.ReceivedTransactionIds = task.Result.ReceivedTransactions.Select(AddressTransaction.Create);
-                }
-            });
-
             var fillSummaryTask = _ninjaAddressProvider.GetAddressBalanceAsync(id).ContinueWith(task =>
             {
                 if (task.Result != null)
@@ -112,9 +109,21 @@ namespace Services.Address
                 }
             });
 
-            await Task.WhenAll(fillMainInfoTask, fillTransactionsTask, fillSummaryTask);
+            await Task.WhenAll(fillMainInfoTask, fillSummaryTask);
 
             return ninjaAddress.IsValueCreated ? ninjaAddress.Value : null;
+        }
+
+        public async Task<IAddressTransactions> GetTransactions(string id)
+        {
+            var tx = await _ninjaAddressProvider.GetTransactionsForAddressAsync(id);
+
+            return new AddressTransactions
+            {
+                All = tx.AllTransactions.Select(AddressTransaction.Create),
+                Received = tx.ReceivedTransactions.Select(AddressTransaction.Create),
+                Send = tx.SendTransactions.Select(AddressTransaction.Create)
+            };
         }
     }
 }
