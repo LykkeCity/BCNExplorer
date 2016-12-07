@@ -319,10 +319,6 @@
       <Project>{b3642177-0525-48a7-844e-7e5054fef3b5}</Project>
       <Name>AzureStorage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.MVC\Common.MVC.csproj">
-      <Project>{9cabfb84-d8ea-4874-8136-5c9d1b18e586}</Project>
-      <Name>Common.MVC</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{e689375b-0822-47e4-ae16-6ab9f3cf5698}</Project>
       <Name>Common</Name>
