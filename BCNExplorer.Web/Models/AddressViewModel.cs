@@ -17,7 +17,9 @@ namespace BCNExplorer.Web.Models
         public bool ShowUnconfirmedBalance => UnconfirmedBalanceDelta != 0;
         public double TotalConfirmedTransactions { get; set; }
         public IEnumerable<Asset> Assets { get; set; }
-        public TransactionIdList TransactionIdList { get; set; }
+        public TransactionIdList AllTransactionIdList { get; set; }
+        public TransactionIdList SendTransactionIdList { get; set; }
+        public TransactionIdList ReceivedTransactionIdList { get; set; }
         private const int PageSize = 20;
 
         public AssetDictionary AssetDic { get; set; }
@@ -27,7 +29,9 @@ namespace BCNExplorer.Web.Models
             return new AddressViewModel
             {
                 AddressId = balance.AddressId,
-                TransactionIdList = new TransactionIdList(balance.TransactionIds, PageSize),
+                AllTransactionIdList = new TransactionIdList(balance.AllTransactionIds?.Select(p=>p.TransactionId), PageSize),
+                SendTransactionIdList = new TransactionIdList(balance.SendTransactionIds?.Select(p => p.TransactionId), PageSize),
+                ReceivedTransactionIdList = new TransactionIdList(balance.ReceivedTransactionIds?.Select(p => p.TransactionId), PageSize),
                 UncoloredAddress = balance.UncoloredAddress,
                 ColoredAddress = balance.ColoredAddress,
                 TotalConfirmedTransactions = balance.TotalTransactions,

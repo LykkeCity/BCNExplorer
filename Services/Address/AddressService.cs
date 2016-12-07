@@ -11,13 +11,24 @@ namespace Services.Address
     public class AddressBalance:IAddressBalance
     {
         public string AddressId { get; set; }
-        public IEnumerable<string> TransactionIds { get; set; }
-        public double TotalTransactions { get; set; }
+        public IEnumerable<IAddressTransaction> AllTransactionIds { get; set; }
+        public IEnumerable<IAddressTransaction> SendTransactionIds { get; set; }
+        public IEnumerable<IAddressTransaction> ReceivedTransactionIds { get; set; }
+        public int TotalTransactions { get; set; }
         public string UncoloredAddress { get; set; }
         public string ColoredAddress { get; set; }
         public double Balance { get; set; }
         public double UnconfirmedBalanceDelta { get; set; }
         public IEnumerable<IColoredBalance> ColoredBalances { get; set; }
+
+        public AddressBalance()
+        {
+            AllTransactionIds = Enumerable.Empty<IAddressTransaction>();
+            SendTransactionIds = Enumerable.Empty<IAddressTransaction>();
+            ReceivedTransactionIds = Enumerable.Empty<IAddressTransaction>();
+
+            ColoredBalances = Enumerable.Empty<IColoredBalance>();
+        }
     }
 
     public class ColoredBalance:IColoredBalance
@@ -26,6 +37,21 @@ namespace Services.Address
         public double Quantity { get; set; }
         public double UnconfirmedQuantityDelta { get; set; }
     }
+
+    public class AddressTransaction : IAddressTransaction
+    {
+        public string TransactionId { get; set; }
+
+        public static AddressTransaction Create(NinjaAddressTransactionList.NinjaAddressTransaction source)
+        {
+            return new AddressTransaction
+            {
+                TransactionId = source.TxId
+            };
+        }
+    }
+
+
     public class AddressService:IAddressService
     {
         private readonly NinjaAddressProvider _ninjaAddressProvider;
@@ -52,7 +78,9 @@ namespace Services.Address
             {
                 if (task.Result != null)
                 {
-                    ninjaAddress.Value.TransactionIds = task.Result.Transactions.Select(tr => tr.TxId);
+                    ninjaAddress.Value.AllTransactionIds = task.Result.AllTransactions.Select(AddressTransaction.Create);
+                    ninjaAddress.Value.SendTransactionIds = task.Result.SendTransactions.Select(AddressTransaction.Create);
+                    ninjaAddress.Value.ReceivedTransactionIds = task.Result.ReceivedTransactions.Select(AddressTransaction.Create);
                 }
             });
 

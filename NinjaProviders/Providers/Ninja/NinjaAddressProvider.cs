@@ -66,11 +66,28 @@ namespace Providers.Providers.Ninja
     
     public class NinjaAddressTransactionList
     {
-        public IEnumerable<NinjaAddressTransaction> Transactions { get; set; }
+        public NinjaAddressTransactionList()
+        {
+            AllTransactions = Enumerable.Empty<NinjaAddressTransaction>();
+            SendTransactions = Enumerable.Empty<NinjaAddressTransaction>();
+            ReceivedTransactions = Enumerable.Empty<NinjaAddressTransaction>();
+        }
 
+        public IEnumerable<NinjaAddressTransaction> AllTransactions { get; set; }
+        public IEnumerable<NinjaAddressTransaction> SendTransactions { get; set; }
+        public IEnumerable<NinjaAddressTransaction> ReceivedTransactions { get; set; }
+        
         public class NinjaAddressTransaction
         {
             public string TxId { get; set; }
+
+            public static NinjaAddressTransaction Create(AddressTransactionListItemContract source)
+            {
+                return new NinjaAddressTransaction
+                {
+                    TxId = source.TxId
+                };
+            }
         }
     }
 
@@ -108,16 +125,16 @@ namespace Providers.Providers.Ninja
                 var tx = result.Transactions ?? Enumerable.Empty<AddressTransactionListItemContract>();
                 return new NinjaAddressTransactionList
                 {
-                    Transactions = tx
-                    .Select(p => new NinjaAddressTransactionList.NinjaAddressTransaction
-                    {
-                        TxId = p.TxId
-                    })
+                    AllTransactions = tx.Select(NinjaAddressTransactionList.NinjaAddressTransaction.Create),
+                    ReceivedTransactions = tx.Where(p => p.IsReceived()).Select(NinjaAddressTransactionList.NinjaAddressTransaction.Create),
+                    SendTransactions = tx.Where(p => p.IsSend()).Select(NinjaAddressTransactionList.NinjaAddressTransaction.Create),
                 };
             }
 
             return null;
         }
+
+
 
         public async Task<NinjaAddressSummary> GetAddressBalanceAsync(string id)
         {
@@ -135,4 +152,30 @@ namespace Providers.Providers.Ninja
             return null;
         }
     }
+
+    static class AddressTransactionListItemContractHelper
+    {
+        public static bool IsSend(this AddressTransactionListItemContract source)
+        {
+            if (source.Amount < 0 || (source.Amount==0 &&source.Spent.Any()))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsReceived(this AddressTransactionListItemContract source)
+        {
+            if (source.Amount > 0  || (source.Amount == 0 && source.Received.Any()))
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+
 }
+

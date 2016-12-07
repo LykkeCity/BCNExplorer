@@ -50,13 +50,18 @@ namespace Providers.Providers.Ninja
 
             public static BlockMinInfo Create(TransactionContract.BlockContract contract)
             {
-                return new BlockMinInfo
+                if (contract != null)
                 {
-                    BlockId = contract.BlockId,
-                    BlockTime = contract.BlockTime,
-                    Confirmations = contract.Confirmations,
-                    Height = contract.Height
-                };
+                    return new BlockMinInfo
+                    {
+                        BlockId = contract.BlockId,
+                        BlockTime = contract.BlockTime,
+                        Confirmations = contract.Confirmations,
+                        Height = contract.Height
+                    };
+                }
+
+                return null;
             }
         }
 
@@ -76,7 +81,7 @@ namespace Providers.Providers.Ninja
             
             public double Quantity { get; set; }
 
-            public static InOut Create(TransactionContract.BitCoinInOutContract contract)
+            public static InOut Create(InOutContract contract)
             {
                 return new InOut
                 {

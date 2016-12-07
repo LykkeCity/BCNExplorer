@@ -26,21 +26,21 @@
                 <div class="table-responsive">
                     <table class="table table--be_info">
                         <tbody>
+                        <tr>
+                            <td>Address</td>
+                            <td>@Model.AddressId</td>
+                        </tr>
+                        <tr>
+                            <td>Total transactions</td>
+                            <td>@Model.AllTransactionIdList.TotalItems</td>
+                        </tr>
+                        @if (Model.UncoloredAddress != null)
+                        {
                             <tr>
-                                <td>Address</td>
-                                <td>@Model.AddressId</td>
+                                <td>Legacy address</td>
+                                <td><a href="@Url.Action("Index", "Address", new {id = Model.UncoloredAddress})">@Model.UncoloredAddress</a></td>
                             </tr>
-                            <tr>
-                                <td>Total confirmed transactions</td>
-                                <td>@Model.TotalConfirmedTransactions</td>
-                            </tr>
-                            @if (Model.UncoloredAddress != null)
-                            {
-                                <tr>
-                                    <td>Legacy address</td>
-                                    <td><a href="@Url.Action("Index", "Address", new { id = Model.UncoloredAddress })">@Model.UncoloredAddress</a></td>
-                                </tr>
-                            }
+                        }
                         </tbody>
                     </table>
                 </div>
@@ -49,9 +49,9 @@
                 <div class="table-responsive">
                     <table class="table table--text_big table--be_info">
                         <tbody>
-                            <tr>
-                                <th colspan="2">Balance</th>
-                            </tr>
+                        <tr>
+                            <th colspan="2">Balance</th>
+                        </tr>
                         <tr>
                             <td>
                                 <img src="/img/assets/bitcoin.png" width="48" alt="Bitcoin"> <span>Bitcoin</span>
@@ -70,50 +70,68 @@
                             </tr>
                         }
 
-                            @foreach (var asset in Model.Assets)
-                            {
-                                var assetDivisibity = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Divisibility, 0);
-                                var assetShortName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.NameShort, "");
-                                var assetName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Name, asset.AssetId);
-                                var assetIcon = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.IconUrl, null);
+                        @foreach (var asset in Model.Assets)
+                        {
+                            var assetDivisibity = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Divisibility, 0);
+                            var assetShortName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.NameShort, "");
+                            var assetName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Name, asset.AssetId);
+                            var assetIcon = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.IconUrl, null);
 
-                                <tr>
-                                    <td>
-                                        @if (assetIcon != null)
-                                        {
-                                            <a href="@Url.Action("Index", "Asset", new {id = asset.AssetId})">
-
-                                                <img src="@assetIcon" width="48" alt="@assetName">
-                                            </a>
-
-                                        }
+                            <tr>
+                                <td>
+                                    @if (assetIcon != null)
+                                    {
                                         <a href="@Url.Action("Index", "Asset", new {id = asset.AssetId})">
-                                            @assetName
+
+                                            <img src="@assetIcon" width="48" alt="@assetName">
                                         </a>
-                                        @if (asset.ShowUnconfirmedBalance)
-                                        {
-                                            <br/>
-                                            <span class="text-muted">Unconfirmed Balance</span>
-                                        }
-                                    </td>
-                                    <td class="text-right">
-                                        @BitcoinUtils.CalculateColoredAssetQuantity(asset.Quantity, assetDivisibity).ToStringBtcFormat() @assetShortName
-                                        @if (asset.ShowUnconfirmedBalance)
-                                        {
-                                            <br />
-                                            <span class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(asset.UnconfirmedQuantity, assetDivisibity).ToStringBtcFormat() @assetShortName</span>
-                                        }
-                                    </td>
-                                </tr>
-                            }
+
+                                    }
+                                    <a href="@Url.Action("Index", "Asset", new {id = asset.AssetId})">
+                                        @assetName
+                                    </a>
+                                    @if (asset.ShowUnconfirmedBalance)
+                                    {
+                                        <br/>
+                                        <span class="text-muted">Unconfirmed Balance</span>
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    @BitcoinUtils.CalculateColoredAssetQuantity(asset.Quantity, assetDivisibity).ToStringBtcFormat() @assetShortName
+                                    @if (asset.ShowUnconfirmedBalance)
+                                    {
+                                        <br/>
+                                        <span class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(asset.UnconfirmedQuantity, assetDivisibity).ToStringBtcFormat() @assetShortName</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            <div class="pull-right">
+                <div class="btn-group js-tx-toggle-container toggle-container">
+                    <a class="js-tx-toggle btn active" href="#js-all-tx">All (@Model.AllTransactionIdList.TotalItems)</a>
+                    <a class="js-tx-toggle btn" href="#js-send-tx">Send (@Model.SendTransactionIdList.TotalItems)</a>
+                    <a class="js-tx-toggle btn" href="#js-received-tx">Received (@Model.ReceivedTransactionIdList.TotalItems)</a>
+                </div>               
+            </div>
+
         </div>
+        <div id="js-tx-select-result-container">
+            <div id="js-all-tx" class="js-select-result">
+                @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.AllTransactionIdList)
+            </div>
 
+            <div id="js-send-tx" class="hidden js-select-result">
+                @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.SendTransactionIdList)
+            </div>
 
-        @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.TransactionIdList)
-
+            <div id="js-received-tx" class="hidden js-select-result">
+                @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.ReceivedTransactionIdList)
+            </div>       
+        </div>
     </div>
 </section>

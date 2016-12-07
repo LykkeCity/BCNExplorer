@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Core.Block;
 
 namespace BCNExplorer.Web.Models

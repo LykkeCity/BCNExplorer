@@ -17,10 +17,10 @@ namespace Providers.Contracts.Ninja
         public BlockContract Block { get; set; }
 
         [JsonProperty("receivedCoins")]
-        public BitCoinInOutContract[] Outputs { get; set; }
+        public InOutContract[] Outputs { get; set; }
 
         [JsonProperty("spentCoins")]
-        public BitCoinInOutContract[] Inputs { get; set; }
+        public InOutContract[] Inputs { get; set; }
 
         [JsonProperty("firstSeen")]
         public DateTime FirstSeen { get; set; }
@@ -41,30 +41,33 @@ namespace Providers.Contracts.Ninja
             public DateTime BlockTime { get; set; }
         }
 
-        public class BitCoinInOutContract
-        {
-            [JsonProperty("address")]
-            public string Address { get; set; }
 
-            [JsonProperty("transactionId")]
-            public string TransactionId { get; set; }
-
-            [JsonProperty("index")]
-            public int Index { get; set; }
-
-            [JsonProperty("value")]
-            public double Value { get; set; }
-
-            [JsonProperty("scriptPubKey")]
-            public string ScriptPubKey { get; set; }
-
-            [JsonProperty("assetId")]
-            public string AssetId { get; set; }
-
-            [JsonProperty("quantity")]
-            public double Quantity { get; set; }
-        }
 
         #endregion
+    }
+
+
+    public class InOutContract
+    {
+        [JsonProperty("address")]
+        public string Address { get; set; }
+
+        [JsonProperty("transactionId")]
+        public string TransactionId { get; set; }
+
+        [JsonProperty("index")]
+        public int Index { get; set; }
+
+        [JsonProperty("value")]
+        public double Value { get; set; }
+
+        [JsonProperty("scriptPubKey")]
+        public string ScriptPubKey { get; set; }
+
+        [JsonProperty("assetId")]
+        public string AssetId { get; set; }
+
+        [JsonProperty("quantity")]
+        public double Quantity { get; set; }
     }
 }

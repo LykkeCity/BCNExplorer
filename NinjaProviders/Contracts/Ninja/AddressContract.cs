@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using NBitcoin;
+using Newtonsoft.Json;
 
 namespace Providers.Contracts.Ninja
 {
@@ -15,7 +17,6 @@ namespace Providers.Contracts.Ninja
     
     #endregion
 
-
     #region AddressTransactionListContract
 
     public class AddressTransactionListContract
@@ -28,7 +29,24 @@ namespace Providers.Contracts.Ninja
     {
         [JsonProperty("transactionId")]
         public string TxId { get; set; }
+
+        [JsonProperty("amount")]
+        public double Amount { get; set; }
+
+        [JsonProperty("confirmations")]
+        public int Confirmations { get; set; }
+
+        [JsonProperty("blockId")]
+        public string BlockId { get; set; }
+        
+        [JsonProperty("receivedCoins")]
+        public InOutContract[] Received { get; set; }
+
+        [JsonProperty("spentCoins")]
+        public InOutContract[] Spent { get; set; }
     }
+
+
 
     #endregion
 

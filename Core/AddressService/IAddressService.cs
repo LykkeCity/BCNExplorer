@@ -1,28 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Core.AddressService
 {
     public interface IAddressBalance
     {
-        string AddressId { get; set; }
-        IEnumerable<string> TransactionIds { get; set; }
-        double TotalTransactions { get; set; }
-        string UncoloredAddress { get; set; }
-        string ColoredAddress { get; set; }
-        double Balance { get; set; }
-        double UnconfirmedBalanceDelta { get; set; }
-        IEnumerable<IColoredBalance> ColoredBalances { get; set; }
+        string AddressId { get; }
+        IEnumerable<IAddressTransaction> AllTransactionIds { get; }
+        IEnumerable<IAddressTransaction> SendTransactionIds { get; }
+        IEnumerable<IAddressTransaction> ReceivedTransactionIds { get; }
+        int TotalTransactions { get; }
+        string UncoloredAddress { get; }
+        string ColoredAddress { get; }
+        double Balance { get; }
+        double UnconfirmedBalanceDelta { get; }
+        IEnumerable<IColoredBalance> ColoredBalances { get; }
+    }
+
+    public interface IAddressTransaction
+    {
+        string TransactionId { get; }
     }
 
     public interface IColoredBalance
     {
-        string AssetId { get; set; }
-        double Quantity { get; set; }
-        double UnconfirmedQuantityDelta { get; set; }
+        string AssetId { get; }
+        double Quantity { get; }
+        double UnconfirmedQuantityDelta { get; }
     }
 
     public interface IAddressService

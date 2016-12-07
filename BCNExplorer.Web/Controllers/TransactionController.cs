@@ -46,15 +46,9 @@ namespace BCNExplorer.Web.Controllers
 
             var loadTransactionTasks = ids.Select(id => _transactionService.GetAsync(id).ContinueWith(task =>
             {
-                try
+                if (task.Result != null)
                 {
-                    if (task.Result != null)
-                    {
-                        result.Push(TransactionViewModel.Create(task.Result, assetDictionary));
-                    }
-                }
-                catch (Exception e)
-                {
+                    result.Push(TransactionViewModel.Create(task.Result, assetDictionary));
                 }
             }));
 
