@@ -25,6 +25,8 @@ namespace AssetCoinHoldersScanner.QueueHandlers
         private readonly BalanceChangesService _balanceChangesService;
         private readonly AssetChangesParseBlockCommandProducer _parseBlockCommandProducer;
 
+        private readonly AssetCoinholdersIndexesCommandProducer _assetCoinholdersIndexesCommandProducer;
+
         private const int attemptCount = 10;
 
         public ParseBalanceChangesCommandQueueConsumer(ILog log, 
@@ -33,7 +35,8 @@ namespace AssetCoinHoldersScanner.QueueHandlers
             MainChainRepository mainChainRepository, 
             BaseSettings baseSettings, 
             BalanceChangesService balanceChangesService, 
-            AssetChangesParseBlockCommandProducer parseBlockCommandProducer)
+            AssetChangesParseBlockCommandProducer parseBlockCommandProducer, 
+            AssetCoinholdersIndexesCommandProducer assetCoinholdersIndexesCommandProducer)
         {
             _log = log;
             _queueReader = queueReader;
@@ -42,6 +45,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
             _baseSettings = baseSettings;
             _balanceChangesService = balanceChangesService;
             _parseBlockCommandProducer = parseBlockCommandProducer;
+            _assetCoinholdersIndexesCommandProducer = assetCoinholdersIndexesCommandProducer;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -70,10 +74,11 @@ namespace AssetCoinHoldersScanner.QueueHandlers
                 var block = _indexerClient.GetIndexerClient().GetBlock(mainChain.GetBlock(context.BlockHeight).HashBlock);
                 var addressesToTrack = (await block.GetAddressesWithColoredMarkerAsync(_baseSettings.UsedNetwork(), _indexerClient.GetIndexerClient())).ToArray();
 
-                await _balanceChangesService.SaveAddressChangesAsync(context.BlockHeight, context.BlockHeight, addressesToTrack);
+                var saveResult = await _balanceChangesService.SaveAddressChangesAsync(context.BlockHeight, context.BlockHeight, addressesToTrack);
 
-                await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), $"Done {st.Elapsed.ToString("g")}. Addr to track {addressesToTrack.Length}");
-                //await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), "Done");
+                await _assetCoinholdersIndexesCommandProducer.CreateAssetCoinholdersUpdateIndexCommand(saveResult.ChangedAssetIds.ToArray());
+
+                await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), $"Done {st.Elapsed.ToString("g")}. Addr to track {addressesToTrack.Length}. SaveResult {saveResult.ToJson()}");
             }
             catch (Exception e)
             {

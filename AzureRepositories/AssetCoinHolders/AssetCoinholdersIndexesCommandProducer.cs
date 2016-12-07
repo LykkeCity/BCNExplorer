@@ -38,5 +38,19 @@ namespace AzureRepositories.AssetCoinHolders
                 });
             }
         }
+
+        public async Task CreateAssetCoinholdersUpdateIndexCommand(params string[] assetIds)
+        {
+            foreach (var assetID in assetIds)
+            {
+                await _queueExt.PutMessageAsync(new QueueRequestModel<AssetCoinholdersUpdateIndexCommand>
+                {
+                    Data = new AssetCoinholdersUpdateIndexCommand
+                    {
+                        AssetId = assetID
+                    }
+                });
+            }
+        }
     }
 }

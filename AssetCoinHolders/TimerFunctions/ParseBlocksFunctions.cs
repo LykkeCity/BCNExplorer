@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using AzureRepositories.AssetCoinHolders;
 using Common;
 using Common.Log;
-using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
-using JobsCommon;
 using Microsoft.Azure.WebJobs;
-using NBitcoin;
-using NBitcoin.Indexer;
-using Providers;
-using Providers.Helpers;
 using Services.MainChain;
 
 namespace AssetCoinHoldersScanner.TimerFunctions
