@@ -10,13 +10,15 @@ namespace Core.Asset
         public IEnumerable<string> AssetIds { get; set; }
         public IDictionary<string, double> BalanceAddressDictionary { get; set; }
         public double Spread { get; }
+        public IEnumerable<int> ChangedAtBlockHeights { get; set; }
 
         public static AssetCoinholdersIndex Create(IBalanceSummary balanceSummary)
         {
             return new AssetCoinholdersIndex
             {
                 AssetIds = balanceSummary.AssetIds,
-                BalanceAddressDictionary = balanceSummary.AddressSummaries.GroupBy(p=>p.Address).ToDictionary(p=>p.Key, p=>p.Sum(x=>x.Balance))
+                BalanceAddressDictionary = balanceSummary.AddressSummaries.GroupBy(p=>p.Address).ToDictionary(p=>p.Key, p=>p.Sum(x=>x.Balance)),
+                ChangedAtBlockHeights = balanceSummary.ChangedAtHeights
             };
         }
     }
@@ -26,6 +28,7 @@ namespace Core.Asset
         IEnumerable<string> AssetIds { get; }
         IDictionary<string, double> BalanceAddressDictionary { get;}
         double Spread { get; }
+        IEnumerable<int> ChangedAtBlockHeights { get; } 
     }
 
     public interface IAssetCoinholdersIndexRepository

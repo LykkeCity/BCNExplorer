@@ -16,6 +16,9 @@ namespace AzureRepositories.AssetCoinHolders
         IDictionary<string, double> IAssetCoinholdersIndex.BalanceAddressDictionary => JsonConvert.DeserializeObject<Dictionary<string, double>>(BalanceAddressDictionary);
 
         public double Spread => CalculateSpread(this);
+
+        IEnumerable<int> IAssetCoinholdersIndex.ChangedAtBlockHeights => JsonConvert.DeserializeObject<List<int>>(ChangedAtBlockHeights);
+        public string ChangedAtBlockHeights { get; set; }
         public string BalanceAddressDictionary { get; set; }
         public string AssetIds { get; set; }
 
@@ -37,6 +40,7 @@ namespace AzureRepositories.AssetCoinHolders
                 RowKey = GenerateRowKey(source.AssetIds),
                 PartitionKey = GeneratePartitionKey(),
                 BalanceAddressDictionary = source.BalanceAddressDictionary.ToJson(),
+                ChangedAtBlockHeights = source.ChangedAtBlockHeights.ToJson()
             };
         }
 
