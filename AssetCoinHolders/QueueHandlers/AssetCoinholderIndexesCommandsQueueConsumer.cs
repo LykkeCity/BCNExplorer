@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AzureRepositories.AssetCoinHolders;
 using AzureRepositories.QueueReaders;
@@ -50,17 +51,30 @@ namespace AssetCoinHoldersScanner.QueueHandlers
 
         private async Task UpdateCoinholersIndex(AssetCoinholdersUpdateIndexCommand context)
         {
-            await _log.WriteInfo("AssetCoinholderIndexesCommandsQueueConsumer", "UpdateCoinholersIndex", context.ToJson(), "Started");
-
-            var asset = await _assetService.GetAssetAsync(context.AssetId);
-            if (asset != null)
+            try
             {
-                var balanceSummary = await _balanceChangesRepository.GetSummaryAsync(asset.AssetIds.ToArray());
+                await
+                    _log.WriteInfo("AssetCoinholderIndexesCommandsQueueConsumer", "UpdateCoinholersIndex",
+                        context.ToJson(), "Started");
 
-                await _assetCoinholdersIndexRepository.InserOrReplaceAsync(AssetCoinholdersIndex.Create(balanceSummary));
+                var asset = await _assetService.GetAssetAsync(context.AssetId);
+                if (asset != null)
+                {
+                    var balanceSummary = await _balanceChangesRepository.GetSummaryAsync(asset.AssetIds.ToArray());
+
+                    await
+                        _assetCoinholdersIndexRepository.InserOrReplaceAsync(AssetCoinholdersIndex.Create(balanceSummary));
+                }
+
+                await
+                    _log.WriteInfo("AssetCoinholderIndexesCommandsQueueConsumer", "UpdateCoinholersIndex",
+                        context.ToJson(), "Done");
             }
-
-            await _log.WriteInfo("AssetCoinholderIndexesCommandsQueueConsumer", "UpdateCoinholersIndex", context.ToJson(), "Done");
+            catch (Exception e)
+            {
+                await  _log.WriteError("AssetCoinholderIndexesCommandsQueueConsumer", "UpdateCoinholersIndex",
+                   context.ToJson(), e);
+            }
         }
 
         public void Start()

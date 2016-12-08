@@ -67,8 +67,6 @@ namespace AssetCoinHoldersScanner.QueueHandlers
 
             try
             {
-                var st = new Stopwatch();
-                st.Start();
                 var mainChain = await _mainChainRepository.GetMainChainAsync();
 
                 var block = _indexerClient.GetIndexerClient().GetBlock(mainChain.GetBlock(context.BlockHeight).HashBlock);
@@ -78,7 +76,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
 
                 await _assetCoinholdersIndexesCommandProducer.CreateAssetCoinholdersUpdateIndexCommand(saveResult.ChangedAssetIds.ToArray());
 
-                await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), $"Done {st.Elapsed.ToString("g")}. Addr to track {addressesToTrack.Length}. SaveResult {saveResult.ToJson()}");
+                await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), $"Done. Addr to track {addressesToTrack.Length}. SaveResult {saveResult.ToJson()}");
             }
             catch (Exception e)
             {

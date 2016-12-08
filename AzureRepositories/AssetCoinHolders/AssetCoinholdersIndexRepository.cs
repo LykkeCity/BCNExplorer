@@ -13,11 +13,13 @@ namespace AzureRepositories.AssetCoinHolders
     public class AssetCoinholdersIndexEntity:TableEntity, IAssetCoinholdersIndex
     {
         IEnumerable<string> IAssetCoinholdersIndex.AssetIds => JsonConvert.DeserializeObject<List<string>>(AssetIds);
-        IDictionary<string, double> IAssetCoinholdersIndex.BalanceAddressDictionary => JsonConvert.DeserializeObject<Dictionary<string, double>>(BalanceAddressDictionary);
+        IDictionary<string, double> IAssetCoinholdersIndex.TopCoinholdersBalanceAddressDictionary => JsonConvert.DeserializeObject<Dictionary<string, double>>(BalanceAddressDictionary);
 
         public double Spread => CalculateSpread(this);
 
         IEnumerable<int> IAssetCoinholdersIndex.ChangedAtBlockHeights => JsonConvert.DeserializeObject<List<int>>(ChangedAtBlockHeights);
+        public int CoinholdersCount { get; set; }
+        public double TotalQuantity { get; set; }
         public string ChangedAtBlockHeights { get; set; }
         public string BalanceAddressDictionary { get; set; }
         public string AssetIds { get; set; }
@@ -39,8 +41,10 @@ namespace AzureRepositories.AssetCoinHolders
                 AssetIds = source.AssetIds.ToJson(),
                 RowKey = GenerateRowKey(source.AssetIds),
                 PartitionKey = GeneratePartitionKey(),
-                BalanceAddressDictionary = source.BalanceAddressDictionary.ToJson(),
-                ChangedAtBlockHeights = source.ChangedAtBlockHeights.ToJson()
+                BalanceAddressDictionary = source.TopCoinholdersBalanceAddressDictionary.ToJson(),
+                ChangedAtBlockHeights = source.ChangedAtBlockHeights.ToJson(),
+                CoinholdersCount = source.CoinholdersCount,
+                TotalQuantity = source.TotalQuantity
             };
         }
 

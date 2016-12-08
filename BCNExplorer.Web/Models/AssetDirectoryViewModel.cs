@@ -86,8 +86,8 @@ namespace BCNExplorer.Web.Models
                     Type = source.Type,
                     Version = source.Version,
                     IsVerified = source.IsVerified,
-                    CoinholdersCount = index?.BalanceAddressDictionary.Keys.Count,
-                    TotalQuantity = index?.BalanceAddressDictionary.Values.Sum(),
+                    CoinholdersCount = index?.TopCoinholdersBalanceAddressDictionary.Keys.Count,
+                    TotalQuantity = index?.TopCoinholdersBalanceAddressDictionary.Values.Sum(),
                     Spread = index?.Spread ?? 0
                 };
             }
