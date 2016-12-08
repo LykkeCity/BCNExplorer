@@ -1,6 +1,7 @@
 ﻿@model TransactionIdList
 
 <h3 class="transactions-header">@Model.TotalItems Transactions</h3>
+<div class="clearfix"></div>
 <ul class="transactions-list js-transaction-cathegory">
     @foreach (var page in Model.Pages)
     {
