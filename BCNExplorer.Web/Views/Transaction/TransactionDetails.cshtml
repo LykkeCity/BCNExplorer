@@ -133,18 +133,16 @@
                                 </a>
                             }
                         </td>
-                        @if (false)
-                        {
-                            <td>
+                        <td>
+                            @if (coloredAsset.IsIssued)
+                            {
                                 <div class="transaction_view__line">
-                                    <i class="icon icon--info"></i> Issued Asset
+                                    <i class="icon icon--info"></i> Issued Assets
                                 </div>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                @foreach (var input in coloredAsset.AggregatedIns)
+                            }
+                            else
+                            {
+                                foreach (var input in coloredAsset.AggregatedIns)
                                 {
                                     var aggregatedContainerId = Guid.NewGuid().ToString("N");
                                     <text>
@@ -163,32 +161,44 @@
                                         }
                                     </text>
                                 }
-                            </td>
 
-                        }
+                            }                        
+                        </td>
+
 
                         <td class="transaction_view__arrow">
                             <div class="colored_arrow"></div>
                         </td>
-                        <td colspan="2">
-                            @foreach (var output in coloredAsset.AggregatedOuts)
-                            {
-                                var aggregatedContainerId = Guid.NewGuid().ToString("N");
-                                <text>
-                                    @RenderInOut(output.TitleItem, aggregatedContainerId)
-                                </text>
 
-                                <text>
-                                    @if (output.ShowAggregatedTransactions)
-                                    {
-                                        <div class="transaction_view__advanced" style="display: none;" id="@aggregatedContainerId">
-                                            @foreach (var aggregated in output.AggregatedTransactions)
-                                            {
-                                                @RenderInOut(aggregated)
-                                            }
-                                        </div>
-                                    }
-                                </text>
+
+                        <td colspan="2">
+                            @if (coloredAsset.IsDestroed)
+                            {
+                                <div class="transaction_view__line">
+                                    <i class="icon icon--info"></i> Destroyed assets
+                                </div>
+                            }
+                            else
+                            {
+                                foreach (var output in coloredAsset.AggregatedOuts)
+                                {
+                                    var aggregatedContainerId = Guid.NewGuid().ToString("N");
+                                    <text>
+                                        @RenderInOut(output.TitleItem, aggregatedContainerId)
+                                    </text>
+
+                                    <text>
+                                        @if (output.ShowAggregatedTransactions)
+                                        {
+                                            <div class="transaction_view__advanced" style="display: none;" id="@aggregatedContainerId">
+                                                @foreach (var aggregated in output.AggregatedTransactions)
+                                                {
+                                                    @RenderInOut(aggregated)
+                                                }
+                                            </div>
+                                        }
+                                    </text>
+                                }
                             }
                         </td>
                     </tr>

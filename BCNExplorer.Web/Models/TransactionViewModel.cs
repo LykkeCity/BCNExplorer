@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Runtime.Remoting.Messaging;
 using Common;
 using Core.Asset;
 using Core.Transaction;
@@ -137,7 +139,8 @@ namespace BCNExplorer.Web.Models
             public int Divisibility { get; set; }
             public string Name { get; set; }
             public string IconImageUrl { get; set; }
-
+            public bool IsDestroed => !AggregatedOuts.Any();
+            public bool IsIssued => !AggregatedIns.Any();
             public IEnumerable<AggregatedInOut<In>> AggregatedIns { get; set; }
             public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
 

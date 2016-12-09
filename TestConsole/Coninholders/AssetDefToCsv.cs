@@ -22,10 +22,10 @@ namespace TestConsole.Coninholders
             var assetDefs = await repo.GetAllAsync();
 
             var csv = new StringBuilder();
-            csv.AppendLine("AssetId,NameShort,Divisibility");
+            csv.AppendLine("AssetIds|Name|NameShort|Divisibility");
             foreach (var assetDefinition in assetDefs)
             {
-                csv.AppendLine($"{assetDefinition.AssetIds.FirstOrDefault()},{assetDefinition.NameShort}, {assetDefinition.Divisibility}");
+                csv.AppendLine($"{string.Join(",", assetDefinition.AssetIds)}|{assetDefinition.Name}|{assetDefinition.NameShort}|{assetDefinition.Divisibility}");
             }
             
             File.WriteAllText(filePath, csv.ToString());
