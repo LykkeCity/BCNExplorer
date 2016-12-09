@@ -23,7 +23,7 @@ namespace BCNExplorer.Web.Models
             return new AssetCoinholdersViewModel
             {
                 Asset = asset,
-                AddressSummaries = balanceSummary.AddressSummaries.Select(p => BalanceAddressSummary.Create(p, total, asset.Divisibility)).Where(p=>p.Balance != 0 || p.ChangeAtBlock != 0),
+                AddressSummaries = balanceSummary.AddressSummaries.Select(p => BalanceAddressSummary.Create(p, total, asset.Divisibility)).Where(p=>p.Balance != 0 || p.ChangeAtBlock != 0).OrderByDescending(p=>p.Balance),
                 Total = BitcoinUtils.CalculateColoredAssetQuantity(total, asset.Divisibility),
                 Pagination = BlockPagination.Create(balanceSummary.ChangedAtHeights, balanceSummary.AtBlockHeight)
 

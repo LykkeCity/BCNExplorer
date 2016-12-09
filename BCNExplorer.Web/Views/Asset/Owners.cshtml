@@ -50,7 +50,7 @@
                                 <th>Ownership</th>
                                 <th>Amount</th>
                             </tr>
-                            @foreach (var addressSum in Model.AddressSummaries.OrderByDescending(p=>p.BalancePercenage))
+                            @foreach (var addressSum in Model.AddressSummaries)
                             {
                                 <tr>
                                     <td>
