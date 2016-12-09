@@ -8,5 +8,10 @@ namespace BCNExplorer.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Server()
+        {
+            return View();
+        }
     }
 }

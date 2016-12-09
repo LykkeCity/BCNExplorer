@@ -36,6 +36,19 @@ namespace BCNExplorer.Web
                 IController c = new ErrorController();
                 c.Execute(new RequestContext(new HttpContextWrapper(Context), rd));
             }
+
+            if (Context.Response.StatusCode == 500)
+            {
+                Response.Clear();
+
+                var rd = new RouteData();
+
+                rd.Values["controller"] = "Error";
+                rd.Values["action"] = "Server";
+
+                IController c = new ErrorController();
+                c.Execute(new RequestContext(new HttpContextWrapper(Context), rd));
+            }
         }
     }
 }

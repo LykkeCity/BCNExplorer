@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Server error";
+}
+<section class="section section--search section--padding">
+    <div class="container container--extend">
+
+        <div class="t-simulate">
+            <div class="t-row">
+                <div class="t-cell">
+                    <h1>500</h1>
+                    <h2>Oops! An error occurred while processing your request</h2>
+
+                    <p>
+                        If you have any problem contact our support:<br>
+                        <a href="mailto:support@lykkex.com">support@lykkex.com</a>
+                    </p>
+
+                    <a href="@Url.Action("Index", "Home")" type="button" class="btn btn-md">Go back</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
