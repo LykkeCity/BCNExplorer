@@ -1,4 +1,5 @@
-﻿@model TransactionViewModel
+﻿@using Common
+@model TransactionViewModel
 @{
     Layout = null;
     var hideTransactionHeader = (ViewBag.HideTransactionHeader != null && ViewBag.HideTransactionHeader is bool) ? ViewBag.HideTransactionHeader : false;
@@ -136,9 +137,15 @@
                         <td>
                             @if (coloredAsset.IsIssued)
                             {
-                                <div class="transaction_view__line">
-                                    <i class="icon icon--info"></i> Issued Assets
+                                <div class="transaction_view__row row">
+                                    <div class="transaction_view__line col-sm-8">
+                                        <i class="icon icon--info"></i> Issued Assets 
+                                    </div>
+                                    <div class="transaction_view__line col-sm-4">
+                                        @coloredAsset.IssedQuantity.ToStringBtcFormat() @coloredAsset.ShortName
+                                    </div>      
                                 </div>
+
                             }
                             else
                             {
@@ -161,21 +168,21 @@
                                         }
                                     </text>
                                 }
-
                             }                        
                         </td>
-
-
                         <td class="transaction_view__arrow">
                             <div class="colored_arrow"></div>
                         </td>
-
-
                         <td colspan="2">
-                            @if (coloredAsset.IsDestroed)
+                            @if (coloredAsset.IsDestroyed)
                             {
-                                <div class="transaction_view__line">
-                                    <i class="icon icon--info"></i> Destroyed assets
+                                <div class="transaction_view__row row">
+                                    <div class="transaction_view__line col-sm-8">
+                                        <i class="icon icon--info"></i> Destroyed Assets
+                                    </div>
+                                    <div class="transaction_view__line col-sm-4">
+                                        @coloredAsset.DestroyedQuantity.ToStringBtcFormat() @coloredAsset.ShortName
+                                    </div>
                                 </div>
                             }
                             else

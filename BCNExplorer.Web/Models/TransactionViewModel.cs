@@ -138,9 +138,13 @@ namespace BCNExplorer.Web.Models
             public string AssetId { get; set; }
             public int Divisibility { get; set; }
             public string Name { get; set; }
+            public string ShortName { get; set; }
             public string IconImageUrl { get; set; }
-            public bool IsDestroed => !AggregatedOuts.Any();
+            public bool IsDestroyed => !AggregatedOuts.Any();
             public bool IsIssued => !AggregatedIns.Any();
+
+            public double IssedQuantity => (-1) * AggregatedOuts.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
+            public double DestroyedQuantity => (-1) * AggregatedIns.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
             public IEnumerable<AggregatedInOut<In>> AggregatedIns { get; set; }
             public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
 
@@ -223,7 +227,8 @@ namespace BCNExplorer.Web.Models
                     Name = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Name, null),
                     IconImageUrl = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.IconUrl, null),
                     AggregatedIns = AssetHelper.GroupByAddress(ins),
-                    AggregatedOuts = AssetHelper.GroupByAddress(outs)
+                    AggregatedOuts = AssetHelper.GroupByAddress(outs),
+                    ShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null),
                 };
 
                 return result;
