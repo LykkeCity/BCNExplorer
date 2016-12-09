@@ -25,7 +25,8 @@ namespace TestConsole
             //CheckBalance.Run(container).Wait();
             //MongoFillBalance.Run(container).Wait();
             //AddAddressesFromBlockChain.Run(container).Wait();
-            CopyMongoData.Run(container).Wait();
+            AssetDefToCsv.Run(container).Wait();
+            //CopyMongoData.Run(container).Wait();
         }
         
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)
