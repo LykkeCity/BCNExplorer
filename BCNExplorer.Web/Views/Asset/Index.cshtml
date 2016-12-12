@@ -5,6 +5,7 @@
 
 @section scripts
 {
+    @Scripts.Render("~/bundles/js/transaction")
     @Scripts.Render("~/bundles/js/asset")
 }
 
@@ -86,12 +87,10 @@
         </div>
         <div class="clearfix"></div>
         <div id="js-load-panels">
-            <div id="js-asset-owners" data-load-url="@Url.Action("Owners", new {id = Model.AssetIds.FirstOrDefault()})">
+            <div id="js-asset-owners" class="js-load-panel" data-load-url="@Url.Action("Owners", new {id = Model.AssetIds.FirstOrDefault()})"></div>
+            <div id="js-asset-transactions" class="hidden js-load-panel" data-load-url="@Url.Action("Transactions", new {id = Model.AssetIds.FirstOrDefault()})"></div>
 
-            </div>
-
-            <div id="js-asset-transactions" class="hidden" data-load-url="@Url.Action("Transactions", new {id = Model.AssetIds.FirstOrDefault()})">
-            </div>
+            
             <div id="js-panel-loader">
                 <div class="spinner_container">
                     <div class="spinner">

@@ -11,7 +11,7 @@ namespace BCNExplorer.Web.Models
 
         public readonly int _pageSize;
 
-        public TransactionIdList(IEnumerable<string> source, int pageSize)
+        public TransactionIdList(IEnumerable<string> source, int pageSize = 20)
         {
             _transactionIds = source ?? Enumerable.Empty<string>();
             _pageSize = pageSize;

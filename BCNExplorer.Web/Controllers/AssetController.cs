@@ -92,6 +92,23 @@ namespace BCNExplorer.Web.Controllers
             }
 
             return View("NotFound");
+        }
+
+        [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
+        public async Task<ActionResult> Transactions(string id)
+        {
+            var asset = await _assetService.GetAssetAsync(id);
+
+            if (asset != null)
+            {
+                var txs = await _balanceChangesRepository.GetTransactionsAsync(asset.AssetIds);
+
+                var txList = new TransactionIdList(txs.Select(p => p.Hash));
+
+                return View("~/Views/Transaction/TransactionIdList.cshtml", txList);
+            }
+
+            return View("NotFound");
         } 
     }
 }
