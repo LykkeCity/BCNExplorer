@@ -26,15 +26,16 @@
                         }
 
                         <th>
-                            @if (Model.IsConfirmed)
-                            {
-                                <span class="label label--green label--plate">Confirmed</span>
-                            }
-                            else
-                            {
-                                <span class="label label--red label--plate">Unconfirmed</span>
-                            }
-
+                            <div class="pull-right">
+                                @if (Model.IsConfirmed)
+                                {
+                                    <span class="label label--green label--plate">Confirmed</span>
+                                }
+                                else
+                                {
+                                    <span class="label label--red label--plate">Unconfirmed</span>
+                                }                          
+                            </div>
                         </th>
                     </tr>
                 }
