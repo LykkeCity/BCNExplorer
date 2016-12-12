@@ -22,10 +22,6 @@
                 {
                     <img class="img-responsive img-thumbnail" src="@Model.ImageUrl" alt="@Model.Name">
                 }
-                <div class="list-group text-center">
-
-                    <a href="@Url.Action("Owners", new {id = Model.AssetIds.FirstOrDefault()})" class="btn">Owners</a>
-                </div>
             </div>
             <div class="col-xs-12 col-sm-9">
                 <div class="table-responsive">
@@ -89,9 +85,14 @@
             </div>
         </div>
         <div class="clearfix"></div>
+        <div id="js-load-panels">
+            <div id="js-asset-owners" data-load-url="@Url.Action("Owners", new {id = Model.AssetIds.FirstOrDefault()})">
 
-        <div id="js-asset-owners" data-load-url="@Url.Action("Owners", new {id = Model.AssetIds.FirstOrDefault()})">
-            <div class="js-loader">
+            </div>
+
+            <div id="js-asset-transactions" class="hidden" data-load-url="@Url.Action("Transactions", new {id = Model.AssetIds.FirstOrDefault()})">
+            </div>
+            <div id="js-panel-loader">
                 <div class="spinner_container">
                     <div class="spinner">
                         <div class="spinner__inside"></div>
@@ -100,14 +101,5 @@
             </div>
         </div>
 
-        <div id="js-asset-transactions" class="hidden" data-load-url="@Url.Action("Transactions", new {id = Model.AssetIds.FirstOrDefault()})">
-            <div class="js-loader">
-                <div class="spinner_container">
-                    <div class="spinner">
-                        <div class="spinner__inside"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </section>
