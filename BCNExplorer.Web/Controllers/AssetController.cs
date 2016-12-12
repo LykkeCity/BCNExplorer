@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
@@ -36,7 +37,7 @@ namespace BCNExplorer.Web.Controllers
         {
             var assetDefinitions = _assetService.GetAssetDefinitionsAsync();
             var assetCoinholdersIndexes = _assetService.GetAssetCoinholdersIndexAsync();
-
+            
             await Task.WhenAll(assetCoinholdersIndexes, assetDefinitions);
 
             var result = AssetDirectoryViewModel.Create(assetDefinitions.Result, assetCoinholdersIndexes.Result);
@@ -52,7 +53,7 @@ namespace BCNExplorer.Web.Controllers
             return _OwnersInner(id);
         }
 
-        [OutputCache(Duration = 60*60, VaryByParam = "*")]
+        [OutputCache(Duration = 60 * 60, VaryByParam = "*")]
         [Route("asset/{id}/owners/{at}")]
         public Task<ActionResult> OwnersHistory(string id, int? at)
         {
@@ -65,9 +66,27 @@ namespace BCNExplorer.Web.Controllers
 
             if (asset != null)
             {
+                var queryOpts = at != null ? QueryOptions.Create().To(at.Value) : null;
+                var summaryTask = _balanceChangesRepository.GetSummaryAsync(queryOpts, asset.AssetIds.ToArray());
+                var addressChangesTask = _balanceChangesRepository.GetBlocksWithChanges(asset.AssetIds);
+                Task<IDictionary<string, double>> addressChangesAtBlockTask;
+                if (at != null)
+                {
+                    addressChangesAtBlockTask = _balanceChangesRepository.GetAddressQuantityChangesAtBlock(at.Value, asset.AssetIds.ToArray());
+                }
+                else
+                {
+                    addressChangesAtBlockTask = Task.FromResult((IDictionary<string, double>)new Dictionary<string, double>());
+                }
+
+                await Task.WhenAll(addressChangesAtBlockTask, summaryTask, addressChangesTask);
+                
                 var result = AssetCoinholdersViewModel.Create(
-                    AssetViewModel.Create(asset),
-                    await _balanceChangesRepository.GetSummaryAsync(at, asset.AssetIds.ToArray()));
+                    AssetViewModel.Create(asset), 
+                    summaryTask.Result, 
+                    at, 
+                    addressChangesAtBlockTask.Result, 
+                    addressChangesTask.Result);
 
                 return View("Owners", result);
             }

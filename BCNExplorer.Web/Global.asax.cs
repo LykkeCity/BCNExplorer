@@ -39,15 +39,18 @@ namespace BCNExplorer.Web
 
             if (Context.Response.StatusCode == 500)
             {
-                Response.Clear();
+                if (!Context.Request.IsLocal)
+                {
+                    Response.Clear();
 
-                var rd = new RouteData();
+                    var rd = new RouteData();
 
-                rd.Values["controller"] = "Error";
-                rd.Values["action"] = "Server";
+                    rd.Values["controller"] = "Error";
+                    rd.Values["action"] = "Server";
 
-                IController c = new ErrorController();
-                c.Execute(new RequestContext(new HttpContextWrapper(Context), rd));
+                    IController c = new ErrorController();
+                    c.Execute(new RequestContext(new HttpContextWrapper(Context), rd));
+                }
             }
         }
     }

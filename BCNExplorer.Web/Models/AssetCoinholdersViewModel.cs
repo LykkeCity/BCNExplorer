@@ -16,16 +16,23 @@ namespace BCNExplorer.Web.Models
         
         public BlockPagination Pagination { get; set; }
         
-        public static AssetCoinholdersViewModel Create(AssetViewModel asset, IBalanceSummary balanceSummary)
+        public static AssetCoinholdersViewModel Create(AssetViewModel asset,
+            IBalanceSummary balanceSummary, 
+            int? atBlockHeight,
+            IDictionary<string, double> addressChanges,
+            IEnumerable<IBalanceBlock> blocksWithChanges)
         {
             var total = balanceSummary.AddressSummaries.Sum(p => p.Balance);
             
             return new AssetCoinholdersViewModel
             {
                 Asset = asset,
-                AddressSummaries = balanceSummary.AddressSummaries.Select(p => BalanceAddressSummary.Create(p, total, asset.Divisibility)).Where(p=>p.Balance != 0 || p.ChangeAtBlock != 0).OrderByDescending(p=>p.Balance),
+                AddressSummaries = balanceSummary.AddressSummaries
+                    .Select(p => BalanceAddressSummary.Create(p, total, asset.Divisibility, addressChanges.ContainsKey(p.Address) ? addressChanges[p.Address] : 0))
+                    .Where(p=>p.Balance != 0 || p.ChangeAtBlock != 0)
+                    .OrderByDescending(p => p.Balance),
                 Total = BitcoinUtils.CalculateColoredAssetQuantity(total, asset.Divisibility),
-                Pagination = BlockPagination.Create(balanceSummary.ChangedAtHeights, balanceSummary.AtBlockHeight)
+                Pagination = BlockPagination.Create(blocksWithChanges.Select(p=>p.Height), atBlockHeight)
 
             };
         }
@@ -39,11 +46,11 @@ namespace BCNExplorer.Web.Models
 
             public string BalancePercentageDescription => BalancePercenage > 0.01 ? BalancePercenage.ToString("F2") : "<0.01";
 
-            public static BalanceAddressSummary Create(IBalanceAddressSummary summary, double total, int divisibility)
+            public static BalanceAddressSummary Create(IBalanceAddressSummary summary, double total, int divisibility, double changesAtBlock)
             {
                 var coloredTotal = BitcoinUtils.CalculateColoredAssetQuantity(total, divisibility);
                 var coloredSummaryPerAddress = BitcoinUtils.CalculateColoredAssetQuantity(summary.Balance, divisibility);
-                var coloredChangeAtBlock = BitcoinUtils.CalculateColoredAssetQuantity(summary.ChangeAtBlock,
+                var coloredChangeAtBlock = BitcoinUtils.CalculateColoredAssetQuantity(changesAtBlock,
                     divisibility);
 
                 return new BalanceAddressSummary

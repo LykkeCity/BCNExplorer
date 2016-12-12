@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Log;
@@ -9,7 +8,6 @@ using Core.AssetBlockChanges.Mongo;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
 namespace AzureRepositories.AssetCoinHolders
 {
@@ -18,15 +16,40 @@ namespace AzureRepositories.AssetCoinHolders
     {
         public IEnumerable<string> AssetIds { get; set; }
         public IEnumerable<IBalanceAddressSummary> AddressSummaries { get; set; }
-        public IEnumerable<int> ChangedAtHeights { get; set; }
-        public int? AtBlockHeight { get; set; }
     }
 
     public class BalanceAddressSummary : IBalanceAddressSummary
     {
         public string Address { get; set; }
         public double Balance { get; set; }
-        public double ChangeAtBlock { get; set; }
+    }
+
+    public class BalanceTransaction : IBalanceTransaction
+    {
+        public string Hash { get; set; }
+
+        public static BalanceTransaction Create(string txHash)
+        {
+            return new BalanceTransaction
+            {
+                Hash = txHash
+            };
+        }
+    }
+
+    public class BalanceBlock:IBalanceBlock
+    {
+        public string Hash { get; set; }
+        public int Height { get; set; }
+
+        public static BalanceBlock Create(string hash, int height)
+        {
+            return new BalanceBlock
+            {
+                Height = height,
+                Hash = hash
+            };
+        }
     }
 
     public class AssetBalanceChangesRepository: IAssetBalanceChangesRepository
@@ -65,7 +88,6 @@ namespace AzureRepositories.AssetCoinHolders
                 }
                 catch (MongoCommandException e)
                 {
-                    Console.WriteLine("attempt {0}", attemptCount);
                     attemptCount++;
                     await _log.WriteError("AssetBalanceChangesRepository", "AddAsync", coloredAddress, e);
                     if (attemptCount >= attemptCountMax)
@@ -87,46 +109,38 @@ namespace AzureRepositories.AssetCoinHolders
             return GetSummaryAsync(null, assetIds);
         }
 
-        public async Task<IBalanceSummary> GetSummaryAsync(int? atBlock, params string[] assetIds)
+        public async Task<IBalanceSummary> GetSummaryAsync(IQueryOptions queryOptions, params string[] assetIds)
         {
-            var fullBalanceQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.TotalChanged != 0);
-            var stopAtBlockQuery = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight <= atBlock.Value && p.TotalChanged != 0);
-
-            var getBlockChangesTask = fullBalanceQuery.Project(p => p.BlockHeight).ToListAsync(); 
-            var addressBalanceChangesTask = (atBlock != null? stopAtBlockQuery: fullBalanceQuery).Project(p => new { p.ColoredAddress, Balance = p.TotalChanged }).ToListAsync();
-            Task<Dictionary<string, double>> changeAtBlockTask;
-
-            if (atBlock != null)
+            IFindFluent<AddressAssetBalanceChangeMongoEntity, AddressAssetBalanceChangeMongoEntity> query;
+            if (queryOptions != null)
             {
-                changeAtBlockTask = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight == atBlock.Value && p.TotalChanged != 0)
-                    .Project(p => new { p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc => bc.Quantity) })
-                    .ToListAsync()
-                    .ContinueWith(tsk =>
-                    {
-                        return tsk.Result.ToDictionary(p => p.ColoredAddress, p => p.Balance);
-                    });
+                query = _mongoCollection.Find(p => assetIds.Contains(p.AssetId)
+                           && p.BlockHeight <= queryOptions.ToBlockHeight
+                           && p.BlockHeight >= queryOptions.FromBlockHeight
+                           && p.TotalChanged != 0);
             }
             else
             {
-                changeAtBlockTask = Task.FromResult(new Dictionary<string, double>());
+                query= _mongoCollection.Find(p => assetIds.Contains(p.AssetId)
+                            && p.TotalChanged != 0);
             }
-
-            await Task.WhenAll(getBlockChangesTask, addressBalanceChangesTask, changeAtBlockTask);
+            
+            var addressBalanceChanges = await query.Project(p => new { p.ColoredAddress, Balance = p.TotalChanged }).ToListAsync();
+            
 
             return new BalanceSummary
             {
                 AssetIds = assetIds,
-                ChangedAtHeights = getBlockChangesTask.Result.Distinct().ToList(),
-                AtBlockHeight = atBlock,
                 AddressSummaries =
-                    addressBalanceChangesTask.Result.GroupBy(p => p.ColoredAddress).Select(bc => new BalanceAddressSummary
+                    addressBalanceChanges.GroupBy(p => p.ColoredAddress).Select(bc => new BalanceAddressSummary
                     {
                         Address = bc.Key,
-                        Balance = bc.Sum(p => p.Balance),
-                        ChangeAtBlock = changeAtBlockTask.Result.ContainsKey(bc.Key)? changeAtBlockTask.Result[bc.Key] : 0
-                    }).Where(p => p.Balance != 0 || p.ChangeAtBlock != 0)
+                        Balance = bc.Sum(p => p.Balance)
+                    })
             };
         }
+
+
 
         private async Task AddInnerAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges)
         {
@@ -162,12 +176,66 @@ namespace AzureRepositories.AssetCoinHolders
             }
         }
 
-
-
         public async Task<int> GetLastParsedBlockHeightAsync()
         {
             var result =  await _mongoCollection.Find(x => true).SortByDescending(d => d.BlockHeight).Limit(1).FirstOrDefaultAsync();
             return result != null ? result.BlockHeight : 0;
+        }
+
+        public async Task<IEnumerable<IBalanceTransaction>> GetTransactionsAsync(IEnumerable<string> assetIds, int? fromBlock = null)
+        {
+            IFindFluent<AddressAssetBalanceChangeMongoEntity, AddressAssetBalanceChangeMongoEntity> query;
+            if (fromBlock == null)
+            {
+                query = _mongoCollection.Find(p => assetIds.Contains(p.AssetId));
+            }
+            else
+            {
+                query = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight >= fromBlock.Value);
+            }
+
+            var queryResult = await query.Project(p => new { p.BalanceChanges }).ToListAsync();
+            var txHashes = queryResult.SelectMany(p => p.BalanceChanges.Select(x => x.TransactionHash));
+
+            return txHashes.Distinct().Select(BalanceTransaction.Create);
+        }
+
+        public async Task<IBalanceTransaction> GetLatestTxAsync(IEnumerable<string> assetIds)
+        {
+            var balanceChanges = (await _mongoCollection.Find(p => assetIds.Contains(p.AssetId))
+                .SortByDescending(p => p.BlockHeight)
+                .Limit(1)
+                .Project(p => p.BalanceChanges)
+                .ToListAsync())
+                .FirstOrDefault();
+
+            if (balanceChanges != null && balanceChanges.Any())
+            {
+                return BalanceTransaction.Create(balanceChanges.First().TransactionHash);
+            }
+
+            return null;
+        }
+
+        public async Task<IDictionary<string, double>> GetAddressQuantityChangesAtBlock(int blockHeight, IEnumerable<string> assetIds)
+        {
+            var result = await _mongoCollection.Find(
+                    p => assetIds.Contains(p.AssetId) && p.BlockHeight == blockHeight && p.TotalChanged != 0)
+                    .Project(p => new {p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc => bc.Quantity)})
+                    .ToListAsync();
+
+            return result.ToDictionary(p => p.ColoredAddress, p => p.Balance);
+        }
+
+        public async Task<IEnumerable<IBalanceBlock>> GetBlocksWithChanges(IEnumerable<string> assetIds)
+        {
+            var result =
+                await
+                    _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.TotalChanged != 0)
+                        .Project(p => new {p.BlockHeight, p.BlockHash})
+                        .ToListAsync();
+
+            return result.Distinct().Select(p => BalanceBlock.Create(p.BlockHash, p.BlockHeight));
         }
     }
 

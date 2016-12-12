@@ -51,6 +51,9 @@ namespace AssetDefinitionScanner.QueueHandlers
         {
             try
             {
+
+                await _log.WriteInfo("ParseBlockCommandQueueConsumer", "ParseBlock", context.ToJson(), "Started");
+
                 var block = _indexerClient.GetIndexerClient().GetBlock(context.BlockHash);
 
                 foreach (var transaction in block.Transactions.Where(p => p.HasValidColoredMarker()))
@@ -72,7 +75,6 @@ namespace AssetDefinitionScanner.QueueHandlers
                 await _log.WriteError("ParseBlockCommandQueueConsumer", "ParseBlock", context.ToJson(), e);
             }
         }
-        
 
         public void Start()
         {

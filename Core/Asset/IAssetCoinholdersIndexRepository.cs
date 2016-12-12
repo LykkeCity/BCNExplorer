@@ -15,14 +15,14 @@ namespace Core.Asset
         public int CoinholdersCount { get; set; }
         public double TotalQuantity { get; set; }
 
-        public static AssetCoinholdersIndex Create(IBalanceSummary balanceSummary)
+        public static AssetCoinholdersIndex Create(IBalanceSummary balanceSummary, IEnumerable<IBalanceBlock> blocksWithChanges)
         {
             var addressDic = balanceSummary.AddressSummaries.GroupBy(p => p.Address).ToDictionary(p => p.Key, p => p.Sum(x => x.Balance));
             return new AssetCoinholdersIndex
             {
                 AssetIds = balanceSummary.AssetIds,
                 TopCoinholdersBalanceAddressDictionary = addressDic.OrderByDescending(p => p.Value).Take(CoinholdersToStore).ToDictionary(p=>p.Key, p=>p.Value),
-                ChangedAtBlockHeights = balanceSummary.ChangedAtHeights,
+                ChangedAtBlockHeights = blocksWithChanges.Select(p => p.Height),
                 CoinholdersCount = addressDic.Count,
                 TotalQuantity = addressDic.Sum(p=>p.Value)
             };

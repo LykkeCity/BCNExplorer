@@ -36,22 +36,7 @@ namespace Core.Asset
         bool IsVerified { get; }
     }
 
-
-
-
-    public class Compare : IEqualityComparer<IAssetDefinition>
-    {
-        public bool Equals(IAssetDefinition x, IAssetDefinition y)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public int GetHashCode(IAssetDefinition obj)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
+    
     public sealed class AssetDefinitionUrlEqualityComparer : IEqualityComparer<IAssetDefinition>
     {
         public bool Equals(IAssetDefinition x, IAssetDefinition y)

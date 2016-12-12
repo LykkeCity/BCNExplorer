@@ -42,6 +42,7 @@ namespace AssetDefinitionScanner.QueueHandlers
         {
             try
             {
+                await _log.WriteInfo("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), "Started");
                 var assetData = await _assetReader.ReadAssetDataAsync(context.AssetDefinitionUrl);
                 if (assetData != null)
                 {

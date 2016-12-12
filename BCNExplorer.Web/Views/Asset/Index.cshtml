@@ -3,6 +3,11 @@
     ViewData["Title"] = "Asset - " + string.Join(", ", Model.AssetIds);
 }
 
+@section scripts
+{
+    @Scripts.Render("~/bundles/js/asset")
+}
+
 <section class="section section--be section--padding">
     <div class="container container--extend">
 
@@ -19,45 +24,45 @@
                 }
                 <div class="list-group text-center">
 
-                    <a href="@Url.Action("Owners", new {id=Model.AssetIds.FirstOrDefault()})" class="btn">Owners</a>
+                    <a href="@Url.Action("Owners", new {id = Model.AssetIds.FirstOrDefault()})" class="btn">Owners</a>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-9">
                 <div class="table-responsive">
                     <table class="table table--be_info">
                         <tbody>
-                            <tr>
-                                <th colspan="2">Advanced details</th>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Asset ID	</td>
-                                <td>@string.Join(", ", Model.AssetIds)</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Ticker</td>
-                                <td>@Model.NameShort</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Type</td>
-                                <td>@Model.Type</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Issuer</td>
-                                <td>@Model.Issuer</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Divisibility</td>
-                                <td>
-                                    @if (Model.Divisibility == 0)
-                                    {
-                                        <span>Indivisible</span>
-                                    }
-                                    else
-                                    {
-                                        <span>Divisible to @Model.Divisibility places</span>
-                                    }
-                                </td>
-                            </tr>
+                        <tr>
+                            <th colspan="2">Advanced details</th>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Asset ID </td>
+                            <td>@string.Join(", ", Model.AssetIds)</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Ticker</td>
+                            <td>@Model.NameShort</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Type</td>
+                            <td>@Model.Type</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Issuer</td>
+                            <td>@Model.Issuer</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Divisibility</td>
+                            <td>
+                                @if (Model.Divisibility == 0)
+                                {
+                                    <span>Indivisible</span>
+                                }
+                                else
+                                {
+                                    <span>Divisible to @Model.Divisibility places</span>
+                                }
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -77,5 +82,32 @@
             </div>
         </div>
 
+        <div class="pull-right">
+            <div class="btn-group js-tx-toggle-container toggle-container">
+                <a class="js-tx-toggle btn" href="#js-asset-transactions">Transactions</a>
+                <a class="js-tx-toggle btn active" href="#js-asset-owners">Coinholders</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div id="js-asset-owners" data-load-url="@Url.Action("Owners", new {id = Model.AssetIds.FirstOrDefault()})">
+            <div class="js-loader">
+                <div class="spinner_container">
+                    <div class="spinner">
+                        <div class="spinner__inside"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="js-asset-transactions" class="hidden" data-load-url="@Url.Action("Transactions", new {id = Model.AssetIds.FirstOrDefault()})">
+            <div class="js-loader">
+                <div class="spinner_container">
+                    <div class="spinner">
+                        <div class="spinner__inside"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

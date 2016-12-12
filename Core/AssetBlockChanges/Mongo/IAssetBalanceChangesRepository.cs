@@ -36,25 +36,81 @@ namespace Core.AssetBlockChanges.Mongo
 
     public interface IBalanceSummary
     {
-
         IEnumerable<string> AssetIds { get; }
         IEnumerable<IBalanceAddressSummary> AddressSummaries { get;  }
-        IEnumerable<int> ChangedAtHeights { get;  }
-        int? AtBlockHeight { get;  }
     }
 
     public interface IBalanceAddressSummary
     {
         string Address { get; }
         double Balance { get; }
-        double ChangeAtBlock { get; }
+    }
+
+    public interface IBalanceTransaction
+    {
+        string Hash { get; }
+    }
+
+    public interface IBalanceBlock
+    {
+        string Hash { get; }
+        int Height { get; }
+    }
+
+    public interface IQueryOptions
+    {
+        int FromBlockHeight { get; }
+        int ToBlockHeight { get; }
+    }
+
+    public class QueryOptions:IQueryOptions
+    {
+        public int FromBlockHeight { get; set; }
+        public int ToBlockHeight { get; set; }
+
+        public QueryOptions()
+        {
+            FromBlockHeight = 0;
+            ToBlockHeight = int.MaxValue;
+        }
+
+        public static QueryOptions Create()
+        {
+            return new QueryOptions();
+        }
+
+        public QueryOptions From(int fromBlockHeight)
+        {
+            this.FromBlockHeight = fromBlockHeight;
+
+            return this;
+        }
+
+        public QueryOptions To(int toBlockHeight)
+        {
+            this.ToBlockHeight = toBlockHeight;
+
+            return this;
+        }
     }
 
     public interface IAssetBalanceChangesRepository
     {
         Task AddAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges);
         Task<IBalanceSummary> GetSummaryAsync(params string[] assetIds);
-        Task<IBalanceSummary> GetSummaryAsync(int? atBlock, params string[] assetIds);
+        Task<IBalanceSummary> GetSummaryAsync(IQueryOptions queryOptions, params string[] assetIds);
         Task<int> GetLastParsedBlockHeightAsync();
+        Task<IEnumerable<IBalanceTransaction>> GetTransactionsAsync(IEnumerable<string> assetIds, int? fromBlock = null);
+        Task<IBalanceTransaction> GetLatestTxAsync(IEnumerable<string> assetIds);
+
+        /// <summary>
+        /// Get Dictionary with address changes at specific block. Key - address, Value - quantity change
+        /// </summary>      
+        Task<IDictionary<string, double>> GetAddressQuantityChangesAtBlock(int blockHeight, IEnumerable<string> assetIds);
+
+        /// <summary>
+        /// Get blocks where asset change happens
+        /// </summary>
+        Task<IEnumerable<IBalanceBlock>> GetBlocksWithChanges(IEnumerable<string> assetIds);
     }
 }

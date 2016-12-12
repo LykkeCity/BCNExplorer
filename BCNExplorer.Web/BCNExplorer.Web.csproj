@@ -251,6 +251,7 @@
     <Content Include="img\twitter.svg" />
     <Content Include="img\youtube.svg" />
     <Content Include="img\yt.svg" />
+    <Content Include="js\app\asset\index.js" />
     <Content Include="js\functions.js" />
     <Content Include="js\vendor\bootstrap.min.js" />
     <Content Include="js\vendor\fastclick.min.js" />

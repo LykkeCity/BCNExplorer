@@ -23,6 +23,10 @@ namespace BCNExplorer.Web
             bundles.Add(new ScriptBundle("~/bundles/js/address").Include(
           "~/js/app/address/*.js"));
 
+
+            bundles.Add(new ScriptBundle("~/bundles/js/asset").Include(
+          "~/js/app/asset/*.js"));
+
             //bundles.Add(new StyleBundle("~/Content/maincss")
             //    .Include("~/Content/bootstrap.css", new CssRewriteUrlTransform())
             //    .Include("~/Content/site.css", new CssRewriteUrlTransform())

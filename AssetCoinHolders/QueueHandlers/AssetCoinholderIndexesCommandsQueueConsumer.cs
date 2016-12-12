@@ -61,9 +61,9 @@ namespace AssetCoinHoldersScanner.QueueHandlers
                 if (asset != null)
                 {
                     var balanceSummary = await _balanceChangesRepository.GetSummaryAsync(asset.AssetIds.ToArray());
-
+                    var blocksWithChanges = await _balanceChangesRepository.GetBlocksWithChanges(asset.AssetIds);
                     await
-                        _assetCoinholdersIndexRepository.InserOrReplaceAsync(AssetCoinholdersIndex.Create(balanceSummary));
+                        _assetCoinholdersIndexRepository.InserOrReplaceAsync(AssetCoinholdersIndex.Create(balanceSummary, blocksWithChanges));
                 }
 
                 await
