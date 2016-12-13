@@ -194,7 +194,7 @@ namespace AzureRepositories.AssetCoinHolders
                 query = _mongoCollection.Find(p => assetIds.Contains(p.AssetId) && p.BlockHeight >= fromBlock.Value);
             }
 
-            var queryResult = await query.Project(p => new { p.BalanceChanges }).ToListAsync();
+            var queryResult = await query.SortByDescending(p=>p.BlockHeight).Project(p => new { p.BalanceChanges }).ToListAsync();
             var txHashes = queryResult.SelectMany(p => p.BalanceChanges.Select(x => x.TransactionHash));
 
             return txHashes.Distinct().Select(BalanceTransaction.Create);
