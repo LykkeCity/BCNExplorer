@@ -172,6 +172,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HtmlHelpers\QRCode.cs" />
     <Compile Include="Models\AssetCoinholdersViewModel.cs" />
     <Compile Include="Models\AssetDictionary.cs" />
     <Compile Include="Models\AssetDirectoryViewModel.cs" />
