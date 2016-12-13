@@ -1,11 +1,18 @@
-﻿$(function() {
-    var $initialLoadPanel = $('#js-load-panels').find('[data-load-url]:visible').first();
-    var loadedClass = "js-loaded";
+﻿$(function () {
+    var initialPanelToShowSelector = window.location.hash ? window.location.hash : '#owners';
 
+    var $initialLoadPanel = $(initialPanelToShowSelector).first();
+    var $initialLoadBtn = $('[href=' + initialPanelToShowSelector +']');
+    $initialLoadBtn.addClass('active');
+    var loadedClass = "js-loaded";
+    $initialLoadPanel.removeClass('hidden');
     var $loader = $('#js-panel-loader');
+
     $initialLoadPanel.load($initialLoadPanel.data('load-url'), function() {
         $loader.hide();
         $initialLoadPanel.addClass(loadedClass);
+
+        $initialLoadPanel.trigger('panel-loaded');
     });
 
     $('body').on('click', '.js-load-panel-loader', function () {
@@ -48,14 +55,19 @@
                 $panelToShow.show();
                 $panelToShow.addClass(loadedClass);
 
-                $panelToShow.trigger('toggle-loaded');
+                $panelToShow.trigger('panel-loaded');
             });
         }
-
+        if (history.pushState) {
+            history.pushState(null, null, idToShow);
+        }
+        else {
+            location.hash = idToShow;
+        }
         return false;
     });
 
-    $('body').on('toggle-loaded', '#js-asset-transactions', function (e) {
+    $('body').on('panel-loaded', '#transactions', function (e) {
         $(e.target).find('.js-transactions-container').first().trigger('load-transactions');
     });
 })

@@ -81,14 +81,14 @@
 
         <div class="pull-right">
             <div class="btn-group js-tx-toggle-container toggle-container">
-                <a class="js-tx-toggle btn" href="#js-asset-transactions">Transactions</a>
-                <a class="js-tx-toggle btn active" href="#js-asset-owners">Coinholders</a>
+                <a class="js-tx-toggle btn" href="#transactions">Transactions</a>
+                <a class="js-tx-toggle btn" href="#owners">Coinholders</a>
             </div>
         </div>
         <div class="clearfix"></div>
         <div id="js-load-panels">
-            <div id="js-asset-owners" class="js-load-panel" data-load-url="@Url.Action("Owners", new {id = Model.AssetIds.FirstOrDefault()})"></div>
-            <div id="js-asset-transactions" class="hidden js-load-panel" data-load-url="@Url.Action("Transactions", new {id = Model.AssetIds.FirstOrDefault()})"></div>
+            <div id="owners" class="js-load-panel hidden" data-load-url="@Url.Action("Owners", new {id = Model.AssetIds.FirstOrDefault()})"></div>
+            <div id="transactions" class="js-load-panel hidden" data-load-url="@Url.Action("Transactions", new {id = Model.AssetIds.FirstOrDefault()})"></div>
 
             
             <div id="js-panel-loader">

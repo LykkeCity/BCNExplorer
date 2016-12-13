@@ -29,7 +29,8 @@
         $panelToShow.find('.js-transactions-container').first().trigger('load-transactions');
         $panelsToHide.addClass('hidden');
         $panelToShow.removeClass('hidden');
-        
+
+
         return false;
     });
 })
