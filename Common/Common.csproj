@@ -141,6 +141,7 @@
     <Compile Include="Files\ReadWriteHelper.cs" />
     <Compile Include="Files\TextFileReader.cs" />
     <Compile Include="FixProtocol\FixProtocolUtils.cs" />
+    <Compile Include="HerfindahlIndex.cs" />
     <Compile Include="HttpRemoteRequests\HttpRequestClient.cs" />
     <Compile Include="HttpRemoteRequests\HttpRequestServer.cs" />
     <Compile Include="HttpRequester.cs" />

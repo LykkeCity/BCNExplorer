@@ -88,7 +88,7 @@ namespace BCNExplorer.Web.Models
                     IsVerified = source.IsVerified,
                     CoinholdersCount = index?.CoinholdersCount,
                     TotalQuantity = index?.TotalQuantity,
-                    Spread = index?.Spread ?? 0
+                    Spread = index?.Score ?? 0
                 };
             }
             

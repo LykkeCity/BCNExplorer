@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using AzureRepositories.AssetCoinHolders;
 using AzureRepositories.QueueReaders;
@@ -11,6 +8,9 @@ using Common;
 using Common.Log;
 using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
+using Core.Transaction;
+using Providers.Helpers;
+using Services.MainChain;
 
 namespace AssetCoinHoldersScanner.QueueHandlers
 {
@@ -21,18 +21,23 @@ namespace AssetCoinHoldersScanner.QueueHandlers
         private readonly IAssetCoinholdersIndexRepository _assetCoinholdersIndexRepository;
         private readonly IAssetBalanceChangesRepository _balanceChangesRepository;
         private readonly IAssetService _assetService;
+        private readonly ITransactionService _transactionService;
+        private readonly MainChainRepository _mainChainRepository;
 
         public AssetCoinholderIndexesCommandsQueueConsumer(ILog log, 
             ICoinholderIndexesQueueReader queueReader,
             IAssetCoinholdersIndexRepository assetCoinholdersIndexRepository, 
             IAssetBalanceChangesRepository balanceChangesRepository, 
-            IAssetService assetService)
+            IAssetService assetService, 
+            ITransactionService transactionService, MainChainRepository mainChainRepository)
         {
             _log = log;
             _queueReader = queueReader;
             _assetCoinholdersIndexRepository = assetCoinholdersIndexRepository;
             _balanceChangesRepository = balanceChangesRepository;
             _assetService = assetService;
+            _transactionService = transactionService;
+            _mainChainRepository = mainChainRepository;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -60,10 +65,24 @@ namespace AssetCoinHoldersScanner.QueueHandlers
                 var asset = await _assetService.GetAssetAsync(context.AssetId);
                 if (asset != null)
                 {
-                    var balanceSummary = await _balanceChangesRepository.GetSummaryAsync(asset.AssetIds.ToArray());
-                    var blocksWithChanges = await _balanceChangesRepository.GetBlocksWithChanges(asset.AssetIds);
-                    await
-                        _assetCoinholdersIndexRepository.InserOrReplaceAsync(AssetCoinholdersIndex.Create(balanceSummary, blocksWithChanges));
+                    var mainChain = await _mainChainRepository.GetMainChainAsync();
+
+                    var balanceSummary = _balanceChangesRepository.GetSummaryAsync(asset.AssetIds.ToArray());
+                    var blocksWithChanges = _balanceChangesRepository.GetBlocksWithChanges(asset.AssetIds);
+                    var allTxs = _balanceChangesRepository.GetTransactionsAsync(asset.AssetIds);
+                    var monthAgoBlock = mainChain.GetClosestToTimeBlock(DateTime.Now.AddDays(-30));
+                    var lastMonthTxs = _balanceChangesRepository.GetTransactionsAsync(asset.AssetIds,
+                        monthAgoBlock?.Height);
+
+                    var lastTxDate = _balanceChangesRepository.GetLatestTxAsync(asset.AssetIds)
+                        .ContinueWith(async p => (await _transactionService.GetAsync(p.Result?.Hash))?.Block?.Time);
+
+                    await Task.WhenAll(balanceSummary, blocksWithChanges, allTxs, lastTxDate.Unwrap(), lastMonthTxs);
+
+                    await _assetCoinholdersIndexRepository.InserOrReplaceAsync(
+                            AssetCoinholdersIndex.Create(balanceSummary.Result, 
+                                blocksWithChanges.Result, 
+                                allTxs.Result.Count(), lastMonthTxs.Result.Count(), lastTxDate.Unwrap().Result));
                 }
 
                 await

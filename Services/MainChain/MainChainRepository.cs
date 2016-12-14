@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Caching;
+using System.Threading;
 using System.Threading.Tasks;
 using Common.Files;
 using Common.Log;
@@ -14,6 +15,7 @@ namespace Services.MainChain
     {
         private readonly IndexerClientFactory _indexerClient;
         private readonly ILog _log;
+        private static SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private const string FilePath = "./chain.dat";
 
@@ -38,7 +40,7 @@ namespace Services.MainChain
                 }
 
                 var result =  new ConcurrentChain(await ReadWriteHelper.ReadAllFileAsync(FilePath));
-
+                
                 Cache.Set(CacheKey, result, ObjectCache.InfiniteAbsoluteExpiration);
 
                 return result;
@@ -60,14 +62,18 @@ namespace Services.MainChain
         {
             try
             {
+                await _semaphore.WaitAsync();
+
                 Cache.Set(CacheKey, chain, ObjectCache.InfiniteAbsoluteExpiration);
                 File.WriteAllBytes(FilePath, chain.ToBytes());
-
-                //await ReadWriteHelper.WriteAsync(FilePath, chain.ToBytes());
             }
             catch (Exception e)
             {
                 await _log.WriteError("MainChainRepository", "CacheChainAsync", null, e);
+            }
+            finally
+            {
+                _semaphore.Release();
             }
         }
 

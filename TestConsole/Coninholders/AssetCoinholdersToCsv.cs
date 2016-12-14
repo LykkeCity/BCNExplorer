@@ -46,8 +46,6 @@ namespace TestConsole.Coninholders
                 var arr = new []
                 {
                     assetCoinholdersIndex.AssetIds.ToJson(),
-                    assetCoinholdersIndex.TopCoinholdersBalanceAddressDictionary.ToJson(),
-                    assetCoinholdersIndex.ChangedAtBlockHeights.ToJson(),
                     assetCoinholdersIndex.CoinholdersCount.ToString(),
                     assetCoinholdersIndex.TotalQuantity.ToString(),
                     totalTx.Count().ToString(),

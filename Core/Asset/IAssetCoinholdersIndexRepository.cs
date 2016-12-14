@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
 using Core.AssetBlockChanges.Mongo;
 
 namespace Core.Asset
@@ -9,22 +11,29 @@ namespace Core.Asset
     {
         private const int CoinholdersToStore = 20;
         public IEnumerable<string> AssetIds { get; set; }
-        public IDictionary<string, double> TopCoinholdersBalanceAddressDictionary { get; set; }
-        public double Spread { get; }
-        public IEnumerable<int> ChangedAtBlockHeights { get; set; }
+        public double Score { get; }
         public int CoinholdersCount { get; set; }
         public double TotalQuantity { get; set; }
+        public double TopCoinholderShare { get; set; }
+        public double HerfindalShareIndex { get; set; }
+        public DateTime? LastTxDate { get; set; }
+        public int TransactionsCount { get; set; }
+        public int LastMonthTransactionCount { get; set; }
 
-        public static AssetCoinholdersIndex Create(IBalanceSummary balanceSummary, IEnumerable<IBalanceBlock> blocksWithChanges)
+        public static AssetCoinholdersIndex Create(IBalanceSummary balanceSummary, IEnumerable<IBalanceBlock> blocksWithChanges, int transactionCount, int lastMonthTransactionCount, DateTime? lastTxDate)
         {
             var addressDic = balanceSummary.AddressSummaries.GroupBy(p => p.Address).ToDictionary(p => p.Key, p => p.Sum(x => x.Balance));
+            var totalQuantity = addressDic.Sum(p => p.Value);
             return new AssetCoinholdersIndex
             {
                 AssetIds = balanceSummary.AssetIds,
-                TopCoinholdersBalanceAddressDictionary = addressDic.OrderByDescending(p => p.Value).Take(CoinholdersToStore).ToDictionary(p=>p.Key, p=>p.Value),
-                ChangedAtBlockHeights = blocksWithChanges.Select(p => p.Height),
                 CoinholdersCount = addressDic.Count,
-                TotalQuantity = addressDic.Sum(p=>p.Value)
+                TotalQuantity = totalQuantity,
+                HerfindalShareIndex = HerfindahlIndex.Calculate(addressDic.Values.Select(p => HerfindahlIndex.CalculateShare(p, totalQuantity))),
+                TopCoinholderShare = HerfindahlIndex.CalculateShare(addressDic.Values.DefaultIfEmpty().Max(), totalQuantity),
+                TransactionsCount = transactionCount,
+                LastTxDate = lastTxDate,
+                LastMonthTransactionCount = lastMonthTransactionCount
             };
         }
     }
@@ -32,11 +41,14 @@ namespace Core.Asset
     public interface IAssetCoinholdersIndex
     {
         IEnumerable<string> AssetIds { get; }
-        IDictionary<string, double> TopCoinholdersBalanceAddressDictionary { get;}
-        double Spread { get; }
-        IEnumerable<int> ChangedAtBlockHeights { get; } 
+        double Score { get; }
         int CoinholdersCount { get; }
         double TotalQuantity { get; }
+        double TopCoinholderShare { get; }
+        double HerfindalShareIndex { get; }
+        DateTime? LastTxDate { get; }
+        int TransactionsCount { get; }
+        int LastMonthTransactionCount { get; }
     }
 
     public interface IAssetCoinholdersIndexRepository

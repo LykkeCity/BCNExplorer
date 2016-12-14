@@ -134,6 +134,11 @@ namespace Services.Transaction
 
         public async Task<ITransaction> GetAsync(string id, bool calculateInputsWithReturnedChange = true)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                return null;
+            }
+
             var responce = await _ninjaTransactionProvider.GetAsync(id, calculateInputsWithReturnedChange);
             if (responce == null)
             {

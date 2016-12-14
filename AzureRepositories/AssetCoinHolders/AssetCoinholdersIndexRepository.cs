@@ -13,15 +13,14 @@ namespace AzureRepositories.AssetCoinHolders
     public class AssetCoinholdersIndexEntity:TableEntity, IAssetCoinholdersIndex
     {
         IEnumerable<string> IAssetCoinholdersIndex.AssetIds => JsonConvert.DeserializeObject<List<string>>(AssetIds);
-        IDictionary<string, double> IAssetCoinholdersIndex.TopCoinholdersBalanceAddressDictionary => JsonConvert.DeserializeObject<Dictionary<string, double>>(BalanceAddressDictionary);
-
-        public double Spread => CalculateSpread(this);
-
-        IEnumerable<int> IAssetCoinholdersIndex.ChangedAtBlockHeights => JsonConvert.DeserializeObject<List<int>>(ChangedAtBlockHeights);
+        public double Score { get; }
         public int CoinholdersCount { get; set; }
         public double TotalQuantity { get; set; }
-        public string ChangedAtBlockHeights { get; set; }
-        public string BalanceAddressDictionary { get; set; }
+        public double TopCoinholderShare { get; set; }
+        public double HerfindalShareIndex { get; set; }
+        public DateTime? LastTxDate { get; set; }
+        public int TransactionsCount { get; set; }
+        public int LastMonthTransactionCount { get; set; }
         public string AssetIds { get; set; }
 
         public static string GenerateRowKey(IEnumerable<string> assetIds)
@@ -41,16 +40,14 @@ namespace AzureRepositories.AssetCoinHolders
                 AssetIds = source.AssetIds.ToJson(),
                 RowKey = GenerateRowKey(source.AssetIds),
                 PartitionKey = GeneratePartitionKey(),
-                BalanceAddressDictionary = source.TopCoinholdersBalanceAddressDictionary.ToJson(),
-                ChangedAtBlockHeights = source.ChangedAtBlockHeights.ToJson(),
                 CoinholdersCount = source.CoinholdersCount,
-                TotalQuantity = source.TotalQuantity
+                TotalQuantity = source.TotalQuantity,
+                LastTxDate = source.LastTxDate,
+                HerfindalShareIndex = source.HerfindalShareIndex,
+                TransactionsCount = source.TransactionsCount,
+                TopCoinholderShare = source.TopCoinholderShare,
+                LastMonthTransactionCount = source.LastMonthTransactionCount
             };
-        }
-
-        private static double CalculateSpread(IAssetCoinholdersIndex asset)
-        {
-            return 0;
         }
     }
 
