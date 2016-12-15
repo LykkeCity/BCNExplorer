@@ -25,13 +25,15 @@ namespace AssetDefinitionScanner.TimerFunctions
         {
             try
             {
+                await _log.WriteInfo("UpdateAssetDataFunctions", "UpdateAssets", null, "Started");
+
                 var assetsToUpdate = await _assetDefinitionRepository.GetAllAsync();
 
                 var updUrls = assetsToUpdate.Select(p => p.AssetDefinitionUrl).ToArray();
 
                 await _assetDataCommandProducer.CreateUpdateAssetDataCommand(updUrls);
 
-                await _log.WriteInfo("AssetUpdaterFunctions", "UpdateAssets", updUrls.Length.ToString(), "Done");
+                await _log.WriteInfo("UpdateAssetDataFunctions", "UpdateAssets", updUrls.Length.ToString(), "Done");
             }
             catch (Exception e)
             {

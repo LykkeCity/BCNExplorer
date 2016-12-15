@@ -6,7 +6,6 @@ using AzureStorage.Queue;
 using Common.IocContainer;
 using Common.Log;
 using Core.Settings;
-using JobsCommon;
 
 namespace AssetCoinHoldersScanner.Binders
 {
@@ -19,8 +18,9 @@ namespace AssetCoinHoldersScanner.Binders
             ioc.Register<ICoinholderIndexesQueueReader>(AssetFunctionsFactories.CreateCoinholderIndexesQueueReader(baseSettings, log));
             ioc.RegisterSingleTone<SendMonitorData>();
             ioc.RegisterSingleTone<ParseBlocksFunctions>();
-            ioc.RegisterSingleTone<UpdateAssetIndexDataFunctions>();
-            
+            ioc.RegisterSingleTone<AssetIndexFunctions>();
+            ioc.RegisterSingleTone<AssetScoreFunctions>();
+
             ioc.RegisterSingleTone<ParseBalanceChangesCommandQueueConsumer>();
         }
     }

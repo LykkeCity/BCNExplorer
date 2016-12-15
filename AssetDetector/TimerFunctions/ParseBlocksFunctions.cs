@@ -34,6 +34,7 @@ namespace AssetDefinitionScanner.TimerFunctions
 
             try
             {
+                await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", null, "Started");
                 var client = _indexerClient.GetIndexerClient();
                 blockPtr = client.GetBestBlock().Header;
                 while (blockPtr != null && !(await _assetDefinitionParsedBlockRepository.IsBlockExistsAsync(AssetDefinitionParsedBlock.Create(blockPtr.GetBlockId()))))

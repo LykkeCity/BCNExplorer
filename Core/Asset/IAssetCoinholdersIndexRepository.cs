@@ -9,9 +9,8 @@ namespace Core.Asset
 {
     public class AssetCoinholdersIndex: IAssetCoinholdersIndex
     {
-        private const int CoinholdersToStore = 20;
         public IEnumerable<string> AssetIds { get; set; }
-        public double Score { get; }
+        public double Score { get; set; }
         public int CoinholdersCount { get; set; }
         public double TotalQuantity { get; set; }
         public double TopCoinholderShare { get; set; }
@@ -41,7 +40,7 @@ namespace Core.Asset
     public interface IAssetCoinholdersIndex
     {
         IEnumerable<string> AssetIds { get; }
-        double Score { get; }
+        double Score { get; set; }
         int CoinholdersCount { get; }
         double TotalQuantity { get; }
         double TopCoinholderShare { get; }
@@ -50,6 +49,7 @@ namespace Core.Asset
         int TransactionsCount { get; }
         int LastMonthTransactionCount { get; }
     }
+
 
     public interface IAssetCoinholdersIndexRepository
     {

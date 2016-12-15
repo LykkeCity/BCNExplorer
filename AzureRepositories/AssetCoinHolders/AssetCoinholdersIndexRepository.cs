@@ -13,7 +13,7 @@ namespace AzureRepositories.AssetCoinHolders
     public class AssetCoinholdersIndexEntity:TableEntity, IAssetCoinholdersIndex
     {
         IEnumerable<string> IAssetCoinholdersIndex.AssetIds => JsonConvert.DeserializeObject<List<string>>(AssetIds);
-        public double Score { get; }
+        public double Score { get; set; }
         public int CoinholdersCount { get; set; }
         public double TotalQuantity { get; set; }
         public double TopCoinholderShare { get; set; }
@@ -46,7 +46,8 @@ namespace AzureRepositories.AssetCoinHolders
                 HerfindalShareIndex = source.HerfindalShareIndex,
                 TransactionsCount = source.TransactionsCount,
                 TopCoinholderShare = source.TopCoinholderShare,
-                LastMonthTransactionCount = source.LastMonthTransactionCount
+                LastMonthTransactionCount = source.LastMonthTransactionCount,
+                Score = source.Score
             };
         }
     }
