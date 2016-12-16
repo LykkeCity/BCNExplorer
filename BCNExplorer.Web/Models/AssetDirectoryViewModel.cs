@@ -27,9 +27,7 @@ namespace BCNExplorer.Web.Models
                     }
                     return Asset.Create(p, index);
                 })
-                    .OrderByDescending(p => p.Spread)
-                    .ThenByDescending(p => p.IsVerified)
-                    .ThenBy(p => p.Name).ToList()
+                    .OrderBy(p => p.Score).ToList()
             };
         }
 
@@ -66,7 +64,7 @@ namespace BCNExplorer.Web.Models
             private double? TotalQuantity { get; set; }
             public double? TotalColored => TotalQuantity != null? (double?)BitcoinUtils.CalculateColoredAssetQuantity(TotalQuantity.Value, Divisibility):null;
             
-            public double Spread { get; set; }
+            public double Score { get; set; }
 
             public static Asset Create(IAssetDefinition source, IAssetCoinholdersIndex index)
             {
@@ -88,7 +86,7 @@ namespace BCNExplorer.Web.Models
                     IsVerified = source.IsVerified,
                     CoinholdersCount = index?.CoinholdersCount,
                     TotalQuantity = index?.TotalQuantity,
-                    Spread = index?.Score ?? 0
+                    Score = index?.Score ?? 0
                 };
             }
             

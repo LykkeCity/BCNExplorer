@@ -34,8 +34,9 @@ namespace AssetCoinHoldersScanner.TimerFunctions
                 {
                     Console.WriteLine(counter);
                     counter--;
-                    index.Score = AssetScoreHelper.CalculateAssetScore(await _assetService.GetAssetAsync(index.AssetIds.FirstOrDefault()), index, indexes);
-                    await _indexRepository.InserOrReplaceAsync(index);
+                    var score = AssetScoreHelper.CalculateAssetScore(await _assetService.GetAssetAsync(index.AssetIds.FirstOrDefault()), index, indexes);
+
+                    await _indexRepository.SetScoreAsync(index, score);
                 }
                 await _log.WriteInfo("AssetScoreFunctions", "UpdateAssetScores", null, "Done");
             }

@@ -55,5 +55,6 @@ namespace Core.Asset
     {
         Task InserOrReplaceAsync(IAssetCoinholdersIndex index);
         Task<IEnumerable<IAssetCoinholdersIndex>> GetAllAsync();
+        Task SetScoreAsync(IAssetCoinholdersIndex index, double score);
     }
 }

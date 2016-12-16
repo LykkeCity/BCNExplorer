@@ -12,31 +12,55 @@ namespace Providers.Helpers
             IEnumerable<IAssetCoinholdersIndex> allIndexes)
         {
             var isVerified = (assetDefinition?.IsVerified??false) ? 0 : 1;
+            var result =  Weight(Coef.IsVerified) * isVerified
+                + Weight(Coef.LastMonthTxCount) * Calc(index.LastMonthTransactionCount, allIndexes.Select(p => p.LastMonthTransactionCount))
+                + Weight(Coef.TotalTransactionsCount) * Calc(index.TransactionsCount, allIndexes.Select(p => p.TransactionsCount))
+                + Weight(Coef.CoinholdersCount) * Calc(index.CoinholdersCount, allIndexes.Select(p => p.CoinholdersCount))
+                + Weight(Coef.TotalQuantity) * Calc(index.TotalQuantity, allIndexes.Select(p => p.TotalQuantity))
+                + Weight(Coef.LastTxDateDaysPast) * (index.LastTxDateDaysPast() != null ? Calc(index.LastTxDateDaysPast().Value, allIndexes.Select(p => p.LastTxDateDaysPast() ?? 0)) : 1)
+                + Weight(Coef.TopCoinholderShare) * index.TopCoinholderShare
+                + Weight(Coef.HerfindalShareIndex) * index.HerfindalShareIndex;
 
-            return Weight(Coef.IsVerified) * isVerified
-                + Weight(Coef.LastMonthTxCount) * Rank(index.LastMonthTransactionCount, allIndexes.Select(p => p.LastMonthTransactionCount))
-                + Weight(Coef.TotalTransactionsCount) * Rank(index.TransactionsCount, allIndexes.Select(p => p.TransactionsCount))
-                + Weight(Coef.CoinholdersCount) * Rank(index.CoinholdersCount, allIndexes.Select(p => p.CoinholdersCount))
-                + Weight(Coef.TotalQuantity) * Rank(index.TotalQuantity, allIndexes.Select(p => p.TotalQuantity))
-                + Weight(Coef.LastTxDateDaysPast) * (index.LastTxDateDaysPast() != null ? Rank(index.LastTxDateDaysPast().Value, allIndexes.Select(p => p.LastTxDateDaysPast() ?? 0)) : 1)
-                + Weight(Coef.TopCoinholderShare) * Rank(index.TopCoinholderShare, allIndexes.Select(p => p.TopCoinholderShare))
-                + Weight(Coef.HerfindalShareIndex) * Rank(index.HerfindalShareIndex, allIndexes.Select(p => p.HerfindalShareIndex));
+            return Math.Round(result, 4);
+        }
+
+
+        private static double Calc(double value, IEnumerable<double> allValues)
+        {
+            var rankArray = allValues.Distinct().Select(p => Rank(p, allValues)).ToList();
+            return Normalize(Rank(value, allValues), rankArray.Min(), rankArray.Max());
+        }
+
+        private static double Calc(int value, IEnumerable<int> allValues)
+        {
+            var rankArray = allValues.Distinct().Select(p => Rank(p, allValues)).ToList();
+            return Normalize(Rank(value, allValues), rankArray.Min(), rankArray.Max());
         }
 
         private static double Rank(double value, IEnumerable<double> allValues)
         {
-            return Rank(value, allValues.DefaultIfEmpty().Min(), allValues.DefaultIfEmpty().Max());
+            var unique = allValues.Distinct().OrderByDescending(p=>p).ToList();
+
+            return unique.IndexOf(value) + 1;
         }
 
         private static double Rank(int value, IEnumerable<int> allValues)
         {
-            return Rank(value, allValues.DefaultIfEmpty().Min(), allValues.DefaultIfEmpty().Max());
+            return Rank(value, allValues.Select(p => (double) p));
+        }
+
+        /// <summary>
+        /// To 0-1
+        /// </summary>
+        private static double Normalize(double value, double min, double max)
+        {
+            return (value - min) / (max - min);
         }
 
 
-        private static double Rank(double value, double min, double max)
+        private static double Normalize(double value, IEnumerable<double> allValues)
         {
-            return (value - min) / (max - min);
+            return Normalize(value, allValues.DefaultIfEmpty().Min(), allValues.DefaultIfEmpty().Max());
         }
 
         #region Weights

@@ -27,13 +27,14 @@
                             {
                                 <tr>
                                     <td>
+                                        @*@asset.Score*@
                                         @if (!string.IsNullOrEmpty(asset.IconUrl))
                                         {
                                             <a href="@Url.Action("Index", new {id = asset.AssetIds.FirstOrDefault()})"><img src="@asset.IconUrl" width="48" alt="@asset.Name"></a>
                                         }
                                         <p class="text-muted">@string.Join(", ", asset.AssetIds)</p>
                                         @*<p>@asset.Spread</p>*@
-                                       
+
                                     </td>
                                     <td><a href="@Url.Action("Index", new {id=asset.AssetIds.FirstOrDefault()})">@asset.Name</a></td>
                                     <td>

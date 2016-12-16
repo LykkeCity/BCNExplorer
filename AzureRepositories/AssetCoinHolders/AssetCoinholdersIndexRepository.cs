@@ -70,5 +70,14 @@ namespace AzureRepositories.AssetCoinHolders
         {
             return await _tableStorage.GetDataAsync();
         }
+
+        public async Task SetScoreAsync(IAssetCoinholdersIndex index, double score)
+        {
+            await _tableStorage.ReplaceAsync(AssetCoinholdersIndexEntity.Create(index), p =>
+            {
+                p.Score = score;
+                return p;
+            });
+        } 
     }
 }
