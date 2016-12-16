@@ -2,7 +2,7 @@
     var initialPanelToShowSelector = window.location.hash ? window.location.hash : '#owners';
 
     var $initialLoadPanel = $(initialPanelToShowSelector).first();
-    var $initialLoadBtn = $('[href=' + initialPanelToShowSelector +']');
+    var $initialLoadBtn = $('[href="' + initialPanelToShowSelector +'"]');
     $initialLoadBtn.addClass('active');
     var loadedClass = "js-loaded";
     $initialLoadPanel.removeClass('hidden');

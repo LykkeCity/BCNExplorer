@@ -16,6 +16,8 @@ namespace Services.Transaction
         public bool IsColor { get; set; }
         public string Hex { get; set; }
         public double Fees { get; set; }
+        public int InputsCount { get; set; }
+        public int OutputsCount { get; set; }
         public IBlockMinInfo Block { get; set; }
         public IEnumerable<IInOutsByAsset> TransactionsByAssets { get; set; }
 
@@ -176,7 +178,9 @@ namespace Services.Transaction
                 IsColor = transactionInfo.HasValidColoredMarker(),
                 Block = Transaction.BlockMinInfo.Create(responce.Block),
                 Fees = responce.Fees,
-                TransactionsByAssets = Transaction.InOutsByAsset.Create(inputs, outputs)
+                TransactionsByAssets = Transaction.InOutsByAsset.Create(inputs, outputs),
+                InputsCount = responce.Inputs.Count(),
+                OutputsCount = responce.Outputs.Count()
             };
 
             return result;

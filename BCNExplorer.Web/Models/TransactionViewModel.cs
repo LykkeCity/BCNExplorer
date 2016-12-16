@@ -19,6 +19,8 @@ namespace BCNExplorer.Web.Models
         public BlockViewModel Block { get; set; }
         public BitcoinAsset Bitcoin { get; set; }
         public IEnumerable<ColoredAsset> ColoredAssets { get; set; }
+        public int InputsCount { get; set; }
+        public int OutputsCount { get; set; }
         
         #region Classes 
 
@@ -58,6 +60,8 @@ namespace BCNExplorer.Web.Models
             public double Fees { get; set; }
             public string FeesDescription => Fees.ToStringBtcFormat();
 
+            public double Total { get; set; }
+
             public static IEnumerable<In> Group(IEnumerable<In> source)
             {
                 var groupedByAddress = source.GroupBy(p => p.Address);
@@ -77,13 +81,15 @@ namespace BCNExplorer.Web.Models
             {
                 var ins = In.Create(ninjaIn);
                 var outs = Out.Create(ninjaOuts);
+                var feesBtc = BitcoinUtils.SatoshiToBtc(fees);
 
                 return new BitcoinAsset
                 {
-                    Fees = BitcoinUtils.SatoshiToBtc(fees),
+                    Fees = feesBtc,
                     IsCoinBase = isCoinBase,
                     AggregatedIns = AssetHelper.GroupByAddress(ins),
-                    AggregatedOuts = AssetHelper.GroupByAddress(outs)
+                    AggregatedOuts = AssetHelper.GroupByAddress(outs),
+                    Total = outs.Sum(p=>p.Value) + feesBtc
                 };
             }
 
@@ -142,6 +148,8 @@ namespace BCNExplorer.Web.Models
             public string IconImageUrl { get; set; }
             public bool IsDestroyed => !AggregatedOuts.Any();
             public bool IsIssued => !AggregatedIns.Any();
+            public bool IsKnown { get; set; }
+            public double Total { get; set; }
 
             public double IssedQuantity => (-1) * AggregatedOuts.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
             public double DestroyedQuantity => (-1) * AggregatedIns.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
@@ -219,16 +227,20 @@ namespace BCNExplorer.Web.Models
 
                 var ins = inOutsByAsset.TransactionIn.Select(p => In.Create(p, divisibility, inOutsByAsset.TransactionsOut, assetShortName));
                 var outs = inOutsByAsset.TransactionsOut.Select(p => Out.Create(p, divisibility, assetShortName));
-                
+
+                var total = outs.Any() ? outs.Sum(p => p.Value) : ins.Sum(p => p.Value);
+
                 var result = new ColoredAsset
                 {
                     AssetId = inOutsByAsset.AssetId,
                     Divisibility = divisibility,
-                    Name = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Name, null),
+                    Name = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Name, inOutsByAsset.AssetId),
                     IconImageUrl = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.IconUrl, null),
                     AggregatedIns = AssetHelper.GroupByAddress(ins),
                     AggregatedOuts = AssetHelper.GroupByAddress(outs),
                     ShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null),
+                    Total = total,
+                    IsKnown = assetDictionary.Dic.ContainsKey(inOutsByAsset.AssetId)
                 };
 
                 return result;
@@ -252,7 +264,9 @@ namespace BCNExplorer.Web.Models
                 AssetsCount = ninjaTransaction.TransactionsByAssets.Count(p => p.IsColored),
                 IsConfirmed = ninjaTransaction.Block != null,
                 Bitcoin = BitcoinAsset.Create(ninjaTransaction.Fees, ninjaTransaction.IsCoinBase, bc.TransactionIn.Union(colored.SelectMany(p => p.TransactionIn)), bc.TransactionsOut.Union(colored.SelectMany(p=>p.TransactionsOut)) ),
-                ColoredAssets = colored.Select(p => ColoredAsset.Create(p, assetDic))
+                ColoredAssets = colored.Select(p => ColoredAsset.Create(p, assetDic)),
+                InputsCount = ninjaTransaction.InputsCount,
+                OutputsCount = ninjaTransaction.OutputsCount
             };
             
             return result;

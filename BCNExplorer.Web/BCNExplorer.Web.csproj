@@ -193,7 +193,6 @@
     <Content Include="Content\site.css" />
     <Content Include="css\bootstrap-custom.min.css" />
     <Content Include="css\style.css" />
-    <Content Include="css\style_new.css" />
     <Content Include="favicon-16x16.png" />
     <Content Include="favicon-24x24.png" />
     <Content Include="favicon-32x32.png" />
@@ -255,10 +254,11 @@
     <Content Include="js\app\asset\index.js" />
     <Content Include="js\functions.js" />
     <Content Include="js\vendor\bootstrap.min.js" />
+    <Content Include="js\vendor\clipboard.min.js" />
     <Content Include="js\vendor\fastclick.min.js" />
     <Content Include="js\vendor\html5shiv.js" />
-    <Content Include="js\vendor\jquery-1.11.2.min.js" />
     <Content Include="js\vendor\jquery.inview.min.js" />
+    <Content Include="js\vendor\jquery.min.js" />
     <Content Include="mstile-150x150.png" />
     <Content Include="safari-pinned-tab.svg" />
     <Content Include="js\app\address\index.js" />
@@ -343,6 +343,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Address\Transactions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Code\UiHelpers.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

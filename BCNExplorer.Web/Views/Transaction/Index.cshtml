@@ -2,115 +2,113 @@
 
 @{
     ViewBag.Title = "Transaction - " + Model.TransactionId;
-    ViewBag.HideTransactionHeader = true;
 }
 
 @section scripts
 {
     @Scripts.Render("~/bundles/js/transaction")
 }
-<section class="section section--be section--padding">
+<section class="section section--padding">
     <div class="container container--extend">
+        @*<div class="page__header">
+            <h2 class="page__title">Transaction</h2>
+            <div class="address_code address_code--lead">
+                @UiHelpers.Truncate(Model.TransactionId)
+                <button class="btn btn--icon copy_code" type="button" title="Copy code">
+                    <i class="icon icon--copy"></i>
+                    <span class="visible-xs-inline-block">Copy code</span>
+                </button>
+            </div>
+        </div>*@
 
         <div class="page__header">
             <h2 class="page__title">Transaction</h2>
-            <div class="page__subtitle h3">@Model.TransactionId</div>
-
+            <div class="address_code address_code--lead">
+                <span>@Model.TransactionId</span>
+                <button class="btn btn--icon copy_code" type="button" title="Copy code">
+                    <i class="icon icon--copy"></i>
+                    <span class="visible-xs-inline-block">Copy code</span>
+                </button>
+            </div>
         </div>
 
         <div class="row">
-            <div class="col-xs-12 col-md-7">
-                <div class="table-responsive">
+            <div class="col-xs-12 col-md-6">
+                <table class="table table--be_info">
+                    <tbody>
+                    @if (Model.Block != null)
+                    {
+                        <tr>
+                            <td><b>Date:</b></td>
+                            <td>@($"{Model.Block.Time:F}")</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td><b>Fee paid:</b></td>
+                        <td>@Model.Bitcoin.Fees.ToString("0.00######") BTC</td>
+                    </tr>
+                    <tr>
+                        <td><b>Assets transacted:</b></td>
+                        <td>
+                            @if (Model.AssetsCount == 0)
+                            {
+                                <text>None</text>
+                            }
+                            else
+                            {
+                                @Model.AssetsCount
+                            }
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Confirmations:</b></td>
+                        <td>
+                            @if (Model.IsConfirmed)
+                            {
+                                <text>
+                                    @(Model.Block?.Confirmations) confirmations
+                                </text>
+                            }
+                            else
+                            {
+                                <text>Unconfirmed transaction</text>
+                            }
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            @if (Model.IsConfirmed)
+            {
+
+                <div class="col-xs-12 col-md-6">
                     <table class="table table--be_info">
                         <tbody>
                         <tr>
-                            <th colspan="2">Advanced details</th>
+                            <td><b>Date:</b></td>
+                            <td>@($"{Model.Block?.Time:F}")</td>
                         </tr>
                         <tr>
-                            <td class="text-muted">Hash</td>
+                            <td><b>Block:</b></td>
                             <td>
-                                <div class="text-overflow">@Model.TransactionId</div></td>
-                        </tr>
-                        @if (Model.Block != null)
-                        {
-                            <tr>
-                                <td class="text-muted">Date</td>
-                                <td>@($"{Model.Block.Time:F}")</td>
-                            </tr>
-                        }
-                        <tr>
-                            <td class="text-muted">Fee paid</td>
-                            <td>@Model.Bitcoin.Fees.ToString("0.00######") BTC</td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">Assets transacted</td>
-                            <td>
-                                @if (Model.AssetsCount == 0)
-                                {
-                                    <span>None</span>
-                                }
-                                else
-                                {
-                                    @Model.AssetsCount
-                                }
+                                <a href="@Url.Action("Index", "Block", new {id= Model.Block?.BlockId })">
+                                    @UiHelpers.Truncate(Model.Block?.BlockId)
+                                </a>
                             </td>
+                        </tr>
+                        <tr>
+                            <td><b>Height:</b></td>
+                            <td>@(Model.Block?.Height)</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-            @if (Model.IsConfirmed)
-            {
-                <div class="col-xs-12 col-md-5">
-                    <div class="table-responsive">
-                        <table class="table table--be_info">
-                            <tbody>
-                            <tr>
-                                <th colspan="2">Transaction confirmed</th>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Confirmations</td>
-                                <td>@Model.Block.Confirmations confirmations</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Time</td>
-
-                                <td>@($"{Model.Block.Time:F}")</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Block</td>
-                                <td>
-                                    <div class="text-overflow"><a href="@Url.Action("Index", "Block", new {id = Model.Block.BlockId})">@Model.Block.BlockId</a>
-                                    </div></td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Height</td>
-                                <td>@Model.Block.Height</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="col-xs-12 col-md-5">
-                    <div class="table-responsive">
-                        <table class="table table--be_info">
-                            <tbody>
-                                <tr>
-                                    <th colspan="2">Unconfirmed Transaction</th>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             }
         </div>
-        <div>
-            @Html.Partial("TransactionDetails", Model)
-        </div>
-
-
     </div>
+</section>
+<section class="section section--transactions">
+    @Html.Partial("TransactionDetails", Model)
 </section>

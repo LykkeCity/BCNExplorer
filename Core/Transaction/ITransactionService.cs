@@ -10,7 +10,9 @@ namespace Core.Transaction
         bool IsCoinBase { get;  }
         bool IsColor { get;  }
         string Hex { get;  }
-        double Fees { get;  }
+        double Fees { get; }
+        int InputsCount { get;  }
+        int OutputsCount { get;  }
         IBlockMinInfo Block { get;  }
         IEnumerable<IInOutsByAsset> TransactionsByAssets { get;  }
     }
