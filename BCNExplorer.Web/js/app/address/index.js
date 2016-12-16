@@ -30,7 +30,6 @@
         $panelsToHide.addClass('hidden');
         $panelToShow.removeClass('hidden');
 
-
         return false;
     });
 })
