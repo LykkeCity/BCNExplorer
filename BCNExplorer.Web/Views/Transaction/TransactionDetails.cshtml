@@ -4,7 +4,7 @@
     Layout = null;
 }
 
-<div class="panel transaction_panel">
+<div class="panel transaction_panel js-transaction-details">
     <div class="container">
         <div class="panel__header">
            <div class="row">
@@ -23,7 +23,7 @@
                 <div class="col-sm-8">
                     <div class="address_code">
                         <a href="@Url.Action("Index", "Transaction", new {id = Model.TransactionId})">
-                            @UiHelpers.Truncate(Model.TransactionId)
+                            @Model.TransactionId
                         </a>
                         <button class="btn btn--icon copy_code" type="button" title="Copy code">
                             <i class="icon icon--copy"></i>

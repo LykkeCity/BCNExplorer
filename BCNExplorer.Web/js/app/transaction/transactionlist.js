@@ -19,6 +19,9 @@
                     $loadContainer.html(resp);
                     $loadContainer.trigger('transactions-loaded');
                     $loadContainer.addClass(loadedClass);
+
+                    var $cath = $loadContainer.parents('.js-transaction-cathegory');
+                    $cath.find('.js-loaded-tx-count').html($cath.find('.js-transaction-details').length);
                 });
             }
         }

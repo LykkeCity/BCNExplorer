@@ -2,33 +2,37 @@
 @{
     Layout = null;
 }
-<h3 class="transactions-header">@Model.TotalItems Transactions</h3>
-<div class="clearfix"></div>
-<ul class="transactions-list js-transaction-cathegory">
-    @foreach (var page in Model.Pages)
-    {
-        <li
-            class="hidden transactions-container js-transactions-container"
-            data-page="@page"
-            data-transaction-ids="@Json.Encode(Model.GetPage(page).ToArray())" data-load-url="@Url.Action("List", "Transaction")">
+<div class="js-transaction-cathegory">
+    <h3 class="transactions-header">
+        Transactions <span class="js-loaded-tx-count">0</span> of @Model.TotalItems Transactions
+    </h3>
+    <div class="clearfix"></div>
+    <ul class="transactions-list">
+        @foreach (var page in Model.Pages)
+        {
+            <li class="hidden transactions-container js-transactions-container"
+                data-page="@page"
+                data-transaction-ids="@Json.Encode(Model.GetPage(page).ToArray())" data-load-url="@Url.Action("List", "Transaction")">
 
-            <div class="text-center">
-                @if (Model.CurrentPage != page)
+                <div class="text-center">
+                    @if (Model.CurrentPage != page)
                 {
-                    <a class="btn js-load-trans">Show More</a>
-                }
-            </div>
-        </li>
-    }
-</ul>
-@if (Model.TotalItems != 0)
-{
-    <div class="js-loader">
-        <div class="spinner_container">
-            <div class="spinner">
-                <div class="spinner__inside"></div>
+                        <a class="btn js-load-trans">Show More</a>
+                    }
+                </div>
+            </li>
+        }
+    </ul>
+    @if (Model.TotalItems != 0)
+    {
+        <div class="js-loader">
+            <div class="spinner_container">
+                <div class="spinner">
+                    <div class="spinner__inside"></div>
+                </div>
             </div>
         </div>
-    </div>
-}
+    }
+  
+</div>
 

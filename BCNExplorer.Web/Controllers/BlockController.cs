@@ -16,7 +16,7 @@ namespace BCNExplorer.Web.Controllers
         }
 
         [Route("block/{id}")]
-        [OutputCache(Duration = 10 * 60, VaryByParam = "*")]
+        //[OutputCache(Duration = 10 * 60, VaryByParam = "*")]
         public async Task<ActionResult> Index(string id)
         {
             var block = await _blockService.GetBlockAsync(id);
