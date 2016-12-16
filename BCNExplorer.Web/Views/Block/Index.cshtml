@@ -3,71 +3,90 @@
 @{
     ViewBag.Title = "Block - " + Model.Hash;
 }
+
 @section scripts
 {
     @Scripts.Render("~/bundles/js/transaction")
 }
-<section class="section section--be section--padding">
-    <div class="container container--extend">
 
+<section class="section section--padding">
+    <div class="container ">
         <div class="page__header">
             <h2 class="page__title">Block @Model.Height</h2>
-            <div class="page__subtitle h3">@Model.Hash</div>
+            <div class="address_code address_code--lead">
+                <span>@Model.Hash</span>
+                <button class="btn btn--icon copy_code" type="button" title="Copy code">
+                    <i class="icon icon--copy"></i>
+                    <span class="visible-xs-inline-block">Copy code</span>
+                </button>
+            </div>
+            <p class="text-muted">
+                @if (Model.ShowPreviousBlock)
+                {
+                    <text>
+                        Previous block: <a href="@Url.Action("Index", "Block", new {id = Model.PreviousBlock})">@Model.PreviousBlockHeight</a>
+                    </text>
+                }
+                @if (Model.ShowNextBlock)
+                {
+                    <text>
+                        <span class="middot">·</span>
+                        Next block: <a href="@Url.Action("Index", "Block", new {id= Model.NextBlockHeight})">@Model.NextBlockHeight</a>
+                    </text>
+                }
 
+
+            </p>
         </div>
 
         <div class="row">
-            <div class="col-xs-12 col-md-7">
-                <div class="table-responsive">
-                    <table class="table table--be_info">
-                        <tbody>
-                            <tr>
-                                <th colspan="2">Advanced details</th>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Hash</td>
-                                <td><div class="text-overflow">@Model.Hash</div></td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Date</td>
-                                <td>@($"{Model.Time:F}")</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Height</td>
-                                <td>@Model.Height</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Total transactions</td>
-                                <td>@Model.TotalTransactions</td>
-                            </tr>
-                            @if (!string.IsNullOrEmpty(Model.PreviousBlock))
-                            {
-                                <tr>
-                                    <td class="text-muted">Previous block</td>
-                                    <td><div class="text-overflow"><a href="@Url.Action("Index", "Block", new { id = Model.PreviousBlock })">@Model.PreviousBlock</a></div></td>
-                                </tr>
-                            }
-
-                            <tr>
-                                <td class="text-muted">Difficulty</td>
-                                <td>@($"{Model.Difficulty:N}")</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Merkle Root</td>
-                                <td>@Model.MerkleRoot</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Nonce</td>
-                                <td>@Model.Nonce</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="col-xs-12 col-md-6">
+                <table class="table table--be_info">
+                    <tbody>
+                    <tr>
+                        <td><b>Hash:</b></td>
+                        <td>
+                            @UiHelpers.Truncate(Model.Hash)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Date:</b></td>
+                        <td>
+                            @($"{Model.Time:F}")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Transactions:</b></td>
+                        <td>@Model.TotalTransactions</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <table class="table table--be_info">
+                    <tbody>
+                    <tr>
+                        <td><b>Difficulty:</b></td>
+                        <td>@Model.Difficulty</td>
+                    </tr>
+                    <tr>
+                        <td><b>Merkle Root:</b></td>
+                        <td>
+                            @UiHelpers.Truncate(Model.MerkleRoot)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Height:</b></td>
+                        <td>@Model.Height</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-
-
-        @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.TransactionIdList)
-
     </div>
+</section>
+
+<section class="section section--transactions">
+
+    @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.TransactionIdList)
 </section>

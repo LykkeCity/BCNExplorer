@@ -15,10 +15,16 @@ namespace BCNExplorer.Web.Models
         public long Nonce { get; set; }
         public int TotalTransactions { get; set; }
         public string PreviousBlock { get; set; }
+        public bool ShowPreviousBlock => !string.IsNullOrEmpty(Hash);
+        public long PreviousBlockHeight => Height-1;
+        public long NextBlockHeight { get; set; }
+        public bool ShowNextBlock { get; set; }
+
         public TransactionIdList TransactionIdList { get; set; }
         private const int PageSize = 20;
 
-        public static BlockViewModel Create(IBlock ninjaBlock)
+
+        public static BlockViewModel Create(IBlock ninjaBlock, IBlockHeader lastBlock)
         {
             return new BlockViewModel
             {
@@ -31,7 +37,9 @@ namespace BCNExplorer.Web.Models
                 PreviousBlock = ninjaBlock.PreviousBlock,
                 Time = ninjaBlock.Time,
                 TransactionIdList = new TransactionIdList(ninjaBlock.TransactionIds, PageSize),
-                TotalTransactions = ninjaBlock.TotalTransactions
+                TotalTransactions = ninjaBlock.TotalTransactions,
+                ShowNextBlock = ninjaBlock.Height < lastBlock?.Height,
+                NextBlockHeight = ninjaBlock.Height + 1
             };
         }
     }

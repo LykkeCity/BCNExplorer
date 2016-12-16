@@ -1,10 +1,11 @@
-﻿@model TransactionIdList
+﻿@using Common
+@model TransactionIdList
 @{
     Layout = null;
 }
 <div class="js-transaction-cathegory">
     <h3 class="transactions-header">
-        Transactions <span class="js-loaded-tx-count">0</span> of @Model.TotalItems Transactions
+        Transactions <span class="js-loaded-tx-count">0</span> of @Model.TotalItems 
     </h3>
     <div class="clearfix"></div>
     <ul class="transactions-list">
@@ -16,7 +17,7 @@
 
                 <div class="text-center">
                     @if (Model.CurrentPage != page)
-                {
+                    {
                         <a class="btn js-load-trans">Show More</a>
                     }
                 </div>
@@ -33,6 +34,6 @@
             </div>
         </div>
     }
-  
+
 </div>
 
