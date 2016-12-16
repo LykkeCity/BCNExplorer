@@ -23,8 +23,8 @@
         var $panelToShow = $('#js-tx-select-result-container').find(idToShow);
         var $panelsToHide = $('#js-tx-select-result-container').find('.js-select-result').not(idToShow);
 
-        $btnGroup.find('.js-tx-toggle').removeClass('active');
-        $self.addClass('active');
+        $btnGroup.find('.js-tx-toggle').parent('.js-tab_item').removeClass('tab_item--active');
+        $self.parent('.js-tab_item').addClass('tab_item--active');
         
         $panelToShow.find('.js-transactions-container').first().trigger('load-transactions');
         $panelsToHide.addClass('hidden');

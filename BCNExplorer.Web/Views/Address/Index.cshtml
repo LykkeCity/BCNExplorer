@@ -13,114 +13,124 @@
 @Html.Hidden("colored-address", Model.ColoredAddress)
 @Html.Hidden("current-address", Model.AddressId)
 
-<section class="section section--be section--padding">
-    <div class="container container--extend">
-
+<section class="section section--padding">
+    <div class="container">
         <div class="page__header">
-            <h2 class="page__title">ADDRESS</h2>
-            <div class="page__subtitle h3">@Model.AddressId</div>
-        </div>
-
-        @Html.QRCode(Model.AddressId, size:230)
-
-        <div class="row">
-            <div class="col-xs-12 col-md-7">
-                <div class="table-responsive">
-                    <table class="table table--be_info">
-                        <tbody>
-                        <tr>
-                            <td>Address</td>
-                            <td>@Model.AddressId</td>
-                        </tr>
-                        <tr>
-                            <td>Total confirmed transactions</td>
-                            <td>@Model.TotalConfirmedTransactions</td>
-                        </tr>
-                        @if (Model.UncoloredAddress != null)
-                        {
-                            <tr>
-                                <td>Legacy address</td>
-                                <td><a href="@Url.Action("Index", "Address", new {id = Model.UncoloredAddress})">@Model.UncoloredAddress</a></td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
+            <div class="row">
+                <div class="col-sm-9">
+                    <h2 class="page__title">Bitcoin Address</h2>
+                    <div class="address_code address_code--lead">
+                        <span>@Model.AddressId</span>
+                        <button class="btn btn--icon copy_code" type="button" title="Copy code">
+                            <i class="icon icon--copy"></i>
+                        </button>
+                    </div>
                 </div>
+                <div class="col-xs-12 col-sm-3">
+                    <div class="address_qrcode">
+                        @Html.QRCode(Model.AddressId, size: 140)
+                    </div>
+                </div>
+
+                @if (Model.UncoloredAddress != null)
+                {
+                    <div class="col-xs-12">
+                        <p class="text-muted">Bitcoin Address: <a href="@Url.Action("Index", "Address", new {id = Model.UncoloredAddress})">@Model.UncoloredAddress</a></p>
+                    </div>
+                }
             </div>
-            <div class="col-xs-12">
-                <div class="table-responsive">
-                    <table class="table table--text_big table--be_info">
+        </div>
+    </div>
+</section>
+
+<section class="section section--heading">
+    <div class="container">
+        <h3>Balance</h3>
+    </div>
+</section>
+
+<section class="section section--balance">
+    <div class="container">
+        <ul class="issuer_list row">
+            <li class="issuer_list__item col-xs-12 col-sm-6">
+                <table class="issuer">
+                    <tbody>
+                    <tr>
+                        <td class="issuer__img"><img src="/img/assets/bitcoin.png" width="48" alt=""></td>
+                        <td class="issuer__content">
+                            <div class="issuer__name">Bitcoin</div>
+                            @if (Model.ShowUnconfirmedBalance)
+                            {
+                                <div class="text-muted">Unconfirmed balance</div>
+                            }
+                        </td>
+                        <td class="issuer__content text-right">
+                            <div class="wallet_value">@BitcoinUtils.SatoshiToBtc(Model.Balance).ToStringBtcFormat() BTC</div>
+                            @if (Model.ShowUnconfirmedBalance)
+                            {
+                                <div class="text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToStringBtcFormat() BTC</div>
+                            }
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </li>
+            @foreach (var asset in Model.Assets)
+            {
+                var assetDivisibity = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Divisibility, 0);
+                var assetShortName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.NameShort, "");
+                var assetName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Name, asset.AssetId);
+                var assetIcon = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.IconUrl, null);
+
+                var assetUrl = Model.AssetDic.Dic.ContainsKey(asset.AssetId) ? Url.Action("Index", "Asset", new { id = asset.AssetId }) : "";
+
+                <li class="issuer_list__item col-xs-12 col-sm-6">
+                    <table class="issuer">
                         <tbody>
-                        <tr>
-                            <th colspan="2">Balance</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src="/img/assets/bitcoin.png" width="48" alt="Bitcoin"> <span>Bitcoin</span>
-                            </td>
-                            <td class="text-right">
-                                @BitcoinUtils.SatoshiToBtc(Model.Balance).ToStringBtcFormat() BTC
-                            </td>
-                        </tr>
-
-                        @if (Model.ShowUnconfirmedBalance)
-                        {
                             <tr>
-                                <td><span class="text-muted">Unconfirmed Balance</span></td>
-
-                                <td class="text-right"><span class="text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToStringBtcFormat() BTC</span></td>
-                            </tr>
-                        }
-
-                        @foreach (var asset in Model.Assets)
-                        {
-                            var assetDivisibity = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Divisibility, 0);
-                            var assetShortName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.NameShort, "");
-                            var assetName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Name, asset.AssetId);
-                            var assetIcon = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.IconUrl, null);
-
-                            <tr>
-                                <td>
+                                <td class="issuer__img">
                                     @if (assetIcon != null)
                                     {
-                                        <a href="@Url.Action("Index", "Asset", new {id = asset.AssetId})">
+                                        <a href="@assetUrl">
 
                                             <img src="@assetIcon" width="48" alt="@assetName">
                                         </a>
 
                                     }
-                                    <a href="@Url.Action("Index", "Asset", new {id = asset.AssetId})">
-                                        @assetName
-                                    </a>
+                                </td>
+                                <td class="issuer__content">
+                                    <div class="issuer__name">@assetName</div>
                                     @if (asset.ShowUnconfirmedBalance)
                                     {
-                                        <br/>
-                                        <span class="text-muted">Unconfirmed Balance</span>
+                                        <div class="text-muted">Unconfirmed balance</div>
                                     }
                                 </td>
-                                <td class="text-right">
-                                    @BitcoinUtils.CalculateColoredAssetQuantity(asset.Quantity, assetDivisibity).ToStringBtcFormat() @assetShortName
+                                <td class="issuer__content text-right">
+                                    <div class="wallet_value">@BitcoinUtils.CalculateColoredAssetQuantity(asset.Quantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
                                     @if (asset.ShowUnconfirmedBalance)
                                     {
-                                        <br/>
-                                        <span class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(asset.UnconfirmedQuantity, assetDivisibity).ToStringBtcFormat() @assetShortName</span>
+                                        <div class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(asset.UnconfirmedQuantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
                                     }
                                 </td>
                             </tr>
-                        }
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-        <div id="js-address-transactions" data-load-url="@Url.Action("Transactions", "Address", new {id = Model.AddressId})">
-            <div class="js-loader">
-                <div class="spinner_container">
-                    <div class="spinner">
-                        <div class="spinner__inside"></div>
-                    </div>
-                </div>
+                </li>
+            }
+
+        </ul>
+    </div>
+</section>
+
+<div id="js-address-transactions" data-load-url="@Url.Action("Transactions", "Address", new {id = Model.AddressId})">
+    <div class="js-loader">
+        <div class="spinner_container">
+            <div class="spinner">
+                <div class="spinner__inside"></div>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+
+
