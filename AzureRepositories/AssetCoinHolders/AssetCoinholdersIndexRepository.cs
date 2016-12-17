@@ -73,7 +73,7 @@ namespace AzureRepositories.AssetCoinHolders
 
         public async Task SetScoreAsync(IAssetCoinholdersIndex index, double score)
         {
-            await _tableStorage.ReplaceAsync(AssetCoinholdersIndexEntity.Create(index), p =>
+            await _tableStorage.ReplaceAsync(AssetCoinholdersIndexEntity.GeneratePartitionKey(),AssetCoinholdersIndexEntity.GenerateRowKey(index.AssetIds), p =>
             {
                 p.Score = score;
                 return p;

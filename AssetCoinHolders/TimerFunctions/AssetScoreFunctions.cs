@@ -29,7 +29,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             {
                 await _log.WriteInfo("AssetScoreFunctions", "UpdateAssetScores", null, "Started");
                 var indexes = (await _indexRepository.GetAllAsync()).ToList();
-                var counter = indexes.Count;
+                var counter = indexes.Count();
                 foreach (var index in indexes)
                 {
                     Console.WriteLine(counter);
