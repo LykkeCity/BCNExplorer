@@ -17,18 +17,18 @@
                         @if (Model.Pagination.ShowPrev)
                         {
                             <div class="block_nav__left">
-                                <a class="btn btn--icon js-change-go-to-block" data-block="@Model.Pagination.PrevBlock"><i class="icon icon--arrow_left_big"></i></a>
+                                <a class="btn btn--icon js-change-go-to-block" title="@Model.Pagination.PrevBlock" data-block="@Model.Pagination.PrevBlock"><i class="icon icon--arrow_left_big"></i></a>
                              @*   <a class="btn btn--icon js-change-go-to-block" data-block="1"><i class="icon icon--arrow_left_big"></i></a>*@
                             </div>
                         }
                         <div class="block_nav__field">
                             <label class="control-label" for="js-go-to-block">Block:</label>
-                            <input type="text" readonly class="form-control js-submit-on-change " id="js-go-to-block" name="at" value="@Model.Pagination.AtBlock">
+                            <input type="text" class="form-control js-submit-on-change " id="js-go-to-block" name="at" value="@Model.Pagination.AtBlock">
                         </div>
                         @if (Model.Pagination.ShowNext)
                         {
-                            <div class="block_nav__right js-change-go-to-block">
-                                <a class="btn btn--icon" data-block="@Model.Pagination.NextBlock"><i class="icon icon--arrow_right_big"></i></a>
+                            <div class="block_nav__right">
+                                <a class="btn btn--icon js-change-go-to-block" title="@Model.Pagination.NextBlock" data-block="@Model.Pagination.NextBlock"><i class="icon icon--arrow_right_big"></i></a>
                             </div>
                         }
                     </form>

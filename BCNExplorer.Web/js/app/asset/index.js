@@ -44,15 +44,25 @@
         var block = $(this).data('block');
         var $input = $('#js-go-to-block');
 
-        $input.val(block);
+        $input.val(block); 
         $input.trigger('change');
 
         return false;
     });
 
-    $('body').on('change', '.js-submit-on-change', function() {
-        $(this).parents('form').submit();
+    var submitGoToBlock = function (elem) {
+        console.log('submitGoToBlock');
+        $(elem).attr('readonly', true);
+        $(elem).parents('form').submit();
+    }
+
+    $('body').on('change', '#js-go-to-block', function () {
+        submitGoToBlock((this));
     });
+
+    $('body').on('keyup', '#js-go-to-block', $.debounce(1000, function() {
+        submitGoToBlock(this);
+    }));
 
     $('body').on('submit', '.js-coinholders-history-form', function () {
         var $self = $(this);
@@ -72,6 +82,7 @@
         }).done(function (resp) {
             $loader.hide();
             $panelToUpdate.html(resp);
+            $('#js-go-to-block').focus();
         });
         return false;
     });

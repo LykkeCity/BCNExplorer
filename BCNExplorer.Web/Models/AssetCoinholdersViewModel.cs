@@ -38,7 +38,7 @@ namespace BCNExplorer.Web.Models
                 Asset = asset,
                 AddressSummaries = addressSummaries,
                 Total = BitcoinUtils.CalculateColoredAssetQuantity(total, asset.Divisibility),
-                Pagination = BlockPagination.Create(blocksWithChanges.Select(p=>p.Height), atBlockHeight??currentBlock?.Height),
+                Pagination = BlockPagination.Create(blocksWithChanges.Select(p=>p.Height), atBlockHeight??currentBlock?.Height, currentBlock),
                 CoinholdersCount = addressSummaries.Count
             };
         }
@@ -71,29 +71,40 @@ namespace BCNExplorer.Web.Models
         
         public class BlockPagination
         {
-            public int[] ChangedAtHeights { get; set; }
+            public IEnumerable<int> ChangedAtHeights { get; set; }
             public bool ShowCurrentBlock { get; set; }
 
             public int AtBlock;
 
-            public int Start => ChangedAtHeights.FirstOrDefault();
+            public int First => ChangedAtHeights.FirstOrDefault();
             public int Last => ChangedAtHeights.LastOrDefault();
 
+            public bool ShowPrev => First < AtBlock;
+            public int PrevBlock => ChangedAtHeights.LastOrDefault(p => p < AtBlock);
+
             public bool ShowNext => Last > AtBlock;
-            public bool ShowPrev => Start < AtBlock;
+            public int NextBlock => ChangedAtHeights.FirstOrDefault(p => p > AtBlock);
 
-            public int NextBlock => ChangedAtHeights.Where(p => p > AtBlock).DefaultIfEmpty().First();
-            public int PrevBlock => ChangedAtHeights.Where(p => p < AtBlock).DefaultIfEmpty().Last();
 
-            public static BlockPagination Create(IEnumerable<int> changedAtHeights, int? atBlock)
+            public static BlockPagination Create(IEnumerable<int> changedAtHeights, int? atBlock, IBlockHeader currentBlock)
             {
-                var ordered = changedAtHeights.OrderBy(p => p).ToArray();
-                return new BlockPagination
+                var ordered = changedAtHeights.OrderBy(p => p).ToList();
+                var at = atBlock ?? ordered.LastOrDefault();
+
+                if (currentBlock != null)
                 {
-                    ChangedAtHeights = ordered,
-                    AtBlock = atBlock ?? ordered.LastOrDefault(),
+                    ordered.Add(currentBlock.Height);
+                }
+
+
+                var result = new BlockPagination
+                {
+                    ChangedAtHeights = ordered.Distinct().ToList(),
+                    AtBlock = at,
                     ShowCurrentBlock = atBlock != null
                 };
+
+                return result;
             }
         }
     }
