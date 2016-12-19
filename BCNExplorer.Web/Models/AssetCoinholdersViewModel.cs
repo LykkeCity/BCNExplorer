@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Core.AssetBlockChanges.Mongo;
+using Core.Block;
 
 namespace BCNExplorer.Web.Models
 {
@@ -12,7 +13,7 @@ namespace BCNExplorer.Web.Models
 
         public IEnumerable<BalanceAddressSummary> AddressSummaries { get; set; }
         public double Total { get; set; }
-        public int AtBlockHeight { get; set; }
+        public int CoinholdersCount { get; set; }
         
         public BlockPagination Pagination { get; set; }
         
@@ -20,20 +21,25 @@ namespace BCNExplorer.Web.Models
             IBalanceSummary balanceSummary, 
             int? atBlockHeight,
             IDictionary<string, double> addressChanges,
-            IEnumerable<IBalanceBlock> blocksWithChanges)
+            IEnumerable<IBalanceBlock> blocksWithChanges,
+            IBlockHeader currentBlock)
         {
             var total = balanceSummary.AddressSummaries.Sum(p => p.Balance);
-            
+            var addressSummaries = balanceSummary.AddressSummaries
+                .Select(
+                    p =>
+                        BalanceAddressSummary.Create(p, total, asset.Divisibility,
+                            addressChanges.ContainsKey(p.Address) ? addressChanges[p.Address] : 0))
+                .Where(p => p.Balance != 0 || p.ChangeAtBlock != 0)
+                .OrderByDescending(p => p.Balance)
+                .ToList();
             return new AssetCoinholdersViewModel
             {
                 Asset = asset,
-                AddressSummaries = balanceSummary.AddressSummaries
-                    .Select(p => BalanceAddressSummary.Create(p, total, asset.Divisibility, addressChanges.ContainsKey(p.Address) ? addressChanges[p.Address] : 0))
-                    .Where(p=>p.Balance != 0 || p.ChangeAtBlock != 0)
-                    .OrderByDescending(p => p.Balance),
+                AddressSummaries = addressSummaries,
                 Total = BitcoinUtils.CalculateColoredAssetQuantity(total, asset.Divisibility),
-                Pagination = BlockPagination.Create(blocksWithChanges.Select(p=>p.Height), atBlockHeight)
-
+                Pagination = BlockPagination.Create(blocksWithChanges.Select(p=>p.Height), atBlockHeight??currentBlock?.Height),
+                CoinholdersCount = addressSummaries.Count
             };
         }
 
@@ -76,8 +82,8 @@ namespace BCNExplorer.Web.Models
             public bool ShowNext => Last > AtBlock;
             public bool ShowPrev => Start < AtBlock;
 
-            public int NextBlock => ChangedAtHeights.Where(p => p > AtBlock).First();
-            public int PrevBlock => ChangedAtHeights.Where(p => p < AtBlock).Last();
+            public int NextBlock => ChangedAtHeights.Where(p => p > AtBlock).DefaultIfEmpty().First();
+            public int PrevBlock => ChangedAtHeights.Where(p => p < AtBlock).DefaultIfEmpty().Last();
 
             public static BlockPagination Create(IEnumerable<int> changedAtHeights, int? atBlock)
             {

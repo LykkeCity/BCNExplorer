@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
+using Core.Block;
 
 namespace BCNExplorer.Web.Controllers
 {
@@ -12,12 +13,15 @@ namespace BCNExplorer.Web.Controllers
     {
         private readonly IAssetService _assetService;
         private readonly IAssetBalanceChangesRepository _balanceChangesRepository;
+        private readonly IBlockService _blockService;
 
         public AssetController(IAssetService assetService, 
-            IAssetBalanceChangesRepository balanceChangesRepository)
+            IAssetBalanceChangesRepository balanceChangesRepository, 
+            IBlockService blockService)
         {
             _assetService = assetService;
             _balanceChangesRepository = balanceChangesRepository;
+            _blockService = blockService;
         }
 
         [Route("asset/{id}")]
@@ -46,7 +50,7 @@ namespace BCNExplorer.Web.Controllers
         }
 
 
-        [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
+        //[OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         [Route("asset/{id}/owners")]
         public Task<ActionResult> Owners(string id)
         {
@@ -54,7 +58,7 @@ namespace BCNExplorer.Web.Controllers
         }
 
         [OutputCache(Duration = 60 * 60, VaryByParam = "*")]
-        [Route("asset/{id}/owners/{at}")]
+        //[Route("asset/{id}/owners/{at}")]
         public Task<ActionResult> OwnersHistory(string id, int? at)
         {
             return _OwnersInner(id, at);
@@ -69,6 +73,7 @@ namespace BCNExplorer.Web.Controllers
                 var queryOpts = at != null ? QueryOptions.Create().To(at.Value) : null;
                 var summaryTask = _balanceChangesRepository.GetSummaryAsync(queryOpts, asset.AssetIds.ToArray());
                 var addressChangesTask = _balanceChangesRepository.GetBlocksWithChanges(asset.AssetIds);
+                var lastBlockTask = _blockService.GetLastBlockHeaderAsync();
                 Task<IDictionary<string, double>> addressChangesAtBlockTask;
                 if (at != null)
                 {
@@ -79,14 +84,15 @@ namespace BCNExplorer.Web.Controllers
                     addressChangesAtBlockTask = Task.FromResult((IDictionary<string, double>)new Dictionary<string, double>());
                 }
 
-                await Task.WhenAll(addressChangesAtBlockTask, summaryTask, addressChangesTask);
+                await Task.WhenAll(addressChangesAtBlockTask, summaryTask, addressChangesTask, lastBlockTask);
                 
                 var result = AssetCoinholdersViewModel.Create(
                     AssetViewModel.Create(asset), 
                     summaryTask.Result, 
                     at, 
                     addressChangesAtBlockTask.Result, 
-                    addressChangesTask.Result);
+                    addressChangesTask.Result,
+                    lastBlockTask.Result);
 
                 return View("Owners", result);
             }

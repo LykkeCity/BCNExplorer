@@ -5,63 +5,72 @@
     Layout = null;
 }
 
-<div>
-    <div class="pull-right">
-        @if (Model.Pagination.ShowPrev)
-        {
-            <a title="First block" class="js-load-panel-loader" data-load-container="#owners" href="@Url.Action("OwnersHistory", new {at=Model.Pagination.Start})"><i class="icon icon--arrow-left-alt"></i></a>
-            <a title="Previous change" class="js-load-panel-loader" data-load-container="#owners" href="@Url.Action("OwnersHistory", new {at=Model.Pagination.PrevBlock})"><i class="icon icon--arrow-left-alt"></i></a>
-        }
-        @if (Model.Pagination.ShowCurrentBlock)
-        {
-            <span>@Model.Pagination.AtBlock</span>
-        }
-
-        @if (Model.Pagination.ShowNext)
-        {
-            <a title="Next change" class="js-load-panel-loader" data-load-container="#owners" href="@Url.Action("OwnersHistory", new {at = Model.Pagination.NextBlock})"><i class="icon icon--arrow-right-alt"></i></a>
-            <a title="Last block"  class="js-load-panel-loader" data-load-container="#owners" href="@Url.Action("Owners")"><i class="icon icon--arrow-right-alt"></i></a>
-        }
-    </div>
-</div>
-
-<div class="table-responsive">
-    <table class="table table--be_info">
-        <tbody>
-            <tr>
-                <th>Address</th>
-                <th>Ownership</th>
-                <th>Amount</th>
-            </tr>
-            @foreach (var addressSum in Model.AddressSummaries)
-            {
-                <tr>
-                    <td>
-                        <a href="@Url.Action("Index", "Address", new {id = addressSum.Address})">@addressSum.Address</a>
-                    </td>
-                    <td>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="70"
-                                 aria-valuemin="0" aria-valuemax="100" style="width:@addressSum.BalancePercenage.ToString("F0")%">
-                                <span style="color: #3F4D60;">@addressSum.BalancePercentageDescription %</span>
-                            </div>
-                        </div>
-
-                    </td>
-                    <td>
-                        @addressSum.Balance.ToStringBtcFormat() @Model.Asset.NameShort
-                        @if (addressSum.ChangeAtBlock != 0)
+<section class="section section--heading">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-5 col-sm-4">
+                <h3>Coinholders <span>@Model.CoinholdersCount</span></h3>
+            </div>
+            <div class="col-xs-7 col-sm-8">
+                <div class="block_nav">
+                    <form class="js-coinholders-history-form" action="@Url.Action("OwnersHistory", "Asset", new {id=Model.Asset.AssetIds.FirstOrDefault()})">
+                        @if (Model.Pagination.ShowPrev)
                         {
-                            <span class="label @(addressSum.ChangeAtBlock>0?"label-success":"label-danger")">@addressSum.ChangeAtBlock.ToStringBtcFormat()</span>
+                            <div class="block_nav__left">
+                                <a class="btn btn--icon js-change-go-to-block" data-block="@Model.Pagination.PrevBlock"><i class="icon icon--arrow_left_big"></i></a>
+                             @*   <a class="btn btn--icon js-change-go-to-block" data-block="1"><i class="icon icon--arrow_left_big"></i></a>*@
+                            </div>
                         }
+                        <div class="block_nav__field">
+                            <label class="control-label" for="js-go-to-block">Block:</label>
+                            <input type="text" readonly class="form-control js-submit-on-change " id="js-go-to-block" name="at" value="@Model.Pagination.AtBlock">
+                        </div>
+                        @if (Model.Pagination.ShowNext)
+                        {
+                            <div class="block_nav__right js-change-go-to-block">
+                                <a class="btn btn--icon" data-block="@Model.Pagination.NextBlock"><i class="icon icon--arrow_right_big"></i></a>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-                    </td>
+<section class="section js-coinholders-data">
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table--simple table_coinholders">
+                <tr>
+                    <th class="_address">Address</th>
+                    <th class="_ownership text-right">Ownership</th>
+                    <th class="_amount">Amount</th>
+                    <th class="_value">&nbsp;</th>
                 </tr>
-            }
-            <tr>
-                <td colspan="2">Total</td>
-                <td>@Model.Total.ToStringBtcFormat() @Model.Asset.NameShort</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                @foreach (var addressSum in Model.AddressSummaries)
+                {
+                    <tr>
+                        <td class="_address">
+                            <a href="@Url.Action("Index", "Address", new {id = addressSum.Address})">
+                                @UiHelpers.Truncate(addressSum.Address)
+                            </a>
+                        </td>
+                        <td class="_ownership text-right">@addressSum.BalancePercentageDescription %</td>
+                        <td class="_amount">@addressSum.Balance.ToStringBtcFormat() @Model.Asset.NameShort</td>
+                        <td class="_value">
+                            <div class="ownership_value" style="width: @addressSum.BalancePercenage.ToString("F0")%"></div>
+                        </td>
+                    </tr>
+                }
+
+                <tr class="_total">
+                    <th>Total</th>
+                    <td class="_ownership text-right">&nbsp;</td>
+                    <th colspan="2" class="_amount">@Model.Total.ToStringBtcFormat() @Model.Asset.NameShort</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>

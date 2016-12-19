@@ -1,73 +1,78 @@
 ﻿$(function () {
-    var initialPanelToShowSelector = window.location.hash ? window.location.hash : '#owners';
-
-    var $initialLoadPanel = $(initialPanelToShowSelector).first();
-    var $initialLoadBtn = $('[href="' + initialPanelToShowSelector +'"]');
-    $initialLoadBtn.addClass('active');
     var loadedClass = "js-loaded";
-    $initialLoadPanel.removeClass('hidden');
-    var $loader = $('#js-panel-loader');
 
-    $initialLoadPanel.load($initialLoadPanel.data('load-url'), function() {
-        $loader.hide();
-        $initialLoadPanel.addClass(loadedClass);
+    var loadPanel = function($target) {
+        var $panel = $target.find('.js-panel-content');
+        var $loader = $target.find('.js-panel-loader');
 
-        $initialLoadPanel.trigger('panel-loaded');
-    });
-
-    $('body').on('click', '.js-load-panel-loader', function () {
-        var $self = $(this);
-        var url = $self.attr('href');
-        var $panel = $($self.data('load-container'));
-
-        $loader.show();
-        $panel.hide();
-        $panel.load(url, function () {
-            $loader.hide();
-            $panel.show();
-            $panel.addClass(loadedClass);
-        });
-
-        return false;
-    });
-
-    $('body').on('click', '.js-tx-toggle', function () {
-        var $self = $(this);
-        var idToShow = $self.attr('href');
-        var $btnGroup = $self.parents('.js-tx-toggle-container');
-        var $panelToShow = $('#js-load-panels').find(idToShow);
-        var $panelsToHide = $('#js-load-panels').find('.js-load-panel').not(idToShow);
-
-        $btnGroup.find('.js-tx-toggle').removeClass('active');
-        $self.addClass('active');
-
-
-        $panelsToHide.addClass('hidden');
-        $panelToShow.removeClass('hidden');
-
-        if (!$panelToShow.hasClass(loadedClass)) {
+        if (!$panel.hasClass(loadedClass)) {
+            var url = $panel.data('load-url');
             $loader.show();
-
-            var url = $panelToShow.data('load-url');
-            $panelToShow.hide();
-            $panelToShow.load(url, function () {
+            $panel.addClass(loadedClass);
+            $panel.load(url, function () {
                 $loader.hide();
-                $panelToShow.show();
-                $panelToShow.addClass(loadedClass);
-
-                $panelToShow.trigger('panel-loaded');
+                $panel.show();
+                $panel.trigger('panel-loaded');
             });
         }
+    };
+
+    var initialPanelToShowSelector = window.location.hash ? window.location.hash : '#owners';
+    $('[href="' + initialPanelToShowSelector + '"]').tab('show');
+    loadPanel($(initialPanelToShowSelector));
+
+
+    $('.js-tx-toggle').on('show.bs.tab', function (e) {
+        var target = e.target;
+
         if (history.pushState) {
-            history.pushState(null, null, idToShow);
+            history.pushState(null, null, target);
         }
         else {
-            location.hash = idToShow;
+            location.hash = target;
         }
-        return false;
+
+        loadPanel($($(target).attr('href')));
     });
 
     $('body').on('panel-loaded', '#transactions', function (e) {
         $(e.target).find('.js-transactions-container').first().trigger('load-transactions');
+    });
+
+
+    $('body').on('click', '.js-change-go-to-block', function () {
+        var block = $(this).data('block');
+        var $input = $('#js-go-to-block');
+
+        $input.val(block);
+        $input.trigger('change');
+
+        return false;
+    });
+
+    $('body').on('change', '.js-submit-on-change', function() {
+        $(this).parents('form').submit();
+    });
+
+    $('body').on('submit', '.js-coinholders-history-form', function () {
+        var $self = $(this);
+
+        var data = $self.serialize();
+        var url = $self.attr('action');
+
+        var $panelToUpdate = $('#owners .js-panel-content');
+        var $panelToHide = $('#owners .js-coinholders-data');
+        var $loader = $('#owners .js-panel-loader');
+
+        $loader.show();
+        $panelToHide.hide();
+        $.ajax(url, {
+            data: data,
+            method: 'get'
+        }).done(function (resp) {
+            $loader.hide();
+            $panelToUpdate.html(resp);
+        });
+        return false;
     });
 })
