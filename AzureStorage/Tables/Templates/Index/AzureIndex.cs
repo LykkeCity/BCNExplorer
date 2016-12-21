@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AzureStorage.Tables.Templates.Index
@@ -63,6 +64,67 @@ namespace AzureStorage.Tables.Templates.Index
                 PrimaryRowKey = primaryRowKey
             };
         }
+    }
+
+
+    public class AzureIndexData
+    {
+        public string Pk { get; set; }
+        public string Rk { get; set; }
+
+        public static AzureIndexData Create(ITableEntity tableEntity)
+        {
+            return new AzureIndexData
+            {
+                Pk = tableEntity.PartitionKey,
+                Rk = tableEntity.RowKey
+            };
+        }
+    }
+
+    public class AzureMultiIndex : TableEntity
+    {
+
+
+        public string Data { get; set; }
+
+        public void SetData(IEnumerable<AzureIndexData> data)
+        {
+            Data = data.ToJson();
+        }
+
+
+        private static AzureIndexData[] _emptyArray = new AzureIndexData[0];
+
+        public AzureIndexData[] GetData()
+        {
+            try
+            {
+                return Data.DeserializeJson<AzureIndexData[]>();
+            }
+            catch (Exception)
+            {
+
+                return _emptyArray;
+            }
+        }
+
+        public static AzureMultiIndex Create(string partitionKey, string rowKey, params ITableEntity[] items)
+        {
+            var indices = items.Select(AzureIndexData.Create);
+
+            var result = new AzureMultiIndex
+            {
+                PartitionKey = partitionKey,
+                RowKey = rowKey
+            };
+
+            result.SetData(indices);
+
+            return result;
+        }
+
+
     }
 
     public static class AzureIndexUtils

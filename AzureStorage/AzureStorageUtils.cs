@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AzureStorage.Tables.Templates;
+using AzureStorage.Tables.Templates.Index;
 using Common;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -280,9 +281,10 @@ namespace AzureStorage
 
             }
 
-            private static string ConvertDateTimeToString(DateTime dateTime)
+            private static string ConvertDateTimeToString(DateTime dateTime, bool includeTime = false)
             {
-                return dateTime.ToString("yyyy-MM-dd") + " 00:00:00.000";
+                return includeTime ? dateTime.ToString("yyyy-MM-dd HH:mm:ss") :
+                    dateTime.ToString("yyyy-MM-dd") + " 00:00:00.000";
             }
 
             public static class PartitionKeyOnly
@@ -378,10 +380,12 @@ namespace AzureStorage
                 return new TableQuery<T>().Where(sqlFilter);
             }
 
-            public static TableQuery<T> BetweenQuery(string partitionKey, DateTime rowKeyFrom, DateTime rowKeyTo, ToIntervalOption intervalOption)
+            public static TableQuery<T> BetweenQuery(string partitionKey, DateTime rowKeyFrom, DateTime rowKeyTo, ToIntervalOption intervalOption,
+                bool includeTime = false)
             {
                 var sqlFilter = "PartitionKey " + QueryComparisons.Equal + " '" + partitionKey + "' and " +
-                                GenerateRowFilterString(ConvertDateTimeToString(rowKeyFrom), ConvertDateTimeToString(rowKeyTo), intervalOption);
+                                GenerateRowFilterString(ConvertDateTimeToString(rowKeyFrom, includeTime),
+                                ConvertDateTimeToString(rowKeyTo, includeTime), intervalOption);
 
                 return new TableQuery<T>().Where(sqlFilter);
             }
@@ -534,10 +538,10 @@ namespace AzureStorage
         }
 
         public static Task<IEnumerable<T>> WhereAsync<T>(this INoSQLTableStorage<T> tableStorage, string partitionKey,
-            DateTime from, DateTime to, ToIntervalOption intervalOption, Func<T, bool> filter = null)
+            DateTime from, DateTime to, ToIntervalOption intervalOption, Func<T, bool> filter = null, bool includeTime = false)
             where T : ITableEntity, new()
         {
-            var rangeQuery = QueryGenerator<T>.BetweenQuery(partitionKey, from, to, intervalOption);
+            var rangeQuery = QueryGenerator<T>.BetweenQuery(partitionKey, from, to, intervalOption, includeTime);
 
             return filter == null
                 ? tableStorage.WhereAsync(rangeQuery)
@@ -702,6 +706,74 @@ namespace AzureStorage
         public static Dictionary<string, string> ParseTableStorageConnectionString(this string connString)
         {
             return connString.Split(';').Select(keyValuePair => keyValuePair.Split('=')).Where(pair => pair.Length >= 2).ToDictionary(pair => pair[0].ToLower(), pair => pair[1]);
+        }
+
+
+        public static async Task<T> GetFirstOrDefaultAsync<T>(this INoSQLTableStorage<AzureMultiIndex> indexTable, string partitionKey, string rowKey, INoSQLTableStorage<T> dataTable) where T : class, ITableEntity, new()
+        {
+            var indexEntity = await indexTable.GetDataAsync(partitionKey, rowKey);
+            if (indexEntity == null)
+                return null;
+
+            var indices = indexEntity.GetData();
+
+            if (indices.Length == 0)
+                return null;
+
+            return await dataTable.GetDataAsync(indices[0].Pk, indices[0].Rk);
+
+        }
+
+
+        public static async Task<T> ReplaceAsync<T>(this INoSQLTableStorage<AzureMultiIndex> indexTable, string partitionKey, string rowKey, INoSQLTableStorage<T> dataTable, Func<T, T> replaceCallback) where T : class, ITableEntity, new()
+        {
+            var indexEntity = await indexTable.GetDataAsync(partitionKey, rowKey);
+            if (indexEntity == null)
+                return null;
+
+            var indices = indexEntity.GetData();
+
+            if (indices.Length == 0)
+                return null;
+
+
+            var tasks = new List<Task<T>>();
+            foreach (var index in indices)
+            {
+                var task = dataTable.ReplaceAsync(index.Pk, index.Rk, replaceCallback);
+                tasks.Add(task);
+            }
+
+            await Task.WhenAll(tasks);
+
+
+            return tasks[0].Result;
+        }
+
+
+        public static async Task<T> MergeAsync<T>(this INoSQLTableStorage<AzureMultiIndex> indexTable, string partitionKey, string rowKey, INoSQLTableStorage<T> dataTable, Func<T, T> replaceCallback) where T : class, ITableEntity, new()
+        {
+            var indexEntity = await indexTable.GetDataAsync(partitionKey, rowKey);
+            if (indexEntity == null)
+                return null;
+
+            var indices = indexEntity.GetData();
+
+            if (indices.Length == 0)
+                return null;
+
+
+            var tasks = new List<Task<T>>();
+            foreach (var index in indices)
+            {
+                var task = dataTable.MergeAsync(index.Pk, index.Rk, replaceCallback);
+                tasks.Add(task);
+            }
+
+            await Task.WhenAll(tasks);
+
+
+            return tasks[0].Result;
         }
     }
 }

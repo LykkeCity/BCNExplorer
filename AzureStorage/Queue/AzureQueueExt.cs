@@ -75,6 +75,10 @@ namespace AzureStorage.Queue
             return _queue.DeleteMessageAsync(cloudQueueMessage);
         }
 
+        public Task PutRawMessageAsync(string msg)
+        {
+            return _queue.AddMessageAsync(new CloudQueueMessage(msg));
+        }
 
         public void PutMessage(object itm)
         {

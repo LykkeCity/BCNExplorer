@@ -6,7 +6,13 @@ namespace AzureStorage.Queue
 {
     public class QueueExtInMemory : IQueueExt
     {
-        private Queue<object> _queue = new Queue<object>(); 
+        private Queue<object> _queue = new Queue<object>();
+
+        public Task PutRawMessageAsync(string msg)
+        {
+            PutMessage(msg);
+            return Task.CompletedTask;
+        }
 
         public void PutMessage(object itm)
         {
