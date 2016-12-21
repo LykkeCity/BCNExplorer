@@ -2655,6 +2655,10 @@ a.action_link:hover img, button.action_link:hover img { opacity: 1; }
 
 a { color: inherit; }
 
+.header .btn-link { margin-top: 2px; }
+
+.header .header__logo { line-height: 45px; }
+
 @media (max-width: 767px) { .header .btn-link { margin-top: 0; }
   .header .header__logo { line-height: 40px; } }
 
@@ -2697,11 +2701,13 @@ a { color: inherit; }
 
 .fixed .input-search .form-control { border-color: #fff; height: 35px; height: 2.1875rem; }
 
-.section--search { text-align: center; background: #F7F8F9; }
+.section--search { text-align: center; }
 
-.section--search h2 { text-transform: uppercase; letter-spacing: .07em; color: #3F4D60; font-size: 34px; font-size: 2.125rem; }
+.section--search h2 { color: #3F4D60; margin-bottom: 30px; margin-bottom: 1.875rem; }
 
-@media all and (max-width: 767px) { .section--search h2 { margin-bottom: 30px; } }
+.section--search a { color: #0DA7FC; }
+
+.section--search a:hover { color: #3F4D60; }
 
 .form--search_blockchain { padding: 30px 0; padding: 1.875rem 0; }
 
@@ -2712,7 +2718,9 @@ a { color: inherit; }
 @media all and (max-width: 767px) { .form--search_blockchain { padding: 0; }
   .form--search_blockchain .form-control { width: 100%; } }
 
-.section--heading { background: #F5F6F7; padding: 25px 0 23px; padding: 1.5625rem 0 1.4375rem; }
+.section--transactions { position: relative; }
+
+.section--heading { background: #F5F6F7; z-index: 1; position: relative; min-height: 80px; padding: 25px 0 23px; padding: 1.5625rem 0 1.4375rem; }
 
 .section--heading h3 { margin-bottom: 0; font-size: 22px; font-size: 1.375rem; }
 
@@ -2720,11 +2728,21 @@ a { color: inherit; }
 
 .section--heading .tabs_stack, .section--heading .tab_item { margin-bottom: 0; }
 
-.section--heading + .section--transactions .panel:first-child { border-top: 0; }
+.section--heading + .section--transactions .panel:first-child, .section--heading + .section--transactions .panel:first-of-type { border-top: 0; }
+
+.section--transactions .section--heading { background: transparent; z-index: 2; position: absolute; pointer-events: none; bottom: 100%; left: 0; right: 0; }
+
+.section--transactions .section--heading h3 { pointer-events: all; }
+
+.section--heading + .panel { border-top: 0; }
 
 @media all and (max-width: 767px) { .section--heading .tabs_stack { float: none !important; white-space: nowrap; margin-top: 10px; margin-top: 0.625rem; }
+  .section--heading_with_tabs { padding-top: 70px; padding-top: 4.375rem; }
+  .section--heading_with_tabs + .section--transactions .section--heading { margin-bottom: 45px; margin-bottom: 2.8125rem; }
   .section--heading .mobile-scroll { padding: 0; overflow: hidden; height: 45px; height: 2.8125rem; }
   .section--heading .mobile-scroll .tabs_stack { overflow: hidden; overflow-x: auto; padding: 0 15px 20px; } }
+
+@media all and (max-width: 543px) { .section--heading_with_tabs + .section--transactions .section--heading { margin-bottom: 30px; margin-bottom: 1.875rem; } }
 
 .section--balance { padding: 35px 0; padding: 2.1875rem 0; }
 
@@ -2965,9 +2983,11 @@ a { color: inherit; }
 
 .table_coinholders ._address { width: 585px; }
 
-.table_coinholders ._ownership { padding-right: 60px !important; padding-right: 3.75rem !important; }
+.table_coinholders ._amount { padding-right: 60px !important; padding-right: 3.75rem !important; }
 
 .table_coinholders ._value { width: 280px; }
+
+.table_coinholders ._change { display: block; font-size: 16px; font-size: 1rem; }
 
 @media all and (max-width: 991px) { .table_coinholders .ownership_value, .table_coinholders ._value { display: none; } }
 
@@ -2994,3 +3014,7 @@ a { color: inherit; }
 .copy_code .icon--check_thin { position: relative; top: -2px; }
 
 .copy_code .icon + span { margin-left: 0; }
+
+._word_break { word-break: break-all; white-space: normal; line-height: normal; display: inline-block; }
+
+._no_break { word-break: normal; word-wrap: normal; white-space: nowrap; }

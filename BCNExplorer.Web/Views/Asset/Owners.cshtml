@@ -44,8 +44,8 @@
             <table class="table table--simple table_coinholders">
                 <tr>
                     <th class="_address">Address</th>
-                    <th class="_ownership text-right">Ownership</th>
-                    <th class="_amount">Amount</th>
+                    <th class="_amount text-right">Amount</th>
+                    <th class="_ownership">Ownership</th>
                     <th class="_value">&nbsp;</th>
                 </tr>
                 @foreach (var addressSum in Model.AddressSummaries)
@@ -56,8 +56,17 @@
                                 @UiHelpers.Truncate(addressSum.Address)
                             </a>
                         </td>
-                        <td class="_ownership text-right">@addressSum.BalancePercentageDescription %</td>
-                        <td class="_amount">@addressSum.Balance.ToStringBtcFormat() @Model.Asset.NameShort</td>
+                        <td class="_amount text-right">
+                            @addressSum.Balance.ToStringBtcFormat() @Model.Asset.NameShort
+                            @if (addressSum.ChangeAtBlock != 0)
+                            {
+
+                                <span class="_change text--green">@addressSum.ChangeAtBlock.ToStringBtcFormat()</span>
+                            }
+                        </td>
+                        <td class="_ownership">
+                            @addressSum.BalancePercentageDescription %
+                        </td>
                         <td class="_value">
                             <div class="ownership_value" style="width: @addressSum.BalancePercenage.ToString("F0")%"></div>
                         </td>
