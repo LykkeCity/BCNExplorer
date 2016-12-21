@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Block;
 using NBitcoin;
+using NBitcoin.OpenAsset;
 using Providers;
 using Providers.Providers.Ninja;
 
@@ -39,7 +40,16 @@ namespace Services.BlockChain
         public long Nonce { get; set; }
         public int TotalTransactions { get; set; }
         public string PreviousBlock { get; set; }
-        public IEnumerable<string> TransactionIds { get; set; }
+        public IEnumerable<string> AllTransactionIds { get; set; }
+        public IEnumerable<string> ColoredTransactionIds { get; set; }
+        public IEnumerable<string> UncoloredTransactionIds { get; set; }
+
+        public Block()
+        {
+            AllTransactionIds = Enumerable.Empty<string>();
+            ColoredTransactionIds = Enumerable.Empty<string>();
+            UncoloredTransactionIds = Enumerable.Empty<string>();
+        }
     }
 
     public class BlockService:IBlockService
@@ -145,7 +155,6 @@ namespace Services.BlockChain
 
         private void FillBlockDataFromDb(NBitcoin.Block block, Block result)
         {
-
             result.Time = block.Header.BlockTime.DateTime;
             result.Hash = block.Header.GetHash().ToString();
             result.TotalTransactions = block.Transactions.Count;
@@ -153,7 +162,9 @@ namespace Services.BlockChain
             result.MerkleRoot = block.Header.HashMerkleRoot.ToString();
             result.PreviousBlock = block.Header.HashPrevBlock.ToString();
             result.Nonce = block.Header.Nonce;
-            result.TransactionIds = block.Transactions.Select(p => p.GetHash().ToString()).ToList();
+            result.AllTransactionIds = block.Transactions.Select(p => p.GetHash().ToString()).ToList();
+            result.ColoredTransactionIds = block.Transactions.Where(p => p.HasValidColoredMarker()).Select(p => p.GetHash().ToString()).ToList();
+            result.UncoloredTransactionIds = block.Transactions.Where(p => !p.HasValidColoredMarker()).Select(p => p.GetHash().ToString()).ToList();
         }
     }
 }

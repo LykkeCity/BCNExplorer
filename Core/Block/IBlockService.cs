@@ -25,7 +25,9 @@ namespace Core.Block
         long Nonce { get; }
         int TotalTransactions { get; }
         string PreviousBlock { get; }
-        IEnumerable<string> TransactionIds { get; }
+        IEnumerable<string> AllTransactionIds { get; }
+        IEnumerable<string> ColoredTransactionIds { get;}
+        IEnumerable<string> UncoloredTransactionIds { get;  }
     }
 
     public interface IBlockService

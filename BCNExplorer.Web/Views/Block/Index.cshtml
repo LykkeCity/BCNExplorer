@@ -86,7 +86,32 @@
     </div>
 </section>
 
-<section class="section section--transactions">
 
-    @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.TransactionIdList)
+<section class="section section--heading">
+    <div class="container">
+        <div class="mobile-scroll">
+            <div class="tabs_stack pull-right js-tx-toggle-container">
+                <div class="tab_item js-tab_item tab_item--active"><a class="tab_item__link js-tx-toggle" href="#js-all-tx">All · @Model.AllTransactionIdList.TotalItems</a></div>
+                <div class="tab_item js-tab_item"><a class="tab_item__link js-tx-toggle" href="#js-colored-tx">Colored · @Model.ColoredTransactionIdList.TotalItems</a></div>
+                <div class="tab_item js-tab_item"><a class="tab_item__link js-tx-toggle" href="#js-uncolored-tx">Uncolored  · @Model.UncoloredTransactionIdList.TotalItems</a></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section--transactions">
+    <div id="js-tx-select-result-container">
+
+        <div id="js-all-tx" class="js-select-result">
+            @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.AllTransactionIdList)
+        </div>
+
+        <div id="js-colored-tx" class="hidden js-select-result">
+            @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.ColoredTransactionIdList)
+        </div>
+
+        <div id="js-uncolored-tx" class="hidden js-select-result">
+            @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.UncoloredTransactionIdList)
+        </div>
+    </div>
 </section>

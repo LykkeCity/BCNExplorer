@@ -20,8 +20,9 @@ namespace BCNExplorer.Web.Models
         public long NextBlockHeight { get; set; }
         public bool ShowNextBlock { get; set; }
 
-        public TransactionIdList TransactionIdList { get; set; }
-        private const int PageSize = 20;
+        public TransactionIdList AllTransactionIdList { get; set; }
+        public TransactionIdList ColoredTransactionIdList { get; set; }
+        public TransactionIdList UncoloredTransactionIdList { get; set; }
 
 
         public static BlockViewModel Create(IBlock ninjaBlock, IBlockHeader lastBlock)
@@ -36,7 +37,9 @@ namespace BCNExplorer.Web.Models
                 Nonce = ninjaBlock.Nonce,
                 PreviousBlock = ninjaBlock.PreviousBlock,
                 Time = ninjaBlock.Time,
-                TransactionIdList = new TransactionIdList(ninjaBlock.TransactionIds, PageSize),
+                AllTransactionIdList = new TransactionIdList(ninjaBlock.AllTransactionIds),
+                ColoredTransactionIdList = new TransactionIdList(ninjaBlock.ColoredTransactionIds),
+                UncoloredTransactionIdList = new TransactionIdList(ninjaBlock.UncoloredTransactionIds),
                 TotalTransactions = ninjaBlock.TotalTransactions,
                 ShowNextBlock = ninjaBlock.Height < lastBlock?.Height,
                 NextBlockHeight = ninjaBlock.Height + 1
