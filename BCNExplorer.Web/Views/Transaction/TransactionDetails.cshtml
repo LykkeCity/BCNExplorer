@@ -292,11 +292,24 @@
                 @if (inOutViewModel.ShowAggregatedTransactions)
                 {
 
-                    <a href="#@aggregatedTransContainerId" class="open_hidden_content">@inOutViewModel.ValueDescription (@inOutViewModel.AggregatedTransactionCount)<i class="icon icon--chevron-thin-down"></i></a>
+                    <a href="#@aggregatedTransContainerId" class="open_hidden_content _word_break">
+                        @inOutViewModel.ValueDescription
+                        <span class="_no_break">
+                            @inOutViewModel.AssetDescription
+                            (@inOutViewModel.AggregatedTransactionCount)
+                        </span> 
+                        <i class="icon icon--chevron-thin-down"></i>
+                    </a>
                 }
                 else
                 {
-                    <span>@inOutViewModel.ValueDescription</span>
+                    <text>
+                        @inOutViewModel.ValueDescription
+                        <span class="_no_break">
+                            @inOutViewModel.AssetDescription
+                            (@inOutViewModel.AggregatedTransactionCount)
+                        </span> 
+                    </text>
                 }
             </div>
         </div>

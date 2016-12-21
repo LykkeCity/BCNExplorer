@@ -105,7 +105,8 @@ namespace BCNExplorer.Web.Models
                 public override string PreviousTransactionId { get; }
 
                 public override string ValueDescription => Value.ToStringBtcFormat();
-                
+                public override string AssetDescription => "";
+
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
                 
                 public static IEnumerable<In> Create(IEnumerable<IInOut> ins)
@@ -129,7 +130,8 @@ namespace BCNExplorer.Web.Models
                 public override string PreviousTransactionId => null;
 
                 public override string ValueDescription => Value.ToStringBtcFormat();
-                
+                public override string AssetDescription => "";
+
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
                 
                 public static IEnumerable<Out> Create(IEnumerable<IInOut> outs)
@@ -170,8 +172,9 @@ namespace BCNExplorer.Web.Models
 
                 public override string PreviousTransactionId { get; }
 
-                public override string ValueDescription => $"{Value.ToStringBtcFormat()} {ShortName}";
-                
+                public override string ValueDescription => Value.ToStringBtcFormat();
+                public override string AssetDescription => ShortName;
+
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
 
                 public string ShortName { get; set; }
@@ -201,7 +204,8 @@ namespace BCNExplorer.Web.Models
 
                 public override string PreviousTransactionId => null;
 
-                public override string ValueDescription => $"{Value.ToStringBtcFormat()} {ShortName}";
+                public override string ValueDescription => Value.ToStringBtcFormat();
+                public override string AssetDescription => ShortName;
 
 
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
@@ -281,6 +285,7 @@ namespace BCNExplorer.Web.Models
         public abstract string PreviousTransactionId { get; }
         public bool ShowPreviousTransaction => PreviousTransactionId != null;
         public abstract string ValueDescription { get; }
+        public abstract string AssetDescription { get; }
         public bool ShowAggregatedTransactions => AggregatedTransactionCount > 1;
         public abstract int AggregatedTransactionCount { get; }
 
@@ -334,6 +339,7 @@ namespace BCNExplorer.Web.Models
     public interface IInOutViewModel
     {
         string ValueDescription { get; } 
+        string AssetDescription { get; }
         bool ShowAggregatedTransactions { get;  }
         int AggregatedTransactionCount { get;  }
         bool IsUnrecoginzedAddress { get; }
