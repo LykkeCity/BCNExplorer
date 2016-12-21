@@ -49,5 +49,21 @@ namespace Providers.Providers.Asset
 
             return result;
         }
+
+        public static Dictionary<string, IAssetScore> IndexAssetScores(IEnumerable<IAssetScore> assets)
+        {
+            var result = new Dictionary<string, IAssetScore>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var asset in assets)
+            {
+
+                foreach (var assetId in asset.AssetIds ?? Enumerable.Empty<string>())
+                {
+                    result[assetId] = asset;
+                }
+            }
+
+            return result;
+        }
     }
 }

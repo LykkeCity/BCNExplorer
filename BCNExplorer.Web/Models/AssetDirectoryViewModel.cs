@@ -12,20 +12,28 @@ namespace BCNExplorer.Web.Models
         public IEnumerable<Asset> Assets { get; set; }
 
         public static AssetDirectoryViewModel Create(IEnumerable<IAssetDefinition> assetDefinitions,
-            IDictionary<string, IAssetCoinholdersIndex> assetCoinholdersIndices)
+            IDictionary<string, IAssetCoinholdersIndex> assetCoinholdersIndices, 
+            IDictionary<string, IAssetScore> assetScoresDictionaries)
         {
             return new AssetDirectoryViewModel
             {
                 Assets = assetDefinitions.Select(p =>
                 {
-                    IAssetCoinholdersIndex index = null;
-
                     var assetId = p.AssetIds.FirstOrDefault();
+
+                    IAssetCoinholdersIndex index = null;
                     if (assetCoinholdersIndices.ContainsKey(assetId))
                     {
                         index = assetCoinholdersIndices[assetId];
                     }
-                    return Asset.Create(p, index);
+
+                    IAssetScore assetScore = null;
+                    if (assetScoresDictionaries.ContainsKey(assetId))
+                    {
+                        assetScore = assetScoresDictionaries[assetId];
+                    }
+
+                    return Asset.Create(p, index, assetScore);
                 })
                     .OrderBy(p => p.Score).ToList()
             };
@@ -66,7 +74,7 @@ namespace BCNExplorer.Web.Models
             
             public double Score { get; set; }
 
-            public static Asset Create(IAssetDefinition source, IAssetCoinholdersIndex index)
+            public static Asset Create(IAssetDefinition source, IAssetCoinholdersIndex index, IAssetScore assetScore)
             {
                 return new Asset
                 {
@@ -86,7 +94,7 @@ namespace BCNExplorer.Web.Models
                     IsVerified = source.IsVerified,
                     CoinholdersCount = index?.CoinholdersCount,
                     TotalQuantity = index?.TotalQuantity,
-                    Score = index?.Score ?? 0
+                    Score = assetScore?.Score ?? 1
                 };
             }
             

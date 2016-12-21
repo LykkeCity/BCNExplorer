@@ -13,7 +13,6 @@ namespace AzureRepositories.AssetCoinHolders
     public class AssetCoinholdersIndexEntity:TableEntity, IAssetCoinholdersIndex
     {
         IEnumerable<string> IAssetCoinholdersIndex.AssetIds => JsonConvert.DeserializeObject<List<string>>(AssetIds);
-        public double Score { get; set; }
         public int CoinholdersCount { get; set; }
         public double TotalQuantity { get; set; }
         public double TopCoinholderShare { get; set; }
@@ -46,8 +45,7 @@ namespace AzureRepositories.AssetCoinHolders
                 HerfindalShareIndex = source.HerfindalShareIndex,
                 TransactionsCount = source.TransactionsCount,
                 TopCoinholderShare = source.TopCoinholderShare,
-                LastMonthTransactionCount = source.LastMonthTransactionCount,
-                Score = source.Score
+                LastMonthTransactionCount = source.LastMonthTransactionCount
             };
         }
     }
@@ -70,14 +68,5 @@ namespace AzureRepositories.AssetCoinHolders
         {
             return await _tableStorage.GetDataAsync();
         }
-
-        public async Task SetScoreAsync(IAssetCoinholdersIndex index, double score)
-        {
-            await _tableStorage.ReplaceAsync(AssetCoinholdersIndexEntity.GeneratePartitionKey(),AssetCoinholdersIndexEntity.GenerateRowKey(index.AssetIds), p =>
-            {
-                p.Score = score;
-                return p;
-            });
-        } 
     }
 }

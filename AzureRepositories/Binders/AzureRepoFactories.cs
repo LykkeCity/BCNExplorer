@@ -1,4 +1,5 @@
-﻿using AzureRepositories.AssetCoinHolders;
+﻿using AzureRepositories.Asset;
+using AzureRepositories.AssetCoinHolders;
 using AzureRepositories.AssetDefinition;
 using AzureStorage.Queue;
 using AzureStorage.Tables;
@@ -43,6 +44,11 @@ namespace AzureRepositories.Binders
         public static AssetCoinholdersIndexRepository CreateAssetCoinholdersIndexRepository(BaseSettings baseSettings, ILog log)
         {
             return new AssetCoinholdersIndexRepository(new AzureTableStorage<AssetCoinholdersIndexEntity>(baseSettings.Db.AssetsConnString, "AssetCoinholdersIndexes", log));
+        }
+
+        public static AssetScoreRepository CreateAssetScoreRepository(BaseSettings baseSettings, ILog log)
+        {
+            return new AssetScoreRepository(new AzureTableStorage<AssetScoreEntity>(baseSettings.Db.AssetsConnString, "AssetScores", log));
         }
 
         public static AssetBalanceChangesRepository CreateAssetBalanceChangesRepository(BaseSettings baseSettings, ILog log)

@@ -40,6 +40,11 @@ namespace Services.Binders
                     async () => AssetIndexer.IndexAssetCoinholders(await ioc.GetObject<IAssetCoinholdersIndexRepository>().GetAllAsync())
                     , validDataInSeconds: 1 * 10 * 60));
 
+            ioc.RegisterFactorySingleTone(() =>
+                new CachedDataDictionary<string, IAssetScore>(
+                    async () => AssetIndexer.IndexAssetScores(await ioc.GetObject<IAssetScoreRepository>().GetAllAsync())
+                    , validDataInSeconds: 1 * 10 * 60));
+
             ioc.RegisterPerCall<IAssetService, AssetService>();
         }
     }

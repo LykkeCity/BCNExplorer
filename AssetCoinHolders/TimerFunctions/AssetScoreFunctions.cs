@@ -13,14 +13,19 @@ namespace AssetCoinHoldersScanner.TimerFunctions
     public class AssetScoreFunctions
     {
         private readonly IAssetCoinholdersIndexRepository _indexRepository;
+        private readonly IAssetScoreRepository _assetScoreRepository;
         private readonly ILog _log;
         private readonly IAssetService _assetService;
         
-        public AssetScoreFunctions(IAssetCoinholdersIndexRepository indexRepository, ILog log, IAssetService assetService)
+        public AssetScoreFunctions(IAssetCoinholdersIndexRepository indexRepository, 
+            ILog log, 
+            IAssetService assetService, 
+            IAssetScoreRepository assetScoreRepository)
         {
             _indexRepository = indexRepository;
             _log = log;
             _assetService = assetService;
+            _assetScoreRepository = assetScoreRepository;
         }
 
         public async Task UpdateAssetScores([TimerTrigger("01:00:00", RunOnStartup = true)] TimerInfo timer)
@@ -35,8 +40,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
                     Console.WriteLine(counter);
                     counter--;
                     var score = AssetScoreHelper.CalculateAssetScore(await _assetService.GetAssetAsync(index.AssetIds.FirstOrDefault()), index, indexes);
-
-                    await _indexRepository.SetScoreAsync(index, score);
+                    await _assetScoreRepository.InsertOrReplaceAsync(AssetScore.Create(index.AssetIds, score));
                 }
                 await _log.WriteInfo("AssetScoreFunctions", "UpdateAssetScores", null, "Done");
             }

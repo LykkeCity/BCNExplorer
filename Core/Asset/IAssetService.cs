@@ -10,5 +10,6 @@ namespace Core.Asset
         Task<IDictionary<string, IAssetDefinition>> GetAssetDefinitionDictionaryAsync();
         Task<IEnumerable<IAssetDefinition>> GetAssetDefinitionsAsync();
         Task<IDictionary<string, IAssetCoinholdersIndex>> GetAssetCoinholdersIndexAsync();
+        Task<IDictionary<string, IAssetScore>> GetAssetScoreDictionaryAsync();
     }
 }

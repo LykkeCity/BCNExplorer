@@ -10,7 +10,6 @@ namespace Core.Asset
     public class AssetCoinholdersIndex: IAssetCoinholdersIndex
     {
         public IEnumerable<string> AssetIds { get; set; }
-        public double Score { get; set; }
         public int CoinholdersCount { get; set; }
         public double TotalQuantity { get; set; }
         public double TopCoinholderShare { get; set; }
@@ -40,7 +39,6 @@ namespace Core.Asset
     public interface IAssetCoinholdersIndex
     {
         IEnumerable<string> AssetIds { get; }
-        double Score { get; set; }
         int CoinholdersCount { get; }
         double TotalQuantity { get; }
         double TopCoinholderShare { get; }
@@ -55,6 +53,5 @@ namespace Core.Asset
     {
         Task InserOrReplaceAsync(IAssetCoinholdersIndex index);
         Task<IEnumerable<IAssetCoinholdersIndex>> GetAllAsync();
-        Task SetScoreAsync(IAssetCoinholdersIndex index, double score);
     }
 }

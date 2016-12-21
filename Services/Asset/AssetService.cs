@@ -10,12 +10,15 @@ namespace Services.Asset
     {
         private readonly CachedDataDictionary<string, IAssetDefinition> _assetDefinitionCachedDictionary;
         private readonly CachedDataDictionary<string, IAssetCoinholdersIndex> _assetCoinholdersIndexesDictionary;
+        private readonly CachedDataDictionary<string, IAssetScore> _assetScoreDictionary; 
 
         public AssetService(CachedDataDictionary<string, IAssetDefinition> assetDefinitionCachedDictionary, 
-            CachedDataDictionary<string, IAssetCoinholdersIndex> assetCoinholdersIndexesDictionary)
+            CachedDataDictionary<string, IAssetCoinholdersIndex> assetCoinholdersIndexesDictionary, 
+            CachedDataDictionary<string, IAssetScore> assetScoreDictionary)
         {
             _assetDefinitionCachedDictionary = assetDefinitionCachedDictionary;
             _assetCoinholdersIndexesDictionary = assetCoinholdersIndexesDictionary;
+            _assetScoreDictionary = assetScoreDictionary;
         }
 
         public async Task<IAssetDefinition> GetAssetAsync(string assetId)
@@ -36,6 +39,11 @@ namespace Services.Asset
         public async Task<IDictionary<string, IAssetCoinholdersIndex>> GetAssetCoinholdersIndexAsync()
         {
             return await _assetCoinholdersIndexesDictionary.GetDictionaryAsync();
+        }
+
+        public async Task<IDictionary<string, IAssetScore>> GetAssetScoreDictionaryAsync()
+        {
+            return await _assetScoreDictionary.GetDictionaryAsync();
         }
 
         public async Task<IEnumerable<IAssetDefinition>> GetAssetDefinitionsAsync()
