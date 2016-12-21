@@ -38,12 +38,12 @@ namespace Services.Binders
             ioc.RegisterFactorySingleTone(() =>
                 new CachedDataDictionary<string, IAssetCoinholdersIndex>(
                     async () => AssetIndexer.IndexAssetCoinholders(await ioc.GetObject<IAssetCoinholdersIndexRepository>().GetAllAsync())
-                    , validDataInSeconds: 1 * 10 * 60));
+                    , validDataInSeconds: 1 * 10 * 10));
 
             ioc.RegisterFactorySingleTone(() =>
                 new CachedDataDictionary<string, IAssetScore>(
                     async () => AssetIndexer.IndexAssetScores(await ioc.GetObject<IAssetScoreRepository>().GetAllAsync())
-                    , validDataInSeconds: 1 * 10 * 60));
+                    , validDataInSeconds: 1 * 10 * 10));
 
             ioc.RegisterPerCall<IAssetService, AssetService>();
         }
