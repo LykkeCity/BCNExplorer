@@ -22,7 +22,7 @@
     loadPanel($(initialPanelToShowSelector));
 
 
-    $('.js-tx-toggle').on('show.bs.tab', function (e) {
+    $('.js-tx-toggle-tab').on('show.bs.tab', function (e) {
         var target = e.target;
 
         if (history.pushState) {
