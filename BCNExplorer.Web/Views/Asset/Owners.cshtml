@@ -61,7 +61,7 @@
                             @if (addressSum.ChangeAtBlock != 0)
                             {
 
-                                <span class="_change text--green">@addressSum.ChangeAtBlock.ToStringBtcFormat()</span>
+                                <span class="_change @(addressSum.ChangeAtBlock>0?"text--green":"text--red")">@addressSum.ChangeAtBlock.ToStringBtcFormat()</span>
                             }
                         </td>
                         <td class="_ownership">

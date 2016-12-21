@@ -235,7 +235,7 @@ namespace AzureRepositories.AssetCoinHolders
                         .Project(p => new {p.BlockHeight, p.BlockHash})
                         .ToListAsync();
 
-            return result.Distinct().Select(p => BalanceBlock.Create(p.BlockHash, p.BlockHeight));
+            return result.Distinct().Select(p => BalanceBlock.Create(p.BlockHash, p.BlockHeight)).OrderByDescending(p=>p.Height);
         }
     }
 
