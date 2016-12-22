@@ -4,6 +4,7 @@
 
 @section scripts{
     @Scripts.Render("~/js/vendor/angular.min.js")
+    @Scripts.Render("~/js/vendor/ng-infinite-scroll.min.js")
     @Scripts.Render("~/bundles/js/asset/directory")
 }
 
@@ -23,8 +24,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" ng-hide="loading">
-                    <div class="col-xs-12">
+                <div ng-hide="loading">
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="searchQuery" ng-change="pagination.resetToDefault()" placeholder="Search assets">
+                    </div>
+                    <div>
+                        @*<div>{{paged.length}}</div>*@
                         <div class="table-responsive">
                             <table class="table table--asstes table--be_info">
                                 <tbody>
@@ -35,18 +40,18 @@
                                     <th>Coinholders</th>
                                     <th>Coins issued</th>
                                 </tr>
-                                <tr ng-repeat="asset in assets">
+                                <tr ng-repeat="asset in pagination.allItems | filter:searchQuery | limitTo:pagination.pagedItemsCount as paged">
                                     <td>
-                                        <a ng-href="/asset/{{asset.AssetIds[0]}}" ng-show="{{asset.IconUrl!=undefined && asset.IconUrl!=''}}">
+                                        <a ng-href="{{detailsUrl(asset)}}" ng-show="{{asset.IconUrl!=undefined && asset.IconUrl!=''}}">
                                             <img ng-src="{{asset.IconUrl}}" width="48" alt="{{asset.Name}}">
                                         </a>
                                         <p class="text-muted">
-                                            {{asset.AssetIds[0]}} 
+                                            {{asset.AssetIds[0]}}
                                         </p>
-                                        
+
                                     </td>
                                     <td>
-                                        <a ng-href="/asset/{{asset.AssetIds[0]}}">
+                                        <a ng-href="{{detailsUrl(asset)}}">
                                             {{asset.Name}}
                                         </a>
                                     </td>
@@ -64,10 +69,14 @@
                                         </div>
                                     </td>
                                 </tr>
-     
+
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+
+                    <div class="show_more">
+                        <a class="btn" ng-show="pagination.showNextBtn()" ng-click="pagination.next()">Show More</a>
                     </div>
                 </div>
             </div>

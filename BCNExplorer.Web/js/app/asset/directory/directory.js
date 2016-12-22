@@ -4,20 +4,59 @@ angular.module('app', [])
     .factory('assetService', function ($http) {
         var result = {
             async: function () {
-                // $http returns a promise, which has a then function, which also returns a promise
                 var promise = $http.get('/api/assets').then(function (response) {
-                    console.log(response);
                     return response.data;
                 });
+
                 return promise;
             }
         };
         return result;
     })
-    .controller('DirectoryCtrl', function ($scope, assetService) {
-        $scope.loading = true;
-        assetService.async().then(function(data) {
-            $scope.assets = data;
-            $scope.loading = false;
-        });
-    });
+    .constant('config', {
+        pageSize: 20,
+        detailsUrl: '/asset/'
+    })
+    .controller('DirectoryCtrl', function ($scope, assetService, config) {
+            var pagination = {
+                page: 0,
+                allItems:[],
+                pagedItemsCount: 0,
+                setPage: function(page) {
+                    pagination.page = page;
+                },
+                resetToDefault: function() {
+                    pagination.setPage(1);
+                },
+                next: function () {
+                    console.log('next');
+                    pagination.page++;
+                },
+                start: function() {
+                    pagination.resetToDefault();
+                },
+                showNextBtn: function () {
+                    return true;
+                }
+            };
+
+            $scope.$watch('pagination.page', function () {
+                pagination.pagedItemsCount = pagination.allItems.slice().splice(0, (pagination.page) * config.pageSize).length;
+            });
+
+            $scope.loading = true;
+            $scope.pagination = pagination;
+
+            $scope.detailsUrl = function(asset) {
+                return config.detailsUrl + asset.AssetIds[0];
+            }
+
+            assetService.async().then(function (data) {
+                pagination.allItems = data;
+                pagination.start();
+                $scope.loading = false;
+            });
+
+    })
+
+;
