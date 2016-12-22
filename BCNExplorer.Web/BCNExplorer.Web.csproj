@@ -273,8 +273,6 @@
     <Content Include="js\vendor\clipboard.min.js" />
     <Content Include="js\vendor\fastclick.min.js" />
     <Content Include="js\vendor\html5shiv.js" />
-    <Content Include="js\vendor\ng-infinite-scroll.js" />
-    <Content Include="js\vendor\ng-infinite-scroll.min.js" />
     <Content Include="js\vendor\throttle-debounce.min.js" />
     <Content Include="js\vendor\jquery.inview.min.js" />
     <Content Include="js\vendor\jquery.min.js" />
