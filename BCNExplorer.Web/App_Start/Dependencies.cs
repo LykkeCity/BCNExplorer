@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Web.Mvc;
+using System.Web.Http.Dependencies;
 using AzureRepositories;
 using AzureRepositories.Binders;
 using AzureRepositories.Log;
@@ -13,6 +13,7 @@ using Common.Validation;
 using Core.Settings;
 using Providers;
 using Services.Binders;
+using IDependencyResolver = System.Web.Mvc.IDependencyResolver;
 
 namespace BCNExplorer.Web.App_Start
 {
@@ -24,9 +25,9 @@ namespace BCNExplorer.Web.App_Start
             public static string ConnectionString => !string.IsNullOrEmpty(ConfigurationManager.AppSettings["ConnectionString"]) ? ConfigurationManager.AppSettings["ConnectionString"]: "UseDevelopmentStorage=true";
         }
 
-        public static IDependencyResolver CreateDepencencyResolver()
+        public static DependencyResolver CreateDepencencyResolver()
         {
-            var dr = new MyDependencyResolver();
+            var dr = new DependencyResolver();
             
             var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
             settings.NinjaUrl = settings.NinjaUrl.AddLastSymbolIfNotExists('/');
@@ -46,8 +47,37 @@ namespace BCNExplorer.Web.App_Start
         }
 
 
-        public class MyDependencyResolver : IDependencyResolver
+
+
+        public class DependencyResolver : IDependencyResolver, System.Web.Http.Dependencies.IDependencyResolver
         {
+            public class DependencyScope : IDependencyScope
+            {
+                private readonly IoC _ioc;
+
+                public DependencyScope(IoC ioc)
+                {
+                    _ioc = ioc;
+                }
+
+                public void Dispose()
+                {
+                }
+
+                public object GetService(Type serviceType)
+                {
+                    var result = _ioc.CreateInstance(serviceType);
+
+                    return result;
+                }
+                internal static readonly object[] NullData =
+                    new object[0];
+                public IEnumerable<object> GetServices(Type serviceType)
+                {
+                    var result = _ioc.CreateInstance(serviceType);
+                    return result == null ? NullData : new[] { result };
+                }
+            }
 
             public readonly IoC IoC = new IoC();
 
@@ -79,6 +109,17 @@ namespace BCNExplorer.Web.App_Start
             {
                 var result = IoC.CreateInstance(serviceType);
                 return result == null ? _nullData : new[] { result };
+            }
+
+            private DependencyScope _dependencyScope;
+            public IDependencyScope BeginScope()
+            {
+                return _dependencyScope ?? (_dependencyScope = new DependencyScope(IoC));
+            }
+
+            public void Dispose()
+            {
+
             }
         }
     }

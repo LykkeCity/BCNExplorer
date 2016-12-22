@@ -1,61 +1,77 @@
-﻿@using Common
-@model AssetDirectoryViewModel
-@{
+﻿@{
     ViewBag.Title = "Asset Directiory";
 }
+
+@section scripts{
+    @Scripts.Render("~/js/vendor/angular.min.js")
+    @Scripts.Render("~/bundles/js/asset/directory")
+}
+
 
 <section class="section section--be section--padding">
     <div class="container container--extend">
 
-        <div class="page__header">
-            <h2 class="page__title">Assets directory</h2>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="table-responsive">
-                    <table class="table table--asstes table--be_info">
-                        <tbody>
-                        <tr>
-                            <th colspan="2">Asset</th>
-                            <th>Issuer</th>
-                            <th>Ticker</th>
-                            <th>Coinholders</th>
-                            <th>Coins issued</th>
-                        </tr>
-                            @foreach (var asset in Model.Assets)
-                            {
+        <div ng-app="app" ng-cloak> 
+            <div ng-controller="DirectoryCtrl">
+                <div class="page__header">
+                    <h2 class="page__title">Assets directory</h2>
+                </div>
+                <div ng-show="loading">
+                    <div class="spinner_container">
+                        <div class="spinner">
+                            <div class="spinner__inside"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-hide="loading">
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table--asstes table--be_info">
+                                <tbody>
                                 <tr>
+                                    <th colspan="2">Asset</th>
+                                    <th>Issuer</th>
+                                    <th>Ticker</th>
+                                    <th>Coinholders</th>
+                                    <th>Coins issued</th>
+                                </tr>
+                                <tr ng-repeat="asset in assets">
                                     <td>
-                                        @*@asset.Score*@
-                                        @if (!string.IsNullOrEmpty(asset.IconUrl))
-                                        {
-                                            <a href="@Url.Action("Index", new {id = asset.AssetIds.FirstOrDefault()})"><img src="@asset.IconUrl" width="48" alt="@asset.Name"></a>
-                                        }
-                                        <p class="text-muted">@string.Join(", ", asset.AssetIds)</p>
-                                        @*<p>@asset.Spread</p>*@
+                                        <a ng-href="/asset/{{asset.AssetIds[0]}}" ng-show="{{asset.IconUrl!=undefined && asset.IconUrl!=''}}">
+                                            <img ng-src="{{asset.IconUrl}}" width="48" alt="{{asset.Name}}">
+                                        </a>
+                                        <p class="text-muted">
+                                            {{asset.AssetIds[0]}} 
+                                        </p>
+                                        
+                                    </td>
+                                    <td>
+                                        <a ng-href="/asset/{{asset.AssetIds[0]}}">
+                                            {{asset.Name}}
+                                        </a>
+                                    </td>
+                                    <td>
 
+                                        <span class="glyphicon" ng-class="{'glyphicon-ok-sign': asset.IsVerified, 'glyphicon-remove-sign': !asset.IsVerified}"></span>
+                                        {{asset.Issuer}}
                                     </td>
-                                    <td><a href="@Url.Action("Index", new {id=asset.AssetIds.FirstOrDefault()})">@asset.Name</a></td>
+                                    <td>{{asset.NameShort}}</td>
+                                    <td>{{asset.CoinholdersCount}}</td>
                                     <td>
-                                        <span class="glyphicon glyphicon-@(asset.IsVerified ? "ok-sign" : "remove-sign")"></span>
-                                        @asset.Issuer
-                                    </td>
-                                    <td>@asset.NameShort</td>
-                                    <td>@asset.CoinholdersCount</td>
-                                    <td>
-                                        @if (asset.TotalColored != null)
-                                        {
-                                            <span>@asset.TotalColored.Value.ToStringBtcFormat()</span>
-                                            <span>@asset.NameShort</span>
-                                        }
+                                        <div ng-show="asset.TotalColored!=undefined">
+                                            <span>{{asset.TotalColoredDescription}}</span>
+                                            <span>{{asset.NameShort}}</span>                                 
+                                        </div>
                                     </td>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+     
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </section>

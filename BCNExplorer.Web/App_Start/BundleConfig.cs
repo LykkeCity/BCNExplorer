@@ -17,6 +17,8 @@ namespace BCNExplorer.Web
             //bundles.Add(new ScriptBundle("~/bundles/js/common").Include(
             //          "~/js/app/common/*.js"));
 
+            
+
             bundles.Add(new ScriptBundle("~/bundles/js/transaction").Include(
                       "~/js/app/transaction/*.js"));
 
@@ -26,6 +28,8 @@ namespace BCNExplorer.Web
 
             bundles.Add(new ScriptBundle("~/bundles/js/asset").Include(
           "~/js/app/asset/*.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/asset/directory").Include("~/js/app/asset/directory/*.js"));
 
             //bundles.Add(new StyleBundle("~/Content/maincss")
             //    .Include("~/Content/bootstrap.css", new CssRewriteUrlTransform())

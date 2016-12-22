@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http.Routing;
 using Common;
 using Core.Asset;
 
@@ -71,8 +72,9 @@ namespace BCNExplorer.Web.Models
             public int? CoinholdersCount { get; set; }
             private double? TotalQuantity { get; set; }
             public double? TotalColored => TotalQuantity != null? (double?)BitcoinUtils.CalculateColoredAssetQuantity(TotalQuantity.Value, Divisibility):null;
-            
+            public string TotalColoredDescription => (TotalColored??0).ToStringBtcFormat();
             public double Score { get; set; }
+            public string DetailsUrl { get; set; }
 
             public static Asset Create(IAssetDefinition source, IAssetCoinholdersIndex index, IAssetScore assetScore)
             {
@@ -94,7 +96,7 @@ namespace BCNExplorer.Web.Models
                     IsVerified = source.IsVerified,
                     CoinholdersCount = index?.CoinholdersCount,
                     TotalQuantity = index?.TotalQuantity,
-                    Score = assetScore?.Score ?? 1
+                    Score = assetScore?.Score ?? 1,
                 };
             }
             

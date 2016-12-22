@@ -39,17 +39,31 @@ namespace BCNExplorer.Web.Controllers
         [Route("assets")]
         public async Task<ActionResult> AssetDirectiory()
         {
+            //var assetDefinitions = _assetService.GetAssetDefinitionsAsync();
+            //var assetCoinholdersIndexes = _assetService.GetAssetCoinholdersIndexAsync();
+            //var assetScores = _assetService.GetAssetScoreDictionaryAsync();
+            
+            //await Task.WhenAll(assetCoinholdersIndexes, assetDefinitions, assetScores);
+
+            //var result = AssetDirectoryViewModel.Create(assetDefinitions.Result, assetCoinholdersIndexes.Result, assetScores.Result);
+
+            //return View(result);
+
+            return View();
+        }
+        
+        public async Task<ActionResult> AssetDirectoryData()
+        {
             var assetDefinitions = _assetService.GetAssetDefinitionsAsync();
             var assetCoinholdersIndexes = _assetService.GetAssetCoinholdersIndexAsync();
             var assetScores = _assetService.GetAssetScoreDictionaryAsync();
-            
+
             await Task.WhenAll(assetCoinholdersIndexes, assetDefinitions, assetScores);
 
             var result = AssetDirectoryViewModel.Create(assetDefinitions.Result, assetCoinholdersIndexes.Result, assetScores.Result);
 
-            return View(result);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
-
 
         [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         [Route("asset/{id}/owners")]
