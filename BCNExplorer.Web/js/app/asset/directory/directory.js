@@ -76,6 +76,12 @@ angular.module('app', [])
                 }
             });
 
+            $scope.$watch('firstLetterSearchQuery', function () {
+                if ($scope.firstLetterSearchQuery) {
+                    $scope.searchQuery = '';
+                }
+            });
+
             $scope.loading = true;
             $scope.assetList = assetList;
 
