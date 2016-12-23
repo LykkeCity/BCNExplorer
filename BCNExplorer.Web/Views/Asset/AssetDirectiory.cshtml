@@ -25,7 +25,7 @@
                 </div>
                 <div ng-hide="loading">
                     <div class="form-group">
-                        <input type="text" class="form-control" ng-model="searchQuery" ng-change="pagination.resetToDefault()" placeholder="Search assets">
+                        <input type="text" class="form-control" ng-model="searchQuery" ng-change="assetList.resetToDefault()" placeholder="Search assets">
                     </div>
                     <div>
                         @*<div>{{paged.length}}</div>*@
@@ -39,35 +39,37 @@
                                     <th>Coinholders</th>
                                     <th>Coins issued</th>
                                 </tr>
-                                <tr ng-repeat="asset in pagination.allItems | filter:searchQuery | limitTo:pagination.pagedItemsCount as paged">
-                                    <td>
-                                        <a ng-href="{{detailsUrl(asset)}}" ng-show="{{asset.IconUrl!=undefined && asset.IconUrl!=''}}">
-                                            <img ng-src="{{asset.IconUrl}}" width="48" alt="{{asset.Name}}">
-                                        </a>
-                                        <p class="text-muted">
-                                            {{asset.AssetIds[0]}}
-                                        </p>
+                                @*<tr ng-repeat="asset in assetList.allItems | filter:searchQuery | limitTo:assetList.pagedItemsCount as paged">*@
 
-                                    </td>
-                                    <td>
-                                        <a ng-href="{{detailsUrl(asset)}}">
-                                            {{asset.Name}}
-                                        </a>
-                                    </td>
-                                    <td>
+                               <tr ng-repeat="asset in assetsToShow()">
+                                        <td>
+                                            <a ng-href="{{detailsUrl(asset)}}" ng-show="{{asset.IconUrl!=undefined && asset.IconUrl!=''}}">
+                                                <img ng-src="{{asset.IconUrl}}" width="48" alt="{{asset.Name}}">
+                                            </a>
+                                            <p class="text-muted">
+                                                {{asset.AssetIds[0]}}
+                                            </p>
 
-                                        <span class="glyphicon" ng-class="{'glyphicon-ok-sign': asset.IsVerified, 'glyphicon-remove-sign': !asset.IsVerified}"></span>
-                                        {{asset.Issuer}}
-                                    </td>
-                                    <td>{{asset.NameShort}}</td>
-                                    <td>{{asset.CoinholdersCount}}</td>
-                                    <td>
-                                        <div ng-show="asset.TotalColored!=undefined">
-                                            <span>{{asset.TotalColoredDescription}}</span>
-                                            <span>{{asset.NameShort}}</span>                                 
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td>
+                                            <a ng-href="{{detailsUrl(asset)}}">
+                                                {{asset.Name}}
+                                            </a>
+                                        </td>
+                                        <td>
+
+                                            <span class="glyphicon" ng-class="{'glyphicon-ok-sign': asset.IsVerified, 'glyphicon-remove-sign': !asset.IsVerified}"></span>
+                                            {{asset.Issuer}}
+                                        </td>
+                                        <td>{{asset.NameShort}}</td>
+                                        <td>{{asset.CoinholdersCount}}</td>
+                                        <td>
+                                            <div ng-show="asset.TotalColored!=undefined">
+                                                <span>{{asset.TotalColoredDescription}}</span>
+                                                <span>{{asset.NameShort}}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
 
                                 </tbody>
                             </table>
@@ -75,7 +77,7 @@
                     </div>
 
                     <div class="show_more">
-                        <a class="btn" ng-show="pagination.showNextBtn()" ng-click="pagination.next()">Show More</a>
+                        <a class="btn" ng-show="showNextBtn()" ng-click="assetList.next()">Show More</a>
                     </div>
                 </div>
             </div>

@@ -15,45 +15,62 @@ angular.module('app', [])
     })
     .constant('config', {
         pageSize: 20,
-        detailsUrl: '/asset/'
+        detailsUrl: function(assetId) {
+            return '/asset/' + assetId;
+        }
     })
-    .controller('DirectoryCtrl', function ($scope, assetService, config) {
-            var pagination = {
+    .controller('DirectoryCtrl', function ($scope, assetService, config, $filter) {
+            var assetList = {
                 page: 0,
                 allItems:[],
                 pagedItemsCount: 0,
                 setPage: function(page) {
-                    pagination.page = page;
+                    assetList.page = page;
                 },
                 resetToDefault: function() {
-                    pagination.setPage(1);
+                    assetList.setPage(1);
                 },
                 next: function () {
                     console.log('next');
-                    pagination.page++;
+                    assetList.page++;
                 },
                 start: function() {
-                    pagination.resetToDefault();
-                },
-                showNextBtn: function () {
-                    return true;
+                    assetList.resetToDefault();
                 }
             };
+            
+            var dataProcessing = {
+                filterData: function(items, searchQuery) {
+                    return $filter('filter')(assetList.allItems, searchQuery);
+                },
+                pageData:function(items) {
+                    return $filter('limitTo')(items, assetList.pagedItemsCount);
+                }
+            }
 
-            $scope.$watch('pagination.page', function () {
-                pagination.pagedItemsCount = pagination.allItems.slice().splice(0, (pagination.page) * config.pageSize).length;
+            $scope.assetsToShow = function () {
+                return dataProcessing.pageData(dataProcessing.filterData(assetList.allItems, $scope.searchQuery));
+            }
+
+            $scope.$watch('assetList.page', function () {
+                assetList.pagedItemsCount = assetList.allItems.slice().splice(0, (assetList.page) * config.pageSize).length;
             });
 
             $scope.loading = true;
-            $scope.pagination = pagination;
+            $scope.assetList = assetList;
 
             $scope.detailsUrl = function(asset) {
-                return config.detailsUrl + asset.AssetIds[0];
+                return config.detailsUrl(asset.AssetIds[0]);
+            }
+
+            $scope.showNextBtn = function() {
+                var filteredDataCount = dataProcessing.filterData(assetList.allItems, $scope.searchQuery).length;
+                return assetList.pagedItemsCount < filteredDataCount;
             }
 
             assetService.async().then(function (data) {
-                pagination.allItems = data;
-                pagination.start();
+                assetList.allItems = data;
+                assetList.start();
                 $scope.loading = false;
             });
 
