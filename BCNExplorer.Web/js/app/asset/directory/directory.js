@@ -38,22 +38,42 @@ angular.module('app', [])
                     assetList.resetToDefault();
                 }
             };
-            
-            var dataProcessing = {
-                filterData: function(items, searchQuery) {
+
+
+        var dataProcessing = {
+            filterData: function(items, searchQuery, firstLetterSearchQuery) {
+                if (firstLetterSearchQuery != undefined && firstLetterSearchQuery !== '') {
+                    return $.grep(items, function(el) {
+                        return dataProcessing.filterStartsWith(el.Name, firstLetterSearchQuery);
+                    });
+                } else {
                     return $filter('filter')(assetList.allItems, searchQuery);
-                },
+                }
+
+            },
+            filterStartsWith: function (actual, expected) {
+                var lowerActual = (actual + "").toLowerCase();
+                var lowerExpected = (expected + "").toLowerCase();
+
+                return lowerActual.indexOf(lowerExpected) === 0;
+            },
                 pageData:function(items) {
                     return $filter('limitTo')(items, assetList.pagedItemsCount);
                 }
             }
 
             $scope.assetsToShow = function () {
-                return dataProcessing.pageData(dataProcessing.filterData(assetList.allItems, $scope.searchQuery));
+                return dataProcessing.pageData(dataProcessing.filterData(assetList.allItems, $scope.searchQuery, $scope.firstLetterSearchQuery));
             }
 
             $scope.$watch('assetList.page', function () {
                 assetList.pagedItemsCount = assetList.allItems.slice().splice(0, (assetList.page) * config.pageSize).length;
+            });
+
+            $scope.$watch('searchQuery', function () {
+                if ($scope.searchQuery) {
+                    $scope.firstLetterSearchQuery = '';
+                }
             });
 
             $scope.loading = true;
@@ -63,8 +83,8 @@ angular.module('app', [])
                 return config.detailsUrl(asset.AssetIds[0]);
             }
 
-            $scope.showNextBtn = function() {
-                var filteredDataCount = dataProcessing.filterData(assetList.allItems, $scope.searchQuery).length;
+            $scope.showNextBtn = function () {
+                var filteredDataCount = dataProcessing.filterData(assetList.allItems, $scope.searchQuery, $scope.firstLetterSearchQuery).length;
                 return assetList.pagedItemsCount < filteredDataCount;
             }
 
