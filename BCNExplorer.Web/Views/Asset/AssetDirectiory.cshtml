@@ -2,6 +2,10 @@
     ViewBag.Title = "Asset Directiory";
     var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
 }
+@section headerscripts
+{
+    @Scripts.Render("~/js/vendor/angular.min.js")
+}
 
 @section scripts{
     @Scripts.Render("~/js/vendor/angular.min.js")
