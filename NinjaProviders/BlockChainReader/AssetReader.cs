@@ -23,10 +23,15 @@ namespace Providers.BlockChainReader
         {
             var respModel = await _httpReader.GetAsync<AssetContract>(absUrl);
 
-            var result = respModel.ParsedBody;
-            result.AssetDefinitionUrl = respModel.Url;
+            if (respModel != null)
+            {
+                var result = respModel.ParsedBody;
+                result.AssetDefinitionUrl = respModel.Url;
 
-            return result;
+                return result;
+            }
+
+            return null;
         }
 
         public async Task<IEnumerable<AssetContract>> ReadAssetDataAsync(IEnumerable<string> absUrls)

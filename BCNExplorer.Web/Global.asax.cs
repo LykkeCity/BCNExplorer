@@ -21,9 +21,9 @@ namespace BCNExplorer.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            DependencyResolver.SetResolver(Dependencies.CreateDepencencyResolver());
-
-            GlobalConfiguration.Configuration.DependencyResolver = Dependencies.CreateDepencencyResolver();
+            var resolver = Dependencies.CreateDepencencyResolver();
+            DependencyResolver.SetResolver(resolver);
+            GlobalConfiguration.Configuration.DependencyResolver = resolver;
         }
 
         protected void Application_EndRequest()

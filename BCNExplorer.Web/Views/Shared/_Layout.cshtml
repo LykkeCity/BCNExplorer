@@ -1,4 +1,6 @@
-﻿@{
+﻿@using System.Security.Claims
+@using BCNExplorer.Web.Helpers
+@{
 
     var hideTopSearchForm = (ViewBag.HideTopSearchForm != null && ViewBag.HideTopSearchForm is bool) ? ViewBag.HideTopSearchForm : false;
 }
@@ -78,8 +80,28 @@
                 </div>
             </div>
             <div class="col-xs-2 col-md-4">
-             @*   <a href="https://wiki.lykkex.com/start?do=login" class="btn btn-link pull-right">Sign In</a>*@
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a href="@Url.Action("SignIn", "Security")" class="btn btn-link pull-right">Sign In</a>
+                }
+                else
+                {
+                    <ul class="nav nav--header pull-right">
+                        <li class="pull-right">
+                            <a class="dropdown__control" >@ClaimsHelper.Get(User.Identity, ClaimTypes.GivenName) @ClaimsHelper.Get(User.Identity, ClaimTypes.Surname)</a>
+                            <div class="dropdown__container">
+                                <ul class="dropdown__nav">
+                                    <li>
+                                        <a href="@Url.Action("SignOut", "Security")">Sign Out</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                }
             </div>
+
+
         </div>
     </div>
 </header>

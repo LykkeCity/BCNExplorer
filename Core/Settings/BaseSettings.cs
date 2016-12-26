@@ -20,6 +20,27 @@ namespace Core.Settings
 
         [Required]
         public NinjaIndexerCredentials NinjaIndexerCredentials { get; set; }
+
+        [Required]
+        public AuthenticationSettings Authentication { get; set; }
+    }
+
+    public class AuthenticationSettings
+    {
+        [Required]
+        public string ClientId { get; set; }
+
+        [Required]
+        public string ClientSecret { get; set; }
+
+        [Required]
+        public string RedirectUri { get; set; }
+
+        [Required]
+        public string PostLogoutRedirectUri { get; set; }
+
+        [Required]
+        public string Authority { get; set; }
     }
 
     public class DbSettings

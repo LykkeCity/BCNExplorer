@@ -30,7 +30,6 @@ namespace BCNExplorer.Web.App_Start
             var dr = new DependencyResolver();
             
             var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
-            settings.NinjaUrl = settings.NinjaUrl.AddLastSymbolIfNotExists('/');
 
             GeneralSettingsValidator.Validate(settings);
 

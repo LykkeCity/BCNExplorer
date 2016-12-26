@@ -1,10 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace BCNExplorer.Web.HtmlHelpers
+namespace BCNExplorer.Web.Helpers
 {
     public static class QRCodeHtmlHelper
     {

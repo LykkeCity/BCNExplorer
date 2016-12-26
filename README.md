@@ -32,6 +32,13 @@ A website explores the blockchain and shows information about blocks, transactio
 		"AzureName":"",
 		"AzureKey":""								
 	},	
+	"Authentication": {
+		"ClientId":"",
+		"ClientSecret":"",
+		"PostLogoutRedirectUri":"",
+		"Authority":"",			
+		"RedirectUrl":""		
+	},	
 	"Jobs": {
 		"IsDebug":false
 	}
@@ -45,3 +52,4 @@ A website explores the blockchain and shows information about blocks, transactio
   *  SharedStorageConnString - Connection string that points to the queue which handles slack notifications.
   *  NinjaIndexerCredentials - Connection credentials that points to Azure Table Storage with NbitCoin ninja blockchain info
   *	 AssetBalanceChanges - connection string and db name to mongodb database, which contains data about colored asset changes
+  *  Authentication - open id auth options
