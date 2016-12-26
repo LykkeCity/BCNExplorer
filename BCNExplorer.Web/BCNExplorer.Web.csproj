@@ -172,7 +172,7 @@
     <Compile Include="App_Start\Dependencies.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\Product.cs" />
+    <Compile Include="App_Start\App.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AddressController.cs" />

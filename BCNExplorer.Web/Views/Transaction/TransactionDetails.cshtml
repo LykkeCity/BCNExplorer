@@ -141,7 +141,7 @@
 
             @foreach (var coloredAsset in Model.ColoredAssets)
             {
-                var assetUrl = coloredAsset.IsKnown ? Url.Action("Index", "Asset", new {id= coloredAsset.AssetId}) : "";
+                var assetUrl = coloredAsset.IsKnown ? Url.Action("Index", "Asset", new {id= coloredAsset.AssetId}) : null;
                 <div class="transaction_details">
                     <div class="transaction_details__header">
                         <table class="issuer">

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace BCNExplorer.Web
 {
-    public static class Product
+    public static class App
     {
         private static readonly Lazy<string> _version = new Lazy<string>(GetVersion);
         public static string Version => _version.Value;

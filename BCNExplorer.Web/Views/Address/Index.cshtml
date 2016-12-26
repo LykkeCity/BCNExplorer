@@ -82,14 +82,14 @@
                 var assetName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Name, asset.AssetId);
                 var assetIcon = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.IconUrl, null);
 
-                var assetUrl = Model.AssetDic.Dic.ContainsKey(asset.AssetId) ? Url.Action("Index", "Asset", new { id = asset.AssetId }) : "";
+                var assetUrl = Model.AssetDic.Dic.ContainsKey(asset.AssetId) ? Url.Action("Index", "Asset", new { id = asset.AssetId }) : null;
 
                 <li class="issuer_list__item col-xs-12 col-sm-6">
                     <table class="issuer">
                         <tbody>
                             <tr>
                                 <td class="issuer__img">
-                                    @if (assetIcon != null)
+                                    @if (!string.IsNullOrEmpty(assetIcon))
                                     {
                                         <a href="@assetUrl">
 
@@ -99,7 +99,11 @@
                                     }
                                 </td>
                                 <td class="issuer__content">
-                                    <div class="issuer__name">@assetName</div>
+                                    <div class="issuer__name">
+                                        <a href="@assetUrl">
+                                            @assetName
+                                        </a>
+                                    </div>
                                     @if (asset.ShowUnconfirmedBalance)
                                     {
                                         <div class="text-muted">Unconfirmed balance</div>

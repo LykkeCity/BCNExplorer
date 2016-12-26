@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using Core.Block;
@@ -24,7 +25,7 @@ namespace BCNExplorer.Web.Controllers
 
         public string Version()
         {
-            return Product.Version;
+            return App.Version;
         }
     }
 }
