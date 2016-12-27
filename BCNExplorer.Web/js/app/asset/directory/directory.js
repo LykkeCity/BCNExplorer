@@ -11,6 +11,7 @@ angular.module('app', [])
                 return promise;
             }
         };
+
         return result;
     })
     .constant('config', {
@@ -62,6 +63,7 @@ angular.module('app', [])
                 }
             }
 
+
             $scope.assetsToShow = function () {
                 return dataProcessing.pageData(dataProcessing.filterData(assetList.allItems, $scope.searchQuery, $scope.firstLetterSearchQuery));
             }
@@ -69,6 +71,15 @@ angular.module('app', [])
             $scope.$watch('assetList.page', function () {
                 assetList.pagedItemsCount = assetList.allItems.slice().splice(0, (assetList.page) * config.pageSize).length;
             });
+
+            $scope.setFirstLetter = function (letter) {
+                if ($scope.firstLetterSearchQuery) {
+                    $scope.firstLetterSearchQuery = undefined;
+                } else {
+
+                    $scope.firstLetterSearchQuery = letter;
+                }
+            }
 
             $scope.$watch('searchQuery', function () {
                 if ($scope.searchQuery) {

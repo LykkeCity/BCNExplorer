@@ -42,7 +42,7 @@
                                 @foreach (var item in alphabet)
                                 {
                                     <li class="list__item" ng-class="firstLetterSearchQuery == '@item'?'active':''">
-                                        <a ng-click="firstLetterSearchQuery = '@item'">@item</a>
+                                        <a ng-click="setFirstLetter('@item')">@item</a>
                                     </li>
                                 }
                             </ul>
