@@ -2655,7 +2655,7 @@ a.action_link:hover img, button.action_link:hover img { opacity: 1; }
 
 .index_bar_container { border-bottom: 1px solid #EBEDEF; white-space: nowrap; overflow: hidden; background: #fff; padding-top: 16px; padding-top: 1rem; height: 57px; height: 3.5625rem; }
 
-.index_bar_container .container { overflow: auto; }
+.index_bar_container .container { overflow: hidden; overflow-x: auto; }
 
 .section--index { margin-top: -40px; margin-top: -2.5rem; margin-bottom: 30px; margin-bottom: 1.875rem; height: 57px; height: 3.5625rem; }
 

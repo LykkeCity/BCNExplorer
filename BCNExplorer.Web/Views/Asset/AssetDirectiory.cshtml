@@ -19,7 +19,15 @@
             </div>
         </section>
 
-        <section class="section section--index" ng-app="app" ng-cloak>
+        <div ng-show="loading">
+            <div class="spinner_container">
+                <div class="spinner">
+                    <div class="spinner__inside"></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="section section--index" ng-hide="loading">
             <div class="index_bar_container">
                 <div class="container">
                     <div class="index_bar">
@@ -44,13 +52,6 @@
             </div>
         </section>
 
-        <div ng-show="loading">
-            <div class="spinner_container">
-                <div class="spinner">
-                    <div class="spinner__inside"></div>
-                </div>
-            </div>
-        </div>
 
         <div class="section" ng-hide="loading">
             <div class="container">
