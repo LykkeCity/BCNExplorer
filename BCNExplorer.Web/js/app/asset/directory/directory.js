@@ -73,7 +73,7 @@ angular.module('app', [])
             });
 
             $scope.setFirstLetter = function (letter) {
-                if ($scope.firstLetterSearchQuery) {
+                if ($scope.firstLetterSearchQuery === letter) {
                     $scope.firstLetterSearchQuery = undefined;
                 } else {
 
