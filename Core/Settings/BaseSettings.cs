@@ -21,8 +21,8 @@ namespace Core.Settings
         [Required]
         public NinjaIndexerCredentials NinjaIndexerCredentials { get; set; }
 
-        [Required]
-        public AuthenticationSettings Authentication { get; set; }
+        //[Required]
+        //public AuthenticationSettings Authentication { get; set; }
     }
 
     public class AuthenticationSettings

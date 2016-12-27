@@ -8,91 +8,115 @@
 }
 
 @section scripts{
-    @Scripts.Render("~/js/vendor/angular.min.js")
     @Scripts.Render("~/bundles/js/asset/directory")
 }
 
+<div ng-app="app" ng-cloak>
+    <div ng-controller="DirectoryCtrl">
+        <section class="section section--padding">
+            <div class="container container--extend">
+                <h2>Assets directory</h2>
+            </div>
+        </section>
 
-<section class="section section--be section--padding">
-    <div class="container container--extend">
-
-        <div ng-app="app" ng-cloak> 
-            <div ng-controller="DirectoryCtrl">
-                <div class="page__header">
-                    <h2 class="page__title">Assets directory</h2>
-                </div>
-                <div ng-show="loading">
-                    <div class="spinner_container">
-                        <div class="spinner">
-                            <div class="spinner__inside"></div>
+        <section class="section section--index" ng-app="app" ng-cloak>
+            <div class="index_bar_container">
+                <div class="container">
+                    <div class="index_bar">
+                        <div class="index_bar__inner">
+                            <div class="index_bar__button">
+                                <button type="button" class="btn btn--icon _show_search_block" ng-click="togglFullSearchBlock()">
+                                    <i class="icon icon--search"></i>
+                                </button>
+                            </div>
+                            <ul class="index_bar__list list">
+                                @*<li class="list__item"><a href="#demical">0–9</a></li>*@
+                                @foreach (var item in alphabet)
+                                {
+                                    <li class="list__item" ng-class="firstLetterSearchQuery == '@item'?'active':''">
+                                        <a ng-click="firstLetterSearchQuery = '@item'">@item</a>
+                                    </li>
+                                }
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <div ng-hide="loading">
-                    <div class="form-group">
-                        @foreach (var item in alphabet)
-                        {
-                            <a ng-click="firstLetterSearchQuery = '@item'" ng-class="firstLetterSearchQuery == '@item'?'text-green':''"style="margin-left: 5px; cursor: pointer;">@item</a>
-                        }
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" ng-model="searchQuery" ng-change="assetList.resetToDefault()" placeholder="Search assets">
-                    </div>
-                    <div>
-                        @*<div>{{paged.length}}</div>*@
-                        <div class="table-responsive">
-                            <table class="table table--asstes table--be_info">
-                                <tbody>
-                                <tr>
-                                    <th colspan="2">Asset</th>
-                                    <th>Issuer</th>
-                                    <th>Ticker</th>
-                                    <th>Coinholders</th>
-                                    <th>Coins issued</th>
-                                </tr>
-                                @*<tr ng-repeat="asset in assetList.allItems | filter:searchQuery | limitTo:assetList.pagedItemsCount as paged">*@
+            </div>
+        </section>
 
-                                <tr ng-repeat="asset in assetsToShow()">
-                                    <td>
-                                        <a ng-href="{{detailsUrl(asset)}}" ng-show="{{asset.IconUrl!=undefined && asset.IconUrl!=''}}">
-                                            <img ng-src="{{asset.IconUrl}}" width="48" alt="{{asset.Name}}">
-                                        </a>
-                                        <p class="text-muted">
-                                            {{asset.AssetIds[0]}}
-                                        </p>
-
-                                    </td>
-                                    <td>
-                                        <a ng-href="{{detailsUrl(asset)}}">
-                                            {{asset.Name}}
-                                        </a>
-                                    </td>
-                                    <td>
-
-                                        <span class="glyphicon" ng-class="{'glyphicon-ok-sign': asset.IsVerified, 'glyphicon-remove-sign': !asset.IsVerified}"></span>
-                                        {{asset.Issuer}}
-                                    </td>
-                                    <td>{{asset.NameShort}}</td>
-                                    <td>{{asset.CoinholdersCount}}</td>
-                                    <td>
-                                        <div ng-show="asset.TotalColored!=undefined">
-                                            <span>{{asset.TotalColoredDescription}}</span>
-                                            <span>{{asset.NameShort}}</span>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="show_more">
-                        <a class="btn" ng-show="showNextBtn()" ng-click="assetList.next()">Show More</a>
-                    </div>
+        <div ng-show="loading">
+            <div class="spinner_container">
+                <div class="spinner">
+                    <div class="spinner__inside"></div>
                 </div>
             </div>
         </div>
 
+        <div class="section" ng-hide="loading">
+            <div class="container">
+                <div class="search_block" ng-class="showFullSearchBlock? 'search_block--show' : null">
+                    <form>
+                        <div class="row">
+                            <div class="col-xs-10 col-sm-11">
+                                <div class="input-search input-search--index">
+                                    <button class="btn btn--icon"><i class="icon icon--search"></i></button>
+                                    <input type="text" class="form-control form-control--search" placeholder="Search assets" ng-model="searchQuery" ng-change="assetList.resetToDefault()">
+                                </div>
+                            </div>
+                            <div class="col-xs-2 col-sm-1">
+                                <button type="button" class="btn btn--link _hide_search_block" ng-click="togglFullSearchBlock()">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table--simple table_asstes">
+                        <tbody>
+                            <tr>
+                                <th colspan="2">Asset and address</th>
+                                <th>Issuer</th>
+                                <th>Ticker</th>
+                                <th class="text-right">Coinholders</th>
+                                <th>Coins issued</th>
+                            </tr>
+                            <tr ng-repeat="asset in assetsToShow()">
+                                <td class="issuer__img">
+                                    <a ng-href="{{detailsUrl(asset)}}">
+                                        <img ng-src="{{asset.IconUrl ? asset.IconUrl:'/img/be/asset_default.jpg'}}" width="48" alt="">
+                                    </a></td>
+                                <td class="issuer__content">
+                                    <div class="issuer__name">
+                                        <a ng-href="{{detailsUrl(asset)}}">{{asset.Name}}</a>
+                                    </div>
+                                    <div class="text-muted">
+                                        <a ng-href="{{detailsUrl(asset)}}">{{asset.AssetIds[0]}}</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="check" ng-class="{'check--green': asset.IsVerified, 'check--yellow': !asset.IsVerified}"></span> 
+                                    <span class="ticker_name">{{asset.Issuer}}</span>
+                                </td>
+                                <td>{{asset.NameShort}}</td>
+                                <td class="text-right">
+                                    {{asset.CoinholdersCount}}
+                                </td>
+                                <td>
+                                    <div ng-show="asset.TotalColored!=undefined">
+                                        <span>{{asset.TotalColoredDescription}}</span>
+                                        <span>{{asset.NameShort}}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="show_more" ng-show="showNextBtn()" >
+            <a class="btn" ng-click="assetList.next()">Show More</a>
+        </div>
     </div>
-</section>
+</div>
+
+

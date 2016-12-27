@@ -15,29 +15,29 @@ namespace BCNExplorer.Web
     {
         public void Configuration(IAppBuilder app)
         {
-            var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(Dependencies.WebSiteSettings.ConnectionString);
+            //var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(Dependencies.WebSiteSettings.ConnectionString);
 
-            app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
+            //app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                ExpireTimeSpan = TimeSpan.FromHours(24),
-                LoginPath = new PathString("/signin"),
-            });
+            //app.UseCookieAuthentication(new CookieAuthenticationOptions
+            //{
+            //    ExpireTimeSpan = TimeSpan.FromHours(24),
+            //    LoginPath = new PathString("/signin"),
+            //});
 
-            app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
-            {
-                ClientId = settings.Authentication.ClientId,
-                ClientSecret = settings.Authentication.ClientSecret,
-                PostLogoutRedirectUri = settings.Authentication.PostLogoutRedirectUri,
-                Authority = settings.Authentication.Authority,
-                CallbackPath = new PathString("/auth"),
-                RedirectUri = settings.Authentication.RedirectUri,
-                ResponseType = "code",
-                Scope = "email profile",
-                UseTokenLifetime = true,
+            //app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
+            //{
+            //    ClientId = settings.Authentication.ClientId,
+            //    ClientSecret = settings.Authentication.ClientSecret,
+            //    PostLogoutRedirectUri = settings.Authentication.PostLogoutRedirectUri,
+            //    Authority = settings.Authentication.Authority,
+            //    CallbackPath = new PathString("/auth"),
+            //    RedirectUri = settings.Authentication.RedirectUri,
+            //    ResponseType = "code",
+            //    Scope = "email profile",
+            //    UseTokenLifetime = true,
                 
-            });
+            //});
         }
     }
 }

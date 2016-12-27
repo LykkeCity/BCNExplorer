@@ -20,24 +20,24 @@ angular.module('app', [])
         }
     })
     .controller('DirectoryCtrl', function ($scope, assetService, config, $filter) {
-            var assetList = {
-                page: 0,
-                allItems:[],
-                pagedItemsCount: 0,
-                setPage: function(page) {
-                    assetList.page = page;
-                },
-                resetToDefault: function() {
-                    assetList.setPage(1);
-                },
-                next: function () {
-                    console.log('next');
-                    assetList.page++;
-                },
-                start: function() {
-                    assetList.resetToDefault();
-                }
-            };
+        var assetList = {
+            page: 0,
+            allItems:[],
+            pagedItemsCount: 0,
+            setPage: function(page) {
+                assetList.page = page;
+            },
+            resetToDefault: function() {
+                assetList.setPage(1);
+            },
+            next: function () {
+                console.log('next');
+                assetList.page++;
+            },
+            start: function() {
+                assetList.resetToDefault();
+            }
+        };
 
 
         var dataProcessing = {
@@ -81,7 +81,10 @@ angular.module('app', [])
                     $scope.searchQuery = '';
                 }
             });
-
+            $scope.showFullSearchBlock = false;
+            $scope.togglFullSearchBlock = function() {
+                $scope.showFullSearchBlock = !$scope.showFullSearchBlock;
+            };
             $scope.loading = true;
             $scope.assetList = assetList;
 

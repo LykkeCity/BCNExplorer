@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Transaction;
+using NBitcoin;
 using NBitcoin.OpenAsset;
 using Providers.Providers.Ninja;
 
@@ -146,7 +147,7 @@ namespace Services.Transaction
             {
                 return null;
             }
-
+            
             var transactionInfo = NBitcoin.Transaction.Parse(responce.Hex);
 
             var inputs = responce.Inputs.ToList();
