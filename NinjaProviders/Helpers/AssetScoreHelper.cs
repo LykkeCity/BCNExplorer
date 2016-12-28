@@ -12,41 +12,51 @@ namespace Providers.Helpers
             IEnumerable<IAssetCoinholdersIndex> allIndexes)
         {
             var isVerified = (assetDefinition?.IsVerified??false) ? 0 : 1;
+            
             var result =  Weight(Coef.IsVerified) * isVerified
                 + Weight(Coef.LastMonthTxCount) * Calc(index.LastMonthTransactionCount, allIndexes.Select(p => p.LastMonthTransactionCount))
                 + Weight(Coef.TotalTransactionsCount) * Calc(index.TransactionsCount, allIndexes.Select(p => p.TransactionsCount))
                 + Weight(Coef.CoinholdersCount) * Calc(index.CoinholdersCount, allIndexes.Select(p => p.CoinholdersCount))
                 + Weight(Coef.TotalQuantity) * Calc(index.TotalQuantity, allIndexes.Select(p => p.TotalQuantity))
-                + Weight(Coef.LastTxDateDaysPast) * (index.LastTxDateDaysPast() != null ? Calc(index.LastTxDateDaysPast().Value, allIndexes.Select(p => p.LastTxDateDaysPast() ?? 0)) : 1)
+                + Weight(Coef.LastTxDateDaysPast) * (index.LastTxDateDaysPast() != null ? Calc(index.LastTxDateDaysPast().Value, allIndexes.Select(p => p.LastTxDateDaysPast() ?? 0), true) : 1)
                 + Weight(Coef.TopCoinholderShare) * index.TopCoinholderShare
                 + Weight(Coef.HerfindalShareIndex) * index.HerfindalShareIndex;
 
-            return Math.Round(result, 4);
+            return Math.Round(result, 6);
         }
 
 
-        private static double Calc(double value, IEnumerable<double> allValues)
+        private static double Calc(double value, IEnumerable<double> allValues, bool isAsc = false)
         {
-            var rankArray = allValues.Distinct().Select(p => Rank(p, allValues)).ToList();
-            return Normalize(Rank(value, allValues), rankArray.Min(), rankArray.Max());
+            var rankArray = allValues.Distinct().Select(p => Rank(p, allValues, isAsc)).OrderBy(p => p).ToList();
+            return Normalize(Rank(value, allValues, isAsc), rankArray.Min(), rankArray.Max());
         }
 
-        private static double Calc(int value, IEnumerable<int> allValues)
+        private static double Calc(int value, IEnumerable<int> allValues, bool isAsc = false)
         {
-            var rankArray = allValues.Distinct().Select(p => Rank(p, allValues)).ToList();
-            return Normalize(Rank(value, allValues), rankArray.Min(), rankArray.Max());
+            var rankArray = allValues.Distinct().Select(p => Rank(p, allValues, isAsc)).OrderBy(p=>p).ToList();
+            return Normalize(Rank(value, allValues, isAsc), rankArray.Min(), rankArray.Max());
         }
 
-        private static double Rank(double value, IEnumerable<double> allValues)
+        private static double Rank(double value, IEnumerable<double> allValues, bool isAsc)
         {
-            var unique = allValues.Distinct().OrderByDescending(p=>p).ToList();
+            IList<double> unique;
+            if (isAsc)
+            {
+                unique = allValues.Distinct().OrderBy(p => p).ToList();
+            }
+            else
+            {
+
+                unique = allValues.Distinct().OrderByDescending(p => p).ToList();
+            }
 
             return unique.IndexOf(value) + 1;
         }
 
-        private static double Rank(int value, IEnumerable<int> allValues)
+        private static double Rank(int value, IEnumerable<int> allValues, bool isAsc)
         {
-            return Rank(value, allValues.Select(p => (double) p));
+            return Rank(value, allValues.Select(p => (double) p), isAsc);
         }
 
         /// <summary>
