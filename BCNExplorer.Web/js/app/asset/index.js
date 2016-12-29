@@ -54,11 +54,17 @@
         return false;
     });
 
-    //$('body').on('change', '#js-go-to-block', function () {
-    //    submitGoToBlock((this));
-    //});
+    //disable submit form on enter
+    $('body').on('keydown', '#js-go-to-block', function (e) {
+        var enterKeyCode = 13;
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === enterKeyCode) {
+            return false;
+        }
+        return true;
+    });
 
-    $('body').on('keyup', '#js-go-to-block', $.debounce(1500, function() {
+    $('body').on('keyup', '#js-go-to-block', $.debounce(1500, function () {
         submitGoToBlock(this);
     }));
 

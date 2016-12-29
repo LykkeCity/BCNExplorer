@@ -8,42 +8,46 @@ namespace BCNExplorer.Web
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/js/jquery").Include(
-                        "~/js/vendor/jquery.min.js"));
+                "~/js/vendor/jquery.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/bootstrap").Include(
-                      "~/js/vendor/bootstrap.min.js"));
+                "~/js/vendor/bootstrap.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/fastclick").Include(
-                        "~/js/vendor/fastclick.min.js"));
+                "~/js/vendor/fastclick.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/clipboard").Include(
-                        "~/js/vendor/clipboard.min.js"));
+                "~/js/vendor/clipboard.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/common").Include(
-                      "~/js/app/common/*.js"));
+                "~/js/app/common/*.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/transaction").Include(
-                      "~/js/app/transaction/*.js"));
+                "~/js/app/transaction/*.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/address").Include(
-                        "~/js/app/address/*.js"));
+                "~/js/app/address/*.js"));
 
 
             bundles.Add(new ScriptBundle("~/bundles/js/asset").Include(
-                        "~/js/app/asset/*.js"));
+                "~/js/app/asset/*.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/angular").Include(
-                        "~/js/vendor/angular.min.js"));
+                "~/js/vendor/angular.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/asset/directory").Include("~/js/app/asset/directory/*.js"));
-            
+
             bundles.Add(new StyleBundle("~/bundles/css/bootstrap")
                 .Include("~/css/bootstrap-custom.min.css", new CssRewriteUrlTransform()));
 
             bundles.Add(new Bundle("~/bundles/css/style")
                 .Include("~/css/style.css", new CssRewriteUrlTransform()));
-            
+
+#if DEBUG
+
+#else
             BundleTable.EnableOptimizations = true;
+#endif
         }
     }
 }
