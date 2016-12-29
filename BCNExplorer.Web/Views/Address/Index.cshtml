@@ -89,14 +89,10 @@
                         <tbody>
                             <tr>
                                 <td class="issuer__img">
-                                    @if (!string.IsNullOrEmpty(assetIcon))
-                                    {
-                                        <a href="@assetUrl">
+                                    <a href="@assetUrl">
 
-                                            <img src="@assetIcon" width="48" alt="@assetName">
-                                        </a>
-
-                                    }
+                                        <img src="@(!string.IsNullOrEmpty(assetIcon) ? assetIcon: "/img/be/asset_default.jpg")" width="48" alt="@assetName">
+                                    </a>
                                 </td>
                                 <td class="issuer__content">
                                     <div class="issuer__name">
