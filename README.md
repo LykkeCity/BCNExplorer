@@ -41,7 +41,8 @@ A website explores the blockchain and shows information about blocks, transactio
 	},	
 	"Jobs": {
 		"IsDebug":false
-	}
+	},
+	Network:""
 }
 ```
 * Keys description
@@ -53,3 +54,4 @@ A website explores the blockchain and shows information about blocks, transactio
   *  NinjaIndexerCredentials - Connection credentials that points to Azure Table Storage with NbitCoin ninja blockchain info
   *	 AssetBalanceChanges - connection string and db name to mongodb database, which contains data about colored asset changes
   *  Authentication - open id auth options
+  * TestNet/MainNet BitcoinNetwork. Write 'mainnet' for MainNet, and 'testnet' for TestNet

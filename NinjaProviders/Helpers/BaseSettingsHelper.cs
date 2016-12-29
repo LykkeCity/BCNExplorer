@@ -12,7 +12,14 @@ namespace Providers.Helpers
     {
         public static Network UsedNetwork(this BaseSettings baseSettings)
         {
-            return Network.Main;
+            try
+            {
+                return Network.GetNetwork(baseSettings.Network);
+            }
+            catch (Exception)
+            {
+                return Network.Main;
+            }
         }
     }
 }

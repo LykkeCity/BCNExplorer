@@ -11,6 +11,9 @@ namespace Core.Settings
     {
         [Required]
         public string NinjaUrl { get; set; }
+        
+
+        public string Network { get; set; }
 
         [Required]
         public DbSettings Db { get; set; }
