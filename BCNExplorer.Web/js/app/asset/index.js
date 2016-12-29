@@ -40,39 +40,14 @@
     });
 
 
-    var submitGoToBlock = function (elem) {
-        $(elem).attr('readonly', true);
-        $(elem).parents('form').submit();
-    }
+    var submitGoToBlock = function () {
+        $('#js-go-to-block').attr('readonly', true);
+        var at = $('#js-go-to-block').val();
+        var helpData = $.parseJSON($('#submit-data').val());
 
-    $('body').on('click', '.js-change-go-to-block', function () {
-        var block = $(this).data('block');
-        var $input = $('#js-go-to-block');
-
-        $input.val(block); 
-        submitGoToBlock($input);
-        return false;
-    });
-
-    //disable submit form on enter
-    $('body').on('keydown', '#js-go-to-block', function (e) {
-        var enterKeyCode = 13;
-        var keyCode = e.keyCode || e.which;
-        if (keyCode === enterKeyCode) {
-            return false;
-        }
-        return true;
-    });
-
-    $('body').on('keyup', '#js-go-to-block', $.debounce(1500, function () {
-        submitGoToBlock(this);
-    }));
-
-    $('body').on('submit', '.js-coinholders-history-form', function () {
-        var $self = $(this);
-
-        var data = $self.serialize();
-        var url = $self.attr('action');
+        var submitData = {
+            at: at
+        };
 
         var $panelToUpdate = $('#owners .js-panel-content');
         var $panelToHide = $('#owners .js-coinholders-data');
@@ -80,15 +55,26 @@
 
         $loader.show();
         $panelToHide.hide();
-        $.ajax(url, {
-            data: data,
+        $.ajax(helpData.url, {
+            data: submitData,
             method: 'get'
         }).done(function (resp) {
             $loader.hide();
             $panelToUpdate.html(resp);
             $('#js-go-to-block').focus();
         });
+    }
 
+    $('body').on('click', '.js-change-go-to-block', function () {
+        var block = $(this).data('block');
+        var $input = $('#js-go-to-block');
+
+        $input.val(block); 
+        submitGoToBlock();
         return false;
     });
+
+    $('body').on('keyup', '#js-go-to-block', $.debounce(1500, function () {
+        submitGoToBlock();
+    }));
 })

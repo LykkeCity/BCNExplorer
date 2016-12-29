@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -66,7 +67,6 @@ namespace BCNExplorer.Web.Controllers
         }
 
         [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
-        [Route("asset/{id}/owners")]
         public Task<ActionResult> Owners(string id)
         {
             return _OwnersInner(id);
