@@ -242,11 +242,13 @@
     <Content Include="favicon-48x48.png" />
     <Content Include="favicon-64x64.png" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\icon.svg" />
     <Content Include="fonts\ProximaNova-Black.svg" />
     <Content Include="fonts\ProximaNova-Light.svg" />
     <Content Include="fonts\ProximaNova-Semibold.svg" />
     <Content Include="fonts\ProximaNovaRegular.svg" />
+    <Content Include="fonts\ProximaNovaThin.svg" />
     <Content Include="Global.asax" />
     <Content Include="img\android-icn.svg" />
     <Content Include="img\app.svg" />
@@ -298,7 +300,7 @@
     <Content Include="img\yt.svg" />
     <Content Include="js\app\asset\directory\directory.js" />
     <Content Include="js\app\asset\index.js" />
-    <Content Include="js\functions.js" />
+    <Content Include="js\app\common\functions.js" />
     <Content Include="js\vendor\angular-mocks.js" />
     <Content Include="js\vendor\bootstrap.min.js" />
     <Content Include="js\vendor\clipboard.min.js" />
@@ -356,7 +358,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="js\app\common\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\Auth\" />
   </ItemGroup>
@@ -400,6 +401,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="js\vendor\angular.min.js.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\ProximaNovaThin.eot" />
+    <Content Include="fonts\ProximaNovaThin.ttf" />
+    <Content Include="fonts\ProximaNovaThin.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

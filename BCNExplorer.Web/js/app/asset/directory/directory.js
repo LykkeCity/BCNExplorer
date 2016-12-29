@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 angular.module('app', [])
-    .factory('assetService', function ($http) {
+    .factory('assetService', ['$http', function ($http) {
         var result = {
             async: function () {
                 var promise = $http.get('/api/assets').then(function (response) {
@@ -13,14 +13,14 @@ angular.module('app', [])
         };
 
         return result;
-    })
+    }])
     .constant('config', {
         pageSize: 20,
         detailsUrl: function(assetId) {
             return '/asset/' + assetId;
         }
     })
-    .controller('DirectoryCtrl', function ($scope, assetService, config, $filter) {
+    .controller('DirectoryCtrl', ['$scope', 'assetService', 'config', '$filter', function ($scope, assetService, config, $filter) {
         var assetList = {
             page: 0,
             allItems:[],
@@ -114,6 +114,4 @@ angular.module('app', [])
                 $scope.loading = false;
             });
 
-    })
-
-;
+    }]);
