@@ -89,14 +89,14 @@ namespace Providers.Helpers
 
         private static IDictionary<Coef, double> _weights = new Dictionary<Coef, double>
         {
-            {Coef.IsVerified, 10},
-            {Coef.LastMonthTxCount, 9},
-            {Coef.TotalTransactionsCount, 3},
-            {Coef.CoinholdersCount, 2},
+            {Coef.IsVerified, 2.5},
+            {Coef.LastMonthTxCount, 10},
+            {Coef.TotalTransactionsCount, 1.25},
+            {Coef.CoinholdersCount, 0.625},
             {Coef.TotalQuantity, 0},
-            {Coef.LastTxDateDaysPast, 10},
-            {Coef.TopCoinholderShare, 1},
-            {Coef.HerfindalShareIndex, 1}
+            {Coef.LastTxDateDaysPast, 5},
+            {Coef.TopCoinholderShare, 0.3125},
+            {Coef.HerfindalShareIndex, 0.3125}
         };
 
 
