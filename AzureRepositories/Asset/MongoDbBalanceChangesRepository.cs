@@ -52,17 +52,17 @@ namespace AzureRepositories.AssetCoinHolders
         }
     }
 
-    public class AssetBalanceChangesRepository: IAssetBalanceChangesRepository
+    public class MongoDbBalanceChangesRepository: IAssetBalanceChangesRepository
     {
         private readonly ILog _log;
         private readonly IMongoCollection<AddressAssetBalanceChangeMongoEntity> _mongoCollection;
         private static  SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1);
-        static AssetBalanceChangesRepository()
+        static MongoDbBalanceChangesRepository()
         {
             BsonClassMap.RegisterClassMap<AddressAssetBalanceChangeMongoEntity>();
         }
         
-        public AssetBalanceChangesRepository(IMongoDatabase db, ILog log)
+        public MongoDbBalanceChangesRepository(IMongoDatabase db, ILog log)
         {
             _log = log;
             _mongoCollection = db.GetCollection<AddressAssetBalanceChangeMongoEntity>(AddressAssetBalanceChangeMongoEntity.CollectionName);

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Core.Settings
 {
@@ -57,10 +52,11 @@ namespace Core.Settings
         [Required]
         public string SharedStorageConnString { get; set; }
 
-        public string SqlConnString { get; set; }
+        //[Required]
+        public AssetBalanceChangesDb AssetBalanceChanges { get; set; }
 
         [Required]
-        public AssetBalanceChangesDb AssetBalanceChanges { get; set; }
+        public AssetBalanceChangesDocumentDb AssetBalanceChangesDocumentDb { get; set; }
     }
 
     public class JobsSettings
@@ -81,6 +77,18 @@ namespace Core.Settings
     {
         [Required]
         public string ConnectionString { get; set; }
+
+        [Required]
+        public string DbName { get; set; }
+    }
+
+    public class AssetBalanceChangesDocumentDb
+    {
+        [Required]
+        public string EndpointUri { get; set; }
+
+        [Required]
+        public string PrimaryKey { get; set; }
 
         [Required]
         public string DbName { get; set; }

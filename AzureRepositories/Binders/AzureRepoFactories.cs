@@ -51,10 +51,10 @@ namespace AzureRepositories.Binders
             return new AssetScoreRepository(new AzureTableStorage<AssetScoreEntity>(baseSettings.Db.AssetsConnString, "AssetScores", log));
         }
 
-        public static AssetBalanceChangesRepository CreateAssetBalanceChangesRepository(BaseSettings baseSettings, ILog log)
+        public static MongoDbBalanceChangesRepository CreateAssetBalanceChangesRepository(BaseSettings baseSettings, ILog log)
         {
             var client = new MongoClient(baseSettings.Db.AssetBalanceChanges.ConnectionString);
-            return new AssetBalanceChangesRepository(client.GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName), log);
+            return new MongoDbBalanceChangesRepository(client.GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName), log);
         }
     }
 }

@@ -20,7 +20,9 @@ namespace Core.Asset
 
         public static AssetCoinholdersIndex Create(IBalanceSummary balanceSummary, IEnumerable<IBalanceBlock> blocksWithChanges, int transactionCount, int lastMonthTransactionCount, DateTime? lastTxDate)
         {
-            var addressDic = balanceSummary.AddressSummaries.GroupBy(p => p.Address).ToDictionary(p => p.Key, p => p.Sum(x => x.Balance));
+            var addressDic = balanceSummary.AddressSummaries.GroupBy(p => p.Address)
+                .Where(p => p.Sum(x=>x.Balance) != 0)
+                .ToDictionary(p => p.Key, p => p.Sum(x => x.Balance));
             var totalQuantity = addressDic.Sum(p => p.Value);
             return new AssetCoinholdersIndex
             {

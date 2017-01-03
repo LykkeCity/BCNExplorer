@@ -22,10 +22,12 @@ A website explores the blockchain and shows information about blocks, transactio
 		"AssetsConnString":"",
 		"SharedStorageConnString":"",
 		"SqlConnString":"",
-		"AssetBalanceChanges" : {
-			"ConnectionString":"",		
+
+		"AssetBalanceChangesDocumentDb" : {
+			"EndpointUri":"",		
+			"PrimaryKey":"",		
 			"DbName":"",		
-		}
+		}		
 		
 	},
 	"NinjaIndexerCredentials": {
@@ -53,5 +55,6 @@ A website explores the blockchain and shows information about blocks, transactio
   *  SharedStorageConnString - Connection string that points to the queue which handles slack notifications.
   *  NinjaIndexerCredentials - Connection credentials that points to Azure Table Storage with NbitCoin ninja blockchain info
   *	 AssetBalanceChanges - connection string and db name to mongodb database, which contains data about colored asset changes
+  *	 AssetBalanceChanges - describes access to documentDb database, which contains data about colored asset changes
   *  Authentication - open id auth options
   * TestNet/MainNet BitcoinNetwork. Write 'mainnet' for MainNet, and 'testnet' for TestNet
