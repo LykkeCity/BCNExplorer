@@ -134,7 +134,7 @@
     <Compile Include="Coninholders\CheckBalance.cs" />
     <Compile Include="Coninholders\CopyData.cs" />
     <Compile Include="Coninholders\GetAddressesWithColoredAssetsFromCoinPrism.cs" />
-    <Compile Include="Coninholders\MongoFillBalance.cs" />
+    <Compile Include="Coninholders\DocDbFillBalance.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Coninholders\TestFillBalance.cs" />
