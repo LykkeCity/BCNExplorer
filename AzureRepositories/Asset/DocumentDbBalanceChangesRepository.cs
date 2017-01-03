@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AzureRepositories.AssetCoinHolders;
 using Common.Log;
 using Core.AssetBlockChanges.Mongo;
 using Core.Settings;
@@ -77,10 +78,9 @@ namespace AzureRepositories.Asset
         {
             using (var client = CreateDocumentClient())
             {
-                var collection = await GetCollectionAsync(client);
                 foreach (var groupedByAssetId in balanceChanges.GroupBy(p => p.AssetId))
                 {
-                       var parsedBlockHashes = await  client.CreateDocumentQuery<AddressAssetBalanceChangeDocDbEntity>(collection.DocumentsLink)
+                       var parsedBlockHashes = await  client.CreateDocumentQuery<AddressAssetBalanceChangeDocDbEntity>(UriFactory.CreateDocumentCollectionUri(_databaseName, AddressAssetBalanceChangeDocDbEntity.CollectionName))
                             .Where(p => p.AssetId == groupedByAssetId.Key && p.ColoredAddress == coloredAddress)
                             .Select(p => p.BlockHash)
                             .AsDocumentQuery()
@@ -125,37 +125,153 @@ namespace AzureRepositories.Asset
 
         public Task<IBalanceSummary> GetSummaryAsync(params string[] assetIds)
         {
-            throw new NotImplementedException();
+            return GetSummaryAsync(null, assetIds);
         }
 
-        public Task<IBalanceSummary> GetSummaryAsync(IQueryOptions queryOptions, params string[] assetIds)
+        public async Task<IBalanceSummary> GetSummaryAsync(IQueryOptions queryOptions, params string[] assetIds)
         {
-            throw new NotImplementedException();
+            using (var client = CreateDocumentClient())
+            {
+                var query = client.CreateDocumentQuery<AddressAssetBalanceChangeDocDbEntity>(
+                    UriFactory.CreateDocumentCollectionUri(_databaseName,
+                        AddressAssetBalanceChangeDocDbEntity.CollectionName));
+
+                IQueryable<AddressAssetBalanceChangeDocDbEntity> filteredQuery;
+                if (queryOptions != null)
+                {
+                    filteredQuery = query.Where(p => assetIds.Contains(p.AssetId)
+                           && p.BlockHeight <= queryOptions.ToBlockHeight
+                           && p.BlockHeight >= queryOptions.FromBlockHeight
+                           && p.TotalChanged != 0);
+                }
+                else
+                {
+                    filteredQuery = query.Where(p => assetIds.Contains(p.AssetId)
+                            && p.TotalChanged != 0);
+                }
+
+                var addressBalanceChanges = await query.Select(p => new { p.ColoredAddress, Balance = p.TotalChanged }).AsDocumentQuery().QueryAsync();
+
+
+                return new BalanceSummary
+                {
+                    AssetIds = assetIds,
+                    AddressSummaries =
+                        addressBalanceChanges.GroupBy(p => p.ColoredAddress).Select(bc => new BalanceAddressSummary
+                        {
+                            Address = bc.Key,
+                            Balance = bc.Sum(p => p.Balance)
+                        })
+                };
+            }
         }
 
-        public Task<int> GetLastParsedBlockHeightAsync()
+        public async Task<int> GetLastParsedBlockHeightAsync()
         {
-            throw new NotImplementedException();
+            using (var client = CreateDocumentClient())
+            {
+                var singleSearchOpts = new FeedOptions
+                {
+                    MaxItemCount = 1
+                };
+
+                var result = await 
+                    client.CreateDocumentQuery<AddressAssetBalanceChangeDocDbEntity>(
+                        UriFactory.CreateDocumentCollectionUri(_databaseName, AddressAssetBalanceChangeDocDbEntity.CollectionName), 
+                        singleSearchOpts)
+                        .OrderByDescending(p => p.BlockHeight)
+                        .Select(p => p.BlockHeight)
+                        .AsDocumentQuery().QueryAsync();
+
+                return result.FirstOrDefault();
+            }
         }
 
-        public Task<IEnumerable<IBalanceTransaction>> GetTransactionsAsync(IEnumerable<string> assetIds, int? fromBlock = null)
+        public async Task<IEnumerable<IBalanceTransaction>> GetTransactionsAsync(IEnumerable<string> assetIds, int? fromBlock = null)
         {
-            throw new NotImplementedException();
+            using (var client = CreateDocumentClient())
+            {
+                var query = client.CreateDocumentQuery<AddressAssetBalanceChangeDocDbEntity>(
+                    UriFactory.CreateDocumentCollectionUri(_databaseName,
+                        AddressAssetBalanceChangeDocDbEntity.CollectionName));
+
+                IQueryable<AddressAssetBalanceChangeDocDbEntity> filteredQuery; 
+                if (fromBlock == null)
+                {
+                    filteredQuery = query.Where(p => assetIds.Contains(p.AssetId));
+                }
+                else
+                {
+                    filteredQuery = query.Where(p => assetIds.Contains(p.AssetId) && p.BlockHeight >= fromBlock.Value);
+                }
+
+                var queryResult = await
+                        filteredQuery
+                        .OrderByDescending(p => p.BlockHeight)
+                        .Select(p => new { p.BalanceChanges })
+                        .AsDocumentQuery().QueryAsync();
+
+                var txHashes = queryResult.SelectMany(p => p.BalanceChanges.Select(x => x.TransactionHash));
+
+                return txHashes.Distinct().Select(BalanceTransaction.Create);
+            }
         }
 
-        public Task<IBalanceTransaction> GetLatestTxAsync(IEnumerable<string> assetIds)
+        public async Task<IBalanceTransaction> GetLatestTxAsync(IEnumerable<string> assetIds)
         {
-            throw new NotImplementedException();
+            using (var client = CreateDocumentClient())
+            {
+                var singleSearchOpts = new FeedOptions
+                {
+                    MaxItemCount = 1
+                };
+
+                var balanceChanges = (await
+                    client.CreateDocumentQuery<AddressAssetBalanceChangeDocDbEntity>(
+                        UriFactory.CreateDocumentCollectionUri(_databaseName, AddressAssetBalanceChangeDocDbEntity.CollectionName),
+                        singleSearchOpts)
+                        .OrderByDescending(p => p.BlockHeight)
+                        .Select(p => p.BalanceChanges)
+                        .AsDocumentQuery().QueryAsync())
+                        .FirstOrDefault();
+
+                if (balanceChanges != null && balanceChanges.Any())
+                {
+                    return BalanceTransaction.Create(balanceChanges.First().TransactionHash);
+                }
+
+                return null;
+            }
         }
 
-        public Task<IDictionary<string, double>> GetAddressQuantityChangesAtBlock(int blockHeight, IEnumerable<string> assetIds)
+        public async Task<IDictionary<string, double>> GetAddressQuantityChangesAtBlock(int blockHeight, IEnumerable<string> assetIds)
         {
-            throw new NotImplementedException();
+            using (var client = CreateDocumentClient())
+            {
+                var result = await
+                    client.CreateDocumentQuery<AddressAssetBalanceChangeDocDbEntity>(
+                        UriFactory.CreateDocumentCollectionUri(_databaseName,AddressAssetBalanceChangeDocDbEntity.CollectionName))
+                        .Where(p => assetIds.Contains(p.AssetId) && p.BlockHeight == blockHeight && p.TotalChanged != 0)
+                        .Select(p => new { p.ColoredAddress, Balance = p.BalanceChanges.Sum(bc => bc.Quantity) })
+                        .AsDocumentQuery().QueryAsync();
+
+                return result.ToDictionary(p => p.ColoredAddress, p => p.Balance);
+            }
         }
 
-        public Task<IEnumerable<IBalanceBlock>> GetBlocksWithChanges(IEnumerable<string> assetIds)
+        public async Task<IEnumerable<IBalanceBlock>> GetBlocksWithChanges(IEnumerable<string> assetIds)
         {
-            throw new NotImplementedException();
+            using (var client = CreateDocumentClient())
+            {
+                var result = await
+                    client.CreateDocumentQuery<AddressAssetBalanceChangeDocDbEntity>(
+                        UriFactory.CreateDocumentCollectionUri(_databaseName, AddressAssetBalanceChangeDocDbEntity.CollectionName))
+                        .Where(p => assetIds.Contains(p.AssetId) && p.TotalChanged != 0)
+                        .Select(p => new { p.BlockHeight, p.BlockHash })
+                        .AsDocumentQuery().QueryAsync();
+
+                return result.Distinct().Select(p => BalanceBlock.Create(p.BlockHash, p.BlockHeight));
+            }
         }
     }
     
