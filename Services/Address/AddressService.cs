@@ -107,6 +107,11 @@ namespace Services.Address
                             return coloredBalance;
                         });
                 }
+                else
+                {
+                    //address not found hack
+                    ninjaAddress = new Lazy<AddressBalance>();
+                }
             });
 
             await Task.WhenAll(fillMainInfoTask, fillSummaryTask);
