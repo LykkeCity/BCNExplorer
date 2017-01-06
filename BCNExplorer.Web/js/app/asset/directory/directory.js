@@ -28,7 +28,7 @@ angular.module('app', [])
             setPage: function(page) {
                 assetList.page = page;
             },
-            resetToDefault: function() {
+            resetToDefault: function () {
                 assetList.setPage(1);
             },
             next: function () {
@@ -76,31 +76,38 @@ angular.module('app', [])
                 if ($scope.firstLetterSearchQuery === letter) {
                     $scope.firstLetterSearchQuery = undefined;
                 } else {
-
                     $scope.firstLetterSearchQuery = letter;
                 }
+                assetList.setPage(1);
             }
 
             $scope.$watch('searchQuery', function () {
                 if ($scope.searchQuery) {
-                    $scope.firstLetterSearchQuery = '';
+                    $scope.firstLetterSearchQuery = undefined;
                 }
             });
 
             $scope.$watch('firstLetterSearchQuery', function () {
                 if ($scope.firstLetterSearchQuery) {
-                    $scope.searchQuery = '';
+                    $scope.searchQuery = undefined;
                 }
             });
+
             $scope.showFullSearchBlock = false;
+
             $scope.togglFullSearchBlock = function() {
                 $scope.showFullSearchBlock = !$scope.showFullSearchBlock;
             };
+
             $scope.loading = true;
             $scope.assetList = assetList;
 
             $scope.detailsUrl = function(asset) {
                 return config.detailsUrl(asset.AssetIds[0]);
+            }
+
+            $scope.resetToDefault = function() {
+                assetList.resetToDefault();
             }
 
             $scope.showNextBtn = function () {
