@@ -6,6 +6,7 @@ using Core.Settings;
 using JobsCommon;
 using Providers;
 using Services.Binders;
+using TestConsole.AssetScanner;
 using TestConsole.Coninholders;
 
 namespace TestConsole
@@ -26,8 +27,8 @@ namespace TestConsole
             //MongoFillBalance.Run(container).Wait();
             //AddAddressesFromBlockChain.Run(container).Wait();
             //AssetDefToCsv.Run(container).Wait();
-            AssetCoinholdersToCsv.Run(container).Wait();
-
+            //AssetCoinholdersToCsv.Run(container).Wait();
+            AddMissingDefinitions.Run(container).Wait();
             //CopyMongoData.Run(container).Wait();
         }
         
