@@ -131,6 +131,7 @@
   <ItemGroup>
     <Compile Include="AssetScanner\AddMissingDefinitions.cs" />
     <Compile Include="Coninholders\AddAddressesFromBlockChain.cs" />
+    <Compile Include="AssetScanner\AddAssetDefinitionsHistory.cs" />
     <Compile Include="Coninholders\AssetCoinholdersToCsv.cs" />
     <Compile Include="Coninholders\AssetDefToCsv.cs" />
     <Compile Include="Coninholders\CheckBalance.cs" />

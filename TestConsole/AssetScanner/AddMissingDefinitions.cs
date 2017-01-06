@@ -38,35 +38,4 @@ namespace TestConsole.AssetScanner
             Console.ReadLine();
         }
     }
-
-    public class Block : TableEntity
-    {
-        public int Height { get; set; }
-
-        public string Hash { get; set; }
-
-        public static Block Create(string hash, int height)
-        {
-            return new Block
-            {
-                Hash = hash,
-                Height = height
-            };
-        }
-    }
-
-    public class DefinitionUrl : TableEntity
-    {
-        public string Url { get; set; }
-
-        public static DefinitionUrl Create(string url)
-        {
-            return new DefinitionUrl
-            {
-                PartitionKey = "DU",
-                RowKey = url.ToBase64(),
-                Url = url
-            };
-        }
-    }
 }

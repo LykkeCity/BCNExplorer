@@ -28,7 +28,8 @@ namespace TestConsole
             //AddAddressesFromBlockChain.Run(container).Wait();
             //AssetDefToCsv.Run(container).Wait();
             //AssetCoinholdersToCsv.Run(container).Wait();
-            AddMissingDefinitions.Run(container).Wait();
+            //AddMissingDefinitions.Run(container).Wait();
+            AddAssetDefinitionsHistory.Run(container).Wait();
             //CopyMongoData.Run(container).Wait();
         }
         
