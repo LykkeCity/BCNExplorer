@@ -15,12 +15,19 @@ namespace Providers.Providers.Asset
         {
             var result = new Dictionary<string, IAssetDefinition>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var asset in assets)
+            foreach (var asset in assets.Where(p=>p.AssetIds.Any() && p.AssetIds.All(x=>x!=null)))
             {
-                result[asset.Name] = asset;
-                result[asset.NameShort] = asset;
+                if (!string.IsNullOrEmpty(asset.Name))
+                {
+                    result[asset.Name] = asset;
+                }
 
-                foreach (var assetId in asset.AssetIds ?? Enumerable.Empty<string>())
+                if (!string.IsNullOrEmpty(asset.NameShort))
+                {
+                    result[asset.NameShort] = asset;
+                }
+
+                foreach (var assetId in (asset.AssetIds ?? Enumerable.Empty<string>()).Where(p=>!string.IsNullOrEmpty(p)))
                 {
                     result[assetId] = asset;
                 }
@@ -40,8 +47,7 @@ namespace Providers.Providers.Asset
 
             foreach (var asset in assets)
             {
-
-                foreach (var assetId in asset.AssetIds ?? Enumerable.Empty<string>())
+                foreach (var assetId in (asset.AssetIds ?? Enumerable.Empty<string>()).Where(p => !string.IsNullOrEmpty(p)))
                 {
                     result[assetId] = asset;
                 }
@@ -57,7 +63,7 @@ namespace Providers.Providers.Asset
             foreach (var asset in assets)
             {
 
-                foreach (var assetId in asset.AssetIds ?? Enumerable.Empty<string>())
+                foreach (var assetId in ((asset.AssetIds ?? Enumerable.Empty<string>()).Where(p => !string.IsNullOrEmpty(p))))
                 {
                     result[assetId] = asset;
                 }
