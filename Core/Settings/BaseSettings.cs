@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 
 namespace Core.Settings
 {
@@ -24,8 +25,8 @@ namespace Core.Settings
         [Required]
         public NinjaIndexerCredentials NinjaIndexerCredentials { get; set; }
 
-        //[Required]
-        //public AuthenticationSettings Authentication { get; set; }
+        [Required]
+        public AuthenticationSettings Authentication { get; set; }
     }
 
     public class AuthenticationSettings
@@ -44,6 +45,11 @@ namespace Core.Settings
 
         [Required]
         public string Authority { get; set; }
+
+        public string AuthorizeEndpoint => Authority.AddLastSymbolIfNotExists('/') + "/connect/authorize";
+        public string LogoutEndpoint => Authority.AddLastSymbolIfNotExists('/') + "/connect/logout";
+        public string TokenEndpoint => Authority.AddLastSymbolIfNotExists('/') + "/connect/token";
+        public string UserInfoEndpoint => Authority.AddLastSymbolIfNotExists('/') + "/connect/userinfo";
     }
 
     public class DbSettings

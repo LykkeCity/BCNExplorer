@@ -1,11 +1,9 @@
 ﻿using System;
-using AzureRepositories;
-using BCNExplorer.Web.App_Start;
-using Core.Settings;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
 
 [assembly: OwinStartupAttribute(typeof(BCNExplorer.Web.Startup))]
@@ -17,7 +15,17 @@ namespace BCNExplorer.Web
         {
             //var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(Dependencies.WebSiteSettings.ConnectionString);
 
-            //app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
+            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
+
+            app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = "TempState",
+                AuthenticationMode = AuthenticationMode.Passive
+            });
+
+            //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+
 
             //app.UseCookieAuthentication(new CookieAuthenticationOptions
             //{
@@ -36,7 +44,7 @@ namespace BCNExplorer.Web
             //    ResponseType = "code",
             //    Scope = "email profile",
             //    UseTokenLifetime = true,
-                
+
             //});
         }
     }

@@ -1,0 +1,22 @@
+﻿
+
+
+<h2>Callback</h2>
+
+Code: <strong>@ViewBag.Code</strong>
+<br />
+State: <strong>@ViewBag.State</strong>
+<br />
+Error: <strong>@ViewBag.Error</strong>
+
+<br />
+<br />
+
+
+    @using (Html.BeginForm("GetToken", "Security"))
+    {
+        @Html.Hidden("code", (object) ViewBag.Code)
+        <input type="submit" value="Get token"/>
+
+    }
+
