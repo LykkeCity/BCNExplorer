@@ -24,6 +24,9 @@ namespace Core.Settings
         [Required]
         public NinjaIndexerCredentials NinjaIndexerCredentials { get; set; }
 
+        public string ExplolerUrl { get; set; }
+
+        public string Secret { get; set; }
         //[Required]
         //public AuthenticationSettings Authentication { get; set; }
     }

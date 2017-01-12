@@ -6,5 +6,7 @@
         public string PingUrl { get; set; }
         public string PublishUserName { get; set; }
         public string PublishPwd { get; set; }
+
+        public string UpdateMainChainIndexerUrl { get; set; }
     }
 }

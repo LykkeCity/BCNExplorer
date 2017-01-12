@@ -234,6 +234,7 @@
     <Compile Include="Controllers\AssetController.cs" />
     <Compile Include="Controllers\api\AssetDirectoryController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\MainChainController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\BlockController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />

@@ -42,7 +42,9 @@ A website explores the blockchain and shows information about blocks, transactio
 	"Jobs": {
 		"IsDebug":false
 	},
-	Network:""
+	Network:"",
+	ExplolerUrl:"",
+	Secret:""
 }
 ```
 * Keys description
@@ -55,3 +57,5 @@ A website explores the blockchain and shows information about blocks, transactio
   *	 AssetBalanceChanges - connection string and db name to mongodb database, which contains data about colored asset changes
   *  Authentication - open id auth options
   * TestNet/MainNet BitcoinNetwork. Write 'mainnet' for MainNet, and 'testnet' for TestNet
+  * ExplolerUrl - hosted bcn exploler URL
+  * Secret - secret, used in requests to index bcn exploler

@@ -42,7 +42,7 @@ namespace Services.MainChain
             return _cacheManager.Get<ConcurrentChain>(CacheKey);
         }
 
-        private async Task  ReloadAsync()
+        public async Task  ReloadAsync()
         {
             var updated = await _sourceRepository.GetMainChainAsync();
 
