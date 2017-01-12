@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Cache;
 using Common.IocContainer;
 using Common.Log;
 using Core.AddressService;
@@ -24,6 +25,7 @@ namespace Services.Binders
         {
             ioc.RegisterSingleTone<MainChainRepository>();
             ioc.RegisterSingleTone<BalanceChangesService>();
+            ioc.RegisterFactorySingleTone( ()=> new CachedMainChainRepository(ioc.GetObject<MainChainRepository>(), new MemoryCacheManager(), cachedTimeInMinutes: 0));
 
             ioc.RegisterPerCall<IBlockService, BlockService>();
             ioc.RegisterPerCall<ITransactionService, TransactionService>();
@@ -48,4 +50,25 @@ namespace Services.Binders
             ioc.RegisterPerCall<IAssetService, AssetService>();
         }
     }
+
+    //public class ServiceBinderOptions
+    //{
+    //    public string MainChainLocalCacheFileName { get; set; }
+
+    //    public static ServiceBinderOptions Create(string mainChainLocalCacheFileName)
+    //    {
+    //        return new ServiceBinderOptions
+    //        {
+    //            MainChainLocalCacheFileName = mainChainLocalCacheFileName
+    //        };
+    //    }
+
+    //    public static ServiceBinderOptions Default()
+    //    {
+    //        return new ServiceBinderOptions
+    //        {
+    //            MainChainLocalCacheFileName = 
+    //        }
+    //    }
+    //}
 }

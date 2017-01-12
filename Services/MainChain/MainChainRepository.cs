@@ -17,10 +17,10 @@ namespace Services.MainChain
         private readonly ILog _log;
         private static SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        private const string FilePath = "./chain.dat";
+        private string FilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "bin", "chain.dat").ToString();
 
         private ObjectCache Cache => MemoryCache.Default;
-        private const string CacheKey = "MainChain";
+        private const string CacheKey = "MainChainSource";
 
         public MainChainRepository(IndexerClientFactory indexerClient, ILog log)
         {
@@ -28,26 +28,45 @@ namespace Services.MainChain
             _log = log;
         }
 
-        private async Task<ConcurrentChain> GetFromCacheAsync()
+        //private async Task<ConcurrentChain> GetFromCacheAsync()
+        //{
+        //    try
+        //    {
+        //        var memoryCached = Cache[CacheKey] as ConcurrentChain;
+
+        //        if (memoryCached != null)
+        //        {
+        //            return memoryCached;
+        //        }
+
+        //        var result =  new ConcurrentChain(await ReadWriteHelper.ReadAllFileAsync(FilePath));
+                
+        //        Cache.Set(CacheKey, result, ObjectCache.InfiniteAbsoluteExpiration);
+
+        //        return result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await _log.WriteError("MainChainRepository", "GetFromCacheAsync", null, e);
+
+        //        return null;
+        //    }
+        //}
+
+        private ConcurrentChain GetFromTemporaryCache()
+        {
+            return Cache[CacheKey] as ConcurrentChain;
+        }
+
+        private async Task<ConcurrentChain> GetFromPersistentCacheAsync()
         {
             try
             {
-                var memoryCached = Cache[CacheKey] as ConcurrentChain;
-
-                if (memoryCached != null)
-                {
-                    return memoryCached;
-                }
-
-                var result =  new ConcurrentChain(await ReadWriteHelper.ReadAllFileAsync(FilePath));
-                
-                Cache.Set(CacheKey, result, ObjectCache.InfiniteAbsoluteExpiration);
-
-                return result;
+                return new ConcurrentChain(File.ReadAllBytes(FilePath));
             }
             catch (Exception e)
             {
-                await _log.WriteError("MainChainRepository", "GetFromCacheAsync", null, e);
+                await _log.WriteError("MainChainRepository", "GetFromPersistentCacheAsync", null, e);
 
                 return null;
             }
@@ -58,14 +77,15 @@ namespace Services.MainChain
             return _indexerClient.GetIndexerClient().GetMainChain();
         }
 
-        private async Task CacheChainAsync(ConcurrentChain chain)
+        private async Task SetToPersistentCacheAsync(ConcurrentChain chain)
         {
             try
             {
                 await _semaphore.WaitAsync();
-
-                Cache.Set(CacheKey, chain, ObjectCache.InfiniteAbsoluteExpiration);
-                File.WriteAllBytes(FilePath, chain.ToBytes());
+                
+                var memorySteam  = new MemoryStream();
+                chain.WriteTo(memorySteam);
+                File.WriteAllBytes(FilePath, memorySteam.ToArray());
             }
             catch (Exception e)
             {
@@ -77,10 +97,16 @@ namespace Services.MainChain
             }
         }
 
+        private void SetToTemporaryCache(ConcurrentChain chain)
+        {
+            Cache.Set(CacheKey, chain, ObjectCache.InfiniteAbsoluteExpiration);
+        } 
+
         public async Task<ConcurrentChain> GetMainChainAsync()
         {
             var iniTip = 0;
-            var result = await GetFromCacheAsync();
+            
+            var result = GetFromTemporaryCache() ?? await GetFromPersistentCacheAsync();
 
             if (result != null)
             {
@@ -95,10 +121,12 @@ namespace Services.MainChain
 
             if (iniTip != result.Height)
             {
-                await CacheChainAsync(result);
+                await SetToPersistentCacheAsync(result);
             }
 
+            SetToTemporaryCache(result);
+
             return result;
-        } 
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace BCNExplorer.Web.App_Start
 
             GeneralSettingsValidator.Validate(settings);
 
-            var log = new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "BCNExplorer.WEB", null));
+            var log = new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "LogBCNExplorerWEB", null));
 
             dr.IoC.Register<ILog>(log);
             dr.IoC.Register(settings);
