@@ -48,6 +48,12 @@
         <h3>Balance</h3>
     </div>
 </section>
+
+<div id="js-balance-load-contaner" data-load-url="@Url.Action("Balance", new {id = Model.AddressId})">
+
+</div>
+
+
 @UiHelpers.Loader(htmlId: "js-balance-loader")
 
 <div id="js-address-transactions" data-load-url="@Url.Action("Transactions", "Address", new {id = Model.AddressId})">
