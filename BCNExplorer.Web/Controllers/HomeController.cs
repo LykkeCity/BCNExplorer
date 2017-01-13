@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using Core.Block;
@@ -18,7 +19,7 @@ namespace BCNExplorer.Web.Controllers
         public async Task<ActionResult> Index()
         {
             var lastBlock = await _blockService.GetLastBlockHeaderAsync();
-
+            throw new Exception("123123");
             return View(LastBlockViewModel.Create(lastBlock));
         }
 

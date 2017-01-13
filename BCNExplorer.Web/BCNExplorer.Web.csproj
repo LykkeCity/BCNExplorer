@@ -241,7 +241,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
-    <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
+    <Compile Include="ErrorHandler\CustomHandleErrorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
