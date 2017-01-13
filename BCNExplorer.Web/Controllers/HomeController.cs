@@ -19,7 +19,6 @@ namespace BCNExplorer.Web.Controllers
         public async Task<ActionResult> Index()
         {
             var lastBlock = await _blockService.GetLastBlockHeaderAsync();
-            throw new Exception("123123");
             return View(LastBlockViewModel.Create(lastBlock));
         }
 
