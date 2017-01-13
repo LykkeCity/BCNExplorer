@@ -35,6 +35,9 @@ namespace BCNExplorer.Web.App_Start
 
             var log = new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "LogBCNExplorerWEB", null));
 
+            App.BaseSettings = settings;
+            App.Log = log;
+
             dr.IoC.Register<ILog>(log);
             dr.IoC.Register(settings);
             
