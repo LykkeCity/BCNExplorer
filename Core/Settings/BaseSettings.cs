@@ -28,7 +28,7 @@ namespace Core.Settings
 
         public string Secret { get; set; }
 
-        public bool CacheChainLocalFile { get; set; }
+        public bool CacheMainChainLocalFile { get; set; }
         //[Required]
         //public AuthenticationSettings Authentication { get; set; }
     }
