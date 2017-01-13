@@ -27,6 +27,8 @@ namespace Core.Settings
         public string ExplolerUrl { get; set; }
 
         public string Secret { get; set; }
+
+        public bool CacheChainLocalFile { get; set; }
         //[Required]
         //public AuthenticationSettings Authentication { get; set; }
     }

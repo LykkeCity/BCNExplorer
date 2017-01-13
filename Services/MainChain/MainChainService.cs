@@ -7,6 +7,7 @@ using AzureStorage;
 using Common;
 using Common.Files;
 using Common.Log;
+using Core.Settings;
 using NBitcoin;
 using NBitcoin.Indexer;
 using Providers;
@@ -19,6 +20,7 @@ namespace Services.MainChain
         private readonly ILog _log;
         private readonly IBlobStorage _blobStorage;
 
+        private readonly bool _cacheMainChainAsLocalFile;
         private static SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private ObjectCache Cache => MemoryCache.Default;
 
@@ -26,12 +28,15 @@ namespace Services.MainChain
         private const string BlobContainerName = "mainchain";
         private const string BlobKeyName = "data";
         private const string CacheKey = "MainChainSource";
+        
 
-        public MainChainService(IndexerClientFactory indexerClient, IBlobStorage storage, ILog log)
+        public MainChainService(IndexerClientFactory indexerClient, IBlobStorage storage, ILog log, BaseSettings baseSettings)
         {
             _indexerClient = indexerClient;
             _log = log;
             _blobStorage = storage;
+
+            _cacheMainChainAsLocalFile = baseSettings.CacheMainChainLocalFile;
         }
 
         private ConcurrentChain GetFromTemporaryCache()
@@ -44,16 +49,20 @@ namespace Services.MainChain
             try
             {
                 ConcurrentChain result;
-#if (DEBUG)
-                result = new  ConcurrentChain(File.ReadAllBytes(FilePath));
-#endif
-#if (!DEBUG)
-                result = new ConcurrentChain((await _blobStorage.GetAsync(BlobContainerName, BlobKeyName)).ReadFully());
 
-                await
-                    _log.WriteInfo("MainChainRepository", "GetFomPersistentCacheAsync", null,
-                        "Get from blob storage done");
-#endif
+                if (_cacheMainChainAsLocalFile)
+                {
+
+                    result = new ConcurrentChain(File.ReadAllBytes(FilePath));
+                }
+                else
+                {
+                    result = new ConcurrentChain((await _blobStorage.GetAsync(BlobContainerName, BlobKeyName)).ReadFully());
+
+                    await
+                        _log.WriteInfo("MainChainRepository", "GetFomPersistentCacheAsync", null,
+                            "Get from blob storage done");
+                }
 
                 return result;
 
@@ -79,15 +88,19 @@ namespace Services.MainChain
                 
                 var memorySteam  = new MemoryStream();
                 chain.WriteTo(memorySteam);
-#if (DEBUG)                
-                var data = memorySteam.ToArray();
-                File.WriteAllBytes(FilePath, data);
-#endif
-#if (!DEBUG)
-                await _blobStorage.SaveBlobAsync(BlobContainerName, BlobKeyName, memorySteam);
-                await _log.WriteInfo("MainChainRepository", "SetToPersistentCacheAsync", null, "Save to blob storage done");
-#endif
+
+                if (_cacheMainChainAsLocalFile)
+                {
+                    var data = memorySteam.ToArray();
+                    File.WriteAllBytes(FilePath, data);
+                }
+                else
+                {
+                    await _blobStorage.SaveBlobAsync(BlobContainerName, BlobKeyName, memorySteam);
+                    await _log.WriteInfo("MainChainRepository", "SetToPersistentCacheAsync", null, "Save to blob storage done");
+                }
             }
+
             catch (Exception e)
             {
                 await _log.WriteError("MainChainRepository", "CacheChainAsync", null, e);
