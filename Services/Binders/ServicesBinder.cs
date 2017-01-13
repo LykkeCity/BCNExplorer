@@ -25,7 +25,7 @@ namespace Services.Binders
     {
         public static void BindServices(this IoC ioc, BaseSettings baseSettings, ILog log)
         {
-            ioc.RegisterFactorySingleTone(()=> new MainChainService(ioc.GetObject<IndexerClientFactory>(), AzureRepoFactories.CreateMainChainBlobStorage(baseSettings, log), log));
+            ioc.RegisterFactorySingleTone(()=> new MainChainService(ioc.GetObject<IndexerClientFactory>(), AzureRepoFactories.CreateMainChainBlobStorage(baseSettings, log), log, baseSettings));
             ioc.RegisterSingleTone<BalanceChangesService>();
             ioc.RegisterFactorySingleTone( ()=> new CachedMainChainService(ioc.GetObject<MainChainService>(), new MemoryCacheManager(), cachedTimeInMinutes: 0));
 
