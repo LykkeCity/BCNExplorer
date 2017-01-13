@@ -1,5 +1,8 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using AzureRepositories;
+using BCNExplorer.Web.App_Start;
+using Core.Settings;
 
 namespace BCNExplorer.Web
 {
@@ -8,6 +11,12 @@ namespace BCNExplorer.Web
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new ErrorHandler.AiHandleErrorAttribute());
+
+            var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(Dependencies.WebSiteSettings.ConnectionString);
+            if (!settings.DisableRedirectToHttps)
+            {
+                filters.Add(new RequireHttpsAttribute());
+            }
         }
     }
 }
