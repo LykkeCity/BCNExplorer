@@ -6,11 +6,9 @@ using Core.Asset;
 
 namespace BCNExplorer.Web.Models
 {
-    public class AddressViewModel
+    public class AddressBalanceViewModel
     {
         public string AddressId { get; set; }
-        public string UncoloredAddress { get; set; }
-        public string ColoredAddress { get; set; }
         public double Balance { get; set; }
         public double UnconfirmedBalance => Balance + UnconfirmedBalanceDelta;
         public double UnconfirmedBalanceDelta { get; set; }
@@ -20,14 +18,11 @@ namespace BCNExplorer.Web.Models
         
         public AssetDictionary AssetDic { get; set; }
 
-        public static AddressViewModel Create(IAddressBalance balance, IDictionary<string, IAssetDefinition> assetDictionary)
+        public static AddressBalanceViewModel Create(IAddressBalance balance, IDictionary<string, IAssetDefinition> assetDictionary)
         {
-            return new AddressViewModel
+            return new AddressBalanceViewModel
             {
                 AddressId = balance.AddressId,
-
-                UncoloredAddress = balance.UncoloredAddress,
-                ColoredAddress = balance.ColoredAddress,
                 TotalConfirmedTransactions = balance.TotalTransactions,
                 Balance = balance.Balance,
                 Assets = (balance.ColoredBalances??Enumerable.Empty<IColoredBalance>()).Select(p => new Asset

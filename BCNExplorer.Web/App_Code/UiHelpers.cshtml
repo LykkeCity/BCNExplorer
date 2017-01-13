@@ -3,3 +3,14 @@
     source = source ?? "";
     <span class="truncate" title="@source" data-content-start="@source.Substring(0, source.Length/2)" data-content-end="@source.Substring(source.Length/2)"></span>
 }
+
+@helper Loader(string htmlClass = null, string htmlId = null)
+{
+    <div class="@htmlClass" id ="@htmlId">
+        <div class="spinner_container">
+            <div class="spinner">
+                <div class="spinner__inside"></div>
+            </div>
+        </div>
+    </div>
+}

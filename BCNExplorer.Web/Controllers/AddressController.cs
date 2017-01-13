@@ -20,15 +20,28 @@ namespace BCNExplorer.Web.Controllers
         [Route("address/{id}")]
         public async Task<ActionResult> Index(string id)
         {
-            var result = await _addressProvider.GetBalanceAsync(id);
+            var result = await _addressProvider.GetMainInfoAsync(id);
             if (result != null)
             {
-                return View(AddressViewModel.Create(result, await _assetService.GetAssetDefinitionDictionaryAsync()));
+                return View(AddressMainInfoViewModel.Create(result));
             }
 
             return View("NotFound");
         }
 
+        [Route("address/balance/{id}")]
+        public async Task<ActionResult> Balance(string id)
+        {
+            var result = await _addressProvider.GetBalanceAsync(id);
+            if (result != null)
+            {
+                return View(AddressBalanceViewModel.Create(result, await _assetService.GetAssetDefinitionDictionaryAsync()));
+            }
+
+            return View("NotFound");
+        }
+
+        [Route("address/transactions/{id}")]
         public async Task<ActionResult> Transactions(string id)
         {
             return View(AddressTransactionsViewModel.Create(await _addressProvider.GetTransactions(id)));

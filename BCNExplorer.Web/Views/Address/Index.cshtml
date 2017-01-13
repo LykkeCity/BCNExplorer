@@ -1,6 +1,6 @@
 ﻿@using BCNExplorer.Web.Helpers
 @using Common
-@model AddressViewModel
+@model AddressMainInfoViewModel
 @{
     ViewData["Title"] = "Address - " + Model.AddressId;
 }
@@ -48,88 +48,16 @@
         <h3>Balance</h3>
     </div>
 </section>
-
-<section class="section section--balance">
-    <div class="container">
-        <ul class="issuer_list row">
-            <li class="issuer_list__item col-xs-12 col-sm-6">
-                <table class="issuer">
-                    <tbody>
-                    <tr>
-                        <td class="issuer__img"><img src="/img/assets/bitcoin.png" width="48" alt=""></td>
-                        <td class="issuer__content">
-                            <div class="issuer__name">Bitcoin</div>
-                            @if (Model.ShowUnconfirmedBalance)
-                            {
-                                <div class="text-muted">Unconfirmed balance</div>
-                            }
-                        </td>
-                        <td class="issuer__content text-right">
-                            <div class="wallet_value">@BitcoinUtils.SatoshiToBtc(Model.Balance).ToStringBtcFormat() BTC</div>
-                            @if (Model.ShowUnconfirmedBalance)
-                            {
-                                <div class="text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToStringBtcFormat() BTC</div>
-                            }
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </li>
-            @foreach (var asset in Model.Assets)
-            {
-                var assetDivisibity = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Divisibility, 0);
-                var assetShortName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.NameShort, "");
-                var assetName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Name, asset.AssetId);
-                var assetIcon = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.IconUrl, null);
-
-                var assetUrl = Model.AssetDic.Dic.ContainsKey(asset.AssetId) ? Url.Action("Index", "Asset", new { id = asset.AssetId }) : null;
-
-                <li class="issuer_list__item col-xs-12 col-sm-6">
-                    <table class="issuer">
-                        <tbody>
-                            <tr>
-                                <td class="issuer__img">
-                                    <a href="@assetUrl">
-
-                                        <img src="@(!string.IsNullOrEmpty(assetIcon) ? assetIcon: "/img/be/asset_default.jpg")" width="48" alt="@assetName">
-                                    </a>
-                                </td>
-                                <td class="issuer__content">
-                                    <div class="issuer__name">
-                                        <a href="@assetUrl">
-                                            @assetName
-                                        </a>
-                                    </div>
-                                    @if (asset.ShowUnconfirmedBalance)
-                                    {
-                                        <div class="text-muted">Unconfirmed balance</div>
-                                    }
-                                </td>
-                                <td class="issuer__content text-right">
-                                    <div class="wallet_value">@BitcoinUtils.CalculateColoredAssetQuantity(asset.Quantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
-                                    @if (asset.ShowUnconfirmedBalance)
-                                    {
-                                        <div class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(asset.UnconfirmedQuantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
-                                    }
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </li>
-            }
-
-        </ul>
-    </div>
-</section>
+@UiHelpers.Loader(htmlId: "js-balance-loader")
 
 <div id="js-address-transactions" data-load-url="@Url.Action("Transactions", "Address", new {id = Model.AddressId})">
-    <div class="js-loader">
-        <div class="spinner_container">
-            <div class="spinner">
-                <div class="spinner__inside"></div>
-            </div>
+    <section class="section section--heading">
+        <div class="container">
+            <h3>Transactions</h3>
         </div>
-    </div>
+    </section>
+
+    @UiHelpers.Loader(htmlClass: "js-loader")
 </div>
 
 

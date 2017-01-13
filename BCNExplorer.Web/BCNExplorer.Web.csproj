@@ -247,11 +247,12 @@
     </Compile>
     <Compile Include="Helpers\ClaimsHelper.cs" />
     <Compile Include="Helpers\QRCode.cs" />
+    <Compile Include="Models\AddressMainInfoViewModel.cs" />
     <Compile Include="Models\AssetCoinholdersViewModel.cs" />
     <Compile Include="Models\AssetDictionary.cs" />
     <Compile Include="Models\AssetDirectoryViewModel.cs" />
     <Compile Include="Models\AssetViewModel.cs" />
-    <Compile Include="Models\AddressViewModel.cs" />
+    <Compile Include="Models\AddressBalanceViewModel.cs" />
     <Compile Include="Models\LastBlockViewModel.cs" />
     <Compile Include="Models\BlockViewModel.cs" />
     <Compile Include="Models\TransactionIdList.cs" />
@@ -454,6 +455,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Service References\Application Insights\ConnectedService.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Address\Balance.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
