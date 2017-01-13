@@ -31,7 +31,7 @@ namespace TestConsole
                 .GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName)
                 .GetCollection<AddressAssetBalanceChangeMongoEntity>("asset-balances");
             var indexerClientFactory = ioc.GetObject<IndexerClientFactory>();
-            var mainChainRepository = ioc.GetObject<MainChainRepository>();
+            var mainChainRepository = ioc.GetObject<MainChainService>();
 
             var okFile = "./AddAddressesFromBlockChain-ok.txt";
             var failFile = "./AddAddressesFromBlockChain-fail.txt";

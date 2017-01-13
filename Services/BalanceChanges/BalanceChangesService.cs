@@ -16,7 +16,7 @@ namespace Services.BalanceChanges
     {
         private readonly IAssetBalanceChangesRepository _balanceChangesRepository;
         private readonly IndexerClientFactory _indexerClient;
-        private readonly MainChainRepository _mainChainRepository;
+        private readonly MainChainService _mainChainService;
         private readonly ILog _log;
         private readonly Network _network;
 
@@ -24,13 +24,13 @@ namespace Services.BalanceChanges
         public BalanceChangesService(
             IAssetBalanceChangesRepository balanceChangesRepository,
             IndexerClientFactory indexerClient,
-            MainChainRepository mainChainRepository, 
+            MainChainService mainChainService, 
             ILog log,
             BaseSettings baseSettings)
         {
             _balanceChangesRepository = balanceChangesRepository;
             _indexerClient = indexerClient;
-            _mainChainRepository = mainChainRepository;
+            _mainChainService = mainChainService;
             _log = log;
             _network = baseSettings.UsedNetwork();
         }
@@ -38,7 +38,7 @@ namespace Services.BalanceChanges
         public async Task<SaveAddressResult> SaveAddressChangesAsync(int fromBlockHeight, int toBlockHeight, BitcoinAddress[] addresses)
         {
             var tasksToAwait = new List<Task>();
-            var mainChain = await _mainChainRepository.GetMainChainAsync();
+            var mainChain = await _mainChainService.GetMainChainAsync();
 
             var changedAssetIds = new List<string>();
             foreach (var coloredAddress in addresses.Select(p=> new BitcoinColoredAddress(p).ToString()).Distinct())

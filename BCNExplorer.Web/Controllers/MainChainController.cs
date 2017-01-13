@@ -7,12 +7,12 @@ namespace BCNExplorer.Web.Controllers
 {
     public class MainChainController:Controller
     {
-        private readonly CachedMainChainRepository _cachedMainChainRepository;
+        private readonly CachedMainChainService _cachedMainChainService;
         private readonly BaseSettings _baseSettings;
 
-        public MainChainController(CachedMainChainRepository cachedMainChainRepository, BaseSettings baseSettings)
+        public MainChainController(CachedMainChainService cachedMainChainService, BaseSettings baseSettings)
         {
-            _cachedMainChainRepository = cachedMainChainRepository;
+            _cachedMainChainService = cachedMainChainService;
             _baseSettings = baseSettings;
         }
 
@@ -21,7 +21,7 @@ namespace BCNExplorer.Web.Controllers
         {
             if (_baseSettings.Secret == secret)
             {
-                await _cachedMainChainRepository.ReloadAsync();
+                await _cachedMainChainService.ReloadAsync();
 
                 return new EmptyResult();
             }

@@ -105,8 +105,8 @@
     <Compile Include="BalanceChanges\BalanceChangesService.cs" />
     <Compile Include="Binders\ServicesBinder.cs" />
     <Compile Include="Block\BlockService.cs" />
-    <Compile Include="MainChain\CachedMainChainRepository.cs" />
-    <Compile Include="MainChain\MainChainRepository.cs" />
+    <Compile Include="MainChain\CachedMainChainService.cs" />
+    <Compile Include="MainChain\MainChainService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\SearchService.cs" />
     <Compile Include="Transaction\TransactionService.cs" />

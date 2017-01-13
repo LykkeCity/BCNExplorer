@@ -21,7 +21,7 @@ namespace TestConsole.AssetScanner
             Console.WriteLine("AddAssetDefinitionsHistory started");
 
             var baseSettings = container.GetObject<BaseSettings>();
-            var mainChainRepo = container.GetObject<MainChainRepository>();
+            var mainChainRepo = container.GetObject<MainChainService>();
             var indexerClient = container.GetObject<IndexerClientFactory>().GetIndexerClient();
             AssetDataCommandProducer assetDataCommandProducer = container.GetObject<AssetDataCommandProducer>();
 

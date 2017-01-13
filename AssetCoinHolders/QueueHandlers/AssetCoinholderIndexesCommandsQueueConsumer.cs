@@ -22,14 +22,14 @@ namespace AssetCoinHoldersScanner.QueueHandlers
         private readonly IAssetBalanceChangesRepository _balanceChangesRepository;
         private readonly IAssetService _assetService;
         private readonly ITransactionService _transactionService;
-        private readonly MainChainRepository _mainChainRepository;
+        private readonly MainChainService _mainChainService;
 
         public AssetCoinholderIndexesCommandsQueueConsumer(ILog log, 
             ICoinholderIndexesQueueReader queueReader,
             IAssetCoinholdersIndexRepository assetCoinholdersIndexRepository, 
             IAssetBalanceChangesRepository balanceChangesRepository, 
             IAssetService assetService, 
-            ITransactionService transactionService, MainChainRepository mainChainRepository)
+            ITransactionService transactionService, MainChainService mainChainService)
         {
             _log = log;
             _queueReader = queueReader;
@@ -37,7 +37,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
             _balanceChangesRepository = balanceChangesRepository;
             _assetService = assetService;
             _transactionService = transactionService;
-            _mainChainRepository = mainChainRepository;
+            _mainChainService = mainChainService;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -65,7 +65,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
                 var asset = await _assetService.GetAssetAsync(context.AssetId);
                 if (asset != null)
                 {
-                    var mainChain = await _mainChainRepository.GetMainChainAsync();
+                    var mainChain = await _mainChainService.GetMainChainAsync();
 
                     var balanceSummary = _balanceChangesRepository.GetSummaryAsync(asset.AssetIds.ToArray());
                     var blocksWithChanges = _balanceChangesRepository.GetBlocksWithChanges(asset.AssetIds);

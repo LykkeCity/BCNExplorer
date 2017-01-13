@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using AzureRepositories.Binders;
+using Common;
 using Common.Cache;
 using Common.IocContainer;
 using Common.Log;
@@ -8,6 +9,7 @@ using Core.Block;
 using Core.SearchService;
 using Core.Settings;
 using Core.Transaction;
+using Providers;
 using Providers.Providers.Asset;
 using Services.Address;
 using Services.Asset;
@@ -23,9 +25,9 @@ namespace Services.Binders
     {
         public static void BindServices(this IoC ioc, BaseSettings baseSettings, ILog log)
         {
-            ioc.RegisterSingleTone<MainChainRepository>();
+            ioc.RegisterFactorySingleTone(()=> new MainChainService(ioc.GetObject<IndexerClientFactory>(), AzureRepoFactories.CreateMainChainBlobStorage(baseSettings, log), log));
             ioc.RegisterSingleTone<BalanceChangesService>();
-            ioc.RegisterFactorySingleTone( ()=> new CachedMainChainRepository(ioc.GetObject<MainChainRepository>(), new MemoryCacheManager(), cachedTimeInMinutes: 0));
+            ioc.RegisterFactorySingleTone( ()=> new CachedMainChainService(ioc.GetObject<MainChainService>(), new MemoryCacheManager(), cachedTimeInMinutes: 0));
 
             ioc.RegisterPerCall<IBlockService, BlockService>();
             ioc.RegisterPerCall<ITransactionService, TransactionService>();

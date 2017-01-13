@@ -9,17 +9,17 @@ using NBitcoin;
 
 namespace Services.MainChain
 {
-    public class CachedMainChainRepository
+    public class CachedMainChainService
     {
         private const string CacheKey = "MainChainCached";
 
-        private readonly MainChainRepository _sourceRepository;
+        private readonly MainChainService _sourceService;
         private readonly ICacheManager _cacheManager;
         private readonly int _cachedTimeInMinutes;
 
-        public CachedMainChainRepository(MainChainRepository sourceRepository, ICacheManager cacheManager, int cachedTimeInMinutes)
+        public CachedMainChainService(MainChainService sourceService, ICacheManager cacheManager, int cachedTimeInMinutes)
         {
-            _sourceRepository = sourceRepository;
+            _sourceService = sourceService;
             _cacheManager = cacheManager;
             _cachedTimeInMinutes = cachedTimeInMinutes;
         }
@@ -44,7 +44,7 @@ namespace Services.MainChain
 
         public async Task  ReloadAsync()
         {
-            var updated = await _sourceRepository.GetMainChainAsync();
+            var updated = await _sourceService.GetMainChainAsync();
 
             _cacheManager.Set(CacheKey, updated, _cachedTimeInMinutes);
         }

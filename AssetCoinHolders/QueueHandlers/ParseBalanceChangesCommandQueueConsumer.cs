@@ -20,7 +20,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
         private readonly IParseBlockQueueReader _queueReader;
         private readonly ILog _log;
         private readonly IndexerClientFactory _indexerClient;
-        private readonly MainChainRepository _mainChainRepository;
+        private readonly MainChainService _mainChainService;
         private readonly BaseSettings _baseSettings;
         private readonly BalanceChangesService _balanceChangesService;
         private readonly AssetChangesParseBlockCommandProducer _parseBlockCommandProducer;
@@ -32,7 +32,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
         public ParseBalanceChangesCommandQueueConsumer(ILog log, 
             IParseBlockQueueReader queueReader,
             IndexerClientFactory indexerClient, 
-            MainChainRepository mainChainRepository, 
+            MainChainService mainChainService, 
             BaseSettings baseSettings, 
             BalanceChangesService balanceChangesService, 
             AssetChangesParseBlockCommandProducer parseBlockCommandProducer, 
@@ -41,7 +41,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
             _log = log;
             _queueReader = queueReader;
             _indexerClient = indexerClient;
-            _mainChainRepository = mainChainRepository;
+            _mainChainService = mainChainService;
             _baseSettings = baseSettings;
             _balanceChangesService = balanceChangesService;
             _parseBlockCommandProducer = parseBlockCommandProducer;
@@ -67,7 +67,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
 
             try
             {
-                var mainChain = await _mainChainRepository.GetMainChainAsync();
+                var mainChain = await _mainChainService.GetMainChainAsync();
 
                 var block = _indexerClient.GetIndexerClient().GetBlock(mainChain.GetBlock(context.BlockHeight).HashBlock);
                 var addressesToTrack = (await block.GetAddressesWithColoredMarkerAsync(_baseSettings.UsedNetwork(), _indexerClient.GetIndexerClient())).ToArray();

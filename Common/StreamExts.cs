@@ -16,7 +16,19 @@ namespace Common
             var b2 = await stream.ReadByteFromSocket();
             return (ushort)(b1 + b2*256);
         }
-
+        public static byte[] ReadFully(this Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
+        }
         public static async Task ReadUntilAsync(this Stream stream, List<byte> list, byte symbol)
         {
             byte b;

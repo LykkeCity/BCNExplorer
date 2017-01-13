@@ -14,17 +14,17 @@ namespace AssetCoinHoldersScanner.TimerFunctions
         private readonly ILog _log;
         private readonly AssetChangesParseBlockCommandProducer _parseBlockCommandProducer;
         private readonly IAssetBalanceChangesRepository _parsedBlockRepository;
-        private readonly MainChainRepository _mainChainRepository;
+        private readonly MainChainService _mainChainService;
 
         public ParseBlocksFunctions(ILog log,
             AssetChangesParseBlockCommandProducer parseBlockCommandProducer,
             IAssetBalanceChangesRepository parsedBlockRepository, 
-            MainChainRepository mainChainRepository)
+            MainChainService mainChainService)
         {
             _log = log;
             _parseBlockCommandProducer = parseBlockCommandProducer;
             _parsedBlockRepository = parsedBlockRepository;
-            _mainChainRepository = mainChainRepository;
+            _mainChainService = mainChainService;
         }
 
         public async Task ParseLastBlock([TimerTrigger("00:05:00", RunOnStartup = true)] TimerInfo timer)
@@ -33,7 +33,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             {
                 await _log.WriteInfo("ParseBlocksFunctions", "ParseLastBlock", null, "Started");
 
-                var mainChain = await _mainChainRepository.GetMainChainAsync();
+                var mainChain = await _mainChainService.GetMainChainAsync();
 
                 var lastParsedBlockHeight = await _parsedBlockRepository.GetLastParsedBlockHeightAsync();
                 // to put notconfirmed tx-s (at last parse block iteration) in prev block. Now this tx have to be confirmed

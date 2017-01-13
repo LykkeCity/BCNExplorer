@@ -1,6 +1,7 @@
 ﻿using AzureRepositories.Asset;
 using AzureRepositories.AssetCoinHolders;
 using AzureRepositories.AssetDefinition;
+using AzureStorage.Blob;
 using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common.Log;
@@ -55,6 +56,11 @@ namespace AzureRepositories.Binders
         {
             var client = new MongoClient(baseSettings.Db.AssetBalanceChanges.ConnectionString);
             return new AssetBalanceChangesRepository(client.GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName), log);
+        }
+
+        public static AzureBlobStorage CreateMainChainBlobStorage(BaseSettings baseSettings, ILog log)
+        {
+            return new AzureBlobStorage(baseSettings.Db.AssetsConnString);
         }
     }
 }
