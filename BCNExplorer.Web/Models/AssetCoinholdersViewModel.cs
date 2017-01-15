@@ -43,7 +43,7 @@ namespace BCNExplorer.Web.Models
                 Total = BitcoinUtils.CalculateColoredAssetQuantity(total, asset.Divisibility),
                 Pagination = BlockPagination.Create(blocksWithChanges.Select(p=>p.Height), atBlockHeight??currentBlock?.Height, currentBlock),
                 CoinholdersCount = addressSummaries.Count,
-                AtBlockDateTime = atBlockInfo?.Time
+                AtBlockDateTime = atBlockInfo?.Time.ToUniversalTime()
             };
         }
 
