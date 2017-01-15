@@ -13,6 +13,12 @@ namespace BCNExplorer.Web
             bundles.Add(new ScriptBundle("~/bundles/js/bootstrap").Include(
                 "~/js/vendor/bootstrap.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/js/bootstrap-datetimepicker")
+                .Include("~/js/vendor/bootstrap-datetimepicker.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/moment")
+                .Include("~/js/vendor/moment.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/js/fastclick").Include(
                 "~/js/vendor/fastclick.min.js"));
 

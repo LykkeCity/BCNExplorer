@@ -2160,9 +2160,11 @@ a { color: inherit; }
 
 .block_nav__field.change_block .form-control { width: 240px; width: 15rem; padding-left: 100px; padding-left: 6.25rem; padding-right: 40px; padding-right: 2.5rem; }
 
-.block_nav__field .form-control.datetimepicker { width: 145px; width: 9.0625rem; }
+.block_nav__field .input-group.datetimepicker .form-control { width: 145px; width: 9.0625rem; }
 
-.block_nav__field .form-control.timepicker { width: 120px; width: 7.5rem; }
+.block_nav__field .input-group.timepicker .form-control { width: 120px; width: 7.5rem; }
+
+.block_nav__field .input-group-addon { pointer-events: none; }
 
 .block_nav__field .time { display: inline-block; vertical-align: middle; }
 

@@ -79,16 +79,19 @@ namespace BCNExplorer.Web.Controllers
                 var addressChangesTask = _balanceChangesRepository.GetBlocksWithChanges(asset.AssetIds);
                 var lastBlockTask = _blockService.GetLastBlockHeaderAsync();
                 Task<IDictionary<string, double>> addressChangesAtBlockTask;
+                Task<IBlockHeader> atBlockInfoTask;
                 if (at != null)
                 {
+                    atBlockInfoTask = _blockService.GetBlockHeaderAsync(at.ToString());
                     addressChangesAtBlockTask = _balanceChangesRepository.GetAddressQuantityChangesAtBlock(at.Value, asset.AssetIds.ToArray());
                 }
                 else
                 {
+                    atBlockInfoTask = Task.FromResult((IBlockHeader) null);
                     addressChangesAtBlockTask = Task.FromResult((IDictionary<string, double>)new Dictionary<string, double>());
                 }
 
-                await Task.WhenAll(addressChangesAtBlockTask, summaryTask, addressChangesTask, lastBlockTask);
+                await Task.WhenAll(addressChangesAtBlockTask, summaryTask, addressChangesTask, lastBlockTask, atBlockInfoTask);
                 
                 var result = AssetCoinholdersViewModel.Create(
                     AssetViewModel.Create(asset), 
@@ -96,7 +99,9 @@ namespace BCNExplorer.Web.Controllers
                     at, 
                     addressChangesAtBlockTask.Result, 
                     addressChangesTask.Result,
-                    lastBlockTask.Result);
+                    lastBlockTask.Result,
+                    atBlockInfoTask.Result
+                    );
 
                 return View("Owners", result);
             }

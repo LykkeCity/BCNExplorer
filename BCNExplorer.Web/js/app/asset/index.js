@@ -41,9 +41,9 @@
 
 
     var submitGoToBlock = function () {
-        $('#js-go-to-block').attr('readonly', true);
+        $('.js-set-readonly-on-submit').attr('readonly', true);
         var at = $('#js-go-to-block').val();
-        var helpData = $.parseJSON($('#submit-data').val());
+        var helpData = $.parseJSON($('#submit-go-to-block-url').val());
 
         var submitData = {
             at: at
@@ -61,6 +61,8 @@
         }).done(function (resp) {
             $loader.hide();
             $panelToUpdate.html(resp);
+
+            $panelToUpdate.trigger('owners-data-loaded');
             $('#js-go-to-block').focus();
         });
     }
@@ -77,4 +79,65 @@
     $('body').on('keyup', '#js-go-to-block', $.debounce(1500, function () {
         submitGoToBlock();
     }));
+
+    (function () {
+        var initDatapickers = function () {
+            var dateFormat = 'DD.MM.YYYY';
+            var timeFormat = 'HH:mm';
+
+            var $date = $('#datetimepicker');
+            var $time = $('#timepicker');
+            var now = moment.utc();
+            
+            if (!$date.val()) {
+                $date.val(now.format(dateFormat));
+            }
+
+            if (!$time.val()) {
+                $time.val(now.format(timeFormat));
+            }
+
+            $date.datetimepicker({
+                format: dateFormat,
+                icons: {
+                    time: "icon--clock",
+                    date: "icon--cal",
+                    up: "icon--chevron-thin-up",
+                    down: "icon--chevron-thin-down",
+                    previous: "icon--chevron-thin-left",
+                    next: "icon--chevron-thin-right"
+                }
+            });
+
+            $time.datetimepicker({
+                format: timeFormat,
+                icons: {
+                    time: "icon--clock",
+                    date: "icon--cal",
+                    up: "icon--chevron-thin-up",
+                    down: "icon--chevron-thin-down",
+                    previous: "icon--chevron-thin-left",
+                    next: "icon--chevron-thin-right"
+                }
+            });
+
+            var submitData = function() {
+                alert(1);
+            }
+
+            $date.on('dp.change', function() {
+                submitData();
+            });
+
+            $time.on('dp.change', $.debounce(1500, function () {
+                submitData();
+            }));
+        }
+
+
+
+        $('body').on('panel-loaded owners-data-loaded', '#owners', function (e) {
+            initDatapickers();
+        });
+    })();
 })

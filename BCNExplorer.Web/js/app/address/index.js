@@ -32,5 +32,4 @@
                 .addClass('current-address-transaction');
         });
     })();
-
 })

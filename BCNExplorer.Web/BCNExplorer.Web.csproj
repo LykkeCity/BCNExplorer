@@ -334,10 +334,12 @@
     <Content Include="js\app\asset\index.js" />
     <Content Include="js\app\common\functions.js" />
     <Content Include="js\vendor\angular-mocks.js" />
+    <Content Include="js\vendor\bootstrap-datetimepicker.min.js" />
     <Content Include="js\vendor\bootstrap.min.js" />
     <Content Include="js\vendor\clipboard.min.js" />
     <Content Include="js\vendor\fastclick.min.js" />
     <Content Include="js\vendor\html5shiv.js" />
+    <Content Include="js\vendor\moment.js" />
     <Content Include="js\vendor\throttle-debounce.min.js" />
     <Content Include="js\vendor\jquery.inview.min.js" />
     <Content Include="js\vendor\jquery.min.js" />

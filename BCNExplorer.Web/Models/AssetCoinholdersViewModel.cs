@@ -16,13 +16,16 @@ namespace BCNExplorer.Web.Models
         public int CoinholdersCount { get; set; }
         
         public BlockPagination Pagination { get; set; }
-        
+
+        public DateTime? AtBlockDateTime { get; set; }
+         
         public static AssetCoinholdersViewModel Create(AssetViewModel asset,
             IBalanceSummary balanceSummary, 
             int? atBlockHeight,
             IDictionary<string, double> addressChanges,
             IEnumerable<IBalanceBlock> blocksWithChanges,
-            IBlockHeader currentBlock)
+            IBlockHeader currentBlock,
+            IBlockHeader atBlockInfo)
         {
             var total = balanceSummary.AddressSummaries.Sum(p => p.Balance);
             var addressSummaries = balanceSummary.AddressSummaries
@@ -39,7 +42,8 @@ namespace BCNExplorer.Web.Models
                 AddressSummaries = addressSummaries,
                 Total = BitcoinUtils.CalculateColoredAssetQuantity(total, asset.Divisibility),
                 Pagination = BlockPagination.Create(blocksWithChanges.Select(p=>p.Height), atBlockHeight??currentBlock?.Height, currentBlock),
-                CoinholdersCount = addressSummaries.Count
+                CoinholdersCount = addressSummaries.Count,
+                AtBlockDateTime = atBlockInfo?.Time
             };
         }
 
