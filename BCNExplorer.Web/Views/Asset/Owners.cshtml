@@ -13,23 +13,24 @@
             </div>
             <div class="col-xs-7 col-sm-8">
                 <div class="block_nav">
-                    @if (Model.Pagination.ShowPrev)
-                    {
-                        <div class="block_nav__left">
-                            <a class="btn btn--icon js-change-go-to-block" title="@Model.Pagination.PrevBlock" data-block="@Model.Pagination.PrevBlock"><i class="icon icon--arrow_left_big"></i></a>
-                            @*   <a class="btn btn--icon js-change-go-to-block" data-block="1"><i class="icon icon--arrow_left_big"></i></a>*@
-                        </div>
-                    }
-                    <div class="block_nav__field">
-                        <label class="control-label" for="js-go-to-block">Block:</label>
-                        <input type="text" class="form-control js-submit-on-change " id="js-go-to-block" name="at" value="@Model.Pagination.AtBlock">
+                    <div class="block_nav__field change_block">
+                        @if (Model.Pagination.ShowPrev)
+                        {
+                            <div class="block_nav__left">
+                                <a class="btn btn--icon js-change-go-to-block" title="@Model.Pagination.PrevBlock" data-block="@Model.Pagination.PrevBlock"><i class="icon icon--prev_transaction"></i></a>
+                            </div>
+                        }
+
+                        <label class="control-label control-label--inner" for="js-go-to-block">Block:</label>
+                        <input type="text" class="form-control js-submit-on-change" id="js-go-to-block" name="at" value="@Model.Pagination.AtBlock">
+
+                        @if (Model.Pagination.ShowNext)
+                        {
+                            <div class="block_nav__right">
+                                <a  class="btn btn--icon js-change-go-to-block" title="@Model.Pagination.NextBlock" data-block="@Model.Pagination.NextBlock"><i class="icon icon--next_transaction"></i></a>
+                            </div>
+                        }
                     </div>
-                    @if (Model.Pagination.ShowNext)
-                    {
-                        <div class="block_nav__right">
-                            <a class="btn btn--icon js-change-go-to-block" title="@Model.Pagination.NextBlock" data-block="@Model.Pagination.NextBlock"><i class="icon icon--arrow_right_big"></i></a>
-                        </div>
-                    }
                 </div>
             </div>
         </div>
