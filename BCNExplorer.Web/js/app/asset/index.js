@@ -124,7 +124,7 @@
             var submitData = function() {
                 var url = $.parseJSON($('#js-submit-go-to-block-time').val()).url;
 
-                var date = moment($date.val(), dateFormat);
+                var date = moment.utc($date.val(), dateFormat);
                 var time = moment($time.val(), timeFormat);
                 var fullDate = date;
                 fullDate.add(time.get('hour'), 'hour');
@@ -133,7 +133,7 @@
                 $('.js-set-readonly-on-submit').attr('readonly', true);
 
                 var submitData = {
-                    at: fullDate.format()
+                    at: fullDate.utc().format()
                 };
 
                 var $panelToUpdate = $('#owners .js-panel-content');
