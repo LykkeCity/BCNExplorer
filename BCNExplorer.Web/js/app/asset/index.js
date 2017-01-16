@@ -89,13 +89,13 @@
             var $time = $('#timepicker');
             var now = moment.utc();
             
-            if (!$date.val()) {
-                $date.val(now.format(dateFormat));
-            }
+            //if (!$date.val()) {
+            //    $date.val(now.format(dateFormat));
+            //}
 
-            if (!$time.val()) {
-                $time.val(now.format(timeFormat));
-            }
+            //if (!$time.val()) {
+            //    $time.val(now.format(timeFormat));
+            //}
 
             $date.datetimepicker({
                 format: dateFormat,

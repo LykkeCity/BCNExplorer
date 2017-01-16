@@ -8,7 +8,7 @@ namespace Providers.Helpers
     {
         public static ChainedBlock GetClosestToTimeBlock(this ConcurrentChain chain, DateTime utcTime)
         {
-            return chain.ToEnumerable(true).FirstOrDefault(p=>p.Header.BlockTime <= utcTime);
+            return chain.ToEnumerable(true).FirstOrDefault(p => p.Header.BlockTime.UtcDateTime <= utcTime);
         }
     }
 }
