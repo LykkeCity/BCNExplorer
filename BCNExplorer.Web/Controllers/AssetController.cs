@@ -7,6 +7,8 @@ using BCNExplorer.Web.Models;
 using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
 using Core.Block;
+using Providers.Helpers;
+using Services.MainChain;
 
 namespace BCNExplorer.Web.Controllers
 {
@@ -16,13 +18,17 @@ namespace BCNExplorer.Web.Controllers
         private readonly IAssetBalanceChangesRepository _balanceChangesRepository;
         private readonly IBlockService _blockService;
 
+        private readonly CachedMainChainService _mainChainService;
+
         public AssetController(IAssetService assetService, 
             IAssetBalanceChangesRepository balanceChangesRepository, 
-            IBlockService blockService)
+            IBlockService blockService,
+            CachedMainChainService mainChainService)
         {
             _assetService = assetService;
             _balanceChangesRepository = balanceChangesRepository;
             _blockService = blockService;
+            _mainChainService = mainChainService;
         }
 
         [Route("asset/{id}")]
@@ -42,19 +48,6 @@ namespace BCNExplorer.Web.Controllers
         {
             return View();
         }
-        
-        public async Task<ActionResult> AssetDirectoryData()
-        {
-            var assetDefinitions = _assetService.GetAssetDefinitionsAsync();
-            var assetCoinholdersIndexes = _assetService.GetAssetCoinholdersIndexAsync();
-            var assetScores = _assetService.GetAssetScoreDictionaryAsync();
-
-            await Task.WhenAll(assetCoinholdersIndexes, assetDefinitions, assetScores);
-
-            var result = AssetDirectoryViewModel.Create(assetDefinitions.Result, assetCoinholdersIndexes.Result, assetScores.Result);
-
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
 
         [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         public Task<ActionResult> Owners(string id)
@@ -67,6 +60,21 @@ namespace BCNExplorer.Web.Controllers
         {
             return _OwnersInner(id, at);
         }
+        
+        public async Task<ActionResult> OwnersHistoryByDate(DateTime at, string id)
+        {
+            var mainChain = await _mainChainService.GetMainChainAsync();
+
+            var block = mainChain.GetClosestToTimeBlock(at);
+            
+            if (block != null)
+            {
+                return RedirectToAction("OwnersHistory", new {id = id, at = block.Height});
+            }
+
+            return new HttpNotFoundResult();
+        }
+
 
         private async Task<ActionResult> _OwnersInner(string id, int? at = null)
         {

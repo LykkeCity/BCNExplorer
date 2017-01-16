@@ -4,7 +4,9 @@
     ViewData["Title"] = "Asset Owners - " + string.Join(", ", Model.Asset.AssetIds);
     Layout = null;
 }
-@Html.Hidden("submit-go-to-block-url", new {url = Url.Action("OwnersHistory", "Asset", new {id= Model.Asset.AssetIds.FirstOrDefault()})}.ToJson())
+@Html.Hidden("js-submit-go-to-block-height", new {url = Url.Action("OwnersHistory", "Asset", new {id= Model.Asset.AssetIds.FirstOrDefault()})}.ToJson())
+
+@Html.Hidden("js-submit-go-to-block-time", new { url = Url.Action("OwnersHistoryByDate", "Asset", new { id = Model.Asset.AssetIds.FirstOrDefault() }) }.ToJson())
 <section class="section section--heading">
     <div class="container">
         <div class="row">
@@ -33,7 +35,7 @@
                     </div>
                     <div class="block_nav__field">
                         <div class="input-group date datetimepicker">
-                            <input type="text" class="form-control js-set-readonly-on-submit" id="datetimepicker" value="@(Model.AtBlockDateTime?.ToString("DD.MM.YYYY"))" />
+                            <input type="text" class="form-control js-set-readonly-on-submit" id="datetimepicker" value="@(Model.AtBlockDateTime?.ToString("dd.MM.yyyy"))" />
                             <label class="input-group-addon open-datetimepicker" for="datetimepicker">
                                 <span class="icon icon--cal"></span>
                             </label>

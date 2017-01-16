@@ -43,7 +43,7 @@
     var submitGoToBlock = function () {
         $('.js-set-readonly-on-submit').attr('readonly', true);
         var at = $('#js-go-to-block').val();
-        var helpData = $.parseJSON($('#submit-go-to-block-url').val());
+        var helpData = $.parseJSON($('#js-submit-go-to-block-height').val());
 
         var submitData = {
             at: at
@@ -122,14 +122,39 @@
             });
 
             var submitData = function() {
-                alert(1);
+                var url = $.parseJSON($('#js-submit-go-to-block-time').val()).url;
+
+                var date = moment($date.val(), dateFormat);
+                var time = moment($time.val(), timeFormat);
+                var fullDate = date;
+                fullDate.add(time.get('hour'), 'hour');
+                fullDate.add(time.get('minute'), 'minute');
+
+                $('.js-set-readonly-on-submit').attr('readonly', true);
+
+                var submitData = {
+                    at: fullDate.format()
+                };
+
+                var $panelToUpdate = $('#owners .js-panel-content');
+                var $panelToHide = $('#owners .js-coinholders-data');
+                var $loader = $('#owners .js-panel-loader');
+
+                $loader.show();
+                $panelToHide.hide();
+                $.ajax(url, {
+                    data: submitData,
+                    method: 'get'
+                }).done(function (resp) {
+                    $loader.hide();
+                    $panelToUpdate.html(resp);
+
+                    $panelToUpdate.trigger('owners-data-loaded');
+                });
+
             }
 
-            $date.on('dp.change', function() {
-                submitData();
-            });
-
-            $time.on('dp.change', $.debounce(1500, function () {
+            $time.add($date).on('dp.change', $.debounce(1500, function () {
                 submitData();
             }));
         }

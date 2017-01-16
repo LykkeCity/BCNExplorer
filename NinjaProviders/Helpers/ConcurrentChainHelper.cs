@@ -6,9 +6,9 @@ namespace Providers.Helpers
 {
     public static class ConcurrentChainHelper
     {
-        public static ChainedBlock GetClosestToTimeBlock(this ConcurrentChain chain, DateTime time)
+        public static ChainedBlock GetClosestToTimeBlock(this ConcurrentChain chain, DateTime utcTime)
         {
-            return chain.ToEnumerable(true).FirstOrDefault(p=>p.Header.BlockTime<=time);
+            return chain.ToEnumerable(true).FirstOrDefault(p=>p.Header.BlockTime <= utcTime);
         }
     }
 }
