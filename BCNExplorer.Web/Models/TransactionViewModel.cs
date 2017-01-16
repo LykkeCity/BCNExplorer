@@ -325,8 +325,9 @@ namespace BCNExplorer.Web.Models
                     var titleItem = p.First().Clone<T>();
                     var allItems = p.ToList();
 
-                    titleItem.Value = p.Sum(ti => ti.Value);
+                    titleItem.Value = (double) p.Sum(ti => (decimal) ti.Value);
                     titleItem.SetAggregatedTransactionCount(allItems.Count);
+
                     return new AggregatedInOut<T>
                     {
                         TitleItem = titleItem,
