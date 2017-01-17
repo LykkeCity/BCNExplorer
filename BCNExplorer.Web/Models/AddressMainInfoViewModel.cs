@@ -13,6 +13,8 @@ namespace BCNExplorer.Web.Models
         public string UncoloredAddress { get; set; }
         public string ColoredAddress { get; set; }
 
+        public bool IsColoredAddress => UncoloredAddress != null;
+
 
 
         public static AddressMainInfoViewModel Create(IAddressMainInfo addressMainInfo)
