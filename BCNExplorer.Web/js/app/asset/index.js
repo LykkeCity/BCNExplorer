@@ -87,15 +87,6 @@
 
             var $date = $('#datetimepicker');
             var $time = $('#timepicker');
-            var now = moment.utc();
-
-            //if (!$date.val()) {
-            //    $date.val(now.format(dateFormat));
-            //}
-
-            //if (!$time.val()) {
-            //    $time.val(now.format(timeFormat));
-            //}
 
             $date.datetimepicker({
                 format: dateFormat,
@@ -155,6 +146,8 @@
             }
 
             $time.add($date).on('dp.change', $.debounce(1500, function () {
+                $time.data("DateTimePicker").destroy();
+                $date.data("DateTimePicker").destroy();
                 submitData();
             }));
         }

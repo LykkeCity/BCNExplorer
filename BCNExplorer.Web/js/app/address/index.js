@@ -49,6 +49,7 @@
 
             $time.datetimepicker({
                 format: timeFormat,
+                stepping: 10,
                 icons: {
                     time: "icon--clock",
                     date: "icon--cal",
@@ -88,6 +89,8 @@
             }
 
             $time.add($date).on('dp.change', $.debounce(1500, function () {
+                $time.data("DateTimePicker").destroy();
+                $date.data("DateTimePicker").destroy();
                 submit();
             }));
         }
