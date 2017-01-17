@@ -1855,8 +1855,6 @@ a.action_link:hover img, button.action_link:hover img { opacity: 1; }
 
 .section--balance .wallet_value { line-height: 30px; line-height: 1.875rem; font-size: 18px; font-size: 1.125rem; }
 
-.section--balance .issuer_list__item:last-child .issuer tr:last-child td { border-bottom: 0 !important; }
-
 .section--balance .issuer__img { padding-top: 10px; padding-top: 0.625rem; }
 
 .section--balance .issuer__content { padding-top: 10px; padding-top: 0.625rem; padding-bottom: 10px; padding-bottom: 0.625rem; height: 70px; height: 4.375rem; }
@@ -1884,6 +1882,8 @@ a { color: inherit; }
 
 .page .page__header p { font-size: 16px; font-size: 1rem; }
 
+.page .page__header.noborder { margin-bottom: 0; border-bottom: 0; padding-bottom: 0; }
+
 .page .page__title { margin-bottom: 11px !important; margin-bottom: 0.6875rem !important; }
 
 .page--address .section--padding { padding-bottom: 0 !important; }
@@ -1901,9 +1901,7 @@ a { color: inherit; }
 @media (min-width: 768px) { .page .section--padding { padding: 45px 0; padding: 2.8125rem 0; }
   .header--new .header__logo img { margin: 0 16px 0 5px; margin: 0 1rem 0 0.3125rem; } }
 
-.issuer_list { overflow: hidden; }
-
-.issuer_list__item { margin-bottom: -1px; }
+.issuer_list { overflow: hidden; margin-bottom: 10px; margin-bottom: 0.625rem; }
 
 .table tr td { white-space: normal; }
 
@@ -2234,3 +2232,7 @@ a { color: inherit; }
 .timepicker .bootstrap-datetimepicker-widget.dropdown-menu table td span { height: 40px; line-height: 40px; }
 
 .bootstrap-datetimepicker-widget .datepicker-decades .decade { line-height: 2 !important; }
+
+.header { z-index: auto; }
+
+.header.fixed { z-index: 110; }
