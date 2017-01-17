@@ -76,7 +76,7 @@
                 $('.js-set-readonly-on-submit').attr('readonly', true);
                 $loader.show();
                 $panelToHide.hide();
-                alert(fullDate.utc().format());
+                //alert(fullDate.utc().format());
                 $.ajax(url, {
                     data: { at: fullDate.utc().format() },
                     async: true
