@@ -49,7 +49,6 @@
 
             $time.datetimepicker({
                 format: timeFormat,
-                stepping: 10,
                 icons: {
                     time: "icon--clock",
                     date: "icon--cal",
