@@ -158,8 +158,6 @@ namespace BCNExplorer.Web.Models
             public IEnumerable<AggregatedInOut<In>> AggregatedIns { get; set; }
             public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
 
-            public bool Show => Total > 0;
-
             #region Classes
 
             public class In:AssetInOut

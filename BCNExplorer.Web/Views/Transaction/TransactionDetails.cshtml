@@ -136,7 +136,7 @@
                 </div> 
             </div>
 
-            @foreach (var coloredAsset in Model.ColoredAssets.Where(p => p.Show))
+            @foreach (var coloredAsset in Model.ColoredAssets)
             {
                 var assetUrl = coloredAsset.IsKnown ? Url.Action("Index", "Asset", new {id= coloredAsset.AssetId}) : null;
                 <div class="transaction_details">
