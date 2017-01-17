@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using Core.AddressService;
 using Core.Asset;
 using Core.Block;
+using Providers.Helpers;
+using Services.MainChain;
 
 namespace BCNExplorer.Web.Controllers
 {
@@ -13,11 +16,17 @@ namespace BCNExplorer.Web.Controllers
         private readonly IAssetService _assetService;
         private readonly IBlockService _blockService;
 
-        public AddressController(IAddressService addressProvider, IAssetService assetService, IBlockService blockService)
+        private readonly CachedMainChainService _mainChainService;
+
+        public AddressController(IAddressService addressProvider, 
+            IAssetService assetService, 
+            IBlockService blockService, 
+            CachedMainChainService mainChainService)
         {
             _addressProvider = addressProvider;
             _assetService = assetService;
             _blockService = blockService;
+            _mainChainService = mainChainService;
         }
 
         [Route("address/{id}")]
@@ -35,10 +44,22 @@ namespace BCNExplorer.Web.Controllers
             return View("NotFound");
         }
 
+        [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         [Route("address/balance/{id}")]
-        public async Task<ActionResult> Balance(string id, int? at)
+        public Task<ActionResult> Balance(string id)
         {
-            var balanceTask = _addressProvider.GetBalanceAsync(id);
+            return BalanceAtBlockInner(id, null);
+        }
+
+        [OutputCache(Duration = 60 * 60, VaryByParam = "*")]
+        public Task<ActionResult> BalanceAtBlock(string id, int? at)
+        {
+            return BalanceAtBlockInner(id, at);
+        }
+
+        private async Task<ActionResult> BalanceAtBlockInner(string id, int? at)
+        {
+            var balanceTask = _addressProvider.GetBalanceAsync(id, at);
             var assetDefinitionDictionaryTask = _assetService.GetAssetDefinitionDictionaryAsync();
             var lastBlockTask = _blockService.GetLastBlockHeaderAsync();
             Task<IBlockHeader> atBlockTask;
@@ -56,15 +77,31 @@ namespace BCNExplorer.Web.Controllers
 
             if (balanceTask.Result != null)
             {
-                return View(AddressBalanceViewModel.Create(balanceTask.Result, 
+                return View("Balance" ,AddressBalanceViewModel.Create(balanceTask.Result,
                     assetDefinitionDictionaryTask.Result,
                     lastBlockTask.Result,
                     atBlockTask.Result));
             }
 
-            return View("NotFound");
+            if (at != null && atBlockTask.Result == null)
+            {
+                return RedirectToAction("BalanceAtBlock", new {id = id, at = lastBlockTask.Result});
+            }
+
+            return new HttpNotFoundResult();
         }
 
+        [Route("address/balance/{id}/time/")]
+        public async Task<ActionResult> BalanceAtTime(DateTime at, string id)
+        {
+            var mainChain = await _mainChainService.GetMainChainAsync();
+
+            var block = mainChain.GetClosestToTimeBlock(at);
+
+            return RedirectToAction("BalanceAtBlock", new { id = id, at = block?.Height ?? 0 });
+        }
+
+        [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         [Route("address/transactions/{id}")]
         public async Task<ActionResult> Transactions(string id)
         {

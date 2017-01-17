@@ -1,7 +1,7 @@
 ﻿$(function () {
     var loadedClass = "js-loaded";
 
-    var loadPanel = function($target) {
+    var loadPanel = function ($target) {
         var $panel = $target.find('.js-panel-content');
         var $loader = $target.find('.js-panel-loader');
 
@@ -71,7 +71,7 @@
         var block = $(this).data('block');
         var $input = $('#js-go-to-block');
 
-        $input.val(block); 
+        $input.val(block);
         submitGoToBlock();
         return false;
     });
@@ -88,7 +88,7 @@
             var $date = $('#datetimepicker');
             var $time = $('#timepicker');
             var now = moment.utc();
-            
+
             //if (!$date.val()) {
             //    $date.val(now.format(dateFormat));
             //}
@@ -121,8 +121,36 @@
                 }
             });
 
-            var submitData = function() {
-                alert('submitData');
+            var submitData = function () {
+                var url = $.parseJSON($('#js-submit-go-to-block-time').val()).url;
+
+                var date = moment.utc($date.val(), dateFormat);
+                var time = moment($time.val(), timeFormat);
+                var fullDate = date;
+                fullDate.add(time.get('hour'), 'hour');
+                fullDate.add(time.get('minute'), 'minute');
+
+                $('.js-set-readonly-on-submit').attr('readonly', true);
+
+                var submitData = {
+                    at: fullDate.utc().format()
+                };
+
+                var $panelToUpdate = $('#owners .js-panel-content');
+                var $panelToHide = $('#owners .js-coinholders-data');
+                var $loader = $('#owners .js-panel-loader');
+
+                $loader.show();
+                $panelToHide.hide();
+                $.ajax(url, {
+                    data: submitData,
+                    method: 'get'
+                }).done(function (resp) {
+                    $loader.hide();
+                    $panelToUpdate.html(resp);
+
+                    $panelToUpdate.trigger('owners-data-loaded');
+                });
 
             }
 

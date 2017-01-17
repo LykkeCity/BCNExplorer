@@ -8,17 +8,17 @@
             $('.js-transactions-container.hidden:first').trigger('load-transactions');
         });
     })();
-    
+
     //Balance
     (function () {
         var $loadContainer = $('#js-balance-load-contaner');
         var $loader = $('#js-balance-loader');
         var loadUrl = $loadContainer.data('load-url');
 
-        var loadBalance = function() {
+        var loadBalance = function () {
             $.ajax(loadUrl).done(function (resp) {
                 $loadContainer.html(resp);
-                $loadContainer.trigger('last-block-balance-loaded');
+                $loadContainer.trigger('balance-loaded');
                 $loader.hide();
             });
         };
@@ -27,7 +27,7 @@
     })();
 
     //Balance History go to time
-    (function() {
+    (function () {
         var init = function () {
             var dateFormat = 'DD.MM.YYYY';
             var timeFormat = 'HH:mm';
@@ -59,21 +59,83 @@
                 }
             });
 
-            var submitData = function () {
-                alert('submitData');
+            var submit = function () {
+                var url = $('#js-go-to-block-time-url').val();
 
+                var $loader = $('#js-balance-loader');
+                var $panelToUpdate = $('#js-balance-load-contaner');
+                var $panelToHide = $('#js-balance-data');
+
+                var date = moment.utc($date.val(), dateFormat);
+                var time = moment($time.val(), timeFormat);
+                var fullDate = date;
+                fullDate.add(time.get('hour'), 'hour');
+                fullDate.add(time.get('minute'), 'minute');
+
+
+                $('.js-set-readonly-on-submit').attr('readonly', true);
+                $loader.show();
+                $panelToHide.hide();
+                alert(fullDate.utc().format());
+                $.ajax(url, {
+                    data: { at: fullDate.utc().format() },
+                    async: true
+                }).done(function (resp) {
+                    $panelToUpdate.html(resp);
+                    $loader.hide();
+                    $panelToUpdate.trigger('balance-loaded');
+                });
             }
 
             $time.add($date).on('dp.change', $.debounce(1500, function () {
-                submitData();
+                submit();
             }));
         }
 
-        $('body').on('last-block-balance-loaded', function () {
+        $('body').on('balance-loaded', function () {
             init();
         });
     })();
-    
+
+    //Balance by height
+    (function () {
+        var init = function () {
+            var submit = function (height) {
+                var url = $('#js-go-to-block-height-url').val();
+
+                var $loader = $('#js-balance-loader');
+                var $panelToUpdate = $('#js-balance-load-contaner');
+                var $panelToHide = $('#js-balance-data');
+
+                $('.js-set-readonly-on-submit').attr('readonly', true);
+                $loader.show();
+                $panelToHide.hide();
+
+                $.ajax(url, {
+                    data: { at: height },
+                    async: true
+                }).done(function (resp) {
+                    $panelToUpdate.html(resp);
+                    $loader.hide();
+                    $panelToUpdate.trigger('balance-loaded');
+                });
+            };
+
+            $('.js-change-go-to-block').on('click', function () {
+                var height = $(this).data('block');
+                submit(height);
+            });
+
+            $('#js-go-to-block').on('keyup', $.debounce(1500, function () {
+                submit($(this).val());
+            }));
+        };
+
+        $('body').on('balance-loaded', function () {
+            init();
+        });
+    })();
+
     //Highlight address
     (function () {
         var coloredAddress = $('#colored-address').val();

@@ -69,8 +69,7 @@ namespace BCNExplorer.Web.Controllers
             
             return RedirectToAction("OwnersHistory", new { id = id, at = block?.Height ?? 0 });
         }
-
-
+        
         private async Task<ActionResult> _OwnersInner(string id, int? at = null)
         {
             var asset = await _assetService.GetAssetAsync(id);

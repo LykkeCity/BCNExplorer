@@ -41,7 +41,7 @@ namespace Core.AddressService
 
     public interface IAddressService
     {
-        Task<IAddressBalance> GetBalanceAsync(string id);
+        Task<IAddressBalance> GetBalanceAsync(string id, int? at = null);
 
         Task<IAddressMainInfo> GetMainInfoAsync(string id);
 

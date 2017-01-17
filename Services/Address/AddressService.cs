@@ -74,18 +74,19 @@ namespace Services.Address
             _ninjaAddressProvider = ninjaAddressProvider;
         }
 
-        public async Task<IAddressBalance> GetBalanceAsync(string id)
+        public async Task<IAddressBalance> GetBalanceAsync(string id, int? at = null)
         {
-            var summary = await _ninjaAddressProvider.GetAddressBalanceAsync(id);
+            var summary = await _ninjaAddressProvider.GetAddressBalanceAsync(id, at);
             if (summary != null)
             {
                 var result = new AddressBalance
                 {
+                    AddressId = id,
                     Balance = summary.Confirmed.Balance,
                     TotalTransactions = summary.Confirmed.TotalTransactions,
-                    UnconfirmedBalanceDelta = summary.Unconfirmed.Balance
+                    UnconfirmedBalanceDelta = summary.Unconfirmed?.Balance ?? 0
                 };
-                var unconfirmedAssets = summary.Unconfirmed.Assets;
+                var unconfirmedAssets = summary.Unconfirmed?.Assets;
                 result.ColoredBalances = summary.Confirmed.Assets.Select(p =>
                 {
                     var coloredBalance = new ColoredBalance
@@ -93,7 +94,7 @@ namespace Services.Address
                         AssetId = p.AssetId,
                         Quantity = p.Quantity
                     };
-                    var unconfirmedAsset = unconfirmedAssets.FirstOrDefault(ua => ua.AssetId == coloredBalance.AssetId);
+                    var unconfirmedAsset = unconfirmedAssets?.FirstOrDefault(ua => ua.AssetId == coloredBalance.AssetId);
                     if (unconfirmedAsset != null)
                     {
                         coloredBalance.UnconfirmedQuantityDelta = unconfirmedAsset.Quantity;

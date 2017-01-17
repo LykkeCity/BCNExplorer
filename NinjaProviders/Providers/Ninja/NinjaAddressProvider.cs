@@ -136,9 +136,15 @@ namespace Providers.Providers.Ninja
 
 
 
-        public async Task<NinjaAddressSummary> GetAddressBalanceAsync(string id)
+        public async Task<NinjaAddressSummary> GetAddressBalanceAsync(string id, int? at)
         {
-            var result = await _blockChainReader.GetAsync<AddressSummaryContract>($"/balances/{id}/summary?colored=true");
+            var url = $"/balances/{id}/summary?colored=true";
+            if (at != null)
+            {
+                url += $"&at={at.Value}";
+            }
+
+            var result = await _blockChainReader.GetAsync<AddressSummaryContract>(url);
 
             if (result != null)
             {

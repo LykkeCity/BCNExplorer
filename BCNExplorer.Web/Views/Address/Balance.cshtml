@@ -3,6 +3,9 @@
     @{
         Layout = null;
     }
+
+@Html.Hidden("js-go-to-block-height-url", Url.Action("BalanceAtBlock", "Address", new {id = Model.AddressId}))
+@Html.Hidden("js-go-to-block-time-url", Url.Action("BalanceAtTime", "Address", new { id = Model.AddressId }))
 <section class="section section--heading">
     <div class="container">
         <div class="row">
@@ -20,7 +23,7 @@
                         }
 
                         <label class="control-label control-label--inner" for="js-go-to-block">Block:</label>
-                        <input type="text" class="form-control js-submit-on-change js-set-readonly-on-submit" id="js-go-to-block" name="at" value="@Model.LastBlockHeight">
+                        <input type="text" class="form-control js-submit-on-change js-set-readonly-on-submit" id="js-go-to-block" name="at" value="@Model.AtBlockHeight">
 
                         @if (Model.ShowNext)
                         {
@@ -31,7 +34,7 @@
                     </div>
                     <div class="block_nav__field">
                         <div class="input-group date datetimepicker">
-                            <input type="text" class="form-control js-set-readonly-on-submit" id="datetimepicker" value="@(Model.LastBlockDateTime.ToString("dd.MM.yyyy"))" />
+                            <input type="text" class="form-control js-set-readonly-on-submit" id="datetimepicker" value="@(Model.AtBlockDateTime.ToString("dd.MM.yyyy"))" />
                             <label class="input-group-addon open-datetimepicker" for="datetimepicker">
                                 <span class="icon icon--cal"></span>
                             </label>
@@ -40,7 +43,7 @@
 
                     <div class="block_nav__field">
                         <div class="input-group timepicker">
-                            <input type="text" class="form-control js-set-readonly-on-submit" id="timepicker" value="@(Model.LastBlockDateTime.ToString("HH:mm"))" />
+                            <input type="text" class="form-control js-set-readonly-on-submit" id="timepicker" value="@(Model.AtBlockDateTime.ToString("HH:mm"))" />
                             <label class="input-group-addon open-datetimepicker" for="timepicker">
                                 <span class="icon icon--clock"></span>
                             </label>
@@ -52,7 +55,7 @@
         </div>
     </div>
 </section>
-<section class="section section--balance">
+<section class="section section--balance" id="js-balance-data">
     <div class="container">
             <ul class="issuer_list row">
                 <li class="issuer_list__item col-xs-12 col-sm-6">
