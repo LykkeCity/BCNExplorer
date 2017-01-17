@@ -3,7 +3,55 @@
     @{
         Layout = null;
     }
+<section class="section section--heading">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+                <h3>Balance</h3>
+            </div>
+            <div class="col-xs-12 col-sm-8">
+                <div class="block_nav">
+                    <div class="block_nav__field change_block">
+                        @if (Model.ShowPrev)
+                        {
+                            <div class="block_nav__left">
+                                <a class="btn btn--icon js-change-go-to-block" title="@Model.PrevBlock" data-block="@Model.PrevBlock"><i class="icon icon--prev_transaction"></i></a>
+                            </div>
+                        }
 
+                        <label class="control-label control-label--inner" for="js-go-to-block">Block:</label>
+                        <input type="text" class="form-control js-submit-on-change js-set-readonly-on-submit" id="js-go-to-block" name="at" value="@Model.LastBlockHeight">
+
+                        @if (Model.ShowNext)
+                        {
+                            <div class="block_nav__right">
+                                <a class="btn btn--icon js-change-go-to-block" title="@Model.NextBlock" data-block="@Model.NextBlock"><i class="icon icon--next_transaction"></i></a>
+                            </div>
+                        }
+                    </div>
+                    <div class="block_nav__field">
+                        <div class="input-group date datetimepicker">
+                            <input type="text" class="form-control js-set-readonly-on-submit" id="datetimepicker" value="@(Model.LastBlockDateTime.ToString("dd.MM.yyyy"))" />
+                            <label class="input-group-addon open-datetimepicker" for="datetimepicker">
+                                <span class="icon icon--cal"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="block_nav__field">
+                        <div class="input-group timepicker">
+                            <input type="text" class="form-control js-set-readonly-on-submit" id="timepicker" value="@(Model.LastBlockDateTime.ToString("HH:mm"))" />
+                            <label class="input-group-addon open-datetimepicker" for="timepicker">
+                                <span class="icon icon--clock"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <section class="section section--balance">
     <div class="container">
             <ul class="issuer_list row">
@@ -30,7 +78,7 @@
                         </tbody>
                     </table>
                 </li>
-                @foreach (var asset in Model.Assets)
+                @foreach (var asset in Model.Assets.Where(p => p.ShowAsset))
                 {
                     var assetDivisibity = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Divisibility, 0);
                     var assetShortName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.NameShort, "");

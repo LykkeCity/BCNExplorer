@@ -5,6 +5,9 @@
     ViewData["Title"] = "Address - " + Model.AddressId;
 }
 @section scripts{
+    @Scripts.Render("~/bundles/js/moment")
+    @Scripts.Render("~/bundles/js/bootstrap-datetimepicker")
+    @Scripts.Render("~/js/vendor/throttle-debounce.min.js")
     @Scripts.Render("~/bundles/js/transaction")
     @Scripts.Render("~/bundles/js/address")
 }
@@ -43,14 +46,14 @@
     </div>
 </section>
 
-<section class="section section--heading">
-    <div class="container">
-        <h3>Balance</h3>
-    </div>
-</section>
+
 
 <div id="js-balance-load-contaner" data-load-url="@Url.Action("Balance", new {id = Model.AddressId})">
-
+    <section class="section section--heading">
+        <div class="container">
+            <h3>Balance</h3>
+        </div>   
+    </section>
 </div>
 
 

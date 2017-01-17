@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.AddressService;
 using Core.Asset;
+using Core.Block;
 
 namespace BCNExplorer.Web.Models
 {
@@ -15,10 +16,21 @@ namespace BCNExplorer.Web.Models
         public bool ShowUnconfirmedBalance => UnconfirmedBalanceDelta != 0;
         public double TotalConfirmedTransactions { get; set; }
         public IEnumerable<Asset> Assets { get; set; }
-        
         public AssetDictionary AssetDic { get; set; }
 
-        public static AddressBalanceViewModel Create(IAddressBalance balance, IDictionary<string, IAssetDefinition> assetDictionary)
+        public DateTime LastBlockDateTime { get; set; }
+        public int LastBlockHeight { get; set; }
+
+        public DateTime AtBlockDateTime { get; set; }
+        public int AtBlockHeight { get; set; }
+
+        public bool ShowNext => NextBlock <= LastBlockHeight;
+        public bool ShowPrev => PrevBlock >= 0;
+        public int PrevBlock => AtBlockHeight - 1;
+        public int NextBlock => AtBlockHeight + 1;
+
+
+        public static AddressBalanceViewModel Create(IAddressBalance balance, IDictionary<string, IAssetDefinition> assetDictionary, IBlockHeader lastBlock, IBlockHeader atBlock)
         {
             return new AddressBalanceViewModel
             {
@@ -32,7 +44,11 @@ namespace BCNExplorer.Web.Models
                     UnconfirmedQuantityDelta = p.UnconfirmedQuantityDelta
                 }),
                 UnconfirmedBalanceDelta = balance.UnconfirmedBalanceDelta,
-                AssetDic = AssetDictionary.Create(assetDictionary)
+                AssetDic = AssetDictionary.Create(assetDictionary),
+                LastBlockHeight = lastBlock.Height,
+                LastBlockDateTime = lastBlock.Time,
+                AtBlockHeight = (atBlock ?? lastBlock).Height,
+                AtBlockDateTime = (atBlock ?? lastBlock).Time,
             };
         }
         
@@ -43,6 +59,8 @@ namespace BCNExplorer.Web.Models
             public double UnconfirmedQuantityDelta { get; set; }
             public bool ShowUnconfirmedBalance => UnconfirmedQuantityDelta != 0;
             public double UnconfirmedQuantity => Quantity + UnconfirmedQuantityDelta;
+
+            public bool ShowAsset => Quantity != 0 || UnconfirmedQuantity != 0;
         }
     }
 

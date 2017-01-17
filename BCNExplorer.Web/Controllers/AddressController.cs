@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using Core.AddressService;
 using Core.Asset;
+using Core.Block;
 
 namespace BCNExplorer.Web.Controllers
 {
@@ -10,32 +11,55 @@ namespace BCNExplorer.Web.Controllers
     {
         private readonly IAddressService _addressProvider;
         private readonly IAssetService _assetService;
+        private readonly IBlockService _blockService;
 
-        public AddressController(IAddressService addressProvider, IAssetService assetService)
+        public AddressController(IAddressService addressProvider, IAssetService assetService, IBlockService blockService)
         {
             _addressProvider = addressProvider;
             _assetService = assetService;
+            _blockService = blockService;
         }
 
         [Route("address/{id}")]
-        public async Task<ActionResult> Index(string id)
+        public async Task<ActionResult> Index(string id, int? at)
         {
-            var result = await _addressProvider.GetMainInfoAsync(id);
-            if (result != null)
+            var mainInfoTask = _addressProvider.GetMainInfoAsync(id);
+
+            await Task.WhenAll(mainInfoTask);
+
+            if (mainInfoTask.Result != null)
             {
-                return View(AddressMainInfoViewModel.Create(result));
+                return View(AddressMainInfoViewModel.Create(mainInfoTask.Result));
             }
 
             return View("NotFound");
         }
 
         [Route("address/balance/{id}")]
-        public async Task<ActionResult> Balance(string id)
+        public async Task<ActionResult> Balance(string id, int? at)
         {
-            var result = await _addressProvider.GetBalanceAsync(id);
-            if (result != null)
+            var balanceTask = _addressProvider.GetBalanceAsync(id);
+            var assetDefinitionDictionaryTask = _assetService.GetAssetDefinitionDictionaryAsync();
+            var lastBlockTask = _blockService.GetLastBlockHeaderAsync();
+            Task<IBlockHeader> atBlockTask;
+
+            if (at != null)
             {
-                return View(AddressBalanceViewModel.Create(result, await _assetService.GetAssetDefinitionDictionaryAsync()));
+                atBlockTask = _blockService.GetBlockHeaderAsync(at.ToString());
+            }
+            else
+            {
+                atBlockTask = Task.FromResult<IBlockHeader>(null);
+            }
+
+            await Task.WhenAll(balanceTask, assetDefinitionDictionaryTask, lastBlockTask, atBlockTask);
+
+            if (balanceTask.Result != null)
+            {
+                return View(AddressBalanceViewModel.Create(balanceTask.Result, 
+                    assetDefinitionDictionaryTask.Result,
+                    lastBlockTask.Result,
+                    atBlockTask.Result));
             }
 
             return View("NotFound");

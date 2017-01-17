@@ -122,35 +122,7 @@
             });
 
             var submitData = function() {
-                var url = $.parseJSON($('#js-submit-go-to-block-time').val()).url;
-
-                var date = moment.utc($date.val(), dateFormat);
-                var time = moment($time.val(), timeFormat);
-                var fullDate = date;
-                fullDate.add(time.get('hour'), 'hour');
-                fullDate.add(time.get('minute'), 'minute');
-
-                $('.js-set-readonly-on-submit').attr('readonly', true);
-
-                var submitData = {
-                    at: fullDate.utc().format()
-                };
-
-                var $panelToUpdate = $('#owners .js-panel-content');
-                var $panelToHide = $('#owners .js-coinholders-data');
-                var $loader = $('#owners .js-panel-loader');
-
-                $loader.show();
-                $panelToHide.hide();
-                $.ajax(url, {
-                    data: submitData,
-                    method: 'get'
-                }).done(function (resp) {
-                    $loader.hide();
-                    $panelToUpdate.html(resp);
-
-                    $panelToUpdate.trigger('owners-data-loaded');
-                });
+                alert('submitData');
 
             }
 
