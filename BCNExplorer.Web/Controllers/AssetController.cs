@@ -67,12 +67,7 @@ namespace BCNExplorer.Web.Controllers
 
             var block = mainChain.GetClosestToTimeBlock(at);
             
-            if (block != null)
-            {
-                return RedirectToAction("OwnersHistory", new {id = id, at = block.Height});
-            }
-
-            return new HttpNotFoundResult();
+            return RedirectToAction("OwnersHistory", new { id = id, at = block?.Height ?? 0 });
         }
 
 

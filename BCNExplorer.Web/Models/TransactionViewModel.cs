@@ -325,7 +325,16 @@ namespace BCNExplorer.Web.Models
                     var titleItem = p.First().Clone<T>();
                     var allItems = p.ToList();
 
-                    titleItem.Value = (double) p.Sum(ti => (decimal) ti.Value);
+                    try
+                    {
+                        //floation point summary hack
+                        titleItem.Value = Convert.ToDouble(p.Sum(ti => Convert.ToDecimal(ti.Value)));
+                    }
+                    catch (Exception) // overflow todo catch correct exception type instead of base class
+                    {
+                        titleItem.Value = p.Sum(ti => ti.Value);
+                    }
+
                     titleItem.SetAggregatedTransactionCount(allItems.Count);
 
                     return new AggregatedInOut<T>

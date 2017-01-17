@@ -15,7 +15,7 @@ namespace BCNExplorer.Web.Models
         public long Nonce { get; set; }
         public int TotalTransactions { get; set; }
         public string PreviousBlock { get; set; }
-        public bool ShowPreviousBlock => !string.IsNullOrEmpty(Hash);
+        public bool ShowPreviousBlock => !string.IsNullOrEmpty(Hash) && Height!=0;
         public long PreviousBlockHeight => Height-1;
         public long NextBlockHeight { get; set; }
         public bool ShowNextBlock { get; set; }

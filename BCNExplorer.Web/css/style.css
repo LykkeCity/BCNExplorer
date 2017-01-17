@@ -2223,8 +2223,14 @@ a { color: inherit; }
 
 .icon--next_transaction:before { content: "\e90a"; }
 
+.bootstrap-datetimepicker-widget.dropdown-menu { white-space: normal; }
+
+.bootstrap-datetimepicker-widget.dropdown-menu td span { width: 64px; width: 4rem; height: 64px; height: 4rem; line-height: 64px; line-height: 4rem; }
+
 .timepicker .bootstrap-datetimepicker-widget.dropdown-menu { width: 250px; }
 
 .timepicker .bootstrap-datetimepicker-widget.dropdown-menu table td { border: 0; }
 
 .timepicker .bootstrap-datetimepicker-widget.dropdown-menu table td span { height: 40px; line-height: 40px; }
+
+.bootstrap-datetimepicker-widget .datepicker-decades .decade { line-height: 2 !important; }
