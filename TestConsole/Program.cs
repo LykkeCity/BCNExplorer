@@ -23,13 +23,13 @@ namespace TestConsole
             //TestGettingChainChanges.Run(container);
             //GetAddressesWithColoredAssetsFromCoinPrism.Run(container);
             //TestFillBalance.Run(container).Wait();
-            //CheckBalance.Run(container).Wait();
+            CheckBalance.Run(container).Wait();
             //MongoFillBalance.Run(container).Wait();
             //AddAddressesFromBlockChain.Run(container).Wait();
             //AssetDefToCsv.Run(container).Wait();
             //AssetCoinholdersToCsv.Run(container).Wait();
             //AddMissingDefinitions.Run(container).Wait();
-            AddAssetDefinitionsHistory.Run(container).Wait();
+            //AddAssetDefinitionsHistory.Run(container).Wait();
             //CopyMongoData.Run(container).Wait();
         }
         
