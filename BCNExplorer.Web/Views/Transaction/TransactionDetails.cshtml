@@ -8,7 +8,7 @@
     <div class="container">
         <div class="panel__header">
            <div class="row">
-                <div class="col-xs-12 col-sm-4 pull-right text-right">
+                <div class="col-xs-12 col-sm-3 pull-right text-right">
                     <div class="confirmation_label">
                         @if (Model.IsConfirmed)
                         {
@@ -20,7 +20,7 @@
                         }
                     </div>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-9">
                     <div class="address_code">
                         <a href="@Url.Action("Index", "Transaction", new {id = Model.TransactionId})">@Model.TransactionId</a>
                         <button class="btn btn--icon copy_code" type="button" title="Copy code">
