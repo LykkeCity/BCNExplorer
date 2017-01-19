@@ -424,14 +424,24 @@ namespace BCNExplorer.Web.Models
             {
                 foreach (var output in outs.Where(x => x.Address == input.Address).OrderBy(p => p.Value).ToList())
                 {
-                    var value = Convert.ToDouble(Convert.ToDecimal(input.Value) + Convert.ToDecimal(output.Value));
-                    if (value > 0)
-                    {
-                        break;
-                    }
                     showChange = true;
-                    input.Value = value;
-                    output.Value = 0;
+
+                    var exactInput = Convert.ToDecimal(input.Value);
+                    var exactOutput = Convert.ToDecimal(output.Value);
+
+                    if (Math.Abs(exactInput) >= Math.Abs(exactOutput))
+                    {
+                        exactInput = exactInput + exactOutput;
+                        exactOutput = 0;
+                    }
+                    else
+                    {
+                        exactOutput = exactInput + exactOutput;
+                        exactInput = 0;
+                    }
+
+                    input.Value = Convert.ToDouble(exactInput);
+                    output.Value = Convert.ToDouble(exactOutput);
                 }
             }
         }
