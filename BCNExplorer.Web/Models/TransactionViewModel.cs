@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Runtime.Remoting.Messaging;
 using Common;
 using Core.Asset;
 using Core.Transaction;
@@ -95,15 +93,39 @@ namespace BCNExplorer.Web.Models
 
                 #region CalculateWithReturnedChange
 
-                foreach (var input in ins.Where(inp => outs.Any(x => x.Address == inp.Address)))
+                foreach (var input in ins.Where(inp => outs.Any(x => x.Address == inp.Address)).ToList())
                 {
                     foreach (var output in outs.Where(x => x.Address == input.Address).ToList())
                     {
                         showChange = true;
-                        input.Value = Convert.ToDouble(Convert.ToDecimal(output.Value) + Convert.ToDecimal(input.Value));
-
-                        outs.Remove(output);
+                        var value = Convert.ToDouble(Convert.ToDecimal(input.Value) + Convert.ToDecimal(output.Value));
+                        input.Value = value;
+                        output.Value = 0;
                     }
+                }
+
+                foreach (var input in ins.Where(p => p.Value > 0).ToList())
+                {
+                    outs.Add(Out.Create(input));
+                    ins.Remove(input);
+                }
+
+                if (ins.All(p=>p.Value==0))
+                {
+                    ins = ins.Take(1).ToList();
+                }
+                else
+                {
+                    ins = ins.Where(p => p.Value != 0).ToList();
+                }
+
+                if (outs.All(p => p.Value == 0))
+                {
+                    outs = outs.Take(1).ToList();
+                }
+                else
+                {
+                    outs = outs.Where(p => p.Value != 0).ToList();
                 }
 
                 #endregion
@@ -164,7 +186,22 @@ namespace BCNExplorer.Web.Models
                 
                 public static IEnumerable<Out> Create(IEnumerable<IInOut> outs)
                 {
-                    return outs.Where(p => p.Value != 0).Select(p => new Out(value: BitcoinUtils.SatoshiToBtc(p.Value), address:p.Address));
+                    return outs.Where(p => p.Value != 0).Select(Out.Create);
+                }
+
+                public static Out Create(IInOut @out)
+                {
+                    return new Out(value: BitcoinUtils.SatoshiToBtc(@out.Value), address: @out.Address);
+                }
+
+                public static IEnumerable<Out> Create(IEnumerable<In> ins)
+                {
+                    return ins.Where(p => p.Value != 0).Select(p => new Out(value: BitcoinUtils.SatoshiToBtc(p.Value), address: p.Address));
+                }
+
+                public static Out Create(In @in)
+                {
+                    return new Out(value: @in.Value, address: @in.Address);
                 }
             }
         }
@@ -176,8 +213,8 @@ namespace BCNExplorer.Web.Models
             public string Name { get; set; }
             public string ShortName { get; set; }
             public string IconImageUrl { get; set; }
-            public bool IsDestroyed => !AggregatedOuts.Any();
-            public bool IsIssued => !AggregatedIns.Any();
+            public bool IsDestroyed => !AggregatedOutsWithoutChange.Any();
+            public bool IsIssued => !AggregatedInsWithoutChange.Any();
             public bool IsKnown { get; set; }
             public double Total { get; set; }
 
@@ -214,10 +251,6 @@ namespace BCNExplorer.Web.Models
 
                 public static In Create(IInOut sourceIn, int divisibility,  IEnumerable<IInOut> outs, string shortName)
                 {
-                    //var l = outs.Select(itm => itm.Quantity - sourceIn.Quantity);
-                    //var def = l.FirstOrDefault();
-                    //var quantity = (def != 0 ? def : sourceIn.Quantity)*(-1);
-
                     return new In(
                         value: BitcoinUtils.CalculateColoredAssetQuantity(sourceIn.Quantity *(-1), divisibility), 
                         address: sourceIn.Address, 
@@ -253,6 +286,14 @@ namespace BCNExplorer.Web.Models
                         address: sourceOut.Address,
                         shortName: shortName);
                 }
+
+                public static Out Create(In @in, string shortName)
+                {
+                    return new Out(
+                        value: @in.Value,
+                        address: @in.Address,
+                        shortName: shortName);
+                }
             }
             
             #endregion
@@ -264,28 +305,50 @@ namespace BCNExplorer.Web.Models
 
                 var ins = inOutsByAsset.TransactionIn.Select(p => In.Create(p, divisibility, inOutsByAsset.TransactionsOut, assetShortName)).ToList();
                 var outs = inOutsByAsset.TransactionsOut.Select(p => Out.Create(p, divisibility, assetShortName)).ToList();
-
-
+                
                 var insWithoutChange = ins.Select(p => p.Clone<In>()).ToList();
                 var outsWithoutChange = outs.Select(p => p.Clone<Out>()).ToList();
                 var showChange = false;
 
                 #region CalculateWithReturnedChange
 
-                foreach (var input in ins.Where(inp => outs.Any(x => x.Address == inp.Address)))
+                foreach (var input in ins.Where(inp => outs.Any(x => x.Address == inp.Address)).ToList())
                 {
                     foreach (var output in outs.Where(x => x.Address == input.Address).ToList())
                     {
                         showChange = true;
-                        //floating point hack
-                        input.Value = Convert.ToDouble(Convert.ToDecimal(output.Value) + Convert.ToDecimal(input.Value));
-
-                        outs.Remove(output);
+                        var value = Convert.ToDouble(Convert.ToDecimal(input.Value) + Convert.ToDecimal(output.Value));
+                        input.Value = value;
+                        output.Value = 0;
                     }
                 }
 
+                foreach (var input in ins.Where(p => p.Value > 0).ToList())
+                {
+                    outs.Add(Out.Create(input, assetShortName));
+                    ins.Remove(input);
+                }
+
+                if (ins.All(p=>p.Value == 0))
+                {
+                    ins = ins.Take(1).ToList();
+                }
+                else
+                {
+                    ins = ins.Where(p => p.Value != 0).ToList();
+                }
+
+                if (outs.All(p => p.Value == 0))
+                {
+                    outs = outs.Take(1).ToList();
+                }
+                else
+                {
+                    outs = outs.Where(p => p.Value != 0).ToList();
+                }
+
                 #endregion
-                
+
                 var total = outs.Any() ? outs.Sum(p => p.Value) : ins.Sum(p => p.Value);
 
                 var result = new ColoredAsset
