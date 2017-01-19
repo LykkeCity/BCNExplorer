@@ -22,9 +22,9 @@ namespace BCNExplorer.Web.Controllers
         }
 
         [Route("transaction/{id}")]
-        public async Task<ActionResult> Index(string id, bool change = true)
+        public async Task<ActionResult> Index(string id)
         {
-            var ninjaTransaction = await _transactionService.GetAsync(id, change);
+            var ninjaTransaction = await _transactionService.GetAsync(id);
 
             if (ninjaTransaction != null)
             {

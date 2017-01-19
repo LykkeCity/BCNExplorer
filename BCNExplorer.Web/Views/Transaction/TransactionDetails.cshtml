@@ -49,91 +49,33 @@
                                 <td class="issuer__content">
                                     <div class="issuer__name pull-left">Bitcoin</div>
                                     <div class="wallet_value pull-right">@Model.Bitcoin.Total.ToStringBtcFormat() BTC</div>
+                                    @{
+                                        var toggleBtcClass = "js-toggle-changes-container-" + Guid.NewGuid().ToString("N");
+                                    }
+                                    @if (Model.Bitcoin.ShowWithoutChange)
+                                    {
+                                        <a href="#" class="btn_show_changes pull-right text--gray js-toggle-change-btn" data-toggle-container=".@toggleBtcClass">
+                                            <span class="js-toggle-change-label">Show</span>
+                                            <span class="hidden js-toggle-change-label">Hide</span> 
+                                            change
+                                        </a>
+                                    }
+
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="transaction_details__body">
-                    <div class="transaction_item">
-                        <div class="transaction_item__left">
-                            <div class="transaction_list">
-                                @if (Model.IsCoinBase)
-                                {
-                                    <div class="transaction_list__item">
-                                        <div class="links_group">
-                                            <i class="icon icon--info"></i> Mined coins
-                                        </div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    foreach (var input in Model.Bitcoin.AggregatedIns)
-                                    {
-                                        var aggregatedContainerId = Guid.NewGuid().ToString("N");
-                                        <text>
-                                            @RenderInOut(input.TitleItem, aggregatedContainerId)
-                                        </text>
-
-                                        <text>
-                                            @if (input.ShowAggregatedTransactions)
-                                            {
-                                                <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
-                                                    @foreach (var aggregated in input.AggregatedTransactions)
-                                                    {
-                                                        @RenderInOut(aggregated)
-                                                    }
-                                                </div>
-                                            }
-                                        </text>
-                                    }
-                                }
-                            </div>
-                        </div>
-
-                        <div class="transaction_item__center">
-                            <div class="transaction_arrow"><i class="icon icon--arrow_right_big"></i></div>
-                        </div>
-
-                        <div class="transaction_item__right">
-                            <div class="transaction_list">
-                                @foreach (var output in Model.Bitcoin.AggregatedOuts)
-                                {
-                                    var aggregatedContainerId = Guid.NewGuid().ToString("N");
-                                    <text>
-                                        @RenderInOut(output.TitleItem, aggregatedContainerId)
-                                    </text>
-
-                                    <text>
-                                        @if (output.ShowAggregatedTransactions)
-                                        {
-                                            <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
-                                                @foreach (var aggregated in output.AggregatedTransactions)
-                                                {
-                                                    @RenderInOut(aggregated)
-                                                }
-                                            </div>
-                                        }
-                                    </text>
-
-                                }
-                                <div class="transaction_list__item">
-                                    <div class="row">
-                                        <div class="col-xs-8">
-                                            <div class="links_group">
-                                                Fees
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <span>@Model.Bitcoin.FeesDescription</span>
-                                        </div>
-                                    </div>                                
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-                </div> 
+                <div class="@toggleBtcClass">
+                    @RenderBtcInOuts(Model.Bitcoin.AggregatedIns, Model.Bitcoin.AggregatedOuts)
+                </div>
+                @if (Model.Bitcoin.ShowWithoutChange)
+                {
+                    <div class="@toggleBtcClass hidden">
+                        @RenderBtcInOuts(Model.Bitcoin.AggregatedInsWithoutChange, Model.Bitcoin.AggregatedOutsWithoutChange)
+                    </div>
+                }
             </div>
 
             @foreach (var coloredAsset in Model.ColoredAssets)
@@ -157,95 +99,32 @@
                                         <div class="wallet_value pull-right">
                                             @coloredAsset.Total.ToStringBtcFormat() @coloredAsset.ShortName
                                         </div>
+                                        @{
+                                            var toggleColoredClass = "js-toggle-changes-container-" + Guid.NewGuid().ToString("N");
+                                        }
+                                        @if (coloredAsset.ShowWithoutChange)
+                                        {
+                                            <a href="#" class="btn_show_changes pull-right text--gray js-toggle-change-btn" data-toggle-container=".@toggleColoredClass">
+                                                <span class="js-toggle-change-label">Show</span>
+                                                <span class="hidden js-toggle-change-label">Hide</span>
+                                                change
+                                            </a>
+                                        }
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <div class="transaction_details__body">
-                        <div class="transaction_item">
-                            <div class="transaction_item__left">
-                                <div class="transaction_list">
-                                    @if (coloredAsset.IsIssued)
-                                    {
-                                        <div class="transaction_list__item">
-                                            <div class="row">
-                                                <div class="col-xs-8">
-                                                    <div class="links_group"><i class="icon icon--info"></i> Issued Assets</div>
-                                                </div>
-                                                <div class="col-xs-4">@coloredAsset.IssedQuantity.ToStringBtcFormat() @coloredAsset.ShortName</div>
-                                            </div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        foreach (var input in coloredAsset.AggregatedIns)
-                                        {
-                                            var aggregatedContainerId = Guid.NewGuid().ToString("N");
-                                            <text>
-                                                @RenderInOut(input.TitleItem, aggregatedContainerId)
-                                            </text>
-
-                                            <text>
-                                                @if (input.ShowAggregatedTransactions)
-                                                {
-                                                    <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
-                                                        @foreach (var aggregated in input.AggregatedTransactions)
-                                                        {
-                                                            @RenderInOut(aggregated)
-                                                        }
-                                                    </div>
-                                                }
-                                            </text>
-                                        }
-                                    }
-                                </div>
-                            </div>
-
-                            <div class="transaction_item__center">
-                                <div class="transaction_arrow"><i class="icon icon--arrow_right_big"></i></div>
-                            </div>
-
-                            <div class="transaction_item__right">
-                                <div class="transaction_list">
-                                    @if (coloredAsset.IsDestroyed)
-                                    {
-                                        <div class="transaction_list__item">
-                                            <div class="row">
-                                                <div class="col-xs-8">
-                                                    <div class="links_group"><i class="icon icon--info"></i> Destroyed Assets</div>
-                                                </div>
-                                                <div class="col-xs-4">@coloredAsset.DestroyedQuantity.ToStringBtcFormat() @coloredAsset.ShortName</div>
-                                            </div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        foreach (var output in coloredAsset.AggregatedOuts)
-                                        {
-                                            var aggregatedContainerId = Guid.NewGuid().ToString("N");
-                                            <text>
-                                                @RenderInOut(output.TitleItem, aggregatedContainerId)
-                                            </text>
-
-                                            <text>
-                                                @if (output.ShowAggregatedTransactions)
-                                                {
-                                                    <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
-                                                        @foreach (var aggregated in output.AggregatedTransactions)
-                                                        {
-                                                            @RenderInOut(aggregated)
-                                                        }
-                                                    </div>
-                                                }
-                                            </text>
-                                        }
-                                    }
-                                </div>
-                            </div>
+                    <div class="@toggleColoredClass">
+                        @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedIns, coloredAsset.AggregatedOuts)
+                    </div>
+                    @if (Model.Bitcoin.ShowWithoutChange)
+                {
+                        <div class="@toggleColoredClass hidden">
+                            @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedInsWithoutChange, coloredAsset.AggregatedOutsWithoutChange)
                         </div>
-                    </div> 
+                    }
                 </div>
             }
 
@@ -254,7 +133,7 @@
     </div>
 </div>
 
-
+@*Helpers faster than Partial Views*@
 
 @helper RenderInOut(IInOutViewModel inOutViewModel, string aggregatedTransContainerId = null)
 {
@@ -304,6 +183,179 @@
                         </span> 
                     </text>
                 }
+            </div>
+        </div>
+    </div>
+}
+
+@helper RenderBtcInOuts(IEnumerable<AggregatedInOut<TransactionViewModel.BitcoinAsset.In>> aggregatedIns, 
+    IEnumerable<AggregatedInOut<TransactionViewModel.BitcoinAsset.Out>> aggregatedOuts)
+{
+    <div class="transaction_details__body">
+        <div class="transaction_item">
+            <div class="transaction_item__left">
+                <div class="transaction_list">
+                    @if (Model.IsCoinBase)
+                    {
+                        <div class="transaction_list__item">
+                            <div class="links_group">
+                                <i class="icon icon--info"></i> Mined coins
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var input in aggregatedIns)
+                        {
+                            var aggregatedContainerId = Guid.NewGuid().ToString("N");
+                            <text>
+                                @RenderInOut(input.TitleItem, aggregatedContainerId)
+                            </text>
+
+                            <text>
+                                @if (input.ShowAggregatedTransactions)
+                                {
+                                    <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
+                                        @foreach (var aggregated in input.AggregatedTransactions)
+                                        {
+                                            @RenderInOut(aggregated)
+                                        }
+                                    </div>
+                                }
+                            </text>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="transaction_item__center">
+                <div class="transaction_arrow"><i class="icon icon--arrow_right_big"></i></div>
+            </div>
+
+            <div class="transaction_item__right">
+                <div class="transaction_list">
+                    @foreach (var output in aggregatedOuts)
+                    {
+                        var aggregatedContainerId = Guid.NewGuid().ToString("N");
+                        <text>
+                            @RenderInOut(output.TitleItem, aggregatedContainerId)
+                        </text>
+
+                        <text>
+                            @if (output.ShowAggregatedTransactions)
+                            {
+                                <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
+                                    @foreach (var aggregated in output.AggregatedTransactions)
+                                    {
+                                        @RenderInOut(aggregated)
+                                    }
+                                </div>
+                            }
+                        </text>
+
+                    }
+                    <div class="transaction_list__item">
+                        <div class="row">
+                            <div class="col-xs-8">
+                                <div class="links_group">
+                                    Fees
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <span>@Model.Bitcoin.FeesDescription</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper RenderColoredAssetInOuts(TransactionViewModel.ColoredAsset coloredAsset, 
+    IEnumerable<AggregatedInOut<TransactionViewModel.ColoredAsset.In>> aggregatedIns,
+    IEnumerable<AggregatedInOut<TransactionViewModel.ColoredAsset.Out>> aggregatedOuts)
+{
+    <div class="transaction_details__body">
+        <div class="transaction_item">
+            <div class="transaction_item__left">
+                <div class="transaction_list">
+                    @if (coloredAsset.IsIssued)
+                    {
+                        <div class="transaction_list__item">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="links_group"><i class="icon icon--info"></i> Issued Assets</div>
+                                </div>
+                                <div class="col-xs-4">@coloredAsset.IssedQuantity.ToStringBtcFormat() @coloredAsset.ShortName</div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var input in aggregatedIns)
+                        {
+                            var aggregatedContainerId = Guid.NewGuid().ToString("N");
+                            <text>
+                                @RenderInOut(input.TitleItem, aggregatedContainerId)
+                            </text>
+
+                            <text>
+                                @if (input.ShowAggregatedTransactions)
+                                {
+                                    <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
+                                        @foreach (var aggregated in input.AggregatedTransactions)
+                                        {
+                                            @RenderInOut(aggregated)
+                                        }
+                                    </div>
+                                }
+                            </text>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="transaction_item__center">
+                <div class="transaction_arrow"><i class="icon icon--arrow_right_big"></i></div>
+            </div>
+
+            <div class="transaction_item__right">
+                <div class="transaction_list">
+                    @if (coloredAsset.IsDestroyed)
+                    {
+                        <div class="transaction_list__item">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="links_group"><i class="icon icon--info"></i> Destroyed Assets</div>
+                                </div>
+                                <div class="col-xs-4">@coloredAsset.DestroyedQuantity.ToStringBtcFormat() @coloredAsset.ShortName</div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var output in aggregatedOuts)
+                        {
+                            var aggregatedContainerId = Guid.NewGuid().ToString("N");
+                            <text>
+                                @RenderInOut(output.TitleItem, aggregatedContainerId)
+                            </text>
+
+                            <text>
+                                @if (output.ShowAggregatedTransactions)
+                                {
+                                    <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
+                                        @foreach (var aggregated in output.AggregatedTransactions)
+                                        {
+                                            @RenderInOut(aggregated)
+                                        }
+                                    </div>
+                                }
+                            </text>
+                        }
+                    }
+                </div>
             </div>
         </div>
     </div>

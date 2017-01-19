@@ -6,4 +6,13 @@
         $this.toggleClass('active');
         $(id).slideToggle('fast');
     });
+
+    $('body').on('click', '.js-toggle-change-btn', function() {
+        var $self = $(this);
+
+        $self.find('.js-toggle-change-label').toggleClass('hidden');
+        $($self.data('toggle-container')).toggleClass('hidden');
+
+        return false;
+    });
 });

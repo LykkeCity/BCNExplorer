@@ -135,14 +135,14 @@ namespace Services.Transaction
             _ninjaTransactionProvider = ninjaTransactionProvider;
         }
 
-        public async Task<ITransaction> GetAsync(string id, bool calculateInputsWithReturnedChange = true)
+        public async Task<ITransaction> GetAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
                 return null;
             }
 
-            var responce = await _ninjaTransactionProvider.GetAsync(id, calculateInputsWithReturnedChange);
+            var responce = await _ninjaTransactionProvider.GetAsync(id);
             if (responce == null)
             {
                 return null;
@@ -153,23 +153,23 @@ namespace Services.Transaction
             var inputs = responce.Inputs.ToList();
             var outputs = responce.Outputs.ToList();
 
-            #region CalculateInputsWithReturnedChange
+            //#region CalculateInputsWithReturnedChange
 
-            if (calculateInputsWithReturnedChange)
-            {
-                foreach (var input in inputs.Where(inp => outputs.Any(x => x.Address == inp.Address)))
-                {
-                    foreach (var output in outputs.Where(x => x.Address == input.Address && x.AssetId == input.AssetId).ToList())
-                    {
-                        input.Value -= output.Value;
-                        input.Quantity -= output.Quantity;
+            //if (calculateInputsWithReturnedChange)
+            //{
+            //    foreach (var input in inputs.Where(inp => outputs.Any(x => x.Address == inp.Address)))
+            //    {
+            //        foreach (var output in outputs.Where(x => x.Address == input.Address && x.AssetId == input.AssetId).ToList())
+            //        {
+            //            input.Value -= output.Value;
+            //            input.Quantity -= output.Quantity;
 
-                        outputs.Remove(output);
-                    }
-                }
-            }
+            //            outputs.Remove(output);
+            //        }
+            //    }
+            //}
 
-            #endregion
+            //#endregion
 
             var result = new Transaction
             {

@@ -46,6 +46,6 @@ namespace Core.Transaction
 
     public interface ITransactionService
     {
-        Task<ITransaction> GetAsync(string id, bool calculateInputsWithReturnedChange = true);
+        Task<ITransaction> GetAsync(string id);
     }
 }

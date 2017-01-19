@@ -57,10 +57,15 @@ namespace BCNExplorer.Web.Models
             public IEnumerable<AggregatedInOut<In>> AggregatedIns { get; set; }
             public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
 
+            public IEnumerable<AggregatedInOut<In>> AggregatedInsWithoutChange { get; set; }
+            public IEnumerable<AggregatedInOut<Out>> AggregatedOutsWithoutChange { get; set; }
+
             public double Fees { get; set; }
             public string FeesDescription => Fees.ToStringBtcFormat();
 
             public double Total { get; set; }
+
+            public bool ShowWithoutChange { get; set; }
 
             public static IEnumerable<In> Group(IEnumerable<In> source)
             {
@@ -79,9 +84,29 @@ namespace BCNExplorer.Web.Models
                 IEnumerable<IInOut> ninjaIn,
                 IEnumerable<IInOut> ninjaOuts)
             {
-                var ins = In.Create(ninjaIn);
-                var outs = Out.Create(ninjaOuts);
+                var ins = In.Create(ninjaIn).ToList();
+                var outs = Out.Create(ninjaOuts).ToList();
                 var feesBtc = BitcoinUtils.SatoshiToBtc(fees);
+                
+                var insWithoutChange = ins.Select(p => p.Clone<In>()).ToList();
+                var outsWithoutChange = outs.Select(p => p.Clone<Out>()).ToList();
+
+                bool showChange = false;
+
+                #region CalculateWithReturnedChange
+
+                foreach (var input in ins.Where(inp => outs.Any(x => x.Address == inp.Address)))
+                {
+                    foreach (var output in outs.Where(x => x.Address == input.Address).ToList())
+                    {
+                        showChange = true;
+                        input.Value += output.Value;
+
+                        outs.Remove(output);
+                    }
+                }
+
+                #endregion
 
                 return new BitcoinAsset
                 {
@@ -89,7 +114,10 @@ namespace BCNExplorer.Web.Models
                     IsCoinBase = isCoinBase,
                     AggregatedIns = AssetHelper.GroupByAddress(ins),
                     AggregatedOuts = AssetHelper.GroupByAddress(outs),
-                    Total = outs.Sum(p=>p.Value) + feesBtc
+                    AggregatedInsWithoutChange = AssetHelper.GroupByAddress(insWithoutChange),
+                    AggregatedOutsWithoutChange = AssetHelper.GroupByAddress(outsWithoutChange),
+                    Total = outs.Sum(p=>p.Value) + feesBtc,
+                    ShowWithoutChange = showChange
                 };
             }
 
@@ -157,6 +185,11 @@ namespace BCNExplorer.Web.Models
             public double DestroyedQuantity => (-1) * AggregatedIns.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
             public IEnumerable<AggregatedInOut<In>> AggregatedIns { get; set; }
             public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
+
+            public IEnumerable<AggregatedInOut<In>> AggregatedInsWithoutChange { get; set; }
+            public IEnumerable<AggregatedInOut<Out>> AggregatedOutsWithoutChange { get; set; }
+
+            public bool ShowWithoutChange { get; set; }
 
             #region Classes
 
@@ -229,10 +262,29 @@ namespace BCNExplorer.Web.Models
                 var divisibility = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Divisibility, 0);
                 var assetShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null);
 
-                var ins = inOutsByAsset.TransactionIn.Select(p => In.Create(p, divisibility, inOutsByAsset.TransactionsOut, assetShortName));
-                var outs = inOutsByAsset.TransactionsOut.Select(p => Out.Create(p, divisibility, assetShortName));
+                var ins = inOutsByAsset.TransactionIn.Select(p => In.Create(p, divisibility, inOutsByAsset.TransactionsOut, assetShortName)).ToList();
+                var outs = inOutsByAsset.TransactionsOut.Select(p => Out.Create(p, divisibility, assetShortName)).ToList();
 
                 var total = outs.Any() ? outs.Sum(p => p.Value) : ins.Sum(p => p.Value);
+
+                var insWithoutChange = ins.Select(p => p.Clone<In>()).ToList();
+                var outsWithoutChange = outs.Select(p => p.Clone<Out>()).ToList();
+                var showChange = false;
+
+                #region CalculateWithReturnedChange
+
+                foreach (var input in ins.Where(inp => outs.Any(x => x.Address == inp.Address)))
+                {
+                    foreach (var output in outs.Where(x => x.Address == input.Address).ToList())
+                    {
+                        showChange = true;
+                        input.Value += output.Value;
+
+                        outs.Remove(output);
+                    }
+                }
+
+                #endregion
 
                 var result = new ColoredAsset
                 {
@@ -240,8 +292,15 @@ namespace BCNExplorer.Web.Models
                     Divisibility = divisibility,
                     Name = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.Name, inOutsByAsset.AssetId),
                     IconImageUrl = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.IconUrl, null),
+
                     AggregatedIns = AssetHelper.GroupByAddress(ins),
                     AggregatedOuts = AssetHelper.GroupByAddress(outs),
+
+                    AggregatedInsWithoutChange = AssetHelper.GroupByAddress(insWithoutChange),
+                    AggregatedOutsWithoutChange = AssetHelper.GroupByAddress(outsWithoutChange),
+
+                    ShowWithoutChange = showChange,
+
                     ShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null),
                     Total = total,
                     IsKnown = assetDictionary.Dic.ContainsKey(inOutsByAsset.AssetId)
