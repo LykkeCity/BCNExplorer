@@ -100,7 +100,7 @@ namespace BCNExplorer.Web.Models
                     foreach (var output in outs.Where(x => x.Address == input.Address).ToList())
                     {
                         showChange = true;
-                        input.Value += output.Value;
+                        input.Value = Convert.ToDouble(Convert.ToDecimal(output.Value) + Convert.ToDecimal(input.Value));
 
                         outs.Remove(output);
                     }
@@ -278,7 +278,8 @@ namespace BCNExplorer.Web.Models
                     foreach (var output in outs.Where(x => x.Address == input.Address).ToList())
                     {
                         showChange = true;
-                        input.Value += output.Value;
+                        //floating point hack
+                        input.Value = Convert.ToDouble(Convert.ToDecimal(output.Value) + Convert.ToDecimal(input.Value));
 
                         outs.Remove(output);
                     }
