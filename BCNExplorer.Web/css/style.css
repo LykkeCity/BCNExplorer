@@ -2052,6 +2052,8 @@ a { color: inherit; }
 
 .transaction_details .wallet_value { font-weight: 600; color: #333333; letter-spacing: 0.2px; text-align: right; padding-top: 10px; padding-top: 0.625rem; font-size: 18px; font-size: 1.125rem; line-height: 20px; line-height: 1.25rem; }
 
+.transaction_details .btn_show_changes { padding-top: 10px; padding-top: 0.625rem; margin-right: 10px; margin-right: 0.625rem; line-height: 16px; line-height: 1rem; font-size: 16px; font-size: 1rem; }
+
 .transaction_item { padding: 15px 0; padding: 0.9375rem 0; }
 
 .transaction_item:after, .transaction_item:before { content: ""; display: table; clear: both; }
@@ -2078,7 +2080,9 @@ a { color: inherit; }
 
 .transaction_list__item .icon--chevron-thin-down { margin-right: 0; margin-left: 2px; margin-left: 0.125rem; font-size: 16px; font-size: 1rem; }
 
-.transaction_list__item .links_group { position: relative; padding-left: 40px; padding-left: 2.5rem; }
+.transaction_list__item .links_group { position: relative; padding-left: 35px; padding-left: 2.1875rem; }
+
+@media (min-width: 543px) { .transaction_list__item .links_group { margin-right: -20px; margin-right: -1.25rem; } }
 
 .transaction_list__item .transaction_prev_link { position: absolute; left: 0; top: 50%; margin-top: -16px; margin-top: -1rem; }
 
@@ -2236,3 +2240,7 @@ a { color: inherit; }
 .header { z-index: auto; }
 
 .header.fixed { z-index: 110; }
+
+.btn_show_changes { color: #8c94a0; }
+
+.btn--link { border-radius: 0; }
