@@ -91,44 +91,18 @@ namespace BCNExplorer.Web.Models
 
                 bool showChange = false;
 
-                #region CalculateWithReturnedChange
+                AssetHelper.CalculateWithReturnedChange(ins, outs, ref showChange);
 
-                foreach (var input in ins.Where(inp => outs.Any(x => x.Address == inp.Address)).ToList())
-                {
-                    foreach (var output in outs.Where(x => x.Address == input.Address).ToList())
-                    {
-                        showChange = true;
-                        var value = Convert.ToDouble(Convert.ToDecimal(input.Value) + Convert.ToDecimal(output.Value));
-                        input.Value = value;
-                        output.Value = 0;
-                    }
-                }
-
-                foreach (var input in ins.Where(p => p.Value > 0).ToList())
-                {
-                    outs.Add(Out.Create(input));
-                    ins.Remove(input);
-                }
-
-                if (ins.All(p=>p.Value==0))
+                if (ins.All(p => p.Value == 0) && outs.All(p => p.Value == 0))
                 {
                     ins = ins.Take(1).ToList();
-                }
-                else
-                {
-                    ins = ins.Where(p => p.Value != 0).ToList();
-                }
-
-                if (outs.All(p => p.Value == 0))
-                {
                     outs = outs.Take(1).ToList();
                 }
                 else
                 {
+                    ins = ins.Where(p => p.Value != 0).ToList();
                     outs = outs.Where(p => p.Value != 0).ToList();
                 }
-
-                #endregion
 
                 return new BitcoinAsset
                 {
@@ -310,44 +284,18 @@ namespace BCNExplorer.Web.Models
                 var outsWithoutChange = outs.Select(p => p.Clone<Out>()).ToList();
                 var showChange = false;
 
-                #region CalculateWithReturnedChange
-
-                foreach (var input in ins.Where(inp => outs.Any(x => x.Address == inp.Address)).ToList())
-                {
-                    foreach (var output in outs.Where(x => x.Address == input.Address).ToList())
-                    {
-                        showChange = true;
-                        var value = Convert.ToDouble(Convert.ToDecimal(input.Value) + Convert.ToDecimal(output.Value));
-                        input.Value = value;
-                        output.Value = 0;
-                    }
-                }
-
-                foreach (var input in ins.Where(p => p.Value > 0).ToList())
-                {
-                    outs.Add(Out.Create(input, assetShortName));
-                    ins.Remove(input);
-                }
-
-                if (ins.All(p=>p.Value == 0))
+                AssetHelper.CalculateWithReturnedChange(ins, outs, ref showChange);
+                
+                if (ins.All(p => p.Value == 0) && outs.All(p => p.Value == 0))
                 {
                     ins = ins.Take(1).ToList();
-                }
-                else
-                {
-                    ins = ins.Where(p => p.Value != 0).ToList();
-                }
-
-                if (outs.All(p => p.Value == 0))
-                {
                     outs = outs.Take(1).ToList();
                 }
                 else
                 {
+                    ins = ins.Where(p => p.Value != 0).ToList();
                     outs = outs.Where(p => p.Value != 0).ToList();
                 }
-
-                #endregion
 
                 var total = outs.Any() ? outs.Sum(p => p.Value) : ins.Sum(p => p.Value);
 
@@ -467,7 +415,26 @@ namespace BCNExplorer.Web.Models
                         AggregatedTransactions = allItems
                     };
                 });
-        } 
+        }
+
+        public static void CalculateWithReturnedChange(IEnumerable<AssetInOut> ins,
+            IEnumerable<AssetInOut> outs, ref bool showChange)
+        {
+            foreach (var input in ins.Where(inp => outs.Any(x => x.Address == inp.Address)).ToList())
+            {
+                foreach (var output in outs.Where(x => x.Address == input.Address).OrderBy(p => p.Value).ToList())
+                {
+                    var value = Convert.ToDouble(Convert.ToDecimal(input.Value) + Convert.ToDecimal(output.Value));
+                    if (value > 0)
+                    {
+                        break;
+                    }
+                    showChange = true;
+                    input.Value = value;
+                    output.Value = 0;
+                }
+            }
+        }
     }
 
     public interface IInOutViewModel
