@@ -116,7 +116,7 @@ namespace BCNExplorer.Web.Models
                     AggregatedOuts = AssetHelper.GroupByAddress(outs),
                     AggregatedInsWithoutChange = AssetHelper.GroupByAddress(insWithoutChange),
                     AggregatedOutsWithoutChange = AssetHelper.GroupByAddress(outsWithoutChange),
-                    Total = outs.Sum(p=>p.Value) + feesBtc,
+                    Total = outs.Sum(p => p.Value) + feesBtc,
                     ShowWithoutChange = showChange
                 };
             }
@@ -265,7 +265,6 @@ namespace BCNExplorer.Web.Models
                 var ins = inOutsByAsset.TransactionIn.Select(p => In.Create(p, divisibility, inOutsByAsset.TransactionsOut, assetShortName)).ToList();
                 var outs = inOutsByAsset.TransactionsOut.Select(p => Out.Create(p, divisibility, assetShortName)).ToList();
 
-                var total = outs.Any() ? outs.Sum(p => p.Value) : ins.Sum(p => p.Value);
 
                 var insWithoutChange = ins.Select(p => p.Clone<In>()).ToList();
                 var outsWithoutChange = outs.Select(p => p.Clone<Out>()).ToList();
@@ -286,6 +285,8 @@ namespace BCNExplorer.Web.Models
                 }
 
                 #endregion
+                
+                var total = outs.Any() ? outs.Sum(p => p.Value) : ins.Sum(p => p.Value);
 
                 var result = new ColoredAsset
                 {
