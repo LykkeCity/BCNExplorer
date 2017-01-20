@@ -37,7 +37,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
 
                 var lastParsedBlockHeight = await _parsedBlockRepository.GetLastParsedBlockHeightAsync();
                 // to put notconfirmed tx-s (at last parse block iteration) in prev block. Now this tx have to be confirmed
-                var startParseBlock = lastParsedBlockHeight != 0 ? (lastParsedBlockHeight - 2) : 0;
+                var startParseBlock = lastParsedBlockHeight != 0 ? (lastParsedBlockHeight - 6) : 0;
 
                 for (var i = startParseBlock; i <= mainChain.Tip.Height; i++)
                 {
