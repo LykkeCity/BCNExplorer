@@ -28,21 +28,20 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             _assetScoreRepository = assetScoreRepository;
         }
 
-        public async Task UpdateAssetScores([TimerTrigger("01:00:00", RunOnStartup = true)] TimerInfo timer)
+        public async Task UpdateAssetScores([TimerTrigger("01:00:00", RunOnStartup = false)] TimerInfo timer)
         {
             try
             {
                 await _log.WriteInfo("AssetScoreFunctions", "UpdateAssetScores", null, "Started");
                 var indexes = (await _indexRepository.GetAllAsync()).ToList();
-                var counter = indexes.Count();
                 foreach (var index in indexes)
                 {
-                    Console.WriteLine(counter);
-                    counter--;
                     var score = AssetScoreHelper.CalculateAssetScore(await _assetService.GetAssetAsync(index.AssetIds.FirstOrDefault()), index, indexes);
+
+                    await _log.WriteInfo("AssetScoreFunctions", "UpdateAssetScores", index.AssetIds.FirstOrDefault(), "Done");
                     await _assetScoreRepository.InsertOrReplaceAsync(AssetScore.Create(index.AssetIds, score));
                 }
-                await _log.WriteInfo("AssetScoreFunctions", "UpdateAssetScores", null, "Done");
+                await _log.WriteInfo("AssetScoreFunctions", "UpdateAssetScores", "All", "Done");
             }
             catch (Exception e)
             {

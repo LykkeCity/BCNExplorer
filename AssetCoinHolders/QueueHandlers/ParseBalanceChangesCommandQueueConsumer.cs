@@ -74,7 +74,7 @@ namespace AssetCoinHoldersScanner.QueueHandlers
 
                 var saveResult = await _balanceChangesService.SaveAddressChangesAsync(context.BlockHeight, context.BlockHeight, addressesToTrack);
 
-                await _assetCoinholdersIndexesCommandProducer.CreateAssetCoinholdersUpdateIndexCommand(saveResult.ChangedAssetIds.ToArray());
+                //await _assetCoinholdersIndexesCommandProducer.CreateAssetCoinholdersUpdateIndexCommand(saveResult.ChangedAssetIds.ToArray());
 
                 await _log.WriteInfo("ParseBalanceChangesCommandQueueConsumer", "ParseBlock", context.ToJson(), $"Done. Addr to track {addressesToTrack.Length}. SaveResult {saveResult.ToJson()}");
             }

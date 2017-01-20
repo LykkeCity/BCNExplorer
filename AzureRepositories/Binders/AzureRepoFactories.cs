@@ -34,7 +34,7 @@ namespace AzureRepositories.Binders
 
         public static AssetCoinholdersIndexesCommandProducer CreateAssetCoinholdersIndexesCommandProducer(BaseSettings baseSettings, ILog log)
         {
-            return new AssetCoinholdersIndexesCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.AssetCoinhodersIndexesCommands));
+            return new AssetCoinholdersIndexesCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.AssetCoinhodersIndexesCommands), log);
         }
 
         public static AssetDefinitionParsedBlockRepository CreateAssetParsedBlockRepository(BaseSettings baseSettings, ILog log)
