@@ -42,6 +42,8 @@
 
     var submitGoToBlock = function () {
         $('.js-set-readonly-on-submit').attr('readonly', true);
+        $('.js-change-go-to-block').attr('disabled', true);
+
         var at = $('#js-go-to-block').val();
         var helpData = $.parseJSON($('#js-submit-go-to-block-height').val());
 
@@ -68,11 +70,16 @@
     }
 
     $('body').on('click', '.js-change-go-to-block', function () {
-        var block = $(this).data('block');
-        var $input = $('#js-go-to-block');
+        var $self = $(this);
 
-        $input.val(block);
-        submitGoToBlock();
+        if (!$self.attr('disabled')) {
+            var block = $self.data('block');
+            var $input = $('#js-go-to-block');
+
+            $input.val(block);
+            submitGoToBlock();
+        }
+
         return false;
     });
 
@@ -122,7 +129,7 @@
                 fullDate.add(time.get('minute'), 'minute');
 
                 $('.js-set-readonly-on-submit').attr('readonly', true);
-
+                $('.js-change-go-to-block').attr('disabled', true);
                 var submitData = {
                     at: fullDate.utc().format()
                 };

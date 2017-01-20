@@ -74,6 +74,7 @@
 
 
                 $('.js-set-readonly-on-submit').attr('readonly', true);
+                $('.js-change-go-to-block').attr('disabled', true);
                 $loader.show();
                 $panelToHide.hide();
                 //alert(fullDate.utc().format());
@@ -110,6 +111,7 @@
                 var $panelToHide = $('#js-balance-data');
 
                 $('.js-set-readonly-on-submit').attr('readonly', true);
+                $('.js-change-go-to-block').attr('disabled', true);
                 $loader.show();
                 $panelToHide.hide();
 
@@ -124,8 +126,15 @@
             };
 
             $('.js-change-go-to-block').on('click', function () {
-                var height = $(this).data('block');
-                submit(height);
+                var $self = $(this);
+
+                if (!$self.attr('disabled')) {
+                    var height = $self.data('block');
+                    submit(height);
+                }
+
+
+                return false;
             });
 
             $('#js-go-to-block').on('keyup', $.debounce(1500, function () {
