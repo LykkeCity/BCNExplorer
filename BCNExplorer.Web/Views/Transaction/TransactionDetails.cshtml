@@ -1,4 +1,5 @@
-﻿@using Common
+﻿@using BCNExplorer.Web.Helpers
+@using Common
 @model TransactionViewModel
 @{
     Layout = null;
@@ -29,7 +30,7 @@
                     </div>
                     @if (Model.Block != null)
                     {
-                        <span class="action_text">@Model.Block.Time.ToString("f")</span>
+                        <span class="action_text">@Model.Block.Time.ToStringBcnExplolerFormat()</span>
                     }
                     <span class="middot">·</span>
                     <span class="action_text">@Model.InputsCount @Utils.GenderAmount(Model.InputsCount, "input", "inputs", "inputs")</span>

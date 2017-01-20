@@ -245,6 +245,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BcnDateHelper.cs" />
     <Compile Include="Helpers\ClaimsHelper.cs" />
     <Compile Include="Helpers\QRCode.cs" />
     <Compile Include="Models\AddressMainInfoViewModel.cs" />

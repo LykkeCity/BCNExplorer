@@ -1,4 +1,5 @@
-﻿@model BlockViewModel
+﻿@using BCNExplorer.Web.Helpers
+@model BlockViewModel
 
 @{
     ViewBag.Title = "Block - " + Model.Hash;
@@ -51,7 +52,7 @@
                     <tr>
                         <td><b>Date:</b></td>
                         <td>
-                            @($"{Model.Time:F}")
+                            @Model.Time.ToStringBcnExplolerFormat()
                         </td>
                     </tr>
                     <tr>
