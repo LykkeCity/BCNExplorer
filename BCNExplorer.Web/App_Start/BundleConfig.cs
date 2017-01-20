@@ -49,7 +49,7 @@ namespace BCNExplorer.Web
             bundles.Add(new Bundle("~/bundles/css/style")
                 .Include("~/css/style.css", new CssRewriteUrlTransform()));
 
-            //BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = true;
         }
     }
 }
