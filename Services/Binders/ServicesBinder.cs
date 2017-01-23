@@ -5,6 +5,7 @@ using Common.IocContainer;
 using Common.Log;
 using Core.AddressService;
 using Core.Asset;
+using Core.BalanceReport;
 using Core.Block;
 using Core.SearchService;
 using Core.Settings;
@@ -14,6 +15,7 @@ using Providers.Providers.Asset;
 using Services.Address;
 using Services.Asset;
 using Services.BalanceChanges;
+using Services.BalanceReport;
 using Services.BlockChain;
 using Services.MainChain;
 using Services.Search;
@@ -33,6 +35,7 @@ namespace Services.Binders
             ioc.RegisterPerCall<ITransactionService, TransactionService>();
             ioc.RegisterPerCall<IAddressService, AddressService>();
             ioc.RegisterPerCall<ISearchService, SearchService>();
+            ioc.RegisterPerCall<IReportRender, PdfReportRenderer>();
 
             ioc.RegisterFactorySingleTone(() =>
                 new CachedDataDictionary<string, IAssetDefinition>(
