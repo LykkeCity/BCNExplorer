@@ -44,7 +44,6 @@ namespace BCNExplorer.Web.Controllers
             return View("NotFound");
         }
 
-        [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         [Route("address/balance/{id}")]
         public Task<ActionResult> Balance(string id)
         {

@@ -86,7 +86,16 @@ namespace Services.Address
                     TotalTransactions = summary.Confirmed.TotalTransactions,
                     UnconfirmedBalanceDelta = summary.Unconfirmed?.Balance ?? 0
                 };
-                var unconfirmedAssets = summary.Unconfirmed?.Assets;
+                var unconfirmedAssets = summary.Unconfirmed?.Assets ?? Enumerable.Empty<NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary>();
+
+                foreach (var assetSummary in unconfirmedAssets.Where(p => !summary.Confirmed.Assets.Select(x=>x.AssetId).Contains(p.AssetId))) //assets with 0
+                {
+                    summary.Confirmed.Assets.Add(new NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary
+                    {
+                        AssetId = assetSummary.AssetId
+                    });
+                }
+
                 result.ColoredBalances = summary.Confirmed.Assets.Select(p =>
                 {
                     var coloredBalance = new ColoredBalance

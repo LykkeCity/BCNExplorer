@@ -25,14 +25,14 @@ namespace Providers.Providers.Ninja
         {
             public NinjaAddressBalance()
             {
-                Assets = Enumerable.Empty<NinjaAddressAssetSummary>();
+                Assets = Enumerable.Empty<NinjaAddressAssetSummary>().ToList();
             }
 
             public int TotalTransactions { get; set; }
 
             public long Balance { get; set; }
 
-            public IEnumerable<NinjaAddressAssetSummary> Assets { get; set; }
+            public IList<NinjaAddressAssetSummary> Assets { get; set; }
 
             public class NinjaAddressAssetSummary
             {
@@ -55,7 +55,7 @@ namespace Providers.Providers.Ninja
                                AssetId = p.AssetId,
                                Quantity = p.Quantity,
                                Received = p.Received
-                           })
+                           }).ToList()
                     };
                 }
 
