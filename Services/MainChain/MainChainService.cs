@@ -24,7 +24,7 @@ namespace Services.MainChain
         private static SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private ObjectCache Cache => MemoryCache.Default;
 
-        private string FilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "bin", "chain.dat").ToString();
+        private string FilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "chain.dat").ToString();
         private const string BlobContainerName = "mainchain";
         private const string BlobKeyName = "data";
         private const string CacheKey = "MainChainSource";

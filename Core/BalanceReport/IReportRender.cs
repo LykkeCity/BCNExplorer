@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Threading.Tasks;
 using Core.Block;
 
 namespace Core.BalanceReport
@@ -39,6 +41,15 @@ namespace Core.BalanceReport
     {
         public string ClientId { get; set; }
         public string Address { get; set; }
+
+        public static Client Create(string clientId, string address)
+        {
+            return new Client
+            {
+                Address = address,
+                ClientId = clientId
+            };
+        }
     }
 
     public interface IFiatPrices
@@ -86,7 +97,7 @@ namespace Core.BalanceReport
 
     public interface IReportRender
     {
-        Stream RenderBalance(IClient client, 
+        Task<Stream> RenderBalanceAsync(IClient client, 
             IBlockHeader reportedAtBlock, 
             IFiatPrices fiatPrices, 
             IEnumerable<IAssetBalance> balances);

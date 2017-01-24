@@ -22,7 +22,7 @@ namespace TestConsole
             var _blockService = container.GetObject<IBlockService>();
             var _addressProvider = container.GetObject<IAddressService>();
             var _balanceChangesRepository = container.GetObject<IAssetBalanceChangesRepository>();
-            var id = "AXkedGbAH1XGDpAypVzA5eyjegX4FaCnvM";
+            var id = "AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog";
             var asset = await _assetProvider.GetAssetAsync(id);
 
             var result = AssetCoinholdersViewModel.Create(
