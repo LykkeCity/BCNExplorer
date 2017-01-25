@@ -38,6 +38,7 @@ namespace TestConsole
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)
         {
             settings.CacheMainChainLocalFile = true;
+            settings.ExplolerUrl = "https://blockchainexplorer.lykke.com/";
             container.Register<ILog>(log);
 
             container.BindProviders(settings, log);

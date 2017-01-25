@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
+using Core.Asset;
 using Core.Block;
 
 namespace Core.BalanceReport
@@ -33,21 +34,24 @@ namespace Core.BalanceReport
 
     public interface IClient
     {
-        string ClientId { get; }
+        string ClientEmail { get; }
         string Address { get; }
+        string BtcExplolerUrl { get; }
     }
 
     public class Client:IClient
     {
-        public string ClientId { get; set; }
+        public string ClientEmail { get; set; }
         public string Address { get; set; }
+        public string BtcExplolerUrl { get; set; }
 
-        public static Client Create(string clientId, string address)
+        public static Client Create(string clientId, string address, string btcExplolerUrl)
         {
             return new Client
             {
                 Address = address,
-                ClientId = clientId
+                ClientEmail = clientId,
+                BtcExplolerUrl = btcExplolerUrl
             };
         }
     }
@@ -97,9 +101,10 @@ namespace Core.BalanceReport
 
     public interface IReportRender
     {
-        Task<Stream> RenderBalanceAsync(IClient client, 
+        void RenderBalance(Stream outputStream, IClient client, 
             IBlockHeader reportedAtBlock, 
             IFiatPrices fiatPrices, 
-            IEnumerable<IAssetBalance> balances);
+            IEnumerable<IAssetBalance> balances,
+            IDictionary<string, IAssetDefinition> assetDefinitions);
     }
 }

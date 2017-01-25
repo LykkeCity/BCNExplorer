@@ -12,6 +12,13 @@ namespace Core.AddressService
         IEnumerable<IColoredBalance> ColoredBalances { get; }
     }
 
+    public interface IColoredBalance
+    {
+        string AssetId { get; }
+        double Quantity { get; }
+        double UnconfirmedQuantityDelta { get; }
+    }
+
     public interface IAddressMainInfo
     {
         string AddressId { get; }
@@ -31,14 +38,7 @@ namespace Core.AddressService
     {
         string TransactionId { get; }
     }
-
-    public interface IColoredBalance
-    {
-        string AssetId { get; }
-        double Quantity { get; }
-        double UnconfirmedQuantityDelta { get; }
-    }
-
+    
     public interface IAddressService
     {
         Task<IAddressBalance> GetBalanceAsync(string id, int? at = null);
