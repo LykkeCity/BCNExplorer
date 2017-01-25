@@ -236,14 +236,21 @@ namespace Services.BalanceReport
 
 
                     var assetUrl = _baseSettings.ExplolerUrl + "asset/" + assetBalance.AssetId;
-                    
-                    
+
                     balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
                     balancesTable.AddCell(new Phrase(assetName, smallFontBold));
                     //balancesTable.DefaultCell.BorderWidthLeft = balancetableBorderRegularWidth;
 
                     balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                    balancesTable.AddCell(new Anchor("view", smallLinkFont) { Reference = assetUrl });
+
+                    if (assetBalance.AssetId != "BTC")
+                    {
+                        balancesTable.AddCell(new Anchor("view", smallLinkFont) {Reference = assetUrl});
+                    }
+                    else
+                    {
+                        balancesTable.AddCell(new Phrase("", smallFontRegular));
+                    }
 
                     balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
                     balancesTable.AddCell(new Phrase($"{coloredValue.ToStringBtcFormat()} {assetNameShort}", smallFontRegular));
