@@ -78,6 +78,8 @@ namespace Services.BalanceReport
             var smallFontBold = new Font(GetBaseFontBold(12));
             var smallLinkFont = new Font(GetLinkFont(12));
 
+            const string fiatPriceFormat = "### ### ### ### ##0.00";
+
 
             var document = new Document();
             using (var writer = PdfWriter.GetInstance(document, outputStream))
@@ -98,7 +100,7 @@ namespace Services.BalanceReport
 
                 var mainInfoTable = new PdfPTable(2);
                 
-                mainInfoTable.SetWidths(new [] { 1f, 3f });
+                mainInfoTable.SetWidths(new [] { 1f, 2.5f });
                 mainInfoTable.WidthPercentage = 100;
                 
                 mainInfoTable.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -151,22 +153,38 @@ namespace Services.BalanceReport
 
                 #region Balances Table 
 
+                //var balancetableBorderBoldWidth = 1f;
+                //var balancetableBorderRegularWidth = 0.5f;
+
                 var balancesTable = new PdfPTable(5);
 
                 balancesTable.SetWidths(new[] { 1, 0.6f, 1, 1, 1 });
                 balancesTable.WidthPercentage = 100;
+
                 balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 balancesTable.DefaultCell.VerticalAlignment = Element.ALIGN_BASELINE;
                 balancesTable.DefaultCell.MinimumHeight = 30;
-
                 #region Header 
+
+                //balancesTable.DefaultCell.BorderWidthLeft = balancetableBorderBoldWidth;
+                //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderBoldWidth;
+                //balancesTable.DefaultCell.BorderWidthTop = balancetableBorderBoldWidth;
+                //balancesTable.DefaultCell.BorderWidthBottom = balancetableBorderBoldWidth;
+
+                //balancesTable.DefaultCell.BorderWidth = balancetableBorderBoldWidth;
 
                 balancesTable.AddCell(new Phrase("Asset", smallFontBold));
                 balancesTable.AddCell(new Phrase("Definition", smallFontBold));
                 balancesTable.AddCell(new Phrase("Position [1]", smallFontBold));
                 balancesTable.AddCell(new Phrase("Market Price [2]", smallFontBold));
                 balancesTable.AddCell(new Phrase("Market Value [3]", smallFontBold));
-                
+
+                //balancesTable.DefaultCell.BorderWidth = balancetableBorderRegularWidth;
+
+                //balancesTable.DefaultCell.BorderWidthLeft = balancetableBorderRegularWidth;
+                //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderRegularWidth;
+                //balancesTable.DefaultCell.BorderWidthTop = balancetableBorderRegularWidth;
+                //balancesTable.DefaultCell.BorderWidthBottom = balancetableBorderRegularWidth;
                 #endregion
 
                 #region Rows
@@ -205,7 +223,7 @@ namespace Services.BalanceReport
                     {
                         marketValue = marketPrice.Value * coloredValue;
                         marketValue = Math.Round(marketValue.Value, 2);
-                        sum += marketPrice.Value;
+                        sum += marketValue.Value;
                     }
 
                     var marketPriceString = marketPrice != null ? marketPrice.Value.ToStringBtcFormat() : "";
@@ -218,9 +236,11 @@ namespace Services.BalanceReport
 
 
                     var assetUrl = _baseSettings.ExplolerUrl + "asset/" + assetBalance.AssetId;
-
+                    
+                    
                     balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
                     balancesTable.AddCell(new Phrase(assetName, smallFontBold));
+                    //balancesTable.DefaultCell.BorderWidthLeft = balancetableBorderRegularWidth;
 
                     balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     balancesTable.AddCell(new Anchor("view", smallLinkFont) { Reference = assetUrl });
@@ -233,13 +253,20 @@ namespace Services.BalanceReport
 
 
                     balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                    //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderBoldWidth;
                     balancesTable.AddCell(new Phrase(marketValueString, smallFontRegular));
-
+                    //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderRegularWidth;
                 }
 
                 #endregion
 
                 #region Total
+
+                //balancesTable.DefaultCell.BorderWidthLeft = balancetableBorderBoldWidth;
+                //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderBoldWidth;
+                //balancesTable.DefaultCell.BorderWidthTop = balancetableBorderBoldWidth;
+                //balancesTable.DefaultCell.BorderWidthBottom = balancetableBorderBoldWidth;
+                //balancesTable.DefaultCell.BorderWidth = balancetableBorderBoldWidth;
 
                 balancesTable.AddCell(new Phrase("", smallFontRegular));
                 balancesTable.AddCell(new Phrase("", smallFontRegular));
@@ -249,7 +276,7 @@ namespace Services.BalanceReport
                 balancesTable.AddCell(new Phrase("Total", smallFontBold));
 
                 balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                balancesTable.AddCell(new Phrase(sum.ToStringBtcFormat(), smallFontBold));
+                balancesTable.AddCell(new Phrase(sum.ToStringBtcFormat() + " " + fiatPrices.CurrencyName, smallFontBold));
 
                 #endregion
 
