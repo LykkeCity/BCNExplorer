@@ -112,6 +112,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\appveyor.pubxml" />
     <None Include="Properties\webjob-publish-settings.json" />
     <None Include="Resources\Pdf\fonts\proximanova-bold-webfont.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
