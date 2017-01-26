@@ -122,7 +122,7 @@ namespace Services.BalanceReport
                 #region Trading wallet ID 
 
                 mainInfoTable.AddCell(new Phrase("Trading wallet ID", mainFontBold));
-                mainInfoTable.AddCell(new Anchor(client.Address, linkFont) { Reference = client.BtcExplolerUrl });
+                mainInfoTable.AddCell(new Anchor(client.Address, linkFont) { Reference = _baseSettings.ExplolerUrl + "address/" + client.Address });
 
                 #endregion
 

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Core.Asset;
 using Core.Block;
@@ -36,22 +38,19 @@ namespace Core.BalanceReport
     {
         string ClientEmail { get; }
         string Address { get; }
-        string BtcExplolerUrl { get; }
     }
 
     public class Client:IClient
     {
         public string ClientEmail { get; set; }
         public string Address { get; set; }
-        public string BtcExplolerUrl { get; set; }
 
-        public static Client Create(string clientId, string address, string btcExplolerUrl)
+        public static Client Create(string clientId, string address)
         {
             return new Client
             {
                 Address = address,
-                ClientEmail = clientId,
-                BtcExplolerUrl = btcExplolerUrl
+                ClientEmail = clientId
             };
         }
     }
@@ -101,7 +100,7 @@ namespace Core.BalanceReport
 
     public interface IReportRender
     {
-        void RenderBalance(Stream outputStream, IClient client, 
+        void RenderBalance(Stream outputStream, IClient client,
             IBlockHeader reportedAtBlock, 
             IFiatPrices fiatPrices, 
             IEnumerable<IAssetBalance> balances,

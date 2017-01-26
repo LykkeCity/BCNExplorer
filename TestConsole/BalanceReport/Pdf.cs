@@ -85,7 +85,7 @@ namespace TestConsole.BalanceReport
             using (var fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
             {
                 reportRender.RenderBalance(fileStream, 
-                    Client.Create("lp-slr@lykke.com", "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a", "http://blockchainexplorer.lykke.com/address/anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a"), 
+                    Client.Create("lp-slr@lykke.com", "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a"), 
                     blockHeader,
                     fiatPrices,
                     balances, assetDic);
