@@ -1,6 +1,7 @@
 ﻿using AzureRepositories.Asset;
 using AzureRepositories.AssetCoinHolders;
 using AzureRepositories.AssetDefinition;
+using AzureRepositories.BalanceReport;
 using AzureStorage.Blob;
 using AzureStorage.Queue;
 using AzureStorage.Tables;
@@ -31,6 +32,12 @@ namespace AzureRepositories.Binders
         {
             return new AssetChangesParseBlockCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.AssetChangesParseBlockCommands));
         }
+
+        public static SendBalanceReportCommandQueryProducer CreateSendBalanceReportCommandQueryProducer(BaseSettings baseSettings, ILog log)
+        {
+            return new SendBalanceReportCommandQueryProducer(new AzureQueueExt(baseSettings.Db.SharedStorageConnString, JobsQueueNames.BalaceReporting), log);
+        }
+        
 
         public static AssetCoinholdersIndexesCommandProducer CreateAssetCoinholdersIndexesCommandProducer(BaseSettings baseSettings, ILog log)
         {

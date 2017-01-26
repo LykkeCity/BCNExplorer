@@ -6,5 +6,6 @@
         public const string AssetDefinitionParseBlockCommands = "parseblockcommands";
         public const string AssetChangesParseBlockCommands = "assetchangescommands";
         public const string AssetCoinhodersIndexesCommands = "coinholdersindexcommands";
+        public const string BalaceReporting = "balancereporting";
     }
 }

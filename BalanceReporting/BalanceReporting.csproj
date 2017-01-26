@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CCF1E3B1-16B8-404D-8A5A-AD8862AA6858}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{154C0122-AF9E-4B48-BCC1-36CBFB74698B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AzureRepositories</RootNamespace>
-    <AssemblyName>AzureRepositories</AssemblyName>
+    <RootNamespace>BalanceReporting</RootNamespace>
+    <AssemblyName>BalanceReporting</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -67,18 +69,6 @@
       <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MongoDB.Bson, Version=2.4.0.70, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MongoDB.Bson.2.4.0\lib\net45\MongoDB.Bson.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MongoDB.Driver, Version=2.4.0.70, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MongoDB.Driver.2.4.0\lib\net45\MongoDB.Driver.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MongoDB.Driver.Core, Version=2.4.0.70, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MongoDB.Driver.Core.2.4.0\lib\net45\MongoDB.Driver.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="NCrontab, Version=3.2.20120.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ncrontab.3.2.0\lib\net45\NCrontab.dll</HintPath>
       <Private>True</Private>
@@ -89,10 +79,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Spatial, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.8.1\lib\net40\System.Spatial.dll</HintPath>
       <Private>True</Private>
@@ -109,34 +95,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Asset\AssetBalanceChangesRepository.cs" />
-    <Compile Include="Asset\AssetChangesParseBlockCommandProducer.cs" />
-    <Compile Include="Asset\AssetCoinholdersIndexesCommandProducer.cs" />
-    <Compile Include="Asset\AssetCoinholdersIndexRepository.cs" />
-    <Compile Include="Asset\AssetDefinitionParseBlockCommandProducer.cs" />
-    <Compile Include="Asset\AssetDefinitionParsedBlockRepository.cs" />
-    <Compile Include="Asset\AssetDefinitionRepository.cs" />
-    <Compile Include="Asset\AssetScoreRepository.cs" />
-    <Compile Include="JobsQueueNames.cs" />
-    <Compile Include="QueueReaders\CoinholderIndexesQueueReader.cs" />
-    <Compile Include="QueueReaders\BalanceReportingQueueReader.cs" />
-    <Compile Include="QueueReaders\ParseBlockQueueReader.cs" />
-    <Compile Include="Asset\UpdateAssetDataCommandProducer.cs" />
-    <Compile Include="Binders\AzureRepoFactories.cs" />
-    <Compile Include="Binders\AzureRepositoriesBinder.cs" />
-    <Compile Include="CloudConfigurationLoader.cs" />
-    <Compile Include="GeneralSettingsReader.cs" />
-    <Compile Include="Log\LogToTable.cs" />
-    <Compile Include="Log\LogToTableAndConsole.cs" />
-    <Compile Include="Monitoring\ServiceMonitoringRepository.cs" />
+    <Compile Include="Binders\BalancReportingFunctionsBinder.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BalanceReport\SendBalanceReportCommandQueryProducer.cs" />
+    <Compile Include="QueueHandlers\BalanceReportQueueConsumer.cs" />
+    <Compile Include="TimerFunctions\SendMonitorDataFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Properties\webjob-publish-settings.json" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AzureRepositories\AzureRepositories.csproj">
+      <Project>{ccf1e3b1-16b8-404d-8a5a-ad8862aa6858}</Project>
+      <Name>AzureRepositories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AzureStorage\AzureStorage.csproj">
       <Project>{b3642177-0525-48a7-844e-7e5054fef3b5}</Project>
       <Name>AzureStorage</Name>
@@ -149,9 +123,22 @@
       <Project>{1dcf2948-0a67-4169-8c2a-43da4909e3a1}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JobsCommon\JobsCommon.csproj">
+      <Project>{7e768c48-d21e-4c1d-8681-267d6107eea0}</Project>
+      <Name>JobsCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NinjaProviders\Providers.csproj">
+      <Project>{f6a82c81-9e41-4c77-b665-50bfcdba853b}</Project>
+      <Name>Providers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\Services.csproj">
+      <Project>{610f820d-9443-453c-abfd-1a34026b4ae5}</Project>
+      <Name>Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.12\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.12\tools\webjobs.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

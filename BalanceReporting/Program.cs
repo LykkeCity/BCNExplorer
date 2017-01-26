@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using AssetCoinHoldersScanner.Binders;
-using AssetCoinHoldersScanner.QueueHandlers;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AzureRepositories;
+using AzureRepositories.BalanceReport;
 using AzureRepositories.Binders;
 using AzureRepositories.Log;
 using AzureStorage.Tables;
+using BalanceReporting.Binders;
+using BalanceReporting.QueueHandlers;
 using Common;
 using Common.Log;
 using Core.Settings;
@@ -14,7 +19,7 @@ using Microsoft.Azure.WebJobs;
 using Providers;
 using Services.Binders;
 
-namespace AssetCoinHoldersScanner
+namespace BalanceReporting
 {
     class Program
     {
@@ -28,13 +33,13 @@ namespace AssetCoinHoldersScanner
                         JobsConnectionStringSettings.ConnectionString);
 
                 var logToTable =
-                    new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "LogAssetCoinHolders",
+                    new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "BalanceReporting",
                         null));
                 log = new LogToTableAndConsole(logToTable, new LogToConsole());
 
                 var container = new DResolver();
                 InitContainer(container, settings, log);
-                
+
                 var config = new JobHostConfiguration
                 {
                     JobActivator = container,
@@ -42,7 +47,7 @@ namespace AssetCoinHoldersScanner
                     Tracing = { ConsoleLevel = TraceLevel.Error },
                     StorageConnectionString = settings.Db.AssetsConnString,
                 };
-                
+
                 config.UseTimers();
 
                 if (settings.Jobs.IsDebug)
@@ -50,14 +55,17 @@ namespace AssetCoinHoldersScanner
                     config.UseDevelopmentSettings();
                 }
 
-                var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBalanceChangesCommandQueueConsumer>();
-                parseBlockCommandQueueConsumer.Start();
-
-                var updateCoinholersIndexesQueueConsumer = container.IoC.CreateInstance<AssetCoinholderIndexesCommandsQueueConsumer>();
-                updateCoinholersIndexesQueueConsumer.Start();
+                //TEST
+                container.IoC.GetObject<SendBalanceReportCommandQueryProducer>()
+                    .CreaseSendBalanceReportCommandAsync("netsky@bk.ru", "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a", DateTime.Now, "USD")
+                    .Wait();
+                //Test
+                
+                container.IoC.CreateInstance<BalanceReportQueueConsumer>().Start();
 
                 var host = new JobHost(config);
                 host.RunAndBlock();
+
             }
             catch (Exception e)
             {
@@ -76,7 +84,7 @@ namespace AssetCoinHoldersScanner
             container.IoC.Register(settings);
             container.IoC.BindAzureRepositories(settings, log);
             container.IoC.BindServices(settings, log);
-            container.IoC.BindAssetsCoinHoldersFunctions(settings, log);
+            container.IoC.BindBalanceReportingFunctions(settings, log);
         }
     }
 }
