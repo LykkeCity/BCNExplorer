@@ -84,13 +84,19 @@ namespace Services.BalanceReport
             var document = new Document();
             using (var writer = PdfWriter.GetInstance(document, outputStream))
             {
+                writer.CloseStream = false;
                 document.Open();
 
                 #region Header/Logo
                 
                 document.Add(new Paragraph("Digital Asset Portfolio Report", headerFont) { SpacingAfter = 50 });
 
-                var logo = Image.GetInstance(new FileStream(@"Resources\Pdf\lykke_logo.png", FileMode.Open));
+                Image logo;
+                using (var fs = new FileStream(@"Resources\Pdf\lykke_logo.png", FileMode.Open))
+                {
+                    logo = Image.GetInstance(fs);
+                }
+
                 logo.SetAbsolutePosition(400, 765);
                 writer.DirectContent.AddImage(logo);
 

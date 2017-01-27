@@ -138,7 +138,7 @@ namespace BalanceReporting.QueueHandlers
                             {
                                FileName = "BalanceReport.pdf",
                                ContentType = "application/pdf",
-                               Stream = new MemoryStream(strm.ToArray())
+                               Stream = strm 
                             }
                         }
                     };
