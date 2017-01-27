@@ -314,7 +314,6 @@ namespace Services.BalanceReport
                 #endregion
 
                 document.Close();
-                writer.Close();
             }
         }
     }
