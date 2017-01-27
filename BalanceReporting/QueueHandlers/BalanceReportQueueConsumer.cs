@@ -13,6 +13,7 @@ using Core.AddressService;
 using Core.Asset;
 using Core.BalanceReport;
 using Core.Block;
+using Core.Email;
 using Core.Settings;
 using Providers;
 using Providers.Helpers;
@@ -31,6 +32,7 @@ namespace BalanceReporting.QueueHandlers
         private readonly IAddressService _addressService;
         private readonly IAssetService _assetService;
         private readonly IBlockService _blockService;
+        private readonly IEmailSender _emailSender;
 
         public BalanceReportQueueConsumer(ILog log,
             IBalanceReportingQueueReader queueReader,
@@ -39,7 +41,8 @@ namespace BalanceReporting.QueueHandlers
             IReportRender reportRender, 
             IAddressService addressService, 
             IAssetService assetService, 
-            IBlockService blockService)
+            IBlockService blockService, 
+            IEmailSender emailSender)
         {
             _log = log;
             _queueReader = queueReader;
@@ -49,6 +52,7 @@ namespace BalanceReporting.QueueHandlers
             _addressService = addressService;
             _assetService = assetService;
             _blockService = blockService;
+            _emailSender = emailSender;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -120,14 +124,31 @@ namespace BalanceReporting.QueueHandlers
                 {
                     File.Delete("./BalanceReport.pdf");
                 }
-                using (var fileStream = new FileStream("./BalanceReport.pdf", FileMode.OpenOrCreate))
+
+                using (var strm = new MemoryStream())
                 {
-                    _reportRender.RenderBalance(fileStream,
-                        Client.Create(context.Email, context.Address),
-                        blockHeader,
-                        fiatPrices,
-                        balances, 
-                        assetDic);
+                    //_reportRender.RenderBalance(strm,
+                    //    Client.Create(context.Email, context.Address),
+                    //    blockHeader,
+                    //    fiatPrices,
+                    //    balances,
+                    //    assetDic);
+
+                    var mes = new EmailMessage
+                    {
+                        Subject = "Lykke Balance Report",
+                        Body = " "
+                        //Attachments = new []
+                        //{
+                        //    new EmailAttachment
+                        //    {
+                        //       FileName = "BalanceReport.pdf",
+                        //       ContentType = "application/pdf"
+                        //    }
+                        //}
+                    };
+
+                    await _emailSender.SendEmailAsync(context.Email, mes);
                 }
 
                 await _log.WriteInfo("BalanceReportQueueConsumer", "SendBalanceReport", context.ToJson(), "Done");

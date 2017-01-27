@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Email;
 
 namespace Core.Settings
 {
@@ -31,6 +32,9 @@ namespace Core.Settings
         public bool CacheMainChainLocalFile { get; set; }
 
         public bool DisableRedirectToHttps { get; set; }
+
+        [Required]
+        public ServiceBusEmailSettings ServiceBusEmailSettings { get; set; }
         //[Required]
         //public AuthenticationSettings Authentication { get; set; }
     }
@@ -91,5 +95,20 @@ namespace Core.Settings
 
         [Required]
         public string DbName { get; set; }
+    }
+
+    public class ServiceBusEmailSettings : IServiceBusEmailSettings
+    {
+        [Required]
+        public string NamespaceUrl { get; set; }
+
+        [Required]
+        public string PolicyName { get; set; }
+
+        [Required]
+        public string Key { get; set; }
+
+        [Required]
+        public string QueueName { get; set; }
     }
 }
