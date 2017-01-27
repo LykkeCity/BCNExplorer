@@ -28,7 +28,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             _assetScoreRepository = assetScoreRepository;
         }
 
-        public async Task UpdateAssetScores([TimerTrigger("01:00:00", RunOnStartup = false)] TimerInfo timer)
+        public async Task UpdateAssetScores([TimerTrigger("23:00:00", RunOnStartup = false)] TimerInfo timer)
         {
             try
             {
