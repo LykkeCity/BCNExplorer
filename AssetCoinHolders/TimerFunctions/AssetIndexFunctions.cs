@@ -22,7 +22,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             _assetDefinitionRepository = assetDefinitionRepository;
         }
 
-        public async Task UpdateIndexCoinholdersData([TimerTrigger("12:00:00", RunOnStartup = true)] TimerInfo timer)
+        public async Task UpdateIndexCoinholdersData([TimerTrigger("23:00:00", RunOnStartup = true)] TimerInfo timer)
         {
             await _log.WriteInfo("AssetIndexFunctions", "UpdateIndexCoinholdersData", null, "Started");
 
