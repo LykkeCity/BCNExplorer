@@ -84,7 +84,7 @@ namespace BalanceReporting.QueueHandlers
                     "Ab8mNRBmrPJCmghHDoMsq26GP5vxm7hZpP"
                 };
 
-                var fiatPrices = FiatPrice.Create("USD", new Dictionary<string, decimal>
+                var fiatPrices = FiatPrice.Create(context.Currency, new Dictionary<string, decimal>
                 {
                     {"AJPMQpygd8V9UCAxwFYYHYXLHJ7dUkQJ5w", 0.981345m },//chf
                     {"ASzmrSxhHjioWMYivoawap9yY4cxAfAMxR", 1.05204m },//eur
@@ -117,35 +117,30 @@ namespace BalanceReporting.QueueHandlers
                     });
                 }
 
-
                 var assetDic = await _assetService.GetAssetDefinitionDictionaryAsync();
-
-                if (File.Exists("./BalanceReport.pdf"))
-                {
-                    File.Delete("./BalanceReport.pdf");
-                }
-
+                
                 using (var strm = new MemoryStream())
                 {
-                    //_reportRender.RenderBalance(strm,
-                    //    Client.Create(context.Email, context.Address),
-                    //    blockHeader,
-                    //    fiatPrices,
-                    //    balances,
-                    //    assetDic);
-
+                    _reportRender.RenderBalance(strm,
+                        Client.Create(context.Email, context.Address),
+                        blockHeader,
+                        fiatPrices,
+                        balances,
+                        assetDic);
+                    
                     var mes = new EmailMessage
                     {
-                        Subject = "Lykke Balance Report",
-                        Body = " "
-                        //Attachments = new []
-                        //{
-                        //    new EmailAttachment
-                        //    {
-                        //       FileName = "BalanceReport.pdf",
-                        //       ContentType = "application/pdf"
-                        //    }
-                        //}
+                        Subject = "Lykke Digital Asset Portfolio Report",
+                        Body = " ",
+                        Attachments = new[]
+                        {
+                            new EmailAttachment
+                            {
+                               FileName = "BalanceReport.pdf",
+                               ContentType = "application/pdf",
+                               Stream = new MemoryStream(strm.ToArray())
+                            }
+                        }
                     };
 
                     await _emailSender.SendEmailAsync(context.Email, mes);
