@@ -23,7 +23,6 @@ namespace AzureRepositories.Binders
             ioc.Register(AzureRepoFactories.CreateAssetChangesParseBlockCommandProducer(baseSettings, log));
             ioc.Register(AzureRepoFactories.CreateAssetCoinholdersIndexesCommandProducer(baseSettings, log));
             ioc.Register(AzureRepoFactories.CreateSendBalanceReportCommandQueryProducer(baseSettings, log));
-            ioc.Register<IAssetScoreRepository>(AzureRepoFactories.CreateAssetScoreRepository(baseSettings, log));
 
             ioc.Register<IAssetBalanceChangesRepository>(AzureRepoFactories.CreateAssetBalanceChangesRepository(baseSettings, log));
             

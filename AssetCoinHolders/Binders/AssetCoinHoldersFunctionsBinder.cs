@@ -18,8 +18,6 @@ namespace AssetCoinHoldersScanner.Binders
             ioc.Register<ICoinholderIndexesQueueReader>(AssetFunctionsFactories.CreateCoinholderIndexesQueueReader(baseSettings, log));
             ioc.RegisterSingleTone<SendMonitorData>();
             ioc.RegisterSingleTone<ParseBlocksFunctions>();
-            ioc.RegisterSingleTone<AssetIndexFunctions>();
-            ioc.RegisterSingleTone<AssetScoreFunctions>();
 
             ioc.RegisterSingleTone<ParseBalanceChangesCommandQueueConsumer>();
         }

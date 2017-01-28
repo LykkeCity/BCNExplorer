@@ -5,7 +5,7 @@ using Common.Log;
 using Core.Asset;
 using Microsoft.Azure.WebJobs;
 
-namespace AssetCoinHoldersScanner.TimerFunctions
+namespace AssetIndexer.TimerFunctions
 {
     public class AssetIndexFunctions
     {

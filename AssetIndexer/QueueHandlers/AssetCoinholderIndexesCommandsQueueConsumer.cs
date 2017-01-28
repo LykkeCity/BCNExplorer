@@ -12,7 +12,7 @@ using Core.Transaction;
 using Providers.Helpers;
 using Services.MainChain;
 
-namespace AssetCoinHoldersScanner.QueueHandlers
+namespace AssetIndexer.QueueHandlers
 {
     public class AssetCoinholderIndexesCommandsQueueConsumer : IStarter
     {

@@ -12,6 +12,9 @@
     },
     {
       "filePath": "../BalanceReporting/BalanceReporting.csproj"
+    },
+    {
+      "filePath": "../AssetIndexer/AssetIndexer.csproj"
     }
   ]
 }

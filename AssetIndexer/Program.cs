@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using AssetCoinHoldersScanner.Binders;
-using AssetCoinHoldersScanner.QueueHandlers;
+using AssetIndexer.Binders;
+using AssetIndexer.QueueHandlers;
 using AzureRepositories;
 using AzureRepositories.Binders;
 using AzureRepositories.Log;
@@ -14,7 +14,7 @@ using Microsoft.Azure.WebJobs;
 using Providers;
 using Services.Binders;
 
-namespace AssetCoinHoldersScanner
+namespace AssetIndexer
 {
     class Program
     {
@@ -28,13 +28,13 @@ namespace AssetCoinHoldersScanner
                         JobsConnectionStringSettings.ConnectionString);
 
                 var logToTable =
-                    new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "LogAssetCoinHolders",
+                    new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "LogAssetIndexer",
                         null));
                 log = new LogToTableAndConsole(logToTable, new LogToConsole());
 
                 var container = new DResolver();
                 InitContainer(container, settings, log);
-                
+
                 var config = new JobHostConfiguration
                 {
                     JobActivator = container,
@@ -42,7 +42,7 @@ namespace AssetCoinHoldersScanner
                     Tracing = { ConsoleLevel = TraceLevel.Error },
                     StorageConnectionString = settings.Db.AssetsConnString,
                 };
-                
+
                 config.UseTimers();
 
                 if (settings.Jobs.IsDebug)
@@ -50,9 +50,9 @@ namespace AssetCoinHoldersScanner
                     config.UseDevelopmentSettings();
                 }
 
-                var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBalanceChangesCommandQueueConsumer>();
-                parseBlockCommandQueueConsumer.Start();
-                
+                var updateCoinholersIndexesQueueConsumer = container.IoC.CreateInstance<AssetCoinholderIndexesCommandsQueueConsumer>();
+                updateCoinholersIndexesQueueConsumer.Start();
+
                 var host = new JobHost(config);
                 host.RunAndBlock();
             }
@@ -73,7 +73,7 @@ namespace AssetCoinHoldersScanner
             container.IoC.Register(settings);
             container.IoC.BindAzureRepositories(settings, log);
             container.IoC.BindServices(settings, log);
-            container.IoC.BindAssetsCoinHoldersFunctions(settings, log);
+            container.IoC.BindAssetsIndexerFunctions(settings, log);
         }
     }
 }

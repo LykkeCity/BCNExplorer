@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Common.Log;
 using Core.Asset;
 using Microsoft.Azure.WebJobs;
 using Providers.Helpers;
 
-namespace AssetCoinHoldersScanner.TimerFunctions
+namespace AssetIndexer.TimerFunctions
 {
     public class AssetScoreFunctions
     {
@@ -28,7 +26,7 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             _assetScoreRepository = assetScoreRepository;
         }
 
-        public async Task UpdateAssetScores([TimerTrigger("23:59:00", RunOnStartup = false)] TimerInfo timer)
+        public async Task UpdateAssetScores([TimerTrigger("23:59:00", RunOnStartup = true)] TimerInfo timer)
         {
             try
             {

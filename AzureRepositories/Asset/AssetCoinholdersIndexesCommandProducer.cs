@@ -32,32 +32,26 @@ namespace AzureRepositories.AssetCoinHolders
         {
             foreach (var asset in assetsDefinition)
             {
+                await CreateAssetCoinholdersUpdateIndexCommand(asset.AssetIds.FirstOrDefault());
+            }
+        }
+
+        public async Task CreateAssetCoinholdersUpdateIndexCommand(params string[] assetIds)
+        {
+            foreach (var assetID in assetIds)
+            {
                 await _queueExt.PutMessageAsync(new QueueRequestModel<AssetCoinholdersUpdateIndexCommand>
                 {
                     Data = new AssetCoinholdersUpdateIndexCommand
                     {
-                        AssetId = asset.AssetIds.FirstOrDefault()
+                        AssetId = assetID
                     }
                 });
 
                 await
                     _log.WriteInfo("AssetCoinholdersIndexesCommandProducer", "CreateAssetCoinholdersUpdateIndexCommand",
-                        asset.AssetIds.FirstOrDefault(), "Done");
+                        assetID, "Done");
             }
         }
-
-        //public async Task CreateAssetCoinholdersUpdateIndexCommand(params string[] assetIds)
-        //{
-        //    foreach (var assetID in assetIds)
-        //    {
-        //        await _queueExt.PutMessageAsync(new QueueRequestModel<AssetCoinholdersUpdateIndexCommand>
-        //        {
-        //            Data = new AssetCoinholdersUpdateIndexCommand
-        //            {
-        //                AssetId = assetID
-        //            }
-        //        });
-        //    }
-        //}
     }
 }
