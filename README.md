@@ -44,7 +44,13 @@ A website explores the blockchain and shows information about blocks, transactio
 	},
 	Network:"",
 	ExplolerUrl:"",
-	Secret:""
+	Secret:"",
+	"ServiceBusEmailSettings": {
+		"Key": "",
+		"QueueName": "",
+		"NamespaceUrl": "",
+		"PolicyName": ""								
+	},	
 }
 ```
 * Keys description
@@ -59,3 +65,4 @@ A website explores the blockchain and shows information about blocks, transactio
   * TestNet/MainNet BitcoinNetwork. Write 'mainnet' for MainNet, and 'testnet' for TestNet
   * ExplolerUrl - hosted bcn exploler URL
   * Secret - secret, used in requests to index bcn exploler
+  * ServiceBusEmailSettings - settings for email sender service

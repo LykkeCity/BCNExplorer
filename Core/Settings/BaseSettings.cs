@@ -31,7 +31,10 @@ namespace Core.Settings
 
         public bool CacheMainChainLocalFile { get; set; }
 
+        public bool DisablePersistentCacheMainChain { get; set; }
+
         public bool DisableRedirectToHttps { get; set; }
+
 
         [Required]
         public ServiceBusEmailSettings ServiceBusEmailSettings { get; set; }

@@ -61,11 +61,10 @@ namespace Services.BalanceReport
             return FontFactory.GetFont(fontName, size, Font.UNDERLINE, BaseColor.BLUE);
         }
 
-        public void RenderBalance(Stream outputStream, 
-            IClient client, 
-            IBlockHeader reportedAtBlock, 
+        public void RenderBalance(Stream outputStream, IClient client,
+            IBlockHeader reportedAtBlock,
             IFiatPrices fiatPrices,
-            IEnumerable<IAssetBalance> balances,
+            IClientBalances balances,
             IDictionary<string, IAssetDefinition> assetDefinitions)
         {
             var headerFont = new Font(GetBaseFontBold(22));
@@ -117,18 +116,23 @@ namespace Services.BalanceReport
                 
                 mainInfoTable.SpacingAfter = 30;
 
-                #region ClientID 
+                #region ClientName
 
-                mainInfoTable.AddCell(new Phrase("Client Id", mainFontBold));
-
-                mainInfoTable.AddCell(new Anchor(client.ClientEmail, linkFont) { Reference = "mailto: " + client.ClientEmail });
+                if (!string.IsNullOrEmpty(client.Name))
+                {
+                    mainInfoTable.AddCell(new Phrase("Client Name", mainFontBold));
+                    mainInfoTable.AddCell(new Phrase(client.Name, mainFontRegular));
+                }
 
                 #endregion
 
-                #region Trading wallet ID 
+                #region ClientID 
 
-                mainInfoTable.AddCell(new Phrase("Trading wallet ID", mainFontBold));
-                mainInfoTable.AddCell(new Anchor(client.Address, linkFont) { Reference = _baseSettings.ExplolerUrl + "address/" + client.Address });
+                if (!string.IsNullOrEmpty(client.Email))
+                {
+                    mainInfoTable.AddCell(new Phrase("Client Id", mainFontBold));
+                    mainInfoTable.AddCell(new Anchor(client.Email, linkFont) { Reference = "mailto: " + client.Email });
+                }
 
                 #endregion
 
@@ -170,6 +174,7 @@ namespace Services.BalanceReport
                 balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 balancesTable.DefaultCell.VerticalAlignment = Element.ALIGN_BASELINE;
                 balancesTable.DefaultCell.MinimumHeight = 30;
+
                 #region Header 
 
                 //balancesTable.DefaultCell.BorderWidthLeft = balancetableBorderBoldWidth;
@@ -191,85 +196,97 @@ namespace Services.BalanceReport
                 //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderRegularWidth;
                 //balancesTable.DefaultCell.BorderWidthTop = balancetableBorderRegularWidth;
                 //balancesTable.DefaultCell.BorderWidthBottom = balancetableBorderRegularWidth;
+
+
                 #endregion
 
                 #region Rows
 
-
                 decimal sum = 0;
-                foreach (var assetBalance in balances)
+                foreach (var address in balances.AddressBalances.Select(p=>p.Key))
                 {
-                    int divisibility;
-                    string assetName;
-                    string assetNameShort;
-                    if (assetBalance.AssetId != "BTC")
-                    {
-                        var asset = assetDefinitions[assetBalance.AssetId];
-                        divisibility = asset.Divisibility;
-                        assetName = asset.Name;
-                        assetNameShort = asset.NameShort;
-                    }
-                    else
-                    {
-                        divisibility = 0;
-                        assetName = "Bitcoin";
-                        assetNameShort = "BTC";
-                    }
-
-                    var marketPrice =
-                        fiatPrices.AssetMarketPrices?.FirstOrDefault(p => p.AssetId == assetBalance.AssetId)?.MarketPrice;
-
-                    var coloredValue =
-                        Convert.ToDecimal(
-                            BitcoinUtils.CalculateColoredAssetQuantity(Convert.ToDouble(assetBalance.Quantity),
-                                divisibility));
-
-                    decimal? marketValue = null;
-                    if (marketPrice != null)
-                    {
-                        marketValue = marketPrice.Value * coloredValue;
-                        marketValue = Math.Round(marketValue.Value, 2);
-                        sum += marketValue.Value;
-                    }
-
-                    var marketPriceString = marketPrice != null ? marketPrice.Value.ToStringBtcFormat() : "";
-
-                    string marketValueString = null;
-                    if (marketValue != null)
-                    {
-                        marketValueString = string.Format("{0} {1}", marketValue.Value.ToStringBtcFormat(), marketValue != null ? fiatPrices.CurrencyName : "");
-                    }
-
-
-                    var assetUrl = _baseSettings.ExplolerUrl + "asset/" + assetBalance.AssetId;
-
                     balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                    balancesTable.AddCell(new Phrase(assetName, smallFontBold));
-                    //balancesTable.DefaultCell.BorderWidthLeft = balancetableBorderRegularWidth;
+                    balancesTable.AddCell(new Phrase("WalletId", smallFontBold));
 
-                    balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    balancesTable.DefaultCell.Colspan = 4;
+                    balancesTable.AddCell(new Anchor(address, smallLinkFont) { Reference = _baseSettings.ExplolerUrl + "address/" + address });
+                    balancesTable.DefaultCell.Colspan = 1;
 
-                    if (assetBalance.AssetId != "BTC")
+                    foreach (var assetBalance in balances.AddressBalances[address])
                     {
-                        balancesTable.AddCell(new Anchor("view", smallLinkFont) {Reference = assetUrl});
+                        int divisibility;
+                        string assetName;
+                        string assetNameShort;
+                        if (assetBalance.AssetId != "BTC")
+                        {
+                            var asset = assetDefinitions[assetBalance.AssetId];
+                            divisibility = asset.Divisibility;
+                            assetName = asset.Name;
+                            assetNameShort = asset.NameShort;
+                        }
+                        else
+                        {
+                            divisibility = 0;
+                            assetName = "Bitcoin";
+                            assetNameShort = "BTC";
+                        }
+
+                        var marketPrice =
+                            fiatPrices.AssetMarketPrices?.FirstOrDefault(p => p.AssetId == assetBalance.AssetId)?.MarketPrice;
+
+                        var coloredValue =
+                            Convert.ToDecimal(
+                                BitcoinUtils.CalculateColoredAssetQuantity(Convert.ToDouble(assetBalance.Quantity),
+                                    divisibility));
+
+                        decimal? marketValue = null;
+                        if (marketPrice != null)
+                        {
+                            marketValue = marketPrice.Value * coloredValue;
+                            marketValue = Math.Round(marketValue.Value, 2);
+                            sum += marketValue.Value;
+                        }
+
+                        var marketPriceString = marketPrice != null ? marketPrice.Value.ToStringBtcFormat() : "";
+
+                        string marketValueString = null;
+                        if (marketValue != null)
+                        {
+                            marketValueString = string.Format("{0} {1}", marketValue.Value.ToStringBtcFormat(), marketValue != null ? fiatPrices.CurrencyName : "");
+                        }
+
+
+                        var assetUrl = _baseSettings.ExplolerUrl + "asset/" + assetBalance.AssetId;
+
+                        balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                        balancesTable.AddCell(new Phrase(assetName, smallFontBold));
+                        //balancesTable.DefaultCell.BorderWidthLeft = balancetableBorderRegularWidth;
+
+                        balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                        if (assetBalance.AssetId != "BTC")
+                        {
+                            balancesTable.AddCell(new Anchor("view", smallLinkFont) { Reference = assetUrl });
+                        }
+                        else
+                        {
+                            balancesTable.AddCell(new Phrase("", smallFontRegular));
+                        }
+
+                        balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                        balancesTable.AddCell(new Phrase($"{coloredValue.ToStringBtcFormat()} {assetNameShort}", smallFontRegular));
+
+                        balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                        balancesTable.AddCell(new Phrase(marketPriceString, smallFontRegular));
+
+
+                        balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                        //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderBoldWidth;
+                        balancesTable.AddCell(new Phrase(marketValueString, smallFontRegular));
+                        //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderRegularWidth;
                     }
-                    else
-                    {
-                        balancesTable.AddCell(new Phrase("", smallFontRegular));
-                    }
-
-                    balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                    balancesTable.AddCell(new Phrase($"{coloredValue.ToStringBtcFormat()} {assetNameShort}", smallFontRegular));
-
-                    balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                    balancesTable.AddCell(new Phrase(marketPriceString, smallFontRegular));
-
-
-                    balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                    //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderBoldWidth;
-                    balancesTable.AddCell(new Phrase(marketValueString, smallFontRegular));
-                    //balancesTable.DefaultCell.BorderWidthRight = balancetableBorderRegularWidth;
                 }
+
 
                 #endregion
 
@@ -309,11 +326,9 @@ namespace Services.BalanceReport
                         reportedAtBlock.Time.ToUniversalTime().ToString("dd MMMM yyyy HH:mm:ss")),
                     smallFontRegular));
 
-                var addressUrl = _baseSettings.ExplolerUrl + "address/" + client.Address;
-                var addressLink = new Anchor(addressUrl, smallLinkFont) {Reference = addressUrl};
-                //var addressPhraseLink = new Chunk(addressUrl);
-                //addressPhraseLink.SetAnchor(addressUrl);
-                document.Add(addressLink);
+                //var addressUrl = _baseSettings.ExplolerUrl + "address/" + client.Address;
+                //var addressLink = new Anchor(addressUrl, smallLinkFont) {Reference = addressUrl};
+                //document.Add(addressLink);
                 document.Add(new Paragraph("[2] Market price is averaged second-by-second mid price trailing 24 hours before reporting datetime", smallFontRegular) { SpacingAfter = 15, SpacingBefore = 15});
                 document.Add(new Paragraph("[3] Market value in reporting currency, [3]=[1]*[2]", smallFontRegular));
 

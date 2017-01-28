@@ -121,29 +121,29 @@ namespace BalanceReporting.QueueHandlers
                 
                 using (var strm = new MemoryStream())
                 {
-                    _reportRender.RenderBalance(strm,
-                        Client.Create(context.Email, context.Address),
-                        blockHeader,
-                        fiatPrices,
-                        balances,
-                        assetDic);
+                    //_reportRender.RenderBalance(strm,
+                    //    Client.Create(context.Email, context.Address),
+                    //    blockHeader,
+                    //    fiatPrices,
+                    //    balances,
+                    //    assetDic);
                     
-                    var mes = new EmailMessage
-                    {
-                        Subject = "Lykke Digital Asset Portfolio Report",
-                        Body = " ",
-                        Attachments = new[]
-                        {
-                            new EmailAttachment
-                            {
-                               FileName = "BalanceReport.pdf",
-                               ContentType = "application/pdf",
-                               Stream = strm 
-                            }
-                        }
-                    };
+                    //var mes = new EmailMessage
+                    //{
+                    //    Subject = "Lykke Digital Asset Portfolio Report",
+                    //    Body = " ",
+                    //    Attachments = new[]
+                    //    {
+                    //        new EmailAttachment
+                    //        {
+                    //           FileName = "BalanceReport.pdf",
+                    //           ContentType = "application/pdf",
+                    //           Stream = strm 
+                    //        }
+                    //    }
+                    //};
 
-                    await _emailSender.SendEmailAsync(context.Email, mes);
+                    //await _emailSender.SendEmailAsync(context.Email, mes);
                 }
 
                 await _log.WriteInfo("BalanceReportQueueConsumer", "SendBalanceReport", context.ToJson(), "Done");

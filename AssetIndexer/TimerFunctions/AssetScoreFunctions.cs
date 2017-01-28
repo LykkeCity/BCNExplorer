@@ -26,7 +26,7 @@ namespace AssetIndexer.TimerFunctions
             _assetScoreRepository = assetScoreRepository;
         }
 
-        public async Task UpdateAssetScores([TimerTrigger("23:59:00", RunOnStartup = true)] TimerInfo timer)
+        public async Task UpdateAssetScores([TimerTrigger("23:59:00", RunOnStartup = false)] TimerInfo timer)
         {
             try
             {

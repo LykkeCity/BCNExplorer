@@ -17,6 +17,11 @@ namespace Core.BalanceReport
         string AssetId { get; }
     }
 
+    public interface IClientBalances
+    {
+        IDictionary<string, IEnumerable<IAssetBalance>> AddressBalances { get; } 
+    }
+
     public class AssetBalance : IAssetBalance
     {
         public decimal Quantity { get; set; }
@@ -32,25 +37,47 @@ namespace Core.BalanceReport
         }
     }
 
+    public class ClientBalance : IClientBalances
+    {
+        public ClientBalance()
+        {
+            AddressBalances = new Dictionary<string, IEnumerable<IAssetBalance>>();    
+        }
+
+        public IDictionary<string, IEnumerable<IAssetBalance>> AddressBalances { get; set; }
+
+        public static ClientBalance Create()
+        {
+            return new ClientBalance();
+        }
+
+        public void Add(string address, IEnumerable<IAssetBalance> assetBalances)
+        {
+            AddressBalances[address] = assetBalances;
+        }
+    }
+
+   
+
 
 
     public interface IClient
     {
-        string ClientEmail { get; }
-        string Address { get; }
+        string Email { get; }
+        string Name { get; }
     }
 
     public class Client:IClient
     {
-        public string ClientEmail { get; set; }
-        public string Address { get; set; }
+        public string Email { get; set; }
+        public string Name { get; set; }
 
-        public static Client Create(string clientId, string address)
+        public static Client Create(string clientId, string clientName)
         {
             return new Client
             {
-                Address = address,
-                ClientEmail = clientId
+                Email = clientId,
+                Name = clientName
             };
         }
     }
@@ -102,8 +129,8 @@ namespace Core.BalanceReport
     {
         void RenderBalance(Stream outputStream, IClient client,
             IBlockHeader reportedAtBlock, 
-            IFiatPrices fiatPrices, 
-            IEnumerable<IAssetBalance> balances,
+            IFiatPrices fiatPrices,
+            IClientBalances balances,
             IDictionary<string, IAssetDefinition> assetDefinitions);
     }
 }

@@ -37,20 +37,9 @@ namespace TestConsole.BalanceReport
             {
                 File.Delete(filePath);
             }
-            var addressId = "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a";
-
-            var balances = new List<AssetBalance>();
-
-            var bal = await addressService.GetBalanceAsync(addressId, atBlock);
-
-            balances.Add(new AssetBalance
-            {
-                AssetId = "BTC",
-                Quantity = Convert.ToDecimal(BitcoinUtils.SatoshiToBtc(bal.Balance))
-            });
 
             var assetsToTrack = new[]
-            {
+{
                 "AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog",
                 "AXkedGbAH1XGDpAypVzA5eyjegX4FaCnvM",
                 "AYeENupK7A9LZ5BsQiXnp22tHHquoASsFc",
@@ -61,13 +50,34 @@ namespace TestConsole.BalanceReport
 
             };
 
-            foreach (var assetBalance in bal.ColoredBalances.Where(p=>assetsToTrack.Contains(p.AssetId)))
+
+            var addr = new[] { "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a" , "anJBX5sKFK4vnbywKWE2NQa9xrvLJEqRAB2" };
+
+            var clientBalance = ClientBalance.Create();
+
+            foreach (var addressId in addr)
             {
+                var balances = new List<AssetBalance>();
+
+                var bal = await addressService.GetBalanceAsync(addressId, atBlock);
+
                 balances.Add(new AssetBalance
                 {
-                    AssetId = assetBalance.AssetId,
-                    Quantity = Convert.ToDecimal(assetBalance.Quantity)
+                    AssetId = "BTC",
+                    Quantity = Convert.ToDecimal(BitcoinUtils.SatoshiToBtc(bal.Balance))
                 });
+
+                foreach (var assetBalance in bal.ColoredBalances.Where(p => assetsToTrack.Contains(p.AssetId)))
+                {
+                    balances.Add(new AssetBalance
+                    {
+                        AssetId = assetBalance.AssetId,
+                        Quantity = Convert.ToDecimal(assetBalance.Quantity)
+                    });
+                }
+
+                clientBalance.Add(addressId, balances);
+
             }
 
             var assetDic = await assetService.GetAssetDefinitionDictionaryAsync();
@@ -82,13 +92,14 @@ namespace TestConsole.BalanceReport
                 {"BTC", 945.492m },//btc
                 {"AYeENupK7A9LZ5BsQiXnp22tHHquoASsFc", 0.07967449m }//solar
             });
+
             using (var fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
             {
                 reportRender.RenderBalance(fileStream, 
-                    Client.Create("lp-slr@lykke.com", "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a"), 
+                    Client.Create("lp-slr@lykke.com", "Andrey Volkov"), 
                     blockHeader,
                     fiatPrices,
-                    balances, assetDic);
+                    clientBalance, assetDic);
             }
 
             Console.WriteLine("Pdf rendering done ");

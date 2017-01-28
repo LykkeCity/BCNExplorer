@@ -21,6 +21,8 @@ namespace Services.MainChain
         private readonly IBlobStorage _blobStorage;
 
         private readonly bool _cacheMainChainAsLocalFile;
+        private readonly bool _disablePersistentCacheMainChain;
+
         private static SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private ObjectCache Cache => MemoryCache.Default;
 
@@ -37,6 +39,7 @@ namespace Services.MainChain
             _blobStorage = storage;
 
             _cacheMainChainAsLocalFile = baseSettings.CacheMainChainLocalFile;
+            _disablePersistentCacheMainChain = baseSettings.DisablePersistentCacheMainChain;
         }
 
         private ConcurrentChain GetFromTemporaryCache()
@@ -77,11 +80,15 @@ namespace Services.MainChain
 
         private async Task<ConcurrentChain> GetFromIndexerAsync()
         {
+            await _log.WriteInfo("MainChainRepository", "GetFromIndexerAsync", null, null);
+
             return _indexerClient.GetIndexerClient().GetMainChain();
         }
 
         private async Task SetToPersistentCacheAsync(ConcurrentChain chain)
         {
+            if (_disablePersistentCacheMainChain)
+                return;
             try
             {
                 await _semaphore.WaitAsync();
