@@ -83,8 +83,8 @@ namespace BalanceReporting.QueueHandlers
                     "AKi5F8zPm7Vn1FhLqQhvLdoWNvWqtwEaig",
                     "Ab8mNRBmrPJCmghHDoMsq26GP5vxm7hZpP"
                 };
-
-                var fiatPrices = FiatPrice.Create(context.Currency, new Dictionary<string, decimal>
+                //TODO CHF etc
+                var fiatPrices = FiatPrice.Create("USD", new Dictionary<string, decimal>
                 {
                     {"AJPMQpygd8V9UCAxwFYYHYXLHJ7dUkQJ5w", 0.981345m },//chf
                     {"ASzmrSxhHjioWMYivoawap9yY4cxAfAMxR", 1.05204m },//eur
@@ -99,51 +99,58 @@ namespace BalanceReporting.QueueHandlers
                 var at = mainChain.GetClosestToTimeBlock(context.ReportingDate);
                 var blockHeader = await _blockService.GetBlockHeaderAsync(at.Height.ToString());
 
-                var ninjaBalance = await _addressService.GetBalanceAsync(context.Address, blockHeader.Height);
-
-                var balances = new List<AssetBalance>();
-                balances.Add(new AssetBalance
+                var clientBalance = ClientBalance.Create();
+                foreach (var addressId in context.Addresses)
                 {
-                    AssetId = "BTC",
-                    Quantity = Convert.ToDecimal(BitcoinUtils.SatoshiToBtc(ninjaBalance.Balance))
-                });
+                    var ninjaBalance = await _addressService.GetBalanceAsync(addressId, blockHeader.Height);
 
-                foreach (var assetBalance in ninjaBalance.ColoredBalances.Where(p => assetsToTrack.Contains(p.AssetId)))
-                {
+                    var balances = new List<AssetBalance>();
                     balances.Add(new AssetBalance
                     {
-                        AssetId = assetBalance.AssetId,
-                        Quantity = Convert.ToDecimal(assetBalance.Quantity)
+                        AssetId = "BTC",
+                        Quantity = Convert.ToDecimal(BitcoinUtils.SatoshiToBtc(ninjaBalance.Balance))
                     });
+
+                    foreach (var assetBalance in ninjaBalance.ColoredBalances.Where(p => assetsToTrack.Contains(p.AssetId)))
+                    {
+                        balances.Add(new AssetBalance
+                        {
+                            AssetId = assetBalance.AssetId,
+                            Quantity = Convert.ToDecimal(assetBalance.Quantity)
+                        });
+                    }
+
+                    clientBalance.Add(addressId, balances);
                 }
+
 
                 var assetDic = await _assetService.GetAssetDefinitionDictionaryAsync();
                 
                 using (var strm = new MemoryStream())
                 {
-                    //_reportRender.RenderBalance(strm,
-                    //    Client.Create(context.Email, context.Address),
-                    //    blockHeader,
-                    //    fiatPrices,
-                    //    balances,
-                    //    assetDic);
-                    
-                    //var mes = new EmailMessage
-                    //{
-                    //    Subject = "Lykke Digital Asset Portfolio Report",
-                    //    Body = " ",
-                    //    Attachments = new[]
-                    //    {
-                    //        new EmailAttachment
-                    //        {
-                    //           FileName = "BalanceReport.pdf",
-                    //           ContentType = "application/pdf",
-                    //           Stream = strm 
-                    //        }
-                    //    }
-                    //};
+                    _reportRender.RenderBalance(strm,
+                        Client.Create(context.Email, context.ClientName),
+                        blockHeader,
+                        fiatPrices,
+                        clientBalance,
+                        assetDic);
+                    strm.Position = 0;
+                    var mes = new EmailMessage
+                    {
+                        Subject = "Lykke Digital Asset Portfolio Report",
+                        Body = " ",
+                        Attachments = new[]
+                        {
+                            new EmailAttachment
+                            {
+                               FileName = "BalanceReport.pdf",
+                               ContentType = "application/pdf",
+                               Stream = strm
+                            }
+                        }
+                    };
 
-                    //await _emailSender.SendEmailAsync(context.Email, mes);
+                    await _emailSender.SendEmailAsync(context.Email, mes);
                 }
 
                 await _log.WriteInfo("BalanceReportQueueConsumer", "SendBalanceReport", context.ToJson(), "Done");

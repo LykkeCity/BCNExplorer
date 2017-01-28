@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage.Queue;
 using Common.Log;
@@ -11,11 +13,11 @@ namespace AzureRepositories.BalanceReport
         
         public string Email { get; set; }
 
-        public string Address { get; set; }
+        public string[] Addresses { get; set; }
 
         public DateTime ReportingDate { get; set; }
 
-        public string Currency { get; set; }
+        public string ClientName { get; set; }
     }
 
 
@@ -33,16 +35,16 @@ namespace AzureRepositories.BalanceReport
         }
 
 
-        public async Task CreaseSendBalanceReportCommandAsync(string email, string address, DateTime reportingDatetime, string currency)
+        public async Task CreaseSendBalanceReportCommandAsync(string email, string clientName, IEnumerable<string> addresses, DateTime reportingDatetime)
         {
             await _queueExt.PutMessageAsync(new QueueRequestModel<SendBalanceReportCommand>
             {
                 Data = new SendBalanceReportCommand
                 {
                     Email = email,
-                    Address = address,
+                    Addresses = addresses.ToArray(),
                     ReportingDate = reportingDatetime,
-                    Currency = currency
+                    ClientName = clientName
                 }
             });
         }

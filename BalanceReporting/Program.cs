@@ -57,7 +57,7 @@ namespace BalanceReporting
 
                 //TEST
                 container.IoC.GetObject<SendBalanceReportCommandQueryProducer>()
-                    .CreaseSendBalanceReportCommandAsync("netsky@bk.ru", "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a", DateTime.Now, "USD")
+                    .CreaseSendBalanceReportCommandAsync("netsky@bk.ru", "Volkov Andrey", new [] { "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a", "anJBX5sKFK4vnbywKWE2NQa9xrvLJEqRAB2" }, DateTime.Now)
                     .Wait();
                 //Test
                 
@@ -81,6 +81,8 @@ namespace BalanceReporting
             container.IoC.Register<ILog>(log);
 
             container.IoC.BindProviders(settings, log);
+
+            settings.DisablePersistentCacheMainChain = true;
             container.IoC.Register(settings);
             container.IoC.BindAzureRepositories(settings, log);
             container.IoC.BindServices(settings, log);
