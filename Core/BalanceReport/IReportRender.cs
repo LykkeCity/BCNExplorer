@@ -39,6 +39,9 @@ namespace Core.BalanceReport
 
     public class ClientBalance : IClientBalances
     {
+        public const string BitcoinAssetId = "BTC";
+        public const string BitcoinAssetName= "Bitcoin";
+
         public ClientBalance()
         {
             AddressBalances = new Dictionary<string, IEnumerable<IAssetBalance>>();    

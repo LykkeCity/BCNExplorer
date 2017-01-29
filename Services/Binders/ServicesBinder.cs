@@ -1,6 +1,7 @@
 ﻿using AzureRepositories.Binders;
 using Common;
 using Common.Cache;
+using Common.HttpRemoteRequests;
 using Common.IocContainer;
 using Common.Log;
 using Core.AddressService;
@@ -29,6 +30,8 @@ namespace Services.Binders
     {
         public static void BindServices(this IoC ioc, BaseSettings baseSettings, ILog log)
         {
+            ioc.RegisterPerCall<HttpRequestClient>();
+
             ioc.RegisterFactorySingleTone(()=> new MainChainService(ioc.GetObject<IndexerClientFactory>(), AzureRepoFactories.CreateMainChainBlobStorage(baseSettings, log), log, baseSettings));
             ioc.RegisterSingleTone<BalanceChangesService>();
             ioc.RegisterFactorySingleTone( ()=> new CachedMainChainService(ioc.GetObject<MainChainService>(), new MemoryCacheManager(), cachedTimeInMinutes: 10));
@@ -38,6 +41,8 @@ namespace Services.Binders
             ioc.RegisterPerCall<IAddressService, AddressService>();
             ioc.RegisterPerCall<ISearchService, SearchService>();
             ioc.RegisterPerCall<IReportRender, PdfReportRenderer>();
+            ioc.RegisterPerCall<ITemplateGenerator, RemoteTemplateGenerator>();
+
 
             ioc.Register<IEmailSender>(ServiceFactories.CreateEmailSenderProducer(baseSettings, log));
 

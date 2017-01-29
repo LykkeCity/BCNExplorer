@@ -51,6 +51,9 @@ A website explores the blockchain and shows information about blocks, transactio
 		"NamespaceUrl": "",
 		"PolicyName": ""								
 	},	
+	"EmalGeneratorSettings": {
+		"EmailTemplatesHost": ""							
+	},
 }
 ```
 * Keys description
@@ -66,3 +69,4 @@ A website explores the blockchain and shows information about blocks, transactio
   * ExplolerUrl - hosted bcn exploler URL
   * Secret - secret, used in requests to index bcn exploler
   * ServiceBusEmailSettings - settings for email sender service
+  * EmalGeneratorSettings - settings for email generation. EmailTemplatesHost - service stored email templates for various types of email(BalanceReporting mail etc)

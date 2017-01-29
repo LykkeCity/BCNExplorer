@@ -217,7 +217,7 @@ namespace Services.BalanceReport
                         int divisibility;
                         string assetName;
                         string assetNameShort;
-                        if (assetBalance.AssetId != "BTC")
+                        if (assetBalance.AssetId != ClientBalance.BitcoinAssetId)
                         {
                             var asset = assetDefinitions[assetBalance.AssetId];
                             divisibility = asset.Divisibility;
@@ -227,8 +227,8 @@ namespace Services.BalanceReport
                         else
                         {
                             divisibility = 0;
-                            assetName = "Bitcoin";
-                            assetNameShort = "BTC";
+                            assetName = ClientBalance.BitcoinAssetName;
+                            assetNameShort = ClientBalance.BitcoinAssetId;
                         }
 
                         var marketPrice =

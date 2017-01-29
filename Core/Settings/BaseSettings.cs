@@ -35,11 +35,19 @@ namespace Core.Settings
 
         public bool DisableRedirectToHttps { get; set; }
 
+        [Required]
+        public EmailGeneratorSettings EmalGeneratorSettings { get; set; }
 
         [Required]
         public ServiceBusEmailSettings ServiceBusEmailSettings { get; set; }
         //[Required]
         //public AuthenticationSettings Authentication { get; set; }
+    }
+
+    public class EmailGeneratorSettings
+    {
+        [Required]
+        public string EmailTemplatesHost { get; set; }
     }
 
     public class AuthenticationSettings

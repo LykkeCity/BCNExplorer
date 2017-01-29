@@ -33,6 +33,7 @@ namespace BalanceReporting.QueueHandlers
         private readonly IAssetService _assetService;
         private readonly IBlockService _blockService;
         private readonly IEmailSender _emailSender;
+        private readonly ITemplateGenerator _templateGenerator;
 
         public BalanceReportQueueConsumer(ILog log,
             IBalanceReportingQueueReader queueReader,
@@ -42,7 +43,8 @@ namespace BalanceReporting.QueueHandlers
             IAddressService addressService, 
             IAssetService assetService, 
             IBlockService blockService, 
-            IEmailSender emailSender)
+            IEmailSender emailSender, 
+            ITemplateGenerator templateGenerator)
         {
             _log = log;
             _queueReader = queueReader;
@@ -53,6 +55,7 @@ namespace BalanceReporting.QueueHandlers
             _assetService = assetService;
             _blockService = blockService;
             _emailSender = emailSender;
+            _templateGenerator = templateGenerator;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -107,7 +110,7 @@ namespace BalanceReporting.QueueHandlers
                     var balances = new List<AssetBalance>();
                     balances.Add(new AssetBalance
                     {
-                        AssetId = "BTC",
+                        AssetId = ClientBalance.BitcoinAssetId,
                         Quantity = Convert.ToDecimal(BitcoinUtils.SatoshiToBtc(ninjaBalance.Balance))
                     });
 
@@ -135,10 +138,12 @@ namespace BalanceReporting.QueueHandlers
                         clientBalance,
                         assetDic);
                     strm.Position = 0;
+                    
                     var mes = new EmailMessage
                     {
-                        Subject = "Lykke Digital Asset Portfolio Report",
-                        Body = " ",
+                        Subject = BalanceReportingTemplateModel.EmailSubject,
+                        Body = await _templateGenerator.GenerateAsync(BalanceReportingTemplateModel.EmailSubject, BalanceReportingTemplateModel.Create(blockHeader.Time, context.ClientName)),
+                        IsHtml = true,
                         Attachments = new[]
                         {
                             new EmailAttachment
