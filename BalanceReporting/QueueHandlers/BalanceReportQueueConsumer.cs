@@ -118,6 +118,7 @@ namespace BalanceReporting.QueueHandlers
                             fiatRate,
                             clientBalance,
                             assetDefinitionDictionary);
+
                         strm.Position = 0;
 
                         var mes = new EmailMessage
@@ -127,20 +128,18 @@ namespace BalanceReporting.QueueHandlers
                             IsHtml = true,
                             Attachments = new[]
                             {
-                            new EmailAttachment
-                            {
-                               FileName = "BalanceReport.pdf",
-                               ContentType = "application/pdf",
-                               Stream = strm
+                                new EmailAttachment
+                                {
+                                    FileName = "BalanceReport.pdf",
+                                    ContentType = "application/pdf",
+                                    Data = strm.ToArray()
+                                }
                             }
-                        }
                         };
 
                         await _emailSender.SendEmailAsync(context.Email, mes);
                     }
                 }
-                
-
 
                 await _log.WriteInfo("BalanceReportQueueConsumer", "SendBalanceReport", context.ToJson(), "Done");
             }

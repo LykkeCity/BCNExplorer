@@ -50,12 +50,7 @@ namespace Services.Email
                 {
                     message.ApplicationProperties["contentType"] = emailMessage.Attachments[0].ContentType;
                     message.ApplicationProperties["fileName"] = emailMessage.Attachments[0].FileName;
-
-                    using (var ms = new MemoryStream())
-                    {
-                        emailMessage.Attachments[0].Stream.CopyTo(ms);
-                        message.ApplicationProperties["file"] = ms.ToArray();
-                    }
+                    message.ApplicationProperties["file"] = emailMessage.Attachments[0].Data;
                 }
 
                 string policyName = WebUtility.UrlEncode(_settings.PolicyName);
