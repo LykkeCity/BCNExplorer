@@ -57,7 +57,7 @@
     <Compile Include="Asset\IAssetDefinitionParsedBlockRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionRepository.cs" />
     <Compile Include="Asset\IAssetScoreRepository.cs" />
-    <Compile Include="BalanceReport\IReportRender.cs" />
+    <Compile Include="BalanceReport\IReportRenderer.cs" />
     <Compile Include="Block\IBlockService.cs" />
     <Compile Include="Asset\IAssetService.cs" />
     <Compile Include="Email\EmailTemplateModels.cs" />

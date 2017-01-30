@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Common;
+using Core.AddressService;
 using Core.Asset;
 using Core.Block;
 
@@ -42,6 +44,8 @@ namespace Core.BalanceReport
         public const string BitcoinAssetId = "BTC";
         public const string BitcoinAssetName= "Bitcoin";
 
+
+        public IEnumerable<string> Assets => AddressBalances.Values.SelectMany(p => p).Select(p => p.AssetId);
         public ClientBalance()
         {
             AddressBalances = new Dictionary<string, IEnumerable<IAssetBalance>>();    
@@ -58,11 +62,28 @@ namespace Core.BalanceReport
         {
             AddressBalances[address] = assetBalances;
         }
+
+        public void Add(IAddressBalance addressBalance, IEnumerable<string> assetsToTrack)
+        {
+            var balances = new List<AssetBalance>();
+            balances.Add(new AssetBalance
+            {
+                AssetId = ClientBalance.BitcoinAssetId,
+                Quantity = Convert.ToDecimal(BitcoinUtils.SatoshiToBtc(addressBalance.BtcBalance))
+            });
+
+            foreach (var assetBalance in addressBalance.ColoredBalances.Where(p => assetsToTrack.Contains(p.AssetId)))
+            {
+                balances.Add(new AssetBalance
+                {
+                    AssetId = assetBalance.AssetId,
+                    Quantity = Convert.ToDecimal(assetBalance.Quantity)
+                });
+            }
+
+            Add(addressBalance.AddressId, balances);
+        }
     }
-
-   
-
-
 
     public interface IClient
     {
@@ -85,7 +106,7 @@ namespace Core.BalanceReport
         }
     }
 
-    public interface IFiatPrices
+    public interface IFiatRates
     {
         string CurrencyName { get; }
 
@@ -98,14 +119,14 @@ namespace Core.BalanceReport
         decimal MarketPrice { get; }
     }
 
-    public class FiatPrice:IFiatPrices
+    public class FiatRate:IFiatRates
     {
         public string CurrencyName { get; set; }
         public IEnumerable<IAssetMarketPrice> AssetMarketPrices { get; set; }
 
-        public static FiatPrice Create(string currencyName, IDictionary<string, decimal> priceDictionary)
+        public static FiatRate Create(string currencyName, IDictionary<string, decimal> priceDictionary)
         {
-            return new FiatPrice
+            return new FiatRate
             {
                 CurrencyName = currencyName,
                 AssetMarketPrices = priceDictionary?.Select(p=> AssetMarketPrice.Create(p.Key, p.Value))
@@ -128,11 +149,11 @@ namespace Core.BalanceReport
         }
     }
 
-    public interface IReportRender
+    public interface IReportRenderer
     {
         void RenderBalance(Stream outputStream, IClient client,
             IBlockHeader reportedAtBlock, 
-            IFiatPrices fiatPrices,
+            IFiatRates fiatRates,
             IClientBalances balances,
             IDictionary<string, IAssetDefinition> assetDefinitions);
     }

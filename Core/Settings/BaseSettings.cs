@@ -12,7 +12,9 @@ namespace Core.Settings
     {
         [Required]
         public string NinjaUrl { get; set; }
-        
+
+        [Required]
+        public string LykkeAPIUrl { get; set; }
 
         public string Network { get; set; }
 

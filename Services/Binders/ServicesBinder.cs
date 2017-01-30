@@ -40,9 +40,10 @@ namespace Services.Binders
             ioc.RegisterPerCall<ITransactionService, TransactionService>();
             ioc.RegisterPerCall<IAddressService, AddressService>();
             ioc.RegisterPerCall<ISearchService, SearchService>();
-            ioc.RegisterPerCall<IReportRender, PdfReportRenderer>();
+            ioc.RegisterPerCall<IReportRenderer, PdfReportRenderer>();
             ioc.RegisterPerCall<ITemplateGenerator, RemoteTemplateGenerator>();
-
+            ioc.RegisterSingleTone<FiatRatesService>();
+            
 
             ioc.Register<IEmailSender>(ServiceFactories.CreateEmailSenderProducer(baseSettings, log));
 

@@ -12,6 +12,7 @@ using Core.Settings;
 using JobsCommon;
 using Microsoft.Azure.WebJobs;
 using Providers;
+using Providers.Binders;
 using Services.Binders;
 
 namespace AssetIndexer

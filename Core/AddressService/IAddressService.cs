@@ -7,7 +7,7 @@ namespace Core.AddressService
     {
         string AddressId { get; }
         int TotalTransactions { get; }
-        double Balance { get; }
+        double BtcBalance { get; }
         double UnconfirmedBalanceDelta { get; }
         IEnumerable<IColoredBalance> ColoredBalances { get; }
     }

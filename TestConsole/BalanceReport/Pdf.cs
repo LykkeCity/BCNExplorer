@@ -18,7 +18,7 @@ namespace TestConsole.BalanceReport
         public static async Task Run(IoC container)
         {
             Console.WriteLine("Fetching data started ");
-            var reportRender = container.GetObject<IReportRender>();
+            var reportRender = container.GetObject<IReportRenderer>();
             var addressService = container.GetObject<IAddressService>();
             var blockService = container.GetObject<IBlockService>();
             var assetService = container.GetObject<IAssetService>();
@@ -64,7 +64,7 @@ namespace TestConsole.BalanceReport
                 balances.Add(new AssetBalance
                 {
                     AssetId = "BTC",
-                    Quantity = Convert.ToDecimal(BitcoinUtils.SatoshiToBtc(bal.Balance))
+                    Quantity = Convert.ToDecimal(BitcoinUtils.SatoshiToBtc(bal.BtcBalance))
                 });
 
                 foreach (var assetBalance in bal.ColoredBalances.Where(p => assetsToTrack.Contains(p.AssetId)))
@@ -82,7 +82,7 @@ namespace TestConsole.BalanceReport
 
             var assetDic = await assetService.GetAssetDefinitionDictionaryAsync();
 
-            var fiatPrices = FiatPrice.Create("USD", new Dictionary<string, decimal>
+            var fiatPrices = FiatRate.Create("USD", new Dictionary<string, decimal>
             {
                 {"AJPMQpygd8V9UCAxwFYYHYXLHJ7dUkQJ5w", 0.981345m },//chf
                 {"ASzmrSxhHjioWMYivoawap9yY4cxAfAMxR", 1.05204m },//eur

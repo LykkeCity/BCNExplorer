@@ -30,6 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Flurl, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.2.2.1\lib\portable40-net40+sl5+win8+wp8+wpa81\Flurl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Flurl.Http, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.Http.1.1.1\lib\net45\Flurl.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.2.0.4\lib\net45\Microsoft.Azure.KeyVault.Core.dll</HintPath>
       <Private>True</Private>
@@ -87,7 +95,8 @@
     <Compile Include="BlockChainReader\HttpReader.cs" />
     <Compile Include="BlockChainReader\AssetReader.cs" />
     <Compile Include="BlockChainReader\NinjaBlockChainReader.cs" />
-    <Compile Include="Contracts\Asset\AssetContract.cs" />
+    <Compile Include="Contracts\AssetDefinition\AssetContract.cs" />
+    <Compile Include="Contracts\Lykke.API\Contracts.cs" />
     <Compile Include="Contracts\Ninja\BlockContract.cs" />
     <Compile Include="Contracts\Ninja\TransactionContract.cs" />
     <Compile Include="Contracts\Ninja\AddressContract.cs" />
@@ -101,6 +110,7 @@
     <Compile Include="Helpers\OrderedBalanceHelper.cs" />
     <Compile Include="Helpers\TransactionHelper.cs" />
     <Compile Include="IndexerClientFactory.cs" />
+    <Compile Include="Providers\Lykke.API\LykkeAPIProvider.cs" />
     <Compile Include="Providers\Ninja\NinjaAddressProvider.cs" />
     <Compile Include="Providers\Ninja\NinjaBlockProvider.cs" />
     <Compile Include="Binders\ProvidersBinder.cs" />

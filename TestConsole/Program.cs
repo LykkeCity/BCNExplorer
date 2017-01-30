@@ -5,6 +5,7 @@ using Common.Log;
 using Core.Settings;
 using JobsCommon;
 using Providers;
+using Providers.Binders;
 using Services.Binders;
 using TestConsole.AssetScanner;
 using TestConsole.BalanceReport;

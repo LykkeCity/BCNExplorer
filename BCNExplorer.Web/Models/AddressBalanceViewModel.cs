@@ -36,7 +36,7 @@ namespace BCNExplorer.Web.Models
             {
                 AddressId = balance.AddressId,
                 TotalConfirmedTransactions = balance.TotalTransactions,
-                Balance = balance.Balance,
+                Balance = balance.BtcBalance,
                 Assets = (balance.ColoredBalances??Enumerable.Empty<IColoredBalance>()).Select(p => new Asset
                 {
                     AssetId = p.AssetId,

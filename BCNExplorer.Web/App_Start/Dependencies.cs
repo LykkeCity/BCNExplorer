@@ -12,6 +12,7 @@ using Common.Log;
 using Common.Validation;
 using Core.Settings;
 using Providers;
+using Providers.Binders;
 using Services.Binders;
 using IDependencyResolver = System.Web.Mvc.IDependencyResolver;
 

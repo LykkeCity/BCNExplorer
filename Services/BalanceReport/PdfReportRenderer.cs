@@ -14,7 +14,7 @@ using iTextSharp.text.pdf;
 
 namespace Services.BalanceReport
 {
-    public class PdfReportRenderer:IReportRender
+    public class PdfReportRenderer:IReportRenderer
     {
         private readonly BaseSettings _baseSettings;
 
@@ -63,7 +63,7 @@ namespace Services.BalanceReport
 
         public void RenderBalance(Stream outputStream, IClient client,
             IBlockHeader reportedAtBlock,
-            IFiatPrices fiatPrices,
+            IFiatRates fiatRates,
             IClientBalances balances,
             IDictionary<string, IAssetDefinition> assetDefinitions)
         {
@@ -153,7 +153,7 @@ namespace Services.BalanceReport
                 #region Reporting currency
 
                 mainInfoTable.AddCell(new Phrase("Reporting currency", mainFontBold));
-                mainInfoTable.AddCell(new Phrase(fiatPrices.CurrencyName, mainFontRegular));
+                mainInfoTable.AddCell(new Phrase(fiatRates.CurrencyName, mainFontRegular));
 
                 #endregion
 
@@ -232,7 +232,7 @@ namespace Services.BalanceReport
                         }
 
                         var marketPrice =
-                            fiatPrices.AssetMarketPrices?.FirstOrDefault(p => p.AssetId == assetBalance.AssetId)?.MarketPrice;
+                            fiatRates.AssetMarketPrices?.FirstOrDefault(p => p.AssetId == assetBalance.AssetId)?.MarketPrice;
 
                         var coloredValue =
                             Convert.ToDecimal(
@@ -252,7 +252,7 @@ namespace Services.BalanceReport
                         string marketValueString = null;
                         if (marketValue != null)
                         {
-                            marketValueString = string.Format("{0} {1}", marketValue.Value.ToStringBtcFormat(), marketValue != null ? fiatPrices.CurrencyName : "");
+                            marketValueString = string.Format("{0} {1}", marketValue.Value.ToStringBtcFormat(), marketValue != null ? fiatRates.CurrencyName : "");
                         }
 
 
@@ -306,7 +306,7 @@ namespace Services.BalanceReport
                 balancesTable.AddCell(new Phrase("Total", smallFontBold));
 
                 balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                balancesTable.AddCell(new Phrase(sum.ToStringBtcFormat() + " " + fiatPrices.CurrencyName, smallFontBold));
+                balancesTable.AddCell(new Phrase(sum.ToStringBtcFormat() + " " + fiatRates.CurrencyName, smallFontBold));
 
                 #endregion
 

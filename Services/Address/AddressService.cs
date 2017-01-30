@@ -20,7 +20,7 @@ namespace Services.Address
     {
         public string AddressId { get; set; }
         public int TotalTransactions { get; set; }
-        public double Balance { get; set; }
+        public double BtcBalance { get; set; }
         public double UnconfirmedBalanceDelta { get; set; }
         public IEnumerable<IColoredBalance> ColoredBalances { get; set; }
 
@@ -82,7 +82,7 @@ namespace Services.Address
                 var result = new AddressBalance
                 {
                     AddressId = id,
-                    Balance = summary.Confirmed.Balance,
+                    BtcBalance = summary.Confirmed.Balance,
                     TotalTransactions = summary.Confirmed.TotalTransactions,
                     UnconfirmedBalanceDelta = summary.Unconfirmed?.Balance ?? 0
                 };
