@@ -142,7 +142,7 @@ namespace BalanceReporting.QueueHandlers
                     var mes = new EmailMessage
                     {
                         Subject = BalanceReportingTemplateModel.EmailSubject,
-                        Body = await _templateGenerator.GenerateAsync(BalanceReportingTemplateModel.EmailSubject, BalanceReportingTemplateModel.Create(blockHeader.Time, context.ClientName)),
+                        Body = await _templateGenerator.GenerateAsync(BalanceReportingTemplateModel.TemplateName, BalanceReportingTemplateModel.Create(blockHeader.Time, context.ClientName)),
                         IsHtml = true,
                         Attachments = new[]
                         {
