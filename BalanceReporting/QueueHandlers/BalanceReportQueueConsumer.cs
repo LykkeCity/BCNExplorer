@@ -84,6 +84,12 @@ namespace BalanceReporting.QueueHandlers
             await _log.WriteInfo("BalanceReportQueueConsumer", "SendBalanceReport", context.ToJson(), "Started");
             try
             {
+                if (context.Addresses == null || context.Addresses.Length == 0)
+                {
+                    await _log.WriteInfo("BalanceReportQueueConsumer", "SendBalanceReport", context.ToJson(), "No addresses found");
+                    return;
+                }
+
                 var currencies = new[] { "USD", "CHF", "EUR", "GBP" };
 
                 var assetsToTrack =  await _lykkeApiProvider.GetAssetsAsync();
@@ -108,38 +114,38 @@ namespace BalanceReporting.QueueHandlers
 
                 var assetDefinitionDictionary = await _assetService.GetAssetDefinitionDictionaryAsync();
 
+
+                var attachments = new List<EmailAttachment>();
                 foreach (var fiatRate in fiatPrices)
                 {
-                    using (var strm = new MemoryStream())
+                    var strm = new MemoryStream();
+
+                    _reportRenderer.RenderBalance(strm,
+                        Client.Create(context.Email, context.ClientName),
+                        blockHeader,
+                        fiatRate,
+                        clientBalance,
+                        assetDefinitionDictionary);
+
+                    strm.Position = 0;
+                    attachments.Add(new EmailAttachment
                     {
-                        _reportRenderer.RenderBalance(strm,
-                            Client.Create(context.Email, context.ClientName),
-                            blockHeader,
-                            fiatRate,
-                            clientBalance,
-                            assetDefinitionDictionary);
-
-                        strm.Position = 0;
-
-                        var mes = new EmailMessage
-                        {
-                            Subject = BalanceReportingTemplateModel.EmailSubject,
-                            Body = await _templateGenerator.GenerateAsync(BalanceReportingTemplateModel.TemplateName, BalanceReportingTemplateModel.Create(blockHeader.Time, context.ClientName)),
-                            IsHtml = true,
-                            Attachments = new[]
-                            {
-                                new EmailAttachment
-                                {
-                                    FileName = "BalanceReport.pdf",
-                                    ContentType = "application/pdf",
-                                    Data = strm.ToArray()
-                                }
-                            }
-                        };
-
-                        await _emailSender.SendEmailAsync(context.Email, mes);
-                    }
+                        FileName = "BalanceReport-" + fiatRate.CurrencyName +".pdf",
+                        ContentType = "application/pdf",
+                        Stream = strm
+                    });
                 }
+
+                var mes = new EmailMessage
+                {
+                    Subject = BalanceReportingTemplateModel.EmailSubject,
+                    Body = await _templateGenerator.GenerateAsync(BalanceReportingTemplateModel.TemplateName, BalanceReportingTemplateModel.Create(blockHeader.Time, context.ClientName)),
+                    IsHtml = true,
+                    Attachments = attachments.ToArray()
+                };
+
+
+                await _emailSender.SendEmailAsync(context.Email, mes);
 
                 await _log.WriteInfo("BalanceReportQueueConsumer", "SendBalanceReport", context.ToJson(), "Done");
             }

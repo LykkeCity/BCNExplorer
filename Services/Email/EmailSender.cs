@@ -11,9 +11,8 @@ using Common;
 using Common.Log;
 using Core.Email;
 
-namespace Services.Email
+namespace Lykke.EmailSenderProducer
 {
-    
     public class EmailSenderProducer : IEmailSender
     {
         private readonly IServiceBusEmailSettings _settings;
@@ -32,6 +31,7 @@ namespace Services.Email
             try
             {
                 bool hasAttachments = emailMessage.Attachments != null && emailMessage.Attachments.Any();
+                int attachmentsCount = emailMessage.Attachments?.Length ?? 0;
 
                 var message = new Message(emailMessage.Body)
                 {
@@ -42,22 +42,44 @@ namespace Services.Email
                         ["sender"] = !string.IsNullOrEmpty(sender) && sender.IsValidEmail() ? sender : string.Empty,
                         ["isHtml"] = emailMessage.IsHtml,
                         ["subject"] = emailMessage.Subject,
-                        ["hasAttachment"] = hasAttachments
+                        ["hasAttachment"] = hasAttachments,
+                        ["attachmentsCount"] = attachmentsCount
                     }
                 };
 
                 if (hasAttachments)
                 {
+                    #region Backward compatibility with old sender brokers (with no multiple attachment support) - they will get only the first attachment
+
                     message.ApplicationProperties["contentType"] = emailMessage.Attachments[0].ContentType;
                     message.ApplicationProperties["fileName"] = emailMessage.Attachments[0].FileName;
-                    message.ApplicationProperties["file"] = emailMessage.Attachments[0].Data;
+
+                    using (var ms = new MemoryStream())
+                    {
+                        emailMessage.Attachments[0].Stream.CopyTo(ms);
+                        message.ApplicationProperties["file"] = ms.ToArray();
+                    }
+
+                    #endregion
+
+                    for (var i = 0; i < attachmentsCount; i++)
+                    {
+                        message.ApplicationProperties[$"contentType_{i}"] = emailMessage.Attachments[i].ContentType;
+                        message.ApplicationProperties[$"fileName_{i}"] = emailMessage.Attachments[i].FileName;
+
+                        using (var ms = new MemoryStream())
+                        {
+                            emailMessage.Attachments[i].Stream.CopyTo(ms);
+                            message.ApplicationProperties[$"file_{i}"] = ms.ToArray();
+                        }
+                    }
                 }
 
                 string policyName = WebUtility.UrlEncode(_settings.PolicyName);
                 string key = WebUtility.UrlEncode(_settings.Key);
                 string connectionString = $"amqps://{policyName}:{key}@{_settings.NamespaceUrl}/";
 
-                var connection = await Connection.Factory.CreateAsync(new Amqp.Address(connectionString));
+                var connection = await Connection.Factory.CreateAsync(new Address(connectionString));
                 var amqpSession = new Session(connection);
                 SenderLink senderLink = new SenderLink(amqpSession, "sender-link", _settings.QueueName);
 

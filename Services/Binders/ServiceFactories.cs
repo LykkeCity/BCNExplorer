@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Common.Log;
 using Core.Settings;
+using Lykke.EmailSenderProducer;
 using Services.Email;
 
 namespace Services.Binders
