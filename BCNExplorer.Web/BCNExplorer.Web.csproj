@@ -264,9 +264,6 @@
   <ItemGroup>
     <Content Include="android-chrome-192x192.png" />
     <Content Include="apple-touch-icon.png" />
-    <Content Include="Content\font-awesome.css" />
-    <Content Include="Content\font-awesome.min.css" />
-    <Content Include="Content\site.css" />
     <Content Include="css\bootstrap-custom.min.css" />
     <Content Include="css\style.css" />
     <Content Include="favicon-16x16.png" />
