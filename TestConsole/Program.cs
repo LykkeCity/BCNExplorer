@@ -25,7 +25,7 @@ namespace TestConsole
             //TestGettingChainChanges.Run(container);
             //GetAddressesWithColoredAssetsFromCoinPrism.Run(container);
             //TestFillBalance.Run(container).Wait();
-           // CheckBalance.Run(container).Wait();
+            // CheckBalance.Run(container).Wait();
             //MongoFillBalance.Run(container).Wait();
             //AddAddressesFromBlockChain.Run(container).Wait();
             //AssetDefToCsv.Run(container).Wait();
@@ -33,9 +33,10 @@ namespace TestConsole
             //AddMissingDefinitions.Run(container).Wait();
             //AddAssetDefinitionsHistory.Run(container).Wait();
             //CopyMongoData.Run(container).Wait();
-            Pdf.Run(container).Wait();
+            //Pdf.Run(container).Wait();
+            PDFTasksProducer.Run(container).Wait();
         }
-        
+
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)
         {
             settings.CacheMainChainLocalFile = true;

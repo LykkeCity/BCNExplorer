@@ -42,7 +42,7 @@ namespace AzureRepositories.BalanceReport
                 Data = new SendBalanceReportCommand
                 {
                     Email = email,
-                    Addresses = addresses.ToArray(),
+                    Addresses = addresses?.ToArray(),
                     ReportingDate = reportingDatetime,
                     ClientName = clientName
                 }

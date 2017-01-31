@@ -25,7 +25,7 @@ namespace BalanceReporting.Binders
         public static BalanceReportingQueueReader CreateBalanceReportingQueueReader(BaseSettings baseSettings, ILog log)
         {
             var updateAssetDataQueue = new AzureQueueExt(baseSettings.Db.SharedStorageConnString, JobsQueueNames.BalaceReporting);
-            return new BalanceReportingQueueReader(updateAssetDataQueue, "ParseBlockQueueReader", 5 * 1000, log);
+            return new BalanceReportingQueueReader(updateAssetDataQueue, "BalanceReportQueueReader", 5 * 1000, log);
         }
     }
 }

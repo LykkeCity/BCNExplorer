@@ -132,7 +132,7 @@ namespace BalanceReporting.QueueHandlers
                     {
                         FileName = "BalanceReport-" + fiatRate.CurrencyName +".pdf",
                         ContentType = "application/pdf",
-                        Stream = strm
+                        Data = strm.ToArray()
                     });
                 }
 
@@ -150,12 +150,15 @@ namespace BalanceReporting.QueueHandlers
                 await _log.WriteInfo("BalanceReportQueueConsumer", "SendBalanceReport", context.ToJson(), "Done");
             }
 
-            catch (FlurlHttpException e)
-            {
-                await
-                    _log.WriteError("BalanceReportQueueConsumer", "SendBalanceReport", "context: " +  context.ToJson() + "responce:" + await e.Call.Response.Content.ReadAsStringAsync(), e);
-                throw;
-            }
+            //catch (FlurlHttpException e)
+            //{
+            //    var responceBody = await e.Call.Response.Content.ReadAsStringAsync();
+            //    var requestBody = await e.Call.Request.Content.ReadAsStringAsync();
+
+            //    await
+            //        _log.WriteError("BalanceReportQueueConsumer", "SendBalanceReport", $"context: {context.ToJson()} |  requestBody: {requestBody} | respBody {responceBody}", e);
+            //    throw;
+            //}
             catch (Exception e)
             {
                 await

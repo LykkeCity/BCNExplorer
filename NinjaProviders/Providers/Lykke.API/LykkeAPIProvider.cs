@@ -120,51 +120,45 @@ namespace Providers.Providers.Lykke.API
             return resp.Select(AssetPair.Create);
         }
 
-        public async Task<IEnumerable<IAssetPairRate>> GetAssetPairRatesAtTimeAsync(DateTime time, params string[] pairs)
+        public async Task<IEnumerable<IAssetPairRate>> GetAssetPairRatesAtTimeAsync(DateTime time, AssetPairRateHistoryPeriod period, params string[] pairs)
         {
-            IEnumerable<AssetPairRateContract> resp;
-            
+            var resp = new List<AssetPairRateContract>();
+
             //api allows max 10 pairs at one request
 
             const int maxPairSize = 10;
             
             if (pairs.Length < maxPairSize)
             {
-                resp = await GetAssetPairRatesAtTimeInnerAsync(time, pairs);
+                resp = (await GetAssetPairRatesAtTimeInnerAsync(time, period, pairs)).ToList();
             }
             else
             {
-               var tasks = new List<Task>();
-
-                var concurrentBag = new ConcurrentBag<AssetPairRateContract>();
-
                 foreach (var batch in pairs.Batch(maxPairSize))
                 {
-                    var tsk =
-                        GetAssetPairRatesAtTimeInnerAsync(time, batch.ToArray()).ContinueWith(p =>
-                        {
-                            foreach (var assetPairRateContract in p.Result)
-                            {
-                                concurrentBag.Add(assetPairRateContract);
-                            }
-                        });
-
-                    tasks.Add(tsk);
+                    resp.AddRange(await GetAssetPairRatesAtTimeInnerAsync(time, period, batch.ToArray()));
                 }
-                
-                await Task.WhenAll(tasks);
-                resp = concurrentBag.ToArray();
             }
             
             return resp.Select(AssetPairRate.Create);
         }
 
-        private async Task<IEnumerable<AssetPairRateContract>> GetAssetPairRatesAtTimeInnerAsync(DateTime time,
+        private async Task<IEnumerable<AssetPairRateContract>> GetAssetPairRatesAtTimeInnerAsync(DateTime time, AssetPairRateHistoryPeriod period,
             params string[] pairs)
         {
             return await _baseSettings.LykkeAPIUrl.AppendPathSegment("api/AssetPairs/rate/history")
-                .PostJsonAsync(new {period = "Sec", DateTime = time, assetPairIds = pairs})
+                .PostJsonAsync(new { period = period.ToString(), DateTime = time, assetPairIds = pairs })
                 .ReceiveJson<AssetPairRateContract[]>();
+
         }
+    }
+
+    public enum AssetPairRateHistoryPeriod
+    {
+        Sec,
+        Minute,
+        Hour,
+        Day,
+        Month
     }
 }
