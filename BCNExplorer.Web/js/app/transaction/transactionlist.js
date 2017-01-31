@@ -48,7 +48,7 @@
 
     $('body').on('click', '.js-load-trans', function () {
         var $selfBtn = $(this);
-        $($selfBtn).addClass('hidden');
+        $($selfBtn).parent().addClass('hidden');
         var $cat = $selfBtn.parents('.js-transaction-cathegory');
         loadTransactions($selfBtn.parents(transactionLoadContainerSelector)).done(function () {
             if ($cat.find('.js-load-trans:visible').length == 0) {
