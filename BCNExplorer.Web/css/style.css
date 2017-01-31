@@ -2305,8 +2305,6 @@ a { color: inherit; }
 
 .bootstrap-datetimepicker-widget .datepicker-decades .decade { line-height: 2 !important; }
 
-.header { z-index: auto; }
-
 .header.fixed { z-index: 110; }
 
 .btn_show_changes { color: #8c94a0; }
