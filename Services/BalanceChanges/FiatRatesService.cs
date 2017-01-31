@@ -35,10 +35,10 @@ namespace Services.BalanceChanges
                 var relatedPairs = pairs.Where(p => p.QuotingAssetId == currency);
                 var priceDictionary = new Dictionary<string, decimal>();
 
-                var btcCurrencyAsset = assets.FirstOrDefault(p => p.Name == currency);
-                if (btcCurrencyAsset != null)
+                var sameCurrencyAsset = assets.FirstOrDefault(p => p.Name == currency);
+                if (sameCurrencyAsset?.BitcoinAssetId != null)
                 {
-                    priceDictionary[btcCurrencyAsset.BitcoinAssetId] = 1;
+                    priceDictionary[sameCurrencyAsset.BitcoinAssetId] = 1;
                 }
                      
                 foreach (var pair in relatedPairs)
@@ -47,7 +47,7 @@ namespace Services.BalanceChanges
                     {
                         var baseAsset = assets.FirstOrDefault(p => p.Id == pair.BaseAssetId);
 
-                        if (baseAsset != null)
+                        if (baseAsset?.BitcoinAssetId != null)
                         {
                             priceDictionary[baseAsset.BitcoinAssetId] = rates[pair.Id];
                         }

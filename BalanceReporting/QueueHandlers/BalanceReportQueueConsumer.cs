@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AzureRepositories.AssetCoinHolders;
 using AzureRepositories.BalanceReport;
 using AzureRepositories.QueueReaders;
 using AzureStorage.Queue;
@@ -14,8 +13,6 @@ using Core.Asset;
 using Core.BalanceReport;
 using Core.Block;
 using Core.Email;
-using Core.Settings;
-using Flurl.Http;
 using Providers;
 using Providers.Helpers;
 using Providers.Providers.Lykke.API;
@@ -113,27 +110,27 @@ namespace BalanceReporting.QueueHandlers
                 var fiatPrices = await _fiatRatesService.GetRatesAsync(blockHeader.Time, currencies, clientBalance.Assets);
 
                 var assetDefinitionDictionary = await _assetService.GetAssetDefinitionDictionaryAsync();
-
-
+                
                 var attachments = new List<EmailAttachment>();
                 foreach (var fiatRate in fiatPrices)
                 {
-                    var strm = new MemoryStream();
-
-                    _reportRenderer.RenderBalance(strm,
-                        Client.Create(context.Email, context.ClientName),
-                        blockHeader,
-                        fiatRate,
-                        clientBalance,
-                        assetDefinitionDictionary);
-
-                    strm.Position = 0;
-                    attachments.Add(new EmailAttachment
+                    using (var strm = new MemoryStream())
                     {
-                        FileName = "BalanceReport-" + fiatRate.CurrencyName +".pdf",
-                        ContentType = "application/pdf",
-                        Data = strm.ToArray()
-                    });
+                        _reportRenderer.RenderBalance(strm,
+                           Client.Create(context.Email, context.ClientName),
+                           blockHeader,
+                           fiatRate,
+                           clientBalance,
+                           assetDefinitionDictionary);
+
+                        strm.Position = 0;
+                        attachments.Add(new EmailAttachment
+                        {
+                            FileName = "BalanceReport-" + fiatRate.CurrencyName + ".pdf",
+                            ContentType = "application/pdf",
+                            Data = strm.ToArray()
+                        });
+                    }
                 }
 
                 var mes = new EmailMessage
@@ -144,21 +141,10 @@ namespace BalanceReporting.QueueHandlers
                     Attachments = attachments.ToArray()
                 };
 
-
                 await _emailSender.SendEmailAsync(context.Email, mes);
 
                 await _log.WriteInfo("BalanceReportQueueConsumer", "SendBalanceReport", context.ToJson(), "Done");
             }
-
-            //catch (FlurlHttpException e)
-            //{
-            //    var responceBody = await e.Call.Response.Content.ReadAsStringAsync();
-            //    var requestBody = await e.Call.Request.Content.ReadAsStringAsync();
-
-            //    await
-            //        _log.WriteError("BalanceReportQueueConsumer", "SendBalanceReport", $"context: {context.ToJson()} |  requestBody: {requestBody} | respBody {responceBody}", e);
-            //    throw;
-            //}
             catch (Exception e)
             {
                 await
@@ -167,7 +153,6 @@ namespace BalanceReporting.QueueHandlers
             }
         }
         
-
         public void Start()
         {
             _queueReader.Start();
