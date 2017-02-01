@@ -28,7 +28,7 @@ namespace TestConsole.BalanceReport
 
                 try
                 {
-                   tasks.Add(producer.CreaseSendBalanceReportCommandAsync("netsky@bk.ru", "clientName", userModel.Addresses,new DateTime(2016, 12, 31)).ContinueWith(
+                   tasks.Add(producer.CreaseSendBalanceReportCommandAsync("netsky@bk.ru", userModel.FullName, userModel.Addresses,new DateTime(2016, 12, 31)).ContinueWith(
                        p =>
                        {
                            Console.WriteLine(counter);
@@ -51,7 +51,9 @@ namespace TestConsole.BalanceReport
 
         public class UserModel
         {
-             public string Email { get; set; }
+            public string Email { get; set; }
+
+            public string FullName { get; set; }
 
             public string[] Addresses { get; set; }
         }
