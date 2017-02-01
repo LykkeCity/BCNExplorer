@@ -91,7 +91,7 @@ namespace Services.BalanceReport
                 document.Add(new Paragraph("Digital Asset Portfolio Report", headerFont) { SpacingAfter = 50 });
 
                 Image logo;
-                using (var fs = new FileStream(@"Resources\Pdf\lykke_logo.png", FileMode.Open))
+                using (var fs = new FileStream(@"Resources\Pdf\lykke_logo.png", FileMode.Open, FileAccess.Read))
                 {
                     logo = Image.GetInstance(fs);
                 }

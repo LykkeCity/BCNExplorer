@@ -18,6 +18,17 @@ namespace AzureRepositories.BalanceReport
         public DateTime ReportingDate { get; set; }
 
         public string ClientName { get; set; }
+
+        public static SendBalanceReportCommand Create(string email, string clientName, IEnumerable<string> addresses, DateTime reportingDatetime)
+        {
+            return new SendBalanceReportCommand
+            {
+                Email = email,
+                Addresses = addresses?.ToArray(),
+                ReportingDate = reportingDatetime,
+                ClientName = clientName
+            };
+        }
     }
 
 
@@ -39,13 +50,7 @@ namespace AzureRepositories.BalanceReport
         {
             await _queueExt.PutMessageAsync(new QueueRequestModel<SendBalanceReportCommand>
             {
-                Data = new SendBalanceReportCommand
-                {
-                    Email = email,
-                    Addresses = addresses?.ToArray(),
-                    ReportingDate = reportingDatetime,
-                    ClientName = clientName
-                }
+                Data = SendBalanceReportCommand.Create(email, clientName, addresses, reportingDatetime)
             });
         }
     }

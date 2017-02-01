@@ -133,7 +133,6 @@ namespace Providers.Providers.Lykke.API
                _baseSettings.LykkeAPIUrl.AppendPathSegment("api/AssetPairs/dictionary")
                    .GetAsync()
                    .ReceiveJson<AssetPairContract[]>();
-
             return resp.Select(AssetPair.Create);
         }
 
@@ -143,7 +142,7 @@ namespace Providers.Providers.Lykke.API
 
             //api allows max 10 pairs at one request
 
-            const int maxPairSize = 1;
+            const int maxPairSize = 10;
             
             if (pairs.Length < maxPairSize)
             {

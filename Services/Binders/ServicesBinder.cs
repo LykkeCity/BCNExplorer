@@ -1,4 +1,5 @@
-﻿using AzureRepositories.Binders;
+﻿using System.Linq;
+using AzureRepositories.Binders;
 using Common;
 using Common.Cache;
 using Common.HttpRemoteRequests;
@@ -14,6 +15,7 @@ using Core.Settings;
 using Core.Transaction;
 using Providers;
 using Providers.Providers.Asset;
+using Providers.Providers.Lykke.API;
 using Services.Address;
 using Services.Asset;
 using Services.BalanceChanges;
@@ -62,28 +64,18 @@ namespace Services.Binders
                     async () => AssetIndexer.IndexAssetScores(await ioc.GetObject<IAssetScoreRepository>().GetAllAsync())
                     , validDataInSeconds: 1 * 10 * 10));
 
+            ioc.RegisterFactorySingleTone(() =>
+                new CachedDataDictionary<string, IAsset>(
+                    async () => (await ioc.GetObject<LykkeAPIProvider>().GetAssetsAsync()).ToDictionary(p => p.Id)
+                    , validDataInSeconds: 2 * 60 * 60));
+
+
+            ioc.RegisterFactorySingleTone(() =>
+                new CachedDataDictionary<string, IAssetPair>(
+                    async () => (await ioc.GetObject<LykkeAPIProvider>().GetAssetPairDictionary()).ToDictionary(p => p.Id)
+                    , validDataInSeconds: 2 * 60 * 60));
+
             ioc.RegisterPerCall<IAssetService, AssetService>();
         }
     }
-
-    //public class ServiceBinderOptions
-    //{
-    //    public string MainChainLocalCacheFileName { get; set; }
-
-    //    public static ServiceBinderOptions Create(string mainChainLocalCacheFileName)
-    //    {
-    //        return new ServiceBinderOptions
-    //        {
-    //            MainChainLocalCacheFileName = mainChainLocalCacheFileName
-    //        };
-    //    }
-
-    //    public static ServiceBinderOptions Default()
-    //    {
-    //        return new ServiceBinderOptions
-    //        {
-    //            MainChainLocalCacheFileName = 
-    //        }
-    //    }
-    //}
 }

@@ -131,7 +131,7 @@
   <ItemGroup>
     <Compile Include="AssetScanner\AddMissingDefinitions.cs" />
     <Compile Include="BalanceReport\Pdf.cs" />
-    <Compile Include="BalanceReport\PDFTasksProducer.cs" />
+    <Compile Include="BalanceReport\PDFReports.cs" />
     <Compile Include="Coninholders\AddAddressesFromBlockChain.cs" />
     <Compile Include="AssetScanner\AddAssetDefinitionsHistory.cs" />
     <Compile Include="Coninholders\AssetCoinholdersToCsv.cs" />
@@ -166,6 +166,10 @@
     <ProjectReference Include="..\AzureStorage\AzureStorage.csproj">
       <Project>{b3642177-0525-48a7-844e-7e5054fef3b5}</Project>
       <Name>AzureStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BalanceReporting\BalanceReporting.csproj">
+      <Project>{154c0122-af9e-4b48-bcc1-36cbfb74698b}</Project>
+      <Name>BalanceReporting</Name>
     </ProjectReference>
     <ProjectReference Include="..\BCNExplorer.Web\BCNExplorer.Web.csproj">
       <Project>{A9E6EC52-A2A1-40DF-A135-F2B458414783}</Project>

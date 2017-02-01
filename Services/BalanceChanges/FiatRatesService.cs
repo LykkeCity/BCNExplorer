@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 using Core.BalanceReport;
 using Providers.Providers.Lykke.API;
 
@@ -10,17 +11,23 @@ namespace Services.BalanceChanges
 {
     public class FiatRatesService
     {
+        private readonly CachedDataDictionary<string, IAsset> _lykkeApiAssets;
+        private readonly CachedDataDictionary<string, IAssetPair> _lykkeApiAssetPairs;
+
         private readonly LykkeAPIProvider _lykkeApiProvider;
 
-        public FiatRatesService(LykkeAPIProvider lykkeApiProvider)
+        public FiatRatesService(LykkeAPIProvider lykkeApiProvider, CachedDataDictionary<string, IAsset> lykkeApiAssets, 
+            CachedDataDictionary<string, IAssetPair> lykkeApiAssetPairs)
         {
             _lykkeApiProvider = lykkeApiProvider;
+            _lykkeApiAssets = lykkeApiAssets;
+            _lykkeApiAssetPairs = lykkeApiAssetPairs;
         }
 
         public async Task<IEnumerable<IFiatRates>> GetRatesAsync(DateTime at, IEnumerable<string> quotingCurrencies, IEnumerable<string> btcAssetIds)
         {
-            var assets = await _lykkeApiProvider.GetAssetsAsync();
-            var pairs = await _lykkeApiProvider.GetAssetPairDictionary();
+            var assets = await _lykkeApiAssets.Values();
+            var pairs = await _lykkeApiAssetPairs.Values();
 
             var baseAssetIds = assets.Where(p => btcAssetIds.Contains(p.BitcoinAssetId) || p.Name == "BTC").Select(p => p.Id).ToList();
 
