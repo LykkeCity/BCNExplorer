@@ -19,6 +19,7 @@ namespace Providers.Providers.Lykke.API
         string Id { get;  }
         string Name { get; }
         string BitcoinAssetId { get; }
+        int Accuracy { get; }
     }
 
     public class Asset:IAsset
@@ -26,6 +27,7 @@ namespace Providers.Providers.Lykke.API
         public string Id { get; set; }
         public string Name { get; set; }
         public string BitcoinAssetId { get; set; }
+        public int Accuracy { get; set; }
 
         public static Asset Create(AssetContract source)
         {
@@ -33,7 +35,8 @@ namespace Providers.Providers.Lykke.API
             {
                 Id = source.id,
                 Name = source.name,
-                BitcoinAssetId = source.bitcoinAssetId
+                BitcoinAssetId = source.bitcoinAssetId,
+                Accuracy = source.accuracy
             };
         }
     }
@@ -47,6 +50,9 @@ namespace Providers.Providers.Lykke.API
         string BaseAssetId { get;  }
 
         string QuotingAssetId { get;  }
+
+        int Accuracy { get; }
+        int InvertedAccuracy { get; }
     }
 
     public class AssetPair : IAssetPair
@@ -55,6 +61,8 @@ namespace Providers.Providers.Lykke.API
         public string Name { get; set; }
         public string BaseAssetId { get; set; }
         public string QuotingAssetId { get; set; }
+        public int Accuracy { get; set; }
+        public int InvertedAccuracy { get; set; }
 
         public static AssetPair Create(AssetPairContract source)
         {
@@ -63,7 +71,9 @@ namespace Providers.Providers.Lykke.API
                 BaseAssetId = source.baseAssetId,
                 Id = source.id,
                 Name = source.name,
-                QuotingAssetId = source.quotingAssetId
+                QuotingAssetId = source.quotingAssetId,
+                Accuracy = source.accuracy,
+                InvertedAccuracy = source.invertedAccuracy
             };
         }
     }
@@ -71,21 +81,28 @@ namespace Providers.Providers.Lykke.API
     public interface IAssetPairRate
     {
         string Id { get; }
-        decimal Rate { get; }
+        decimal Bid { get; }
+        decimal Ask { get; }
     }
 
     public class AssetPairRate : IAssetPairRate
     {
         public string Id { get; set; }
-        public decimal Rate { get; set; }
+        public decimal Bid { get; set; }
+        public decimal Ask { get; set; }
 
         public static AssetPairRate Create(AssetPairRateContract source)
         {
-            return new AssetPairRate
+            if (source?.bid !=null && source?.ask != null)
             {
-                Id = source.id,
-                Rate = source.ask
-            };
+                return new AssetPairRate
+                {
+                    Id = source.id,
+                    Bid = source.bid.Value,
+                    Ask = source.ask.Value
+                };
+            }
+            return null;
         }
     }
 
@@ -126,7 +143,7 @@ namespace Providers.Providers.Lykke.API
 
             //api allows max 10 pairs at one request
 
-            const int maxPairSize = 10;
+            const int maxPairSize = 1;
             
             if (pairs.Length < maxPairSize)
             {
@@ -140,16 +157,22 @@ namespace Providers.Providers.Lykke.API
                 }
             }
             
-            return resp.Select(AssetPairRate.Create);
+            return resp.Select(AssetPairRate.Create).Where(p => p != null);
         }
 
         private async Task<IEnumerable<AssetPairRateContract>> GetAssetPairRatesAtTimeInnerAsync(DateTime time, AssetPairRateHistoryPeriod period,
             params string[] pairs)
         {
-            return await _baseSettings.LykkeAPIUrl.AppendPathSegment("api/AssetPairs/rate/history")
-                .PostJsonAsync(new { period = period.ToString(), DateTime = time, assetPairIds = pairs })
-                .ReceiveJson<AssetPairRateContract[]>();
-
+            try
+            {
+                return await _baseSettings.LykkeAPIUrl.AppendPathSegment("api/AssetPairs/rate/history")
+                    .PostJsonAsync(new { period = period.ToString(), DateTime = time, assetPairIds = pairs })
+                    .ReceiveJson<AssetPairRateContract[]>();
+            }
+            catch (Exception)
+            {
+                return Enumerable.Empty<AssetPairRateContract>();
+            }
         }
     }
 

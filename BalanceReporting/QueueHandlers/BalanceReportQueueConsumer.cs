@@ -100,7 +100,6 @@ namespace BalanceReporting.QueueHandlers
                 var clientBalance = ClientBalance.Create();
                 foreach (var addressId in context.Addresses)
                 {
-
                     var ninjaBalance = await _addressService.GetBalanceAsync(addressId, blockHeader.Height);
                     clientBalance.Add(ninjaBalance, assetsToTrack.Select(x => x.BitcoinAssetId));
                 }

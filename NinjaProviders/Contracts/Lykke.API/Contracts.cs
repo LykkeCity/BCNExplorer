@@ -28,16 +28,19 @@ namespace Providers.Contracts.Lykke.API
         public string name { get; set; }
 
         public int accuracy { get; set; }
+        public int invertedAccuracy { get; set; }
 
         public string baseAssetId { get; set; }
 
         public string quotingAssetId { get; set; }
+
+
     }
 
     public class AssetPairRateContract
     {
         public string id { get; set; }
-        public decimal bid { get; set; }
-        public decimal ask { get; set; }
+        public decimal? bid { get; set; }
+        public decimal? ask { get; set; }
     }
 }

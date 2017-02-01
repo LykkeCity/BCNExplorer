@@ -112,11 +112,32 @@ namespace Core.BalanceReport
 
         IEnumerable<IAssetMarketPrice> AssetMarketPrices { get; }
     }
+    public interface IPrice
+    {
+        decimal MarketPrice { get; }
+        int Accuracy { get; }
+    }
+
+    public class Price : IPrice
+    {
+        public decimal MarketPrice { get; set; }
+        public int Accuracy { get; set; }
+
+        public static Price Create(decimal marketPrice, int accuracy)
+        {
+            return new Price
+            {
+                Accuracy = accuracy,
+                MarketPrice = marketPrice
+            };
+        }
+    }
 
     public interface IAssetMarketPrice
     {
-        string AssetId { get; }
-        decimal MarketPrice { get; }
+        string BitcoinAssetId { get; }
+
+        IPrice Price { get; }
     }
 
     public class FiatRate:IFiatRates
@@ -124,27 +145,27 @@ namespace Core.BalanceReport
         public string CurrencyName { get; set; }
         public IEnumerable<IAssetMarketPrice> AssetMarketPrices { get; set; }
 
-        public static FiatRate Create(string currencyName, IDictionary<string, decimal> priceDictionary)
+        public static FiatRate Create(string currencyName, IDictionary<string, IPrice> priceDictionary)
         {
             return new FiatRate
             {
                 CurrencyName = currencyName,
-                AssetMarketPrices = priceDictionary?.Select(p=> AssetMarketPrice.Create(p.Key, p.Value))
+                AssetMarketPrices = priceDictionary?.Select(p => AssetMarketPrice.Create(p.Key, p.Value))
             };
         }
     }
 
     public class AssetMarketPrice : IAssetMarketPrice
     {
-        public string AssetId { get; set; }
-        public decimal MarketPrice { get; set; }
+        public string BitcoinAssetId { get; set; }
+        public IPrice Price { get; set; }
 
-        public static AssetMarketPrice Create(string assetId, decimal marketPrice)
+        public static AssetMarketPrice Create(string assetId, IPrice price)
         {
             return new AssetMarketPrice
             {
-                AssetId = assetId,
-                MarketPrice = marketPrice
+                BitcoinAssetId = assetId,
+                Price = price
             };
         }
     }

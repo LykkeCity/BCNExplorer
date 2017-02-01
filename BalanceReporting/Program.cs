@@ -66,7 +66,6 @@ namespace BalanceReporting
 
                 var host = new JobHost(config);
                 host.RunAndBlock();
-
             }
             catch (Exception e)
             {

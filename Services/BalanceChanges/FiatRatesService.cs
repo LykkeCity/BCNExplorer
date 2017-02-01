@@ -24,23 +24,17 @@ namespace Services.BalanceChanges
 
             var baseAssetIds = assets.Where(p => btcAssetIds.Contains(p.BitcoinAssetId) || p.Name == "BTC").Select(p => p.Id).ToList();
 
-            var assetPairs = pairs.Where(p => quotingCurrencies.Contains(p.QuotingAssetId) && baseAssetIds.Contains(p.BaseAssetId));
+            var assetPairs = pairs.Where(p => (quotingCurrencies.Contains(p.QuotingAssetId) || quotingCurrencies.Contains(p.BaseAssetId)) && baseAssetIds.Contains(p.BaseAssetId));
             
             var rates = (await _lykkeApiProvider.GetAssetPairRatesAtTimeAsync(at, AssetPairRateHistoryPeriod.Day,
-                assetPairs.Select(p => p.Id).ToArray())).ToDictionary(p => p.Id, p => p.Rate);
+                assetPairs.Select(p => p.Id).ToArray())).ToDictionary(p => p.Id, p => p.Bid);
 
             var result = new List<FiatRate>();
             foreach (var currency in quotingCurrencies)
             {
-                var relatedPairs = pairs.Where(p => p.QuotingAssetId == currency);
-                var priceDictionary = new Dictionary<string, decimal>();
-
-                var sameCurrencyAsset = assets.FirstOrDefault(p => p.Name == currency);
-                if (sameCurrencyAsset?.BitcoinAssetId != null)
-                {
-                    priceDictionary[sameCurrencyAsset.BitcoinAssetId] = 1;
-                }
-                     
+                var relatedPairs = pairs.Where(p => p.QuotingAssetId == currency || p.BaseAssetId == currency);
+                var priceDictionary = new Dictionary<string, IPrice>();
+  
                 foreach (var pair in relatedPairs)
                 {
                     if (rates.ContainsKey(pair.Id))
@@ -49,11 +43,27 @@ namespace Services.BalanceChanges
 
                         if (baseAsset?.BitcoinAssetId != null)
                         {
-                            priceDictionary[baseAsset.BitcoinAssetId] = rates[pair.Id];
+                            priceDictionary[baseAsset.BitcoinAssetId] = Price.Create(rates[pair.Id], pair.Accuracy);
                         }
 
-                        priceDictionary[pair.BaseAssetId] = rates[pair.Id];
+                        priceDictionary[pair.BaseAssetId] = Price.Create(rates[pair.Id], pair.Accuracy);
+
+                        var invertedAsset = assets.FirstOrDefault(p => p.Id == pair.QuotingAssetId);
+
+                        if (invertedAsset?.BitcoinAssetId != null)
+                        {
+                            priceDictionary[invertedAsset.BitcoinAssetId] = Price.Create(1/rates[pair.Id], pair.InvertedAccuracy);
+                        }
+
+                        priceDictionary[pair.QuotingAssetId] = Price.Create(Math.Round(1 / rates[pair.Id], pair.InvertedAccuracy), pair.InvertedAccuracy);
                     }
+
+                    var sameCurrencyAsset = assets.FirstOrDefault(p => p.Name == currency);
+                    if (sameCurrencyAsset?.BitcoinAssetId != null)
+                    {
+                        priceDictionary[sameCurrencyAsset.BitcoinAssetId] = Price.Create(1, sameCurrencyAsset.Accuracy);
+                    }
+
                 }
 
                 result.Add(FiatRate.Create(currency, priceDictionary));

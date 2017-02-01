@@ -232,7 +232,7 @@ namespace Services.BalanceReport
                         }
 
                         var marketPrice =
-                            fiatRates.AssetMarketPrices?.FirstOrDefault(p => p.AssetId == assetBalance.AssetId)?.MarketPrice;
+                            fiatRates.AssetMarketPrices?.FirstOrDefault(p => p.BitcoinAssetId == assetBalance.AssetId)?.Price.MarketPrice;
 
                         var coloredValue =
                             Convert.ToDecimal(

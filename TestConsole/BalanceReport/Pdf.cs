@@ -82,27 +82,27 @@ namespace TestConsole.BalanceReport
 
             var assetDic = await assetService.GetAssetDefinitionDictionaryAsync();
 
-            var fiatPrices = FiatRate.Create("USD", new Dictionary<string, decimal>
-            {
-                {"AJPMQpygd8V9UCAxwFYYHYXLHJ7dUkQJ5w", 0.981345m },//chf
-                {"ASzmrSxhHjioWMYivoawap9yY4cxAfAMxR", 1.05204m },//eur
-                {"AKi5F8zPm7Vn1FhLqQhvLdoWNvWqtwEaig", 1.23412m },//gbp
-                {"Ab8mNRBmrPJCmghHDoMsq26GP5vxm7hZpP", 0.008546m}, //jpy
-                {"AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog", 1 },//usd
-                {"BTC", 945.492m },//btc
-                {"AYeENupK7A9LZ5BsQiXnp22tHHquoASsFc", 0.07967449m }//solar
-            });
+            //var fiatPrices = FiatRate.Create("USD", new Dictionary<string, decimal>
+            //{
+            //    {"AJPMQpygd8V9UCAxwFYYHYXLHJ7dUkQJ5w", 0.981345m },//chf
+            //    {"ASzmrSxhHjioWMYivoawap9yY4cxAfAMxR", 1.05204m },//eur
+            //    {"AKi5F8zPm7Vn1FhLqQhvLdoWNvWqtwEaig", 1.23412m },//gbp
+            //    {"Ab8mNRBmrPJCmghHDoMsq26GP5vxm7hZpP", 0.008546m}, //jpy
+            //    {"AWm6LaxuJgUQqJ372qeiUxXhxRWTXfpzog", 1 },//usd
+            //    {"BTC", 945.492m },//btc
+            //    {"AYeENupK7A9LZ5BsQiXnp22tHHquoASsFc", 0.07967449m }//solar
+            //});
 
-            using (var fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
-            {
-                reportRender.RenderBalance(fileStream, 
-                    Client.Create("lp-slr@lykke.com", "Andrey Volkov"), 
-                    blockHeader,
-                    fiatPrices,
-                    clientBalance, assetDic);
-            }
+            //using (var fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
+            //{
+            //    reportRender.RenderBalance(fileStream, 
+            //        Client.Create("lp-slr@lykke.com", "Andrey Volkov"), 
+            //        blockHeader,
+            //        fiatPrices,
+            //        clientBalance, assetDic);
+            //}
 
-            Console.WriteLine("Pdf rendering done ");
+            //Console.WriteLine("Pdf rendering done ");
         } 
     }
 }
