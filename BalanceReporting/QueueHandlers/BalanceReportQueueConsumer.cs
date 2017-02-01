@@ -13,6 +13,7 @@ using Core.Asset;
 using Core.BalanceReport;
 using Core.Block;
 using Core.Email;
+using Core.Settings;
 using Providers;
 using Providers.Helpers;
 using Providers.Providers.Lykke.API;
@@ -35,6 +36,7 @@ namespace BalanceReporting.QueueHandlers
         private readonly ITemplateGenerator _templateGenerator;
         private readonly LykkeAPIProvider _lykkeApiProvider;
         private readonly FiatRatesService _fiatRatesService;
+        private readonly BalanceReportSettings _balanceReportSettings;
 
         public BalanceReportQueueConsumer(ILog log,
             IBalanceReportingQueueReader queueReader,
@@ -47,7 +49,8 @@ namespace BalanceReporting.QueueHandlers
             IEmailSender emailSender, 
             ITemplateGenerator templateGenerator, 
             LykkeAPIProvider lykkeApiProvider, 
-            FiatRatesService fiatRatesService)
+            FiatRatesService fiatRatesService,
+            BaseSettings baseSettings)
         {
             _log = log;
             _queueReader = queueReader;
@@ -61,6 +64,7 @@ namespace BalanceReporting.QueueHandlers
             _templateGenerator = templateGenerator;
             _lykkeApiProvider = lykkeApiProvider;
             _fiatRatesService = fiatRatesService;
+            _balanceReportSettings = baseSettings.BalanceReportSettings;
 
             _queueReader.RegisterPreHandler(async data =>
             {
@@ -89,7 +93,7 @@ namespace BalanceReporting.QueueHandlers
 
                 var currencies = new[] { "USD", "CHF", "EUR", "GBP" };
 
-                var assetsToTrack =  await _lykkeApiProvider.GetAssetsAsync();
+                var assetsToTrack =  (await _lykkeApiProvider.GetAssetsAsync()).Where(p=> _balanceReportSettings.AssetIds.Contains(p.Id));
 
                 var mainChain = await _mainChainService.GetMainChainAsync();
                 var at = mainChain.GetClosestToTimeBlock(context.ReportingDate);
@@ -135,7 +139,7 @@ namespace BalanceReporting.QueueHandlers
                 var mes = new EmailMessage
                 {
                     Subject = BalanceReportingTemplateModel.EmailSubject,
-                    Body = await _templateGenerator.GenerateAsync(BalanceReportingTemplateModel.TemplateName, BalanceReportingTemplateModel.Create(blockHeader.Time, context.ClientName)),
+                    Body = await _templateGenerator.GenerateAsync(BalanceReportingTemplateModel.TemplateName, BalanceReportingTemplateModel.Create(blockHeader.Time.ToUniversalTime(), context.ClientName)),
                     IsHtml = true,
                     Attachments = attachments.ToArray()
                 };

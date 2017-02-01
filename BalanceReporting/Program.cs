@@ -57,9 +57,9 @@ namespace BalanceReporting
                 }
 
                 //TEST
-                container.IoC.GetObject<SendBalanceReportCommandQueryProducer>()
-                    .CreaseSendBalanceReportCommandAsync("netsky@bk.ru", "Volkov Andrey", new[] { "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a", "anJBX5sKFK4vnbywKWE2NQa9xrvLJEqRAB2" }, new DateTime(2016,12,31))
-                    .Wait();
+                //container.IoC.GetObject<SendBalanceReportCommandQueryProducer>()
+                //    .CreaseSendBalanceReportCommandAsync("netsky@bk.ru", "Volkov Andrey", new[] { "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a", "anJBX5sKFK4vnbywKWE2NQa9xrvLJEqRAB2" }, new DateTime(2016, 12, 31))
+                //    .Wait();
                 //Test
 
                 container.IoC.CreateInstance<BalanceReportQueueConsumer>().Start();

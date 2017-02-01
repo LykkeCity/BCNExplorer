@@ -42,6 +42,9 @@ namespace Core.Settings
 
         [Required]
         public ServiceBusEmailSettings ServiceBusEmailSettings { get; set; }
+
+        [Required]
+        public BalanceReportSettings BalanceReportSettings { get; set; }
         //[Required]
         //public AuthenticationSettings Authentication { get; set; }
     }
@@ -123,5 +126,10 @@ namespace Core.Settings
 
         [Required]
         public string QueueName { get; set; }
+    }
+
+    public class BalanceReportSettings
+    {
+        public string[] AssetIds { get; set; }
     }
 }

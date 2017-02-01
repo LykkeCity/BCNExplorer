@@ -146,7 +146,7 @@ namespace Services.BalanceReport
                 #region Reporting datetime
 
                 mainInfoTable.AddCell(new Phrase("Reporting datetime", mainFontBold));
-                mainInfoTable.AddCell(new Phrase(reportedAtBlock.Time.ToUniversalTime().ToString("dd MMMM yyyy HH:mm:ss"), mainFontRegular));
+                mainInfoTable.AddCell(new Phrase(reportedAtBlock.Time.ToUniversalTime().ToString("dd MMMM yyyy HH:mm"), mainFontRegular));
 
                 #endregion
 
@@ -205,6 +205,12 @@ namespace Services.BalanceReport
                 decimal sum = 0;
                 foreach (var address in balances.AddressBalances.Select(p=>p.Key))
                 {
+                    var addressBalances = balances.AddressBalances[address].Where(p=>p.Quantity!=0);
+                    if (!addressBalances.Any())
+                    {
+                        continue;
+                    }
+                    
                     balancesTable.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
                     balancesTable.AddCell(new Phrase("WalletId", smallFontBold));
 
@@ -212,7 +218,7 @@ namespace Services.BalanceReport
                     balancesTable.AddCell(new Anchor(address, smallLinkFont) { Reference = _baseSettings.ExplolerUrl + "address/" + address });
                     balancesTable.DefaultCell.Colspan = 1;
 
-                    foreach (var assetBalance in balances.AddressBalances[address])
+                    foreach (var assetBalance in addressBalances)
                     {
                         int divisibility;
                         string assetName;
@@ -329,7 +335,7 @@ namespace Services.BalanceReport
                 //var addressUrl = _baseSettings.ExplolerUrl + "address/" + client.Address;
                 //var addressLink = new Anchor(addressUrl, smallLinkFont) {Reference = addressUrl};
                 //document.Add(addressLink);
-                document.Add(new Paragraph("[2] Market price is averaged second-by-second mid price trailing 24 hours before reporting datetime", smallFontRegular) { SpacingAfter = 15, SpacingBefore = 15});
+                document.Add(new Paragraph("[2] Market price is the last bid price for the reporting datetime", smallFontRegular) { SpacingAfter = 15, SpacingBefore = 15});
                 document.Add(new Paragraph("[3] Market value in reporting currency, [3]=[1]*[2]", smallFontRegular));
 
                 #endregion

@@ -55,6 +55,9 @@ A website explores the blockchain and shows information about blocks, transactio
 		"EmailTemplatesHost": ""							
 	},
     "LykkeAPIUrl": "",
+	"BalanceReportSettings": {
+		"AssetIds": ["", ""]							
+	},	
 }
 ```
 * Keys description

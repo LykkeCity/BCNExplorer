@@ -52,7 +52,7 @@ namespace Services.BalanceChanges
 
                         if (invertedAsset?.BitcoinAssetId != null)
                         {
-                            priceDictionary[invertedAsset.BitcoinAssetId] = Price.Create(1/rates[pair.Id], pair.InvertedAccuracy);
+                            priceDictionary[invertedAsset.BitcoinAssetId] = Price.Create(Math.Round(1 /rates[pair.Id], pair.InvertedAccuracy), pair.InvertedAccuracy);
                         }
 
                         priceDictionary[pair.QuotingAssetId] = Price.Create(Math.Round(1 / rates[pair.Id], pair.InvertedAccuracy), pair.InvertedAccuracy);
