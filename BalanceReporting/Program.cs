@@ -34,7 +34,7 @@ namespace BalanceReporting
                         JobsConnectionStringSettings.ConnectionString);
 
                 var logToTable =
-                    new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "BalanceReporting",
+                    new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "LogBalanceReporting",
                         null));
                 log = new LogToTableAndConsole(logToTable, new LogToConsole());
 
