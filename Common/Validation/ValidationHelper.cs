@@ -18,7 +18,9 @@ namespace Common.Validation
                     || property.PropertyType == typeof(decimal)
                     || property.PropertyType.IsValueType 
                     || property.PropertyType.IsPrimitive 
-                    || property.PropertyType.IsEnum)
+                    || property.PropertyType.IsEnum
+                    || property.PropertyType.IsGenericType
+                    || property.PropertyType.IsArray)
                     continue;
 
                 var value = property.GetValue(obj);
