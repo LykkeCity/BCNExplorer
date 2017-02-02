@@ -21,12 +21,12 @@
                 data-page="@page"
                 data-transaction-ids="@Json.Encode(Model.GetPage(page).ToArray())" data-load-url="@Url.Action("List", "Transaction")">
 
-                <div class="show_more">
-                    @if (Model.CurrentPage != page)
-                    {
+                @if (Model.CurrentPage != page)
+                {
+                    <div class="show_more">
                         <a class="btn js-load-trans">Show More</a>
-                    }
-                </div>
+                    </div>
+                }
             </li>
         }
     </ul>
