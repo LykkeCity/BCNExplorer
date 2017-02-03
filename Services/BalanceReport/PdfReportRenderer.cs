@@ -336,7 +336,8 @@ namespace Services.BalanceReport
                 //var addressLink = new Anchor(addressUrl, smallLinkFont) {Reference = addressUrl};
                 //document.Add(addressLink);
                 document.Add(new Paragraph("[2] Market price is the last bid price for the reporting datetime", smallFontRegular) { SpacingAfter = 15, SpacingBefore = 15});
-                document.Add(new Paragraph("[3] Market value in reporting currency, [3]=[1]*[2]", smallFontRegular));
+                document.Add(new Paragraph("[3] Market value in reporting currency, [3]=[1]*[2]", smallFontRegular) { SpacingAfter = 15});
+                document.Add(new Paragraph("Lykke Corp and its affiliates do not provide tax, legal or accounting advice. This document serves informational purposes only and is not in-tended to provide, and should not be relied on for, tax, legal or accounting advice.", smallFontRegular) { SpacingAfter = 15 });
 
                 #endregion
 
