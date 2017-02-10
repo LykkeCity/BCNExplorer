@@ -80,7 +80,7 @@ namespace Services.Address
             var btcSummary = _ninjaAddressProvider.GetAddressBalanceAsync(id, at, colored: false);
             await Task.WhenAll(coloredSummary, btcSummary);
 
-            if (coloredSummary.Result != null)
+            if (coloredSummary.Result != null && btcSummary.Result != null)
             {
                 var result = new AddressBalance
                 {
