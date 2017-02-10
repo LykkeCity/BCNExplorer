@@ -11,7 +11,7 @@ namespace BCNExplorer.Web.Helpers
                 return date.ToString("MMMM dd, yyyy h:mm tt");
             }
 
-            return date.ToString("f");
+            return date.ToString("dddd, h:mm tt");
         }
     }
 }
