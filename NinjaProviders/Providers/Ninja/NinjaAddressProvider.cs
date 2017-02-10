@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NBitcoin;
 using Newtonsoft.Json;
 using Providers.BlockChainReader;
 using Providers.Contracts.Ninja;
@@ -136,9 +137,21 @@ namespace Providers.Providers.Ninja
 
 
 
-        public async Task<NinjaAddressSummary> GetAddressBalanceAsync(string id, int? at)
+        public async Task<NinjaAddressSummary> GetAddressBalanceAsync(string id, int? at, bool colored)
         {
-            var url = $"/balances/{id}/summary?colored=true";
+            if (!colored)
+            {
+                //getting uncolored address if id is colored
+                try
+                {
+                    id = new BitcoinColoredAddress(id).Address.ToWif();
+                }
+                catch (Exception)
+                {
+                    //address is uncolored already - its ok
+                }
+            }
+            var url = $"/balances/{id}/summary?colored={colored}";
             if (at != null)
             {
                 url += $"&at={at.Value}";
