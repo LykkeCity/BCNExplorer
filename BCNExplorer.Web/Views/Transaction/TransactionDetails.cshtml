@@ -292,27 +292,24 @@
                             </div>
                         </div>
                     }
-                    else
+                    @foreach (var input in aggregatedIns)
                     {
-                        foreach (var input in aggregatedIns)
-                        {
-                            var aggregatedContainerId = Guid.NewGuid().ToString("N");
-                            <text>
-                                @RenderInOut(input.TitleItem, aggregatedContainerId)
-                            </text>
+                        var aggregatedContainerId = Guid.NewGuid().ToString("N");
+                        <text>
+                            @RenderInOut(input.TitleItem, aggregatedContainerId)
+                        </text>
 
-                            <text>
-                                @if (input.ShowAggregatedTransactions)
-                                {
-                                    <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
-                                        @foreach (var aggregated in input.AggregatedTransactions)
-                                        {
-                                            @RenderInOut(aggregated)
-                                        }
-                                    </div>
-                                }
-                            </text>
-                        }
+                        <text>
+                            @if (input.ShowAggregatedTransactions)
+                            {
+                                <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
+                                    @foreach (var aggregated in input.AggregatedTransactions)
+                                    {
+                                        @RenderInOut(aggregated)
+                                    }
+                                </div>
+                            }
+                        </text>
                     }
                 </div>
             </div>
@@ -334,27 +331,24 @@
                             </div>
                         </div>
                     }
-                    else
+                    @foreach (var output in aggregatedOuts)
                     {
-                        foreach (var output in aggregatedOuts)
-                        {
-                            var aggregatedContainerId = Guid.NewGuid().ToString("N");
-                            <text>
-                                @RenderInOut(output.TitleItem, aggregatedContainerId)
-                            </text>
+                        var aggregatedContainerId = Guid.NewGuid().ToString("N");
+                        <text>
+                            @RenderInOut(output.TitleItem, aggregatedContainerId)
+                        </text>
 
-                            <text>
-                                @if (output.ShowAggregatedTransactions)
-                                {
-                                    <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
-                                        @foreach (var aggregated in output.AggregatedTransactions)
-                                        {
-                                            @RenderInOut(aggregated)
-                                        }
-                                    </div>
-                                }
-                            </text>
-                        }
+                        <text>
+                            @if (output.ShowAggregatedTransactions)
+                            {
+                                <div class="transaction_list__advanced" style="display: none;" id="@aggregatedContainerId">
+                                    @foreach (var aggregated in output.AggregatedTransactions)
+                                    {
+                                        @RenderInOut(aggregated)
+                                    }
+                                </div>
+                            }
+                        </text>
                     }
                 </div>
             </div>

@@ -187,7 +187,7 @@ namespace BCNExplorer.Web.Models
             public string Name { get; set; }
             public string ShortName { get; set; }
             public string IconImageUrl { get; set; }
-            public bool IsDestroyed => !AggregatedOutsWithoutChange.Any();
+            public bool IsDestroyed => !AggregatedOuts.Any();
             public bool IsIssued => !AggregatedInsWithoutChange.Any();
             public bool IsKnown { get; set; }
             public double Total { get; set; }
