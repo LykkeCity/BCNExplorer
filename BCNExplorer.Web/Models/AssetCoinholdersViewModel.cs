@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Common;
+using Common.CSV;
 using Core.AssetBlockChanges.Mongo;
 using Core.Block;
 
@@ -111,5 +113,21 @@ namespace BCNExplorer.Web.Models
                 return result;
             }
         }
+
+        public byte[] ToCsv()
+        {
+            var result = new StringBuilder();
+            result.AppendLine("Address,Amount,Ownership");
+
+            foreach (var addressSum in AddressSummaries)
+            {
+                result.AppendLine($"{CsvHelper.Escape(addressSum.Address)},{CsvHelper.Escape(addressSum.Balance.ToStringBtcFormat())} {CsvHelper.Escape(Asset.NameShort)},{CsvHelper.Escape(addressSum.BalancePercentageDescription)} %");
+            }
+
+            result.AppendLine($"Total,{CsvHelper.Escape(Total.ToStringBtcFormat())} {CsvHelper.Escape(Asset.NameShort)}");
+
+            return new UTF8Encoding().GetBytes(result.ToString());
+        }
+        
     }
 }

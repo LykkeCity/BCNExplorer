@@ -134,6 +134,7 @@
     <Compile Include="CashRepository.cs" />
     <Compile Include="Clone.cs" />
     <Compile Include="CountryManager.cs" />
+    <Compile Include="CSV\CsvHelper.cs" />
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="DictionaryThreadSafe.cs" />
     <Compile Include="EncryptionTools\AESHelper.cs" />

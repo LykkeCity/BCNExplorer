@@ -11,7 +11,13 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-4">
-                <h3>Coinholders <span>@Model.CoinholdersCount</span></h3>
+                <h3>
+                    Coinholders <span>@Model.CoinholdersCount</span>
+                    <a class="btn btn--icon btn_asset_download" href="@Url.Action("OwnersToCsv", "Asset", new {id = Model.Asset.AssetIds.FirstOrDefault(), at = Model.Pagination.AtBlock})">
+                        CSV
+                        <i class="icon icon--download"></i>
+                    </a>
+                </h3>
             </div>
             <div class="col-xs-12 col-sm-8">
                 <div class="block_nav">

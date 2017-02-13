@@ -48,6 +48,7 @@ namespace BCNExplorer.Web.Controllers
         {
             return View();
         }
+        #region owners
 
         [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         public Task<ActionResult> Owners(string id)
@@ -72,6 +73,18 @@ namespace BCNExplorer.Web.Controllers
         
         private async Task<ActionResult> _OwnersInner(string id, int? at = null)
         {
+            var result = await GetOwnersAsync(id, at);
+
+            if (result != null)
+            {
+                return View("Owners", result);
+            }
+
+            return View("NotFound");
+        }
+
+        private async Task<AssetCoinholdersViewModel> GetOwnersAsync(string id, int? at)
+        {
             var asset = await _assetService.GetAssetAsync(id);
 
             if (asset != null)
@@ -89,26 +102,26 @@ namespace BCNExplorer.Web.Controllers
                 }
                 else
                 {
-                    atBlockInfoTask = Task.FromResult((IBlockHeader) null);
+                    atBlockInfoTask = Task.FromResult((IBlockHeader)null);
                     addressChangesAtBlockTask = Task.FromResult((IDictionary<string, double>)new Dictionary<string, double>());
                 }
 
                 await Task.WhenAll(addressChangesAtBlockTask, summaryTask, addressChangesTask, lastBlockTask, atBlockInfoTask);
-                
+
                 var result = AssetCoinholdersViewModel.Create(
-                    AssetViewModel.Create(asset), 
-                    summaryTask.Result, 
-                    at, 
-                    addressChangesAtBlockTask.Result, 
+                    AssetViewModel.Create(asset),
+                    summaryTask.Result,
+                    at,
+                    addressChangesAtBlockTask.Result,
                     addressChangesTask.Result,
                     lastBlockTask.Result,
                     atBlockInfoTask.Result
                     );
 
-                return View("Owners", result);
+                return result;
             }
 
-            return View("NotFound");
+            return null;
         }
 
         [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
@@ -125,7 +138,23 @@ namespace BCNExplorer.Web.Controllers
                 return View("~/Views/Transaction/TransactionIdList.cshtml", txList);
             }
 
+
             return View("NotFound");
-        } 
+        }
+
+        [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
+        public async Task<ActionResult> OwnersToCsv(string id, int at)
+        {
+            var result = await GetOwnersAsync(id, at);
+
+            if (result != null)
+            {
+                return File(result.ToCsv(), "text/csv", $"Coinholders-{result.Asset.NameShort}-{at}.csv");
+            }
+
+            return View("NotFound");
+        }
+
+        #endregion
     }
 }
