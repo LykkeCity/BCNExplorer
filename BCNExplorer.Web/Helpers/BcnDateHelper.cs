@@ -6,7 +6,7 @@ namespace BCNExplorer.Web.Helpers
     {
         public static string ToStringBcnExplolerFormat(this DateTime date)
         {
-            if (DateTime.Now - date > TimeSpan.FromDays(7))
+            if (DateTime.Now.Date - date.Date > TimeSpan.FromDays(7))
             {
                 return date.ToString("MMMM dd, yyyy h:mm tt");
             }
