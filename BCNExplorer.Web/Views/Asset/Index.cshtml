@@ -38,9 +38,10 @@
                 </div>
                 <div class="col-xs-12">
                     <p class="text-muted">
-                        <a href="@Model.DefinitionUrl" target="_blank">Asset definition</a><span class="middot">&middot;</span>
+                        <a href="@Model.DefinitionUrl" target="_blank">Asset definition</a>
                         @if (Model.LinkToWebsite)
                         {
+                            <span class="middot">&middot;</span>
                             <a href="@Model.ContactUrl" target="_blank">Asset webpage</a>
                         }
                         @*<span class="middot">&middot;</span><a href="">Coinprism metadata</a>*@
@@ -79,7 +80,7 @@
                     <tr>
                         <td>
                             <b>Details:</b>
-                            <p >
+                            <p>
                                 @if (!string.IsNullOrEmpty(Model.Description))
                                 {
                                     @Model.Description
