@@ -52,14 +52,20 @@ namespace BCNExplorer.Web.Models
         {
             public bool IsCoinBase { get; set; }
             
-            public IEnumerable<AggregatedInOut<In>> AggregatedIns { get; set; }
-            public IEnumerable<AggregatedInOut<Out>> AggregatedOuts { get; set; }
+            public IEnumerable<AggregatedInOut<AssetInOut>> AggregatedIns { get; set; }
+            public IEnumerable<AggregatedInOut<AssetInOut>> AggregatedOuts { get; set; }
 
-            public IEnumerable<AggregatedInOut<In>> AggregatedInsWithoutChange { get; set; }
-            public IEnumerable<AggregatedInOut<Out>> AggregatedOutsWithoutChange { get; set; }
+            public IEnumerable<AggregatedInOut<AssetInOut>> AggregatedInsWithoutChange { get; set; }
+            public IEnumerable<AggregatedInOut<AssetInOut>> AggregatedOutsWithoutChange { get; set; }
 
             public double Fees { get; set; }
             public string FeesDescription => Fees.ToStringBtcFormat();
+
+            public double ReleasedFromColorValue { get; set; }
+            public bool ShowReleasedFromColor => ReleasedFromColorValue != 0;
+
+            public double ConsumedForColorValue { get; set; }
+            public bool ShowConsumedForColor => ConsumedForColorValue != 0;
 
             public double Total { get; set; }
 
@@ -83,15 +89,21 @@ namespace BCNExplorer.Web.Models
                 IEnumerable<IInOut> ninjaOuts,
                 AssetDictionary assetDictionary)
             {
-                var ins = In.Create(ninjaIn, assetDictionary).ToList();
-                var outs = Out.Create(ninjaOuts, assetDictionary).ToList();
                 var feesBtc = BitcoinUtils.SatoshiToBtc(fees);
-                
-                var insWithoutChange = ins.Select(p => p.Clone<In>()).ToList();
-                var outsWithoutChange = outs.Select(p => p.Clone<Out>()).ToList();
+
+                IEnumerable<AssetInOut> ins = In.Create(ninjaIn, assetDictionary).ToList();
+                IEnumerable<AssetInOut> outs = Out.Create(ninjaOuts, assetDictionary).ToList();
+
+                IEnumerable<AssetInOut> insWithoutChange = ins.Select(p => p.Clone<In>()).ToList();
+                IEnumerable<AssetInOut> outsWithoutChange = outs.Select(p => p.Clone<Out>()).ToList();
+
+                double releasedFromColor = 0;
+                ins = AssetHelper.RemoveColored(ins, out releasedFromColor).ToList();
+
+                double consumedForColor = 0;
+                outs = AssetHelper.RemoveColored(outs, out consumedForColor).ToList();
 
                 bool showChange = false;
-
                 AssetHelper.CalculateWithReturnedChange(ins, outs, ref showChange);
 
                 if (ins.All(p => p.Value == 0) && outs.All(p => p.Value == 0))
@@ -113,8 +125,10 @@ namespace BCNExplorer.Web.Models
                     AggregatedOuts = AssetHelper.GroupByAddress(outs),
                     AggregatedInsWithoutChange = AssetHelper.GroupByAddress(insWithoutChange),
                     AggregatedOutsWithoutChange = AssetHelper.GroupByAddress(outsWithoutChange),
-                    Total = outs.Sum(p => p.Value) + feesBtc,
-                    ShowWithoutChange = showChange
+                    Total = outsWithoutChange.Sum(p => p.Value) + feesBtc,
+                    ShowWithoutChange = showChange,
+                    ConsumedForColorValue = consumedForColor,
+                    ReleasedFromColorValue = releasedFromColor
                 };
             }
 
@@ -381,7 +395,7 @@ namespace BCNExplorer.Web.Models
 
         public abstract string PreviousTransactionId { get; }
         public bool ShowPreviousTransaction => PreviousTransactionId != null;
-        public bool ShowColoredEquivalent => ColoredEquivalentQuantity != 0;
+        public bool HasColoredEquivalent => ColoredEquivalentQuantity != 0;
         public abstract string ColoredEquivalentDescription { get; }
         public double ColoredEquivalentQuantity { get; set; }
         public abstract string ValueDescription { get; }
@@ -473,11 +487,20 @@ namespace BCNExplorer.Web.Models
                 }
             }
         }
+
+        public static IEnumerable<AssetInOut> RemoveColored(IEnumerable<AssetInOut> assetInOuts, out double totalColoredBtc)
+        {
+            totalColoredBtc = Convert.ToDouble(assetInOuts.Where(p => p.HasColoredEquivalent).Sum(p => Convert.ToDecimal(p.Value)));
+
+            return assetInOuts.Where(p => !p.HasColoredEquivalent).ToList();
+        }
+
+
     }
 
     public interface IInOutViewModel
     {
-        bool ShowColoredEquivalent { get; }
+        bool HasColoredEquivalent { get; }
         string ColoredEquivalentDescription { get; }
         string ValueDescription { get; } 
         string AssetDescription { get; }

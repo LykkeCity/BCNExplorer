@@ -69,12 +69,12 @@
                 </div>
 
                 <div class="@toggleBtcClass">
-                    @RenderBtcInOuts(Model.Bitcoin.AggregatedIns, Model.Bitcoin.AggregatedOuts)
+                    @RenderBtcInOuts(Model.Bitcoin.AggregatedIns, Model.Bitcoin.AggregatedOuts, showConsumedReleased: true)
                 </div>
                 @if (Model.Bitcoin.ShowWithoutChange)
                 {
                     <div class="@toggleBtcClass hidden">
-                        @RenderBtcInOuts(Model.Bitcoin.AggregatedInsWithoutChange, Model.Bitcoin.AggregatedOutsWithoutChange)
+                        @RenderBtcInOuts(Model.Bitcoin.AggregatedInsWithoutChange, Model.Bitcoin.AggregatedOutsWithoutChange, showConsumedReleased: false)
                     </div>
                 }
             </div>
@@ -121,7 +121,7 @@
                         @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedIns, coloredAsset.AggregatedOuts)
                     </div>
                     @if (Model.Bitcoin.ShowWithoutChange)
-                {
+                    {
                         <div class="@toggleColoredClass hidden">
                             @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedInsWithoutChange, coloredAsset.AggregatedOutsWithoutChange)
                         </div>
@@ -185,7 +185,7 @@
                         </span> 
                     </text>
                 }
-                @if (inOutViewModel.ShowColoredEquivalent)
+                @if (inOutViewModel.HasColoredEquivalent)
                 {
                     <div class="btn_colored_coin" data-toggle="popover" data-placement="top"
                           data-content="@inOutViewModel.ColoredEquivalentDescription colored" >
@@ -197,8 +197,8 @@
     </div>
 }
 
-@helper RenderBtcInOuts(IEnumerable<AggregatedInOut<TransactionViewModel.BitcoinAsset.In>> aggregatedIns, 
-    IEnumerable<AggregatedInOut<TransactionViewModel.BitcoinAsset.Out>> aggregatedOuts)
+@helper RenderBtcInOuts(IEnumerable<AggregatedInOut<AssetInOut>> aggregatedIns, 
+    IEnumerable<AggregatedInOut<AssetInOut>> aggregatedOuts, bool showConsumedReleased)
 {
     <div class="transaction_details__body">
         <div class="transaction_item">
@@ -233,6 +233,21 @@
                                 }
                             </text>
                         }
+                        if (showConsumedReleased && Model.Bitcoin.ShowReleasedFromColor)
+                        {
+                            <div class="transaction_list__item">
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <div class="links_group">
+                                            Released from color
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <span>@Model.Bitcoin.ReleasedFromColorValue.ToStringBtcFormat()</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     }
                 </div>
             </div>
@@ -262,6 +277,21 @@
                             }
                         </text>
 
+                    }
+                    @if (showConsumedReleased && Model.Bitcoin.ShowConsumedForColor)
+                    {
+                        <div class="transaction_list__item">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="links_group">
+                                        Consumed for color
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <span>@Model.Bitcoin.ConsumedForColorValue.ToStringBtcFormat()</span>
+                                </div>
+                            </div>
+                        </div>
                     }
                     <div class="transaction_list__item">
                         <div class="row">
