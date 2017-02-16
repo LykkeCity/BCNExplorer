@@ -28,7 +28,7 @@
         
         return $.Deferred().promise();
     }
-
+    
     var nextLoadTranContainerSelector = '.js-transactions-container.hidden:first';
     var transactionLoadContainerSelector = '.js-transactions-container';
 

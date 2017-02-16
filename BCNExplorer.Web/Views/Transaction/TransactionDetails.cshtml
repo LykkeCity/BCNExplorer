@@ -171,6 +171,7 @@
                         <span class="_no_break">
                             @inOutViewModel.AssetDescription
                             (@inOutViewModel.AggregatedTransactionCount)
+
                         </span> 
                         <i class="icon icon--chevron-thin-down"></i>
                     </a>
@@ -183,6 +184,13 @@
                             @inOutViewModel.AssetDescription
                         </span> 
                     </text>
+                }
+                @if (inOutViewModel.ShowColoredEquivalent)
+                {
+                    <div class="btn_colored_coin" data-toggle="popover" data-placement="top"
+                          data-content="@inOutViewModel.ColoredEquivalentDescription colored" >
+                        <span class="btn_colored_coin__icon"></span>
+                    </div>
                 }
             </div>
         </div>

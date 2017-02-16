@@ -15,4 +15,21 @@
 
         return false;
     });
+
+    (function() {
+        var initAssetQuantityPopover = function () {
+            var $elem = $('[data-toggle="popover"]');
+
+            $elem.popover('destroy');
+            $elem.popover({
+                trigger: 'hover',
+                container: this.parentNode,
+                placement: 'auto'
+            });
+        }
+
+        initAssetQuantityPopover();
+
+        $('body').on('transactions-loaded', initAssetQuantityPopover);
+    })();    
 });

@@ -13,7 +13,7 @@ namespace BCNExplorer.Web.Models
 
         public AssetViewModel Get(string asset)
         {
-            if (Dic.ContainsKey(asset))
+            if (!string.IsNullOrEmpty(asset) && Dic.ContainsKey(asset))
             {
                 return Dic[asset];
             }

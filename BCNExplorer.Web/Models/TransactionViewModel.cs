@@ -80,10 +80,11 @@ namespace BCNExplorer.Web.Models
             public static BitcoinAsset Create(double fees,
                 bool isCoinBase,
                 IEnumerable<IInOut> ninjaIn,
-                IEnumerable<IInOut> ninjaOuts)
+                IEnumerable<IInOut> ninjaOuts,
+                AssetDictionary assetDictionary)
             {
-                var ins = In.Create(ninjaIn).ToList();
-                var outs = Out.Create(ninjaOuts).ToList();
+                var ins = In.Create(ninjaIn, assetDictionary).ToList();
+                var outs = Out.Create(ninjaOuts, assetDictionary).ToList();
                 var feesBtc = BitcoinUtils.SatoshiToBtc(fees);
                 
                 var insWithoutChange = ins.Select(p => p.Clone<In>()).ToList();
@@ -119,25 +120,33 @@ namespace BCNExplorer.Web.Models
 
             public class In:AssetInOut
             {
-                public In(double value, string address, string previousTransactionId)
+                public In(double value, string address, string previousTransactionId, double coloredEquivalentQuantityQuantity, AssetViewModel coloredEquivalentAsset)
                 {
                     Value = value;
                     Address = address;
                     PreviousTransactionId = previousTransactionId;
+                    ColoredEquivalentQuantity = coloredEquivalentQuantityQuantity;
+                    ColoredEquivalentAsset = coloredEquivalentAsset;
                 }
+
+                public AssetViewModel ColoredEquivalentAsset { get; set; }
 
                 public override string PreviousTransactionId { get; }
 
+                public override string ColoredEquivalentDescription
+                    => FormatColoredEquivalent(ColoredEquivalentQuantity, ColoredEquivalentAsset);
                 public override string ValueDescription => Value.ToStringBtcFormat();
                 public override string AssetDescription => "";
 
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
                 
-                public static IEnumerable<In> Create(IEnumerable<IInOut> ins)
+                public static IEnumerable<In> Create(IEnumerable<IInOut> ins, AssetDictionary assetDictionary)
                 {
                     return ins.Where(p => p.Value != 0)
                         .Select(p => new In(
                             value: BitcoinUtils.SatoshiToBtc(p.Value * (-1)), 
+                            coloredEquivalentAsset:assetDictionary.Get(p.AssetId),
+                            coloredEquivalentQuantityQuantity:p.Quantity,
                             address:p.Address, 
                             previousTransactionId:p.TransactionId));
                 }
@@ -145,38 +154,40 @@ namespace BCNExplorer.Web.Models
 
             public class Out:AssetInOut
             {
-                public Out(double value, string address)
+                public Out(double value, string address, double coloredEquivalentQuantity, AssetViewModel coloredEquivalentAsset)
                 {
                     Value = value;
                     Address = address;
+                    ColoredEquivalentQuantity = coloredEquivalentQuantity;
                 }
+
+                public AssetViewModel ColoredEquivalentAsset { get; set; }
 
                 public override string PreviousTransactionId => null;
 
+                public override string ColoredEquivalentDescription => FormatColoredEquivalent(ColoredEquivalentQuantity, ColoredEquivalentAsset);
                 public override string ValueDescription => Value.ToStringBtcFormat();
                 public override string AssetDescription => "";
 
                 public override int AggregatedTransactionCount => _aggregatedTransactionCount;
                 
-                public static IEnumerable<Out> Create(IEnumerable<IInOut> outs)
+                public static IEnumerable<Out> Create(IEnumerable<IInOut> outs, AssetDictionary assetDictionary)
                 {
-                    return outs.Where(p => p.Value != 0).Select(Out.Create);
+                    return outs.Where(p => p.Value != 0).Select(p=> Create(p, assetDictionary.Get(p.AssetId)));
                 }
 
-                public static Out Create(IInOut @out)
+                public static Out Create(IInOut @out, AssetViewModel coloredEquivalentAsset)
                 {
-                    return new Out(value: BitcoinUtils.SatoshiToBtc(@out.Value), address: @out.Address);
+                    return new Out(value: BitcoinUtils.SatoshiToBtc(@out.Value), address: @out.Address, coloredEquivalentAsset:coloredEquivalentAsset, coloredEquivalentQuantity: @out.Quantity);
                 }
+            }
 
-                public static IEnumerable<Out> Create(IEnumerable<In> ins)
-                {
-                    return ins.Where(p => p.Value != 0).Select(p => new Out(value: BitcoinUtils.SatoshiToBtc(p.Value), address: p.Address));
-                }
+            public static string FormatColoredEquivalent(double quantity, AssetViewModel assetViewModel)
+            {
+                var divisibility = assetViewModel?.Divisibility ?? 0;
+                var nameShort = assetViewModel?.NameShort;
 
-                public static Out Create(In @in)
-                {
-                    return new Out(value: @in.Value, address: @in.Address);
-                }
+                return $"{nameShort} {BitcoinUtils.CalculateColoredAssetQuantity(quantity, divisibility).ToStringBtcFormat()}";
             }
         }
 
@@ -216,6 +227,11 @@ namespace BCNExplorer.Web.Models
 
                 public override string PreviousTransactionId { get; }
 
+                public override string ColoredEquivalentDescription
+                {
+                    get { throw new InvalidOperationException(); }
+                }
+
                 public override string ValueDescription => Value.ToStringBtcFormat();
                 public override string AssetDescription => ShortName;
 
@@ -243,6 +259,14 @@ namespace BCNExplorer.Web.Models
                 }
 
                 public override string PreviousTransactionId => null;
+
+                public override string ColoredEquivalentDescription
+                {
+                    get
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
 
                 public override string ValueDescription => Value.ToStringBtcFormat();
                 public override string AssetDescription => ShortName;
@@ -339,7 +363,7 @@ namespace BCNExplorer.Web.Models
                 Block = BlockViewModel.Create(ninjaTransaction.Block),
                 AssetsCount = ninjaTransaction.TransactionsByAssets.Count(p => p.IsColored),
                 IsConfirmed = ninjaTransaction.Block != null,
-                Bitcoin = BitcoinAsset.Create(ninjaTransaction.Fees, ninjaTransaction.IsCoinBase, bc.TransactionIn.Union(colored.SelectMany(p => p.TransactionIn)), bc.TransactionsOut.Union(colored.SelectMany(p=>p.TransactionsOut)) ),
+                Bitcoin = BitcoinAsset.Create(ninjaTransaction.Fees, ninjaTransaction.IsCoinBase, bc.TransactionIn.Union(colored.SelectMany(p => p.TransactionIn)), bc.TransactionsOut.Union(colored.SelectMany(p=>p.TransactionsOut)), assetDic ),
                 ColoredAssets = colored.Select(p => ColoredAsset.Create(p, assetDic)),
                 InputsCount = ninjaTransaction.InputsCount,
                 OutputsCount = ninjaTransaction.OutputsCount
@@ -356,6 +380,9 @@ namespace BCNExplorer.Web.Models
 
         public abstract string PreviousTransactionId { get; }
         public bool ShowPreviousTransaction => PreviousTransactionId != null;
+        public bool ShowColoredEquivalent => ColoredEquivalentQuantity != 0;
+        public abstract string ColoredEquivalentDescription { get; }
+        public double ColoredEquivalentQuantity { get; set; }
         public abstract string ValueDescription { get; }
         public abstract string AssetDescription { get; }
         public bool ShowAggregatedTransactions => AggregatedTransactionCount > 1;
@@ -449,6 +476,8 @@ namespace BCNExplorer.Web.Models
 
     public interface IInOutViewModel
     {
+        bool ShowColoredEquivalent { get; }
+        string ColoredEquivalentDescription { get; }
         string ValueDescription { get; } 
         string AssetDescription { get; }
         bool ShowAggregatedTransactions { get;  }
