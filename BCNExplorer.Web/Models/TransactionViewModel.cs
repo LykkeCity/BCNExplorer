@@ -443,6 +443,7 @@ namespace BCNExplorer.Web.Models
                     {
                         //floation point summary hack
                         titleItem.Value = Convert.ToDouble(p.Sum(ti => Convert.ToDecimal(ti.Value)));
+                        titleItem.ColoredEquivalentQuantity = Convert.ToDouble(p.Sum(ti => Convert.ToDecimal(ti.ColoredEquivalentQuantity)));
                     }
                     catch (Exception) // overflow todo catch correct exception type instead of base class
                     {
