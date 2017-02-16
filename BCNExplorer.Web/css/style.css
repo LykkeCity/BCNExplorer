@@ -2134,7 +2134,7 @@ a { color: inherit; }
 
 .transaction_list { color: #3F4D60; }
 
-.transaction_list__advanced { display: none; overflow: hidden; color: rgba(63, 77, 96, 0.8); }
+.transaction_list__advanced { display: none; color: rgba(63, 77, 96, 0.8); }
 
 .transaction_list__item { white-space: nowrap; line-height: 30px; line-height: 1.875rem; }
 

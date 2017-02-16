@@ -159,6 +159,7 @@ namespace BCNExplorer.Web.Models
                     Value = value;
                     Address = address;
                     ColoredEquivalentQuantity = coloredEquivalentQuantity;
+                    ColoredEquivalentAsset = coloredEquivalentAsset;
                 }
 
                 public AssetViewModel ColoredEquivalentAsset { get; set; }
