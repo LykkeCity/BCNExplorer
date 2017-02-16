@@ -61,7 +61,7 @@
                             <div class="col-xs-10 col-sm-11">
                                 <div class="input-search input-search--index">
                                     <button class="btn btn--icon"><i class="icon icon--search"></i></button>
-                                    <input type="text" class="form-control form-control--search" placeholder="Search assets" ng-model="searchQuery" ng-change="assetList.resetToDefault()">
+                                    <input type="text" class="form-control form-control--search" placeholder="Search assets" ng-model="searchQuery" ng-change="assetList.resetToDefault()" ng-model-options="{ debounce: 100 }">
                                 </div>
                             </div>
                             <div class="col-xs-2 col-sm-1">
