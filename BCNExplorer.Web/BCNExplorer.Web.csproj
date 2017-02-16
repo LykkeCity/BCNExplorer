@@ -313,6 +313,7 @@
     <Content Include="img\assets\yen-lykke.png" />
     <Content Include="img\be\asset_default.jpg" />
     <Content Include="img\be\colored-arrow.png" />
+    <Content Include="img\be\colored_icn.svg" />
     <Content Include="img\be\qrcode.png" />
     <Content Include="img\fb.svg" />
     <Content Include="img\insta.svg" />
