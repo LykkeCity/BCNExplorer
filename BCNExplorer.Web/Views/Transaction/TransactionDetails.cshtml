@@ -120,7 +120,7 @@
                     <div class="@toggleColoredClass">
                         @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedIns, coloredAsset.AggregatedOuts)
                     </div>
-                    @if (Model.Bitcoin.ShowWithoutChange)
+                    @if (coloredAsset.ShowWithoutChange)
                     {
                         <div class="@toggleColoredClass hidden">
                             @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedInsWithoutChange, coloredAsset.AggregatedOutsWithoutChange)
