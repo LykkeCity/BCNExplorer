@@ -197,8 +197,8 @@
     </div>
 }
 
-@helper RenderBtcInOuts(IEnumerable<AggregatedInOut<AssetInOut>> aggregatedIns, 
-    IEnumerable<AggregatedInOut<AssetInOut>> aggregatedOuts, bool showConsumedReleased)
+@helper RenderBtcInOuts(IEnumerable<AggregatedInOut<AssetInOutBase>> aggregatedIns, 
+    IEnumerable<AggregatedInOut<AssetInOutBase>> aggregatedOuts, bool showConsumedReleased)
 {
     <div class="transaction_details__body">
         <div class="transaction_item">
