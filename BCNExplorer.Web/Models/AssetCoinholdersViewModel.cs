@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Common;
 using Common.CSV;
+using Common.Files;
 using Core.AssetBlockChanges.Mongo;
 using Core.Block;
 
@@ -114,20 +116,17 @@ namespace BCNExplorer.Web.Models
             }
         }
 
-        public byte[] ToCsv()
+        public Task<byte[]> ToCsvAsync()
         {
-            var result = new StringBuilder();
-            result.AppendLine("Address,Amount,Ownership");
+            var csv = new CsvWriter();
+            csv.WriteLine("Address", "Amount", "Ownership");
 
             foreach (var addressSum in AddressSummaries)
             {
-                result.AppendLine($"{CsvHelper.Escape(addressSum.Address)},{CsvHelper.Escape(addressSum.Balance.ToStringBtcFormat())} {CsvHelper.Escape(Asset.NameShort)},{CsvHelper.Escape(addressSum.BalancePercentageDescription)} %");
+                csv.WriteLine(addressSum.Address, addressSum.Balance.ToStringBtcFormat(),Asset.NameShort, $"{addressSum.BalancePercentageDescription} %");
             }
-
-            result.AppendLine($"Total,{CsvHelper.Escape(Total.ToStringBtcFormat())} {CsvHelper.Escape(Asset.NameShort)}");
-
-            return new UTF8Encoding().GetBytes(result.ToString());
+            csv.WriteLine("Total", $"{Total.ToStringBtcFormat()} {Asset.NameShort}");
+            return csv.GetResult().ToBytesAsync();
         }
-        
     }
 }

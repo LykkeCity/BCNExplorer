@@ -48,6 +48,7 @@ namespace BCNExplorer.Web.Controllers
         {
             return View();
         }
+
         #region owners
 
         [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
@@ -149,7 +150,7 @@ namespace BCNExplorer.Web.Controllers
 
             if (result != null)
             {
-                return File(result.ToCsv(), "text/csv", $"Coinholders-{result.Asset.NameShort}-{at}.csv");
+                return File(await result.ToCsvAsync(), "text/csv", $"Coinholders-{result.Asset.NameShort}-{at}.csv");
             }
 
             return View("NotFound");
