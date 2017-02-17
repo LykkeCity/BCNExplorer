@@ -125,7 +125,7 @@ namespace BCNExplorer.Web.Models
                     AggregatedOuts = AssetHelper.GroupByAddress(outs),
                     AggregatedInsWithoutChange = AssetHelper.GroupByAddress(insWithoutChange),
                     AggregatedOutsWithoutChange = AssetHelper.GroupByAddress(outsWithoutChange),
-                    Total = outsWithoutChange.Sum(p => p.Value) + feesBtc,
+                    Total = outs.Sum(p => p.Value) + feesBtc + consumedForColor,
                     ShowWithoutChange = showChange,
                     ConsumedForColorValue = consumedForColor,
                     ReleasedFromColorValue = releasedFromColor
