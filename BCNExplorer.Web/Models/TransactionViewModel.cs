@@ -441,15 +441,21 @@ namespace BCNExplorer.Web.Models
 
                     //floation point summary hack
                     titleItem.Value = Convert.ToDouble(p.Sum(ti => Convert.ToDecimal(ti.Value)));
-                    //titleItem.ColoredEquivalentQuantity = Convert.ToDouble(p.Sum(ti => Convert.ToDecimal(ti.ColoredEquivalentQuantity)));
-                    titleItem.ColoredEquivalentQuantity = 0;
+
                     titleItem.SetAggregatedTransactionCount(allItems.Count);
 
-                    return new AggregatedInOut<T>
+                    var result = new AggregatedInOut<T>
                     {
                         TitleItem = titleItem,
                         AggregatedTransactions = allItems
                     };
+
+                    if (result.ShowAggregatedTransactions)
+                    {
+                        titleItem.ColoredEquivalentQuantity = 0;
+                    }
+
+                    return result;
                 });
         }
 
