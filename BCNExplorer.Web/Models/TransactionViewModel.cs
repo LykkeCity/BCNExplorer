@@ -120,6 +120,9 @@ namespace BCNExplorer.Web.Models
                     outs = outs.Where(p => p.Value != 0).ToList();
                 }
 
+                var total = outs.Sum(p => Convert.ToDecimal(p.Value)) + Convert.ToDecimal(feesBtc) +
+                            Convert.ToDecimal(consumedForColor);
+
                 return new BitcoinAsset
                 {
                     Fees = feesBtc,
@@ -128,7 +131,7 @@ namespace BCNExplorer.Web.Models
                     AggregatedOuts = AssetHelper.GroupByAddress(outs),
                     AggregatedInsWithoutChange = AssetHelper.GroupByAddress(insWithoutChange),
                     AggregatedOutsWithoutChange = AssetHelper.GroupByAddress(outsWithoutChange),
-                    Total = outs.Sum(p => p.Value) + feesBtc,
+                    Total = Convert.ToDouble(total),
                     ShowWithoutChange = showChange || consumedForColor != 0 || releasedFromColor !=0,
                     ColoredEquivalentValue = Convert.ToDouble(consumedForColor + releasedFromColor)
                 };
