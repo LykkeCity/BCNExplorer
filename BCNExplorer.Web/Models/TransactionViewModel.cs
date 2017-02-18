@@ -61,11 +61,13 @@ namespace BCNExplorer.Web.Models
             public double Fees { get; set; }
             public string FeesDescription => Fees.ToStringBtcFormat();
 
-            public double ReleasedFromColorValue { get; set; }
-            public bool ShowReleasedFromColor => ReleasedFromColorValue != 0;
+            public double ReleasedFromColorValue => ColoredEquivalentValue;
+            public bool ShowReleasedFromColor => ColoredEquivalentValue < 0;
 
-            public double ConsumedForColorValue { get; set; }
-            public bool ShowConsumedForColor => ConsumedForColorValue != 0;
+            public double ConsumedForColorValue => ColoredEquivalentValue;
+
+            public double ColoredEquivalentValue { get; set; }
+            public bool ShowConsumedForColor => ColoredEquivalentValue > 0;
 
             public double Total { get; set; }
 
@@ -97,11 +99,12 @@ namespace BCNExplorer.Web.Models
                 IEnumerable<AssetInOutBase> insWithoutChange = ins.Select(p => p.Clone<In>()).ToList();
                 IEnumerable<AssetInOutBase> outsWithoutChange = outs.Select(p => p.Clone<Out>()).ToList();
 
-                double releasedFromColor = 0;
+                decimal releasedFromColor = 0;
                 ins = AssetHelper.RemoveColored(ins, out releasedFromColor).ToList();
 
-                double consumedForColor = 0;
+                decimal consumedForColor = 0;
                 outs = AssetHelper.RemoveColored(outs, out consumedForColor).ToList();
+                
 
                 bool showChange = false;
                 AssetHelper.CalculateWithReturnedChange(ins, outs, ref showChange);
@@ -125,10 +128,9 @@ namespace BCNExplorer.Web.Models
                     AggregatedOuts = AssetHelper.GroupByAddress(outs),
                     AggregatedInsWithoutChange = AssetHelper.GroupByAddress(insWithoutChange),
                     AggregatedOutsWithoutChange = AssetHelper.GroupByAddress(outsWithoutChange),
-                    Total = outs.Sum(p => p.Value) + feesBtc + consumedForColor,
+                    Total = outs.Sum(p => p.Value) + feesBtc,
                     ShowWithoutChange = showChange || consumedForColor != 0 || releasedFromColor !=0,
-                    ConsumedForColorValue = consumedForColor,
-                    ReleasedFromColorValue = releasedFromColor
+                    ColoredEquivalentValue = Convert.ToDouble(consumedForColor + releasedFromColor)
                 };
             }
 
@@ -488,9 +490,9 @@ namespace BCNExplorer.Web.Models
             }
         }
 
-        public static IEnumerable<AssetInOutBase> RemoveColored(IEnumerable<AssetInOutBase> assetInOuts, out double totalColoredBtc)
+        public static IEnumerable<AssetInOutBase> RemoveColored(IEnumerable<AssetInOutBase> assetInOuts, out decimal totalColoredBtc)
         {
-            totalColoredBtc = Convert.ToDouble(assetInOuts.Where(p => p.HasColoredEquivalent).Sum(p => Convert.ToDecimal(p.Value)));
+            totalColoredBtc = assetInOuts.Where(p => p.HasColoredEquivalent).Sum(p => Convert.ToDecimal(p.Value));
 
             return assetInOuts.Where(p => !p.HasColoredEquivalent).ToList();
         }
