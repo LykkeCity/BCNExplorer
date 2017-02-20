@@ -1,0 +1,82 @@
+﻿@model IssuerViewModel
+@{
+    ViewBag.Title = "Issuer " + Model.Issuer;
+}
+<div class="container">
+    <div class="page-header">
+        <h2 class="page__title">
+            @Model.Issuer
+            @if (Model.IsVerified)
+            {
+                //TODO IsVerified html
+            }
+            else
+            {
+                //TODO !IsVerified html
+            }
+        </h2>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.IssuerWebsite))
+    {
+        <p class="text-muted">
+            <a href="@Model.IssuerWebsite" target="_blank">Issuer website</a>
+        </p>
+    }
+
+    <section class="section section--heading">
+        <h3>Assets <span>@Model.AssetDirectory.Assets.Count()</span></h3>
+    </section>
+</div>
+
+<div class="section">
+    <div class="section">
+        <div class="container">
+            <div class="table-responsive">
+                <table class="table table--simple table_asstes">
+                    <tbody>
+                        <tr>
+                            <th colspan="2">Asset and address</th>
+                            <th>Ticker</th>
+                            <th class="text-right">Coinholders</th>
+                            <th>Coins issued</th>
+                        </tr>
+
+                        @foreach (var asset in Model.AssetDirectory.Assets)
+                        {
+                            <tr>
+                                <td class="issuer__img">
+                                    <a href="@Url.Action("Index", "Asset", new {id = asset.AssetIds.FirstOrDefault()})">
+
+                                        <img src="@(!string.IsNullOrEmpty(asset.IconUrl) ? asset.IconUrl : "/img/be/asset_default.jpg")" width="48" alt="">
+                                    </a>
+                                </td>
+                                <td class="issuer__content">
+                                    <div class="issuer__name">
+                                        <a href="@Url.Action("Index", "Asset", new {id = asset.AssetIds.FirstOrDefault()})">
+                                            @asset.Name
+                                        </a>
+                                    </div>
+                                    <div class="text-muted">
+                                        <a href="@Url.Action("Index", "Asset", new {id = asset.AssetIds.FirstOrDefault()})">
+                                            @asset.AssetIds.FirstOrDefault()
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>@asset.NameShort</td>
+                                <td class="text-right">@asset.CoinholdersCount</td>
+                                <td>@asset.TotalColoredDescription @asset.NameShort</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+

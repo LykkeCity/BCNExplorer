@@ -63,7 +63,17 @@
                     </tr>
                     <tr>
                         <td><b>Issuer:</b></td>
-                        <td>@Model.Issuer</td>
+                        <td>
+                            @if (Model.IsVerified)
+                            {
+                                <a href="@Url.Action("IssuerDetails", "Issuer", new {id= Model.Issuer.ToBase64() })">@Model.Issuer</a>
+                            }
+                            else
+                            {
+
+                                @Model.Issuer
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <td><b>Divisibility:</b></td>

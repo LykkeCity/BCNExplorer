@@ -74,7 +74,9 @@ namespace BCNExplorer.Web.Models
             public double? TotalColored => TotalQuantity != null? (double?)BitcoinUtils.CalculateColoredAssetQuantity(TotalQuantity.Value, Divisibility):null;
             public string TotalColoredDescription => (TotalColored??0).ToStringBtcFormat();
             public double Score { get; set; }
-            public string DetailsUrl { get; set; }
+            public string IssuerEncoded { get; set; }
+
+            public string IssuerWebSite { get; set; }
 
             public static Asset Create(IAssetDefinition source, IAssetCoinholdersIndex index, IAssetScore assetScore)
             {
@@ -97,10 +99,10 @@ namespace BCNExplorer.Web.Models
                     CoinholdersCount = index?.CoinholdersCount,
                     TotalQuantity = index?.TotalQuantity,
                     Score = assetScore?.Score ?? 1,
+                    IssuerEncoded = (source.Issuer ?? "").ToBase64(),
+                    IssuerWebSite = source.IssuerWebsite
                 };
             }
-            
-
         }
     }
 }

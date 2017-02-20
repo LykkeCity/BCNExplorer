@@ -117,7 +117,7 @@
     <Compile Include="Providers\Ninja\NinjaSearchProvider.cs" />
     <Compile Include="Providers\Ninja\NinjaTransactionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TransportTypes\Asset\AssetDefinitionDefinition.cs" />
+    <Compile Include="TransportTypes\Asset\AssetDefinition.cs" />
     <Compile Include="TransportTypes\Ninja\SearchResultType.cs" />
   </ItemGroup>
   <ItemGroup>

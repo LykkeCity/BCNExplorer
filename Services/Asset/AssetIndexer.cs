@@ -38,7 +38,7 @@ namespace Providers.Providers.Asset
 
         public static Dictionary<string, IAssetDefinition> IndexAssetsDefinitions(IEnumerable<AssetContract> assets)
         {
-            return IndexAssetsDefinitions(assets.Select(AssetDefinitionDefinition.Create));
+            return IndexAssetsDefinitions(assets.Select(AssetDefinition.Create));
         }
 
         public static Dictionary<string, IAssetCoinholdersIndex> IndexAssetCoinholders(IEnumerable<IAssetCoinholdersIndex> assets)

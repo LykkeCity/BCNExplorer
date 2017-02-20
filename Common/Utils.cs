@@ -575,6 +575,19 @@ namespace Common
             return Encoding.UTF8.GetString(bytes);
         }
 
+        public static bool IsBase64(this string src)
+        {
+            try
+            {
+                src.Base64ToString();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
 
         public static double ParseAnyDouble(this string amount)
         {

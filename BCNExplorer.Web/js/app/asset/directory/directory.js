@@ -17,7 +17,10 @@ angular.module('app', [])
     .constant('config', {
         pageSize: 20,
         detailsUrl: function(assetId) {
-            return '/asset/' + assetId;
+            return '/asset/' + encodeURIComponent(assetId);
+        },
+        issuerUrl: function (issuer) {
+            return '/issuer/' + encodeURIComponent(issuer);
         }
     })
     .controller('DirectoryCtrl', ['$scope', 'assetService', 'config', '$filter', function ($scope, assetService, config, $filter) {
@@ -104,6 +107,10 @@ angular.module('app', [])
 
             $scope.detailsUrl = function(asset) {
                 return config.detailsUrl(asset.AssetIds[0]);
+            }
+
+            $scope.issuerUrl = function (asset) {
+                return config.issuerUrl(asset.IssuerEncoded);
             }
 
             $scope.resetToDefault = function() {

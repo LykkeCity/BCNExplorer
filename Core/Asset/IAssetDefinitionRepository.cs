@@ -34,6 +34,8 @@ namespace Core.Asset
         string AssetDefinitionUrl { get; }
 
         bool IsVerified { get; }
+
+        string IssuerWebsite { get; }
     }
 
     

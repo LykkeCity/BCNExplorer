@@ -6,7 +6,7 @@ using Providers.Contracts.Asset;
 
 namespace Providers.TransportTypes.Asset
 {
-    public class AssetDefinitionDefinition:IAssetDefinition
+    public class AssetDefinition:IAssetDefinition
     {
         public IEnumerable<string> AssetIds { get; set; }
         
@@ -35,10 +35,11 @@ namespace Providers.TransportTypes.Asset
         public string Version { get; set; }
         public string AssetDefinitionUrl { get; set; }
         public bool IsVerified { get; }
+        public string IssuerWebsite { get; }
 
-        public static AssetDefinitionDefinition Create(AssetContract source)
+        public static AssetDefinition Create(AssetContract source)
         {
-            return new AssetDefinitionDefinition
+            return new AssetDefinition
             {
                 AssetIds = source.AssetIds ?? Enumerable.Empty<string>(),
                 ContactUrl = source.ContactUrl,

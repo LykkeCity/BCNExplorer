@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Common;
@@ -34,6 +35,13 @@ namespace Services.Asset
         public async Task<IDictionary<string, IAssetDefinition>> GetAssetDefinitionDictionaryAsync()
         {
             return await _assetDefinitionCachedDictionary.GetDictionaryAsync();
+        }
+
+        public async Task<IEnumerable<IAssetDefinition>> GetAssetDefinitionsAsync(string issuer)
+        {
+            return (await GetAssetDefinitionsAsync())
+                .Where(p => string.Equals(issuer, p.Issuer, StringComparison.InvariantCultureIgnoreCase) 
+                            && p.IsVerified);
         }
 
         public async Task<IDictionary<string, IAssetCoinholdersIndex>> GetAssetCoinholdersIndexAsync()

@@ -9,6 +9,7 @@ namespace Core.Asset
         Task<IAssetDefinition> GetAssetDefinitionByDefUrlAsync(string url);
         Task<IDictionary<string, IAssetDefinition>> GetAssetDefinitionDictionaryAsync();
         Task<IEnumerable<IAssetDefinition>> GetAssetDefinitionsAsync();
+        Task<IEnumerable<IAssetDefinition>> GetAssetDefinitionsAsync(string issuer);
         Task<IDictionary<string, IAssetCoinholdersIndex>> GetAssetCoinholdersIndexAsync();
         Task<IDictionary<string, IAssetScore>> GetAssetScoreDictionaryAsync();
     }
