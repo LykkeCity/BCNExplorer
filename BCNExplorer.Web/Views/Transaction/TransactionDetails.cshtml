@@ -233,17 +233,17 @@
                                 }
                             </text>
                         }
-                        if (showConsumedReleased && Model.Bitcoin.ShowReleasedFromColor)
+                        if (showConsumedReleased && Model.Bitcoin.ShowColoredEquivalentLeft)
                         {
                             <div class="transaction_list__item">
                                 <div class="row">
                                     <div class="col-xs-8">
                                         <div class="links_group">
-                                            Released from color
+                                            Consumed for color
                                         </div>
                                     </div>
                                     <div class="col-xs-4">
-                                        <span>@Model.Bitcoin.ReleasedFromColorValue.ToStringBtcFormat()</span>
+                                        <span>@Model.Bitcoin.ColoredEquivalentValue.ToStringBtcFormat()</span>
                                     </div>
                                 </div>
                             </div>
@@ -278,7 +278,7 @@
                         </text>
 
                     }
-                    @if (showConsumedReleased && Model.Bitcoin.ShowConsumedForColor)
+                    @if (showConsumedReleased && Model.Bitcoin.ShowColoredEquivalentRight)
                     {
                         <div class="transaction_list__item">
                             <div class="row">
@@ -288,7 +288,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-4">
-                                    <span>@Model.Bitcoin.ConsumedForColorValue.ToStringBtcFormat()</span>
+                                    <span>@Model.Bitcoin.ColoredEquivalentValue.ToStringBtcFormat()</span>
                                 </div>
                             </div>
                         </div>

@@ -61,13 +61,10 @@ namespace BCNExplorer.Web.Models
             public double Fees { get; set; }
             public string FeesDescription => Fees.ToStringBtcFormat();
 
-            public double ReleasedFromColorValue => ColoredEquivalentValue;
-            public bool ShowReleasedFromColor => ColoredEquivalentValue < 0;
-
-            public double ConsumedForColorValue => ColoredEquivalentValue;
+            public bool ShowColoredEquivalentLeft => ColoredEquivalentValue < 0;
 
             public double ColoredEquivalentValue { get; set; }
-            public bool ShowConsumedForColor => ColoredEquivalentValue > 0;
+            public bool ShowColoredEquivalentRight => ColoredEquivalentValue > 0;
 
             public double Total { get; set; }
 
@@ -99,11 +96,11 @@ namespace BCNExplorer.Web.Models
                 IEnumerable<AssetInOutBase> insWithoutChange = ins.Select(p => p.Clone<In>()).ToList();
                 IEnumerable<AssetInOutBase> outsWithoutChange = outs.Select(p => p.Clone<Out>()).ToList();
 
-                decimal releasedFromColor = 0;
-                ins = AssetHelper.RemoveColored(ins, out releasedFromColor).ToList();
+                decimal coloredEquityIns = 0;
+                ins = AssetHelper.RemoveColored(ins, out coloredEquityIns).ToList();
 
-                decimal consumedForColor = 0;
-                outs = AssetHelper.RemoveColored(outs, out consumedForColor).ToList();
+                decimal coloredEquityOuts = 0;
+                outs = AssetHelper.RemoveColored(outs, out coloredEquityOuts).ToList();
                 
 
                 bool showChange = false;
@@ -121,7 +118,7 @@ namespace BCNExplorer.Web.Models
                 }
 
                 var total = outs.Sum(p => Convert.ToDecimal(p.Value)) + Convert.ToDecimal(feesBtc) +
-                            Convert.ToDecimal(consumedForColor);
+                            Convert.ToDecimal(coloredEquityOuts);
 
                 return new BitcoinAsset
                 {
@@ -132,8 +129,8 @@ namespace BCNExplorer.Web.Models
                     AggregatedInsWithoutChange = AssetHelper.GroupByAddress(insWithoutChange),
                     AggregatedOutsWithoutChange = AssetHelper.GroupByAddress(outsWithoutChange),
                     Total = Convert.ToDouble(total),
-                    ShowWithoutChange = showChange || consumedForColor != 0 || releasedFromColor !=0,
-                    ColoredEquivalentValue = Convert.ToDouble(consumedForColor + releasedFromColor)
+                    ShowWithoutChange = showChange || coloredEquityOuts != 0 || coloredEquityIns !=0,
+                    ColoredEquivalentValue = Convert.ToDouble(coloredEquityOuts + coloredEquityIns)
                 };
             }
 
