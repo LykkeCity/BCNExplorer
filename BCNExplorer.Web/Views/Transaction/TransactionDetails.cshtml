@@ -51,7 +51,17 @@
                                 <td class="issuer__img"><img src="/img/assets/bitcoin.png" width="48" alt=""></td>
                                 <td class="issuer__content">
                                     <div class="issuer__name pull-left">Bitcoin</div>
-                                    <div class="wallet_value pull-right">@Model.Bitcoin.Total.ToStringBtcFormat() BTC</div>
+                                    <div class="wallet_value pull-right">
+                                        <span class="@(Model.Bitcoin.ShowWithoutChange ? toggleChangeItemClass : "")">
+                                            @Model.Bitcoin.Total.ToStringBtcFormat() BTC
+                                        </span>
+                                        @if (Model.Bitcoin.ShowWithoutChange)
+                                        {
+                                            <span class="@toggleChangeItemClass hidden">
+                                                @Model.Bitcoin.TotalWithoutChange.ToStringBtcFormat() BTC
+                                            </span>
+                                        }
+                                    </div>
  
                                     @if (Model.ShowChangeBtn)
                                     {
@@ -68,9 +78,7 @@
                     </table>
                 </div>
 
-                <div 
-                     class="@(Model.Bitcoin.ShowWithoutChange ? toggleChangeItemClass : "")"
-                     >
+                <div class="@(Model.Bitcoin.ShowWithoutChange ? toggleChangeItemClass : "")">
                     @RenderBtcInOuts(Model.Bitcoin.AggregatedIns, Model.Bitcoin.AggregatedOuts, showConsumedReleased: true)
                 </div>
                 @if (Model.Bitcoin.ShowWithoutChange)
@@ -100,9 +108,16 @@
                                             <a href="@assetUrl">@coloredAsset.Name</a>
                                         </div>
                                         <div class="wallet_value pull-right">
-                                            @coloredAsset.Total.ToStringBtcFormat() @coloredAsset.ShortName
+                                            <span class = "@(coloredAsset.ShowWithoutChange? toggleChangeItemClass : "")">
+                                                @coloredAsset.Total.ToStringBtcFormat() @coloredAsset.ShortName
+                                            </span>
+                                            @if (coloredAsset.ShowWithoutChange)
+                                            {
+                                                <span class="@toggleChangeItemClass hidden">
+                                                    @coloredAsset.TotalWithoutChange.ToStringBtcFormat() @coloredAsset.ShortName
+                                                </span>
+                                            }
                                         </div>
-
                                     </td>
                                 </tr>
                             </tbody>

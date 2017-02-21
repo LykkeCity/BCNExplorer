@@ -70,6 +70,7 @@ namespace BCNExplorer.Web.Models
 
             public double Total { get; set; }
 
+            public double TotalWithoutChange { get; set; }
             public bool ShowWithoutChange { get; set; }
 
             public static IEnumerable<In> Group(IEnumerable<In> source)
@@ -118,9 +119,11 @@ namespace BCNExplorer.Web.Models
                     ins = ins.Where(p => p.Value != 0).ToList();
                     outs = outs.Where(p => p.Value != 0).ToList();
                 }
-
+                var coloredEquivalentValue = coloredEquityOuts + coloredEquityIns;
                 var total = outs.Sum(p => Convert.ToDecimal(p.Value)) + Convert.ToDecimal(feesBtc) +
-                            Convert.ToDecimal(coloredEquityOuts);
+                            Convert.ToDecimal(coloredEquivalentValue);
+
+                var totalWithoutChange = outsWithoutChange.Sum(p => Convert.ToDecimal(p.Value)) + Convert.ToDecimal(feesBtc);
 
                 return new BitcoinAsset
                 {
@@ -131,8 +134,9 @@ namespace BCNExplorer.Web.Models
                     AggregatedInsWithoutChange = AssetHelper.GroupByAddress(insWithoutChange),
                     AggregatedOutsWithoutChange = AssetHelper.GroupByAddress(outsWithoutChange),
                     Total = Convert.ToDouble(total),
+                    TotalWithoutChange = Convert.ToDouble(totalWithoutChange),
                     ShowWithoutChange = showChange || coloredEquityOuts != 0 || coloredEquityIns !=0,
-                    ColoredEquivalentValue = Convert.ToDouble(coloredEquityOuts + coloredEquityIns)
+                    ColoredEquivalentValue = Convert.ToDouble(coloredEquivalentValue)
                 };
             }
 
@@ -218,6 +222,7 @@ namespace BCNExplorer.Web.Models
             public bool IsIssued => !AggregatedInsWithoutChange.Any();
             public bool IsKnown { get; set; }
             public double Total { get; set; }
+            public double TotalWithoutChange { get; set; }
 
             public double IssedQuantity => (-1) * AggregatedOuts.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
             public double DestroyedQuantity => (-1) * AggregatedIns.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
@@ -338,6 +343,7 @@ namespace BCNExplorer.Web.Models
                 }
 
                 var total = outs.Any() ? outs.Sum(p => p.Value) : ins.Sum(p => p.Value);
+                var totalWithoutChange = outsWithoutChange.Any() ? outsWithoutChange.Sum(p => p.Value) : insWithoutChange.Sum(p => p.Value);
 
                 var result = new ColoredAsset
                 {
@@ -356,6 +362,7 @@ namespace BCNExplorer.Web.Models
 
                     ShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null),
                     Total = total,
+                    TotalWithoutChange = totalWithoutChange,
                     IsKnown = assetDictionary.Dic.ContainsKey(inOutsByAsset.AssetId)
                 };
 
