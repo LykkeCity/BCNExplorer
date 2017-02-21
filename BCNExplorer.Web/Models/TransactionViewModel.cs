@@ -19,6 +19,8 @@ namespace BCNExplorer.Web.Models
         public IEnumerable<ColoredAsset> ColoredAssets { get; set; }
         public int InputsCount { get; set; }
         public int OutputsCount { get; set; }
+
+        public bool ShowChangeBtn => Bitcoin.ShowWithoutChange || ColoredAssets.Any(p => p.ShowWithoutChange);
         
         #region Classes 
 

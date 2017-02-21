@@ -3,9 +3,11 @@
 @model TransactionViewModel
 @{
     Layout = null;
+    var toggleChangeContainer = "js-toggle-changes-container-" + Guid.NewGuid().ToString("N");
+    var toggleChangeItemClass = "js-toggle-change-item";
 }
 
-<div class="panel transaction_panel js-transaction-details">
+<div class="panel transaction_panel js-transaction-details @toggleChangeContainer" >
     <div class="container">
         <div class="panel__header">
            <div class="row">
@@ -50,12 +52,10 @@
                                 <td class="issuer__content">
                                     <div class="issuer__name pull-left">Bitcoin</div>
                                     <div class="wallet_value pull-right">@Model.Bitcoin.Total.ToStringBtcFormat() BTC</div>
-                                    @{
-                                        var toggleBtcClass = "js-toggle-changes-container-" + Guid.NewGuid().ToString("N");
-                                    }
-                                    @if (Model.Bitcoin.ShowWithoutChange)
+ 
+                                    @if (Model.ShowChangeBtn)
                                     {
-                                        <a href="#" class="btn_show_changes pull-right text--gray js-toggle-change-btn" data-toggle-container=".@toggleBtcClass">
+                                        <a href="#" class="btn_show_changes pull-right text--gray js-toggle-change-btn" data-toggle-container=".@toggleChangeContainer">
                                             <span class="js-toggle-change-label">Show</span>
                                             <span class="hidden js-toggle-change-label">Hide</span> 
                                             change
@@ -68,12 +68,14 @@
                     </table>
                 </div>
 
-                <div class="@toggleBtcClass">
+                <div 
+                     class="@(Model.Bitcoin.ShowWithoutChange ? toggleChangeItemClass : "")"
+                     >
                     @RenderBtcInOuts(Model.Bitcoin.AggregatedIns, Model.Bitcoin.AggregatedOuts, showConsumedReleased: true)
                 </div>
                 @if (Model.Bitcoin.ShowWithoutChange)
                 {
-                    <div class="@toggleBtcClass hidden">
+                    <div class="@toggleChangeItemClass hidden">
                         @RenderBtcInOuts(Model.Bitcoin.AggregatedInsWithoutChange, Model.Bitcoin.AggregatedOutsWithoutChange, showConsumedReleased: false)
                     </div>
                 }
@@ -100,29 +102,19 @@
                                         <div class="wallet_value pull-right">
                                             @coloredAsset.Total.ToStringBtcFormat() @coloredAsset.ShortName
                                         </div>
-                                        @{
-                                            var toggleColoredClass = "js-toggle-changes-container-" + Guid.NewGuid().ToString("N");
-                                        }
-                                        @if (coloredAsset.ShowWithoutChange)
-                                        {
-                                            <a href="#" class="btn_show_changes pull-right text--gray js-toggle-change-btn" data-toggle-container=".@toggleColoredClass">
-                                                <span class="js-toggle-change-label">Show</span>
-                                                <span class="hidden js-toggle-change-label">Hide</span>
-                                                change
-                                            </a>
-                                        }
+
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="@toggleColoredClass">
+                    
+                    <div class="@(coloredAsset.ShowWithoutChange? toggleChangeItemClass : "")">
                         @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedIns, coloredAsset.AggregatedOuts)
                     </div>
                     @if (coloredAsset.ShowWithoutChange)
                     {
-                        <div class="@toggleColoredClass hidden">
+                        <div class="@toggleChangeItemClass hidden">
                             @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedInsWithoutChange, coloredAsset.AggregatedOutsWithoutChange)
                         </div>
                     }

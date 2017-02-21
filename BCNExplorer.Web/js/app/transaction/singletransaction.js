@@ -11,7 +11,7 @@
         var $self = $(this);
 
         $self.find('.js-toggle-change-label').toggleClass('hidden');
-        $($self.data('toggle-container')).toggleClass('hidden');
+        $($self.data('toggle-container')).find('.js-toggle-change-item').toggleClass('hidden');
 
         return false;
     });
