@@ -66,7 +66,7 @@
                         <td>
                             @if (Model.IsVerified)
                             {
-                                <a href="@Url.Action("IssuerDetails", "Issuer", new {id= Model.Issuer.ToBase64() })">@Model.Issuer</a>
+                                <a href="@Url.Action("IssuerDetails", "Issuer", new {id= (Model.Issuer ?? "").ToBase64() })">@Model.Issuer</a>
                             }
                             else
                             {
