@@ -225,11 +225,18 @@ namespace BCNExplorer.Web.Models
             public bool IsDestroyed => !AggregatedOuts.Any();
             public bool IsIssued => !AggregatedInsWithoutChange.Any();
             public bool IsKnown { get; set; }
-            public double Total { get; set; }
-            public double TotalWithoutChange { get; set; }
 
-            //public double IssedQuantity => (-1) * AggregatedOuts.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
-            //public double DestroyedQuantity => (-1) * AggregatedIns.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
+            public double Total
+                =>
+                    IsDestroyed
+                        ? DestroyedQuantity
+                        : AggregatedOuts.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
+
+            public double TotalWithoutChange => 
+                    IsDestroyed
+                        ? DestroyedQuantity
+                        : AggregatedOutsWithoutChange.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
+
             public double IssedQuantity { get; set; }
             public double DestroyedQuantity { get; set; }
 
@@ -352,9 +359,6 @@ namespace BCNExplorer.Web.Models
                 var issuedQuantity = (-1) * outs.Sum(p => p.Value);
                 var destroyedQuantity = (-1) * ins.Sum(p => p.Value);
 
-                var total = outs.Sum(p => p.Value) + destroyedQuantity;
-                var totalWithoutChange = outsWithoutChange.Sum(p => p.Value) + destroyedQuantity;
-
                 var result = new ColoredAsset
                 {
                     AssetId = inOutsByAsset.AssetId,
@@ -374,8 +378,6 @@ namespace BCNExplorer.Web.Models
                     DestroyedQuantity = destroyedQuantity,
 
                     ShortName = assetDictionary.GetAssetProp(inOutsByAsset.AssetId, p => p.NameShort, null),
-                    Total = total,
-                    TotalWithoutChange = totalWithoutChange,
                     IsKnown = assetDictionary.Dic.ContainsKey(inOutsByAsset.AssetId)
                 };
 
