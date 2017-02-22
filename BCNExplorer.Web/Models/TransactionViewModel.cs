@@ -227,15 +227,12 @@ namespace BCNExplorer.Web.Models
             public bool IsKnown { get; set; }
 
             public double Total
-                =>
-                    IsDestroyed
-                        ? DestroyedQuantity
-                        : AggregatedOuts.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
+                => AggregatedOuts.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value) +
+                    (IsDestroyed ? DestroyedQuantity: 0);
 
-            public double TotalWithoutChange => 
-                    IsDestroyed
-                        ? DestroyedQuantity
-                        : AggregatedOutsWithoutChange.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value);
+            public double TotalWithoutChange =>
+                AggregatedOutsWithoutChange.SelectMany(p => p.AggregatedTransactions).Sum(p => p.Value) +
+                    (IsDestroyed ? DestroyedQuantity : 0);
 
             public double IssedQuantity { get; set; }
             public double DestroyedQuantity { get; set; }
