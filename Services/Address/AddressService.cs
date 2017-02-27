@@ -137,9 +137,9 @@ namespace Services.Address
             throw new NotImplementedException();
         }
 
-        public async Task<IAddressTransactions> GetTransactions(string id)
+        public async Task<IAddressTransactions> GetTransactions(string id, int? until = null, int? from = null)
         {
-            var tx = await _ninjaAddressProvider.GetTransactionsForAddressAsync(id);
+            var tx = await _ninjaAddressProvider.GetTransactionsForAddressAsync(id, until, from);
 
             return new AddressTransactions
             {

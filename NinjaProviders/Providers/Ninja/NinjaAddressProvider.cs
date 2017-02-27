@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
 using NBitcoin;
 using Newtonsoft.Json;
 using Providers.BlockChainReader;
@@ -117,9 +118,22 @@ namespace Providers.Providers.Ninja
             return null;
         }
 
-        public async Task<NinjaAddressTransactionList> GetTransactionsForAddressAsync(string id)
+        public async Task<NinjaAddressTransactionList> GetTransactionsForAddressAsync(string id, int? until = null, int? from = null)
         {
-            var result =  await _blockChainReader.GetAsync<AddressTransactionListContract>($"/balances/{id}");
+            var url = $"/balances/{id}";
+
+            if (until != null || from != null)
+            {
+                var queryParams = new
+                {
+                    until = until,
+                    from = from
+                };
+                
+                url += "?" + queryParams.ToUrlParamString();
+            }
+
+            var result =  await _blockChainReader.GetAsync<AddressTransactionListContract>(url);
 
             if (result != null)
             {

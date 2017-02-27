@@ -45,6 +45,6 @@ namespace Core.AddressService
 
         Task<IAddressMainInfo> GetMainInfoAsync(string id);
 
-        Task<IAddressTransactions> GetTransactions(string id);
+        Task<IAddressTransactions> GetTransactions(string id, int? at = null, int? from = null);
     }
 }

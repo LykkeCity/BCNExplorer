@@ -104,6 +104,7 @@ namespace BCNExplorer.Web.Controllers
         [Route("address/transactions/{id}")]
         public async Task<ActionResult> Transactions(string id)
         {
+            
             return View(AddressTransactionsViewModel.Create(await _addressProvider.GetTransactions(id)));
         } 
     }
