@@ -37,16 +37,16 @@ $(function () {
 
 $(function () {
     //caches a jQuery object containing the header element
-    var header = $(".header");
-    $(window).scroll(function () {
-        var scroll = $(window).scrollTop();
+    //var header = $(".header");
+    //$(window).scroll(function () {
+    //    var scroll = $(window).scrollTop();
 
-        if (scroll >= 10) {
-            header.addClass("fixed");
-        } else {
-            header.removeClass("fixed")
-        }
-    });
+    //    if (scroll >= 10) {
+    //        header.addClass("fixed");
+    //    } else {
+    //        header.removeClass("fixed")
+    //    }
+    //});
 });
 
 

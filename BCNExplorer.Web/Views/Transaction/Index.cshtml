@@ -51,50 +51,48 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <td><b>Confirmations:</b></td>
-                        <td>
-                            @if (Model.IsConfirmed)
-                            {
-                                <text>
-                                    @(Model.Block?.Confirmations) confirmations
-                                </text>
-                            }
-                            else
-                            {
-                                <text>Unconfirmed transaction</text>
-                            }
-                        </td>
-                    </tr>
+
                     </tbody>
                 </table>
             </div>
-            @if (Model.IsConfirmed)
-            {
 
                 <div class="col-xs-12 col-md-6">
                     <table class="table table--be_info">
                         <tbody>
+                        @if (Model.IsConfirmed)
+                        {
+                            <tr>
+                                <td><b>Block:</b></td>
+                                <td>
+                                    <a href="@Url.Action("Index", "Block", new {id = Model.Block?.BlockId})">
+                                        @UiHelpers.Truncate(Model.Block?.BlockId)
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Height:</b></td>
+                                <td>@(Model.Block?.Height)</td>
+                            </tr>
+                        }
                         <tr>
-                            <td><b>Date:</b></td>
-                            <td>@($"{Model.Block?.Time:F}")</td>
-                        </tr>
-                        <tr>
-                            <td><b>Block:</b></td>
+                            <td><b>Confirmations:</b></td>
                             <td>
-                                <a href="@Url.Action("Index", "Block", new {id= Model.Block?.BlockId })">
-                                    @UiHelpers.Truncate(Model.Block?.BlockId)
-                                </a>
+                                @if (Model.IsConfirmed)
+                                {
+                                    <text>
+                                        @(Model.Block?.Confirmations) confirmations
+                                    </text>
+                                }
+                                else
+                                {
+                                    <text>Unconfirmed transaction</text>
+                                }
                             </td>
-                        </tr>
-                        <tr>
-                            <td><b>Height:</b></td>
-                            <td>@(Model.Block?.Height)</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-            }
+            
         </div>
     </div>
 </section>

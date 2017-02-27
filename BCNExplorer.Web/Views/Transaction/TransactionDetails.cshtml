@@ -15,13 +15,21 @@
                     <div class="confirmation_label">
                         @if (Model.IsConfirmed)
                         {
-                            <span class="label label--green @(Model.Block?.Confirmations>=5?"label--green":"label--gray")">@(Model.Block?.Confirmations) Confirmations</span>
+                            <span class="label label--green @(Model.Block?.Confirmations >= 5 ? "label--green" : "label--gray")">@(Model.Block?.Confirmations) Confirmations</span>
                         }
                         else
                         {
                             <span class="label label--red label--plate">Unconfirmed</span>
                         }
                     </div>
+                    @if (Model.ShowChangeBtn)
+                    {
+                        <a href="#" class="btn_show_changes pull-right text--gray js-toggle-change-btn" data-toggle-container=".@toggleChangeContainer">
+                            <span class="js-toggle-change-label">Show</span>
+                            <span class="hidden js-toggle-change-label">Hide</span>
+                            change
+                        </a>
+                    }
                 </div>
                 <div class="col-sm-9">
                     <div class="address_code">
@@ -63,14 +71,6 @@
                                         }
                                     </div>
  
-                                    @if (Model.ShowChangeBtn)
-                                    {
-                                        <a href="#" class="btn_show_changes pull-right text--gray js-toggle-change-btn" data-toggle-container=".@toggleChangeContainer">
-                                            <span class="js-toggle-change-label">Show</span>
-                                            <span class="hidden js-toggle-change-label">Hide</span> 
-                                            change
-                                        </a>
-                                    }
 
                                 </td>
                             </tr>
@@ -260,7 +260,7 @@
             </div>
 
             <div class="transaction_item__center">
-                <div class="transaction_arrow"><i class="icon icon--arrow_right_big"></i></div>
+                <div class="transaction_arrow"><i class="icon icon--arrow_right_circle"></i></div>
             </div>
 
             <div class="transaction_item__right">
@@ -360,7 +360,7 @@
             </div>
 
             <div class="transaction_item__center">
-                <div class="transaction_arrow"><i class="icon icon--arrow_right_big"></i></div>
+                <div class="transaction_arrow"><i class="icon icon--arrow_right_circle"></i></div>
             </div>
 
             <div class="transaction_item__right">

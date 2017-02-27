@@ -2,26 +2,43 @@
 @{
     ViewBag.Title = "Issuer " + Model.Issuer;
 }
-<div class="container">
-    <div class="page-header">
-        <h2 class="page__title">
-            @Model.Issuer
-            @if (Model.IsVerified)
+<div class="page--issuer">
+        @*<div class="page-header">
+            <h2 class="page__title">
+                @Model.Issuer
+                @if (Model.IsVerified)
+                {
+                    <span class="label label--green"><i class="icon icon--check"></i> verified issuer</span>
+                }
+                else
+                {
+                    <span class="label label--yellow"><i class="icon_question"></i> not verified</span>
+                    <span class="label label--yellow"><i class="icon icon--check"></i> Unverified issuer</span>
+                }
+            </h2>
+        </div>*@
+
+    <section class="section section--padding">
+        <div class="container container--extend">
+            <h2>
+                @Model.Issuer
+                @if (Model.IsVerified)
+                {
+                    <span class="label label--green"><i class="icon icon--check"></i> verified issuer</span>
+                }
+                else
+                {
+                    <span class="label label--yellow"><i class="icon_question"></i> not verified</span>
+                }
+            </h2>
+            @if (!string.IsNullOrEmpty(Model.IssuerWebsite))
             {
-                //TODO IsVerified html
+                <p class="text-muted">
+                    <a href="@Model.IssuerWebsite" target="_blank">Issuer website</a>
+                </p>
             }
-            else
-            {
-                //TODO !IsVerified html
-            }
-        </h2>
-    </div>
-    @if (!string.IsNullOrEmpty(Model.IssuerWebsite))
-    {
-        <p class="text-muted">
-            <a href="@Model.IssuerWebsite" target="_blank">Issuer website</a>
-        </p>
-    }
+        </div>
+    </section>
 
 
 </div>

@@ -53,7 +53,7 @@
         </section>
 
 
-        <div class="section" ng-hide="loading">
+        <section class="section" ng-hide="loading">
             <div class="container">
                 <div class="search_block" ng-class="showFullSearchBlock? 'search_block--show' : null">
                     <form>
@@ -96,7 +96,6 @@
                                 </td>
                                 <td>
                                     <span class="check" ng-class="{'check--green': asset.IsVerified, 'check--yellow': !asset.IsVerified}"></span> 
-                                    
                                     <a ng-href="{{issuerUrl(asset)}}" ng-show="{{asset.IsVerified}}">
                                         <span class="ticker_name">{{asset.Issuer}}</span>
                                     </a>
@@ -117,7 +116,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="show_more" ng-show="showNextBtn()" >
             <a class="btn" ng-click="assetList.next()">Show More</a>
         </div>

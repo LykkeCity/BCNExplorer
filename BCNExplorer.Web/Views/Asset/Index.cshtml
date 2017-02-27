@@ -20,7 +20,17 @@
         <div class="page__header">
             <div class="row">
                 <div class="col-sm-9">
-                    <h2 class="page__title">@Model.Name</h2>
+                    <h2 class="page__title">
+                        @Model.Name
+                        @if (Model.IsVerified)
+                        {
+                            <i class="check check--green"></i>
+                        }
+                        else
+                        {
+                            <i class="check check--yellow"></i>
+                        }
+                    </h2>
                     <div class="address_code address_code--lead">
                         <span>@Model.AssetIds.FirstOrDefault()</span>
                         <button class="btn btn--icon copy_code" type="button" title="Copy code">

@@ -16,13 +16,16 @@
         return false;
     });
 
-    (function() {
+    (function () {
+        var popoverSelector = '[data-toggle="popover"]';
         var initAssetQuantityPopover = function () {
-            var $elem = $('[data-toggle="popover"]');
+            var $elem = $(popoverSelector);
+
+            var is_touch_device = ("ontouchstart" in window) || window.DocumentTouch && document instanceof DocumentTouch;
 
             $elem.popover('destroy');
             $elem.popover({
-                trigger: 'hover',
+                trigger: is_touch_device ? 'click' : 'hover',
                 container: this.parentNode,
                 placement: 'auto'
             });
@@ -31,5 +34,9 @@
         initAssetQuantityPopover();
 
         $('body').on('transactions-loaded', initAssetQuantityPopover);
+
+        $(document).on('blur', popoverSelector, function () {
+            $(this).popover('hide');
+        });
     })();    
 });
