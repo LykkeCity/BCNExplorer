@@ -87,7 +87,20 @@
                     </tr>
                     <tr>
                         <td><b>Divisibility:</b></td>
-                        <td>Divisible to @Model.Divisibility  @Utils.GenderAmount(Model.Divisibility, "place", "places", "places")</td>
+                        <td>
+                            @if (Model.Divisibility != 0)
+                            {
+                                <text>
+                                    Divisible to @Model.Divisibility @Utils.GenderAmount(Model.Divisibility, "place", "places", "places")
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                    Indivisible
+                                </text>
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <td><b>Definition URL:</b></td>
