@@ -6,6 +6,7 @@ using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
 using Core.Monitoring;
 using Core.Settings;
+using Core.TransactionCache;
 
 namespace AzureRepositories.Binders
 {
@@ -17,6 +18,7 @@ namespace AzureRepositories.Binders
             ioc.Register<IAssetDefinitionParsedBlockRepository>(AzureRepoFactories.CreateAssetParsedBlockRepository(baseSettings, log));
             ioc.Register<IAssetCoinholdersIndexRepository>(AzureRepoFactories.CreateAssetCoinholdersIndexRepository(baseSettings, log));
             ioc.Register<IAssetScoreRepository>(AzureRepoFactories.CreateAssetScoreRepository(baseSettings, log));
+            ioc.Register<ITransactionCacheRepository>(AzureRepoFactories.CreateTransactionCacheRepository(baseSettings, log));
 
             ioc.Register(AzureRepoFactories.CreateUpdateAssetDataCommandProducer(baseSettings, log));
             ioc.Register(AzureRepoFactories.CreateAssetDefinitionParseBlockCommandProducer(baseSettings, log));

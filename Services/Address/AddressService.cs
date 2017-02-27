@@ -134,18 +134,17 @@ namespace Services.Address
                 };
             }
             return null;
-            throw new NotImplementedException();
         }
 
-        public async Task<IAddressTransactions> GetTransactions(string id, int? until = null, int? from = null)
+        public async Task<IAddressTransactions> GetTransactions(string id)
         {
-            var tx = await _ninjaAddressProvider.GetTransactionsForAddressAsync(id, until, from);
+            var tx = await _ninjaAddressProvider.GetTransactionsForAddressAsync(id);
 
             return new AddressTransactions
             {
                 All = tx.AllTransactions.Select(AddressTransaction.Create),
-                Received = tx.ReceivedTransactions.Select(AddressTransaction.Create),
-                Send = tx.SendTransactions.Select(AddressTransaction.Create)
+                Received = tx.AllTransactions.Where(p => p.IsReceived).Select(AddressTransaction.Create),
+                Send = tx.AllTransactions.Where(p => !p.IsReceived).Select(AddressTransaction.Create)
             };
         }
     }

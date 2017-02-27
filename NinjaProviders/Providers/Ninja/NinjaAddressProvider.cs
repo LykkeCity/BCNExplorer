@@ -71,23 +71,25 @@ namespace Providers.Providers.Ninja
         public NinjaAddressTransactionList()
         {
             AllTransactions = Enumerable.Empty<NinjaAddressTransaction>();
-            SendTransactions = Enumerable.Empty<NinjaAddressTransaction>();
-            ReceivedTransactions = Enumerable.Empty<NinjaAddressTransaction>();
         }
 
         public IEnumerable<NinjaAddressTransaction> AllTransactions { get; set; }
-        public IEnumerable<NinjaAddressTransaction> SendTransactions { get; set; }
-        public IEnumerable<NinjaAddressTransaction> ReceivedTransactions { get; set; }
         
         public class NinjaAddressTransaction
         {
             public string TxId { get; set; }
+            public bool IsReceived { get; set; }
+            public int BlockHeight { get; set; }
+            public string BlockHash { get; set; }
 
             public static NinjaAddressTransaction Create(AddressTransactionListItemContract source)
             {
                 return new NinjaAddressTransaction
                 {
-                    TxId = source.TxId
+                    TxId = source.TxId,
+                    IsReceived = source.IsReceived(),
+                    BlockHeight = source.Height,
+                    BlockHash = source.BlockId
                 };
             }
         }
@@ -140,9 +142,7 @@ namespace Providers.Providers.Ninja
                 var tx = result.Transactions ?? Enumerable.Empty<AddressTransactionListItemContract>();
                 return new NinjaAddressTransactionList
                 {
-                    AllTransactions = tx.Select(NinjaAddressTransactionList.NinjaAddressTransaction.Create),
-                    ReceivedTransactions = tx.Where(p => p.IsReceived()).Select(NinjaAddressTransactionList.NinjaAddressTransaction.Create),
-                    SendTransactions = tx.Where(p => p.IsSend()).Select(NinjaAddressTransactionList.NinjaAddressTransaction.Create),
+                    AllTransactions = tx.Select(NinjaAddressTransactionList.NinjaAddressTransaction.Create)
                 };
             }
 
