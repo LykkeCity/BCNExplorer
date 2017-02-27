@@ -120,6 +120,8 @@
             });
 
             var submitData = function () {
+                $time.data("DateTimePicker").destroy();
+                $date.data("DateTimePicker").destroy();
                 var url = $.parseJSON($('#js-submit-go-to-block-time').val()).url;
 
                 var date = moment.utc($date.val(), dateFormat);
@@ -152,9 +154,13 @@
 
             }
 
-            $time.add($date).on('dp.change', $.debounce(1500, function () {
-                $time.data("DateTimePicker").destroy();
-                $date.data("DateTimePicker").destroy();
+            $date.on('dp.change', function () {
+
+                submitData();
+            });
+
+            $time.on('dp.change', $.debounce(1500, function () {
+
                 submitData();
             }));
         }

@@ -60,6 +60,8 @@
             });
 
             var submit = function () {
+                $time.data("DateTimePicker").destroy();
+                $date.data("DateTimePicker").destroy();
                 var url = $('#js-go-to-block-time-url').val();
 
                 var $loader = $('#js-balance-loader');
@@ -88,9 +90,11 @@
                 });
             }
 
-            $time.add($date).on('dp.change', $.debounce(1500, function () {
-                $time.data("DateTimePicker").destroy();
-                $date.data("DateTimePicker").destroy();
+            $date.on('dp.change', function() {
+                submit();
+            });
+
+            $time.on('dp.change', $.debounce(1500, function () {
                 submit();
             }));
         }
