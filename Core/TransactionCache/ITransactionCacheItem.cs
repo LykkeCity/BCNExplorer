@@ -11,7 +11,7 @@ namespace Core.TransactionCache
         string TransactionId { get; }
         bool IsReceived { get; }
         string BlockHash { get; }
-        int BlockHeight { get; }
+        int? BlockHeight { get; }
         string Address { get; }
     }
 
@@ -19,6 +19,6 @@ namespace Core.TransactionCache
     {
         Task InsertOrReplaceAsync(IEnumerable<ITransactionCacheItem> transactions);
         Task<IEnumerable<ITransactionCacheItem>> GetAsync(string address);
-        Task<int> GetLastCachedBlockHeight(string address);
+        Task<ITransactionCacheItem> GetLastCachedTransaction(string address);
     }
 }

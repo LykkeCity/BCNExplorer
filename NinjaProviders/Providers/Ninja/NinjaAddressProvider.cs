@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Common;
+using Core.TransactionCache;
 using NBitcoin;
 using Newtonsoft.Json;
 using Providers.BlockChainReader;
@@ -75,21 +76,23 @@ namespace Providers.Providers.Ninja
 
         public IEnumerable<NinjaAddressTransaction> AllTransactions { get; set; }
         
-        public class NinjaAddressTransaction
+        public class NinjaAddressTransaction: ITransactionCacheItem
         {
-            public string TxId { get; set; }
+            public string TransactionId { get; set; }
             public bool IsReceived { get; set; }
-            public int BlockHeight { get; set; }
+            public int? BlockHeight { get; set; }
+            public string Address { get; set; }
             public string BlockHash { get; set; }
 
-            public static NinjaAddressTransaction Create(AddressTransactionListItemContract source)
+            public static NinjaAddressTransaction Create(string address, AddressTransactionListItemContract source)
             {
                 return new NinjaAddressTransaction
                 {
-                    TxId = source.TxId,
+                    TransactionId = source.TxId,
                     IsReceived = source.IsReceived(),
                     BlockHeight = source.Height,
-                    BlockHash = source.BlockId
+                    BlockHash = source.BlockId,
+                    Address = address
                 };
             }
         }
@@ -142,7 +145,7 @@ namespace Providers.Providers.Ninja
                 var tx = result.Transactions ?? Enumerable.Empty<AddressTransactionListItemContract>();
                 return new NinjaAddressTransactionList
                 {
-                    AllTransactions = tx.Select(NinjaAddressTransactionList.NinjaAddressTransaction.Create)
+                    AllTransactions = tx.Select(p => NinjaAddressTransactionList.NinjaAddressTransaction.Create(id, p))
                 };
             }
 

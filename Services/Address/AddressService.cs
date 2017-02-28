@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.AddressService;
+using Core.TransactionCache;
 using Providers.Providers.Ninja;
 
 namespace Services.Address
@@ -53,13 +54,37 @@ namespace Services.Address
 
     public class AddressTransaction : IAddressTransaction
     {
+        private sealed class TransactionIdEqualityComparer : IEqualityComparer<AddressTransaction>
+        {
+            public bool Equals(AddressTransaction x, AddressTransaction y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return string.Equals(x.TransactionId, y.TransactionId);
+            }
+
+            public int GetHashCode(AddressTransaction obj)
+            {
+                return (obj.TransactionId != null ? obj.TransactionId.GetHashCode() : 0);
+            }
+        }
+
+        private static readonly IEqualityComparer<AddressTransaction> TransactionIdComparerInstance = new TransactionIdEqualityComparer();
+
+        public static IEqualityComparer<AddressTransaction> TransactionIdComparer
+        {
+            get { return TransactionIdComparerInstance; }
+        }
+
         public string TransactionId { get; set; }
 
-        public static AddressTransaction Create(NinjaAddressTransactionList.NinjaAddressTransaction source)
+        public static AddressTransaction Create(ITransactionCacheItem source)
         {
             return new AddressTransaction
             {
-                TransactionId = source.TxId
+                TransactionId = source.TransactionId
             };
         }
     }
@@ -68,10 +93,13 @@ namespace Services.Address
     public class AddressService:IAddressService
     {
         private readonly NinjaAddressProvider _ninjaAddressProvider;
+        private readonly ITransactionCacheRepository _transactionCacheRepository;
 
-        public AddressService(NinjaAddressProvider ninjaAddressProvider)
+        public AddressService(NinjaAddressProvider ninjaAddressProvider, 
+            ITransactionCacheRepository transactionCacheRepository)
         {
             _ninjaAddressProvider = ninjaAddressProvider;
+            _transactionCacheRepository = transactionCacheRepository;
         }
 
         public async Task<IAddressBalance> GetBalanceAsync(string id, int? at = null)
@@ -138,13 +166,28 @@ namespace Services.Address
 
         public async Task<IAddressTransactions> GetTransactions(string id)
         {
-            var tx = await _ninjaAddressProvider.GetTransactionsForAddressAsync(id);
+            var lastCachedTx = await _transactionCacheRepository.GetLastCachedTransaction(id);
+
+            var cachedTxs = _transactionCacheRepository.GetAsync(id);
+            var notCachedTxs = _ninjaAddressProvider.GetTransactionsForAddressAsync(id, until:lastCachedTx?.BlockHeight);
+
+            await Task.WhenAll(cachedTxs, notCachedTxs);
+
+            var notCachedAllTxs = notCachedTxs.Result.AllTransactions.Select(AddressTransaction.Create);
+            var notCachedReceivedTxs = notCachedTxs.Result.AllTransactions.Where(p => p.IsReceived).Select(AddressTransaction.Create);
+            var notCachedSendTxs = notCachedTxs.Result.AllTransactions.Where(p => !p.IsReceived).Select(AddressTransaction.Create);
+
+            var cachedAllTxs = cachedTxs.Result.Select(AddressTransaction.Create);
+            var cachedReceivedTxs = cachedTxs.Result.Where(p => p.IsReceived).Select(AddressTransaction.Create);
+            var cachedSendTxs = cachedTxs.Result.Where(p => !p.IsReceived).Select(AddressTransaction.Create);
+
+            await _transactionCacheRepository.InsertOrReplaceAsync(notCachedTxs.Result.AllTransactions);
 
             return new AddressTransactions
             {
-                All = tx.AllTransactions.Select(AddressTransaction.Create),
-                Received = tx.AllTransactions.Where(p => p.IsReceived).Select(AddressTransaction.Create),
-                Send = tx.AllTransactions.Where(p => !p.IsReceived).Select(AddressTransaction.Create)
+                All = notCachedAllTxs.Union(cachedAllTxs).Distinct(AddressTransaction.TransactionIdComparer),
+                Received = notCachedReceivedTxs.Union(cachedReceivedTxs).Distinct(AddressTransaction.TransactionIdComparer),
+                Send = notCachedSendTxs.Union(cachedSendTxs).Distinct(AddressTransaction.TransactionIdComparer)
             };
         }
     }

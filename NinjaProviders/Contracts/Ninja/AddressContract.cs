@@ -37,7 +37,7 @@ namespace Providers.Contracts.Ninja
         public int Confirmations { get; set; }
 
         [JsonProperty("height")]
-        public int Height { get; set; }
+        public int? Height { get; set; }
 
         [JsonProperty("blockId")]
         public string BlockId { get; set; }

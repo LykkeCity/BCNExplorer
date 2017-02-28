@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AzureStorage;
+using Common;
 using Core.TransactionCache;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -12,7 +15,7 @@ namespace AzureRepositories.TransactionCache
         public string TransactionId { get; set; }
         public bool IsReceived { get; set; }
         public string BlockHash { get; set; }
-        public int BlockHeight { get; set; }
+        public int? BlockHeight { get; set; }
         public string Address { get; set; }
 
         public static string GeneratePartitionKey(string address)
@@ -49,9 +52,27 @@ namespace AzureRepositories.TransactionCache
             _tableStorage = tableStorage;
         }
 
-        public Task InsertOrReplaceAsync(IEnumerable<ITransactionCacheItem> transactions)
+        public async Task InsertOrReplaceAsync(IEnumerable<ITransactionCacheItem> transactions)
         {
-            return _tableStorage.InsertOrReplaceBatchAsync(transactions.Select(TransactionCacheItemEntity.Create));
+            var maxbatchSize = 99;
+
+            var insertTasks = new List<Task>();
+
+            var semaphore = new SemaphoreSlim(5);
+
+            foreach (var txsBatch in transactions.Where(p => p.BlockHeight != null).OrderBy(p=>p.BlockHeight).Batch(maxbatchSize))
+            {
+                await semaphore.WaitAsync();
+                var task = _tableStorage.InsertOrReplaceBatchAsync(txsBatch.Select(TransactionCacheItemEntity.Create))
+                    .ContinueWith(p =>
+                    {
+                        semaphore.Release(1);
+                    });
+
+                insertTasks.Add(task);
+            }
+
+            await Task.WhenAll(insertTasks);
         }
 
         public async Task<IEnumerable<ITransactionCacheItem>> GetAsync(string address)
@@ -59,11 +80,9 @@ namespace AzureRepositories.TransactionCache
             return await _tableStorage.GetDataAsync(TransactionCacheItemEntity.GeneratePartitionKey(address));
         }
 
-        public async Task<int> GetLastCachedBlockHeight(string address)
+        public async Task<ITransactionCacheItem> GetLastCachedTransaction(string address)
         {
-            var res = await _tableStorage.GetTopRecordAsync(TransactionCacheItemEntity.GeneratePartitionKey(address));
-
-            return res?.BlockHeight ?? 0;
+            return await _tableStorage.GetTopRecordAsync(TransactionCacheItemEntity.GeneratePartitionKey(address));
         }
     }
 }
