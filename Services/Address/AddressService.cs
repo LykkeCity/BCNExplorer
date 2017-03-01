@@ -197,7 +197,7 @@ namespace Services.Address
             var notCachedReceivedTxs = notCachedTxs.Result.AllTransactions.Where(p => p.IsReceived).Select(AddressTransaction.Create);
             var notCachedSendTxs = notCachedTxs.Result.AllTransactions.Where(p => !p.IsReceived).Select(AddressTransaction.Create);
             
-            await _transactionCacheRepository.InsertOrReplaceAsync(notCachedTxs.Result.AllTransactions);
+            //await _transactionCacheRepository.InsertOrReplaceAsync(notCachedTxs.Result.AllTransactions);
 
             return new AddressTransactions
             {
