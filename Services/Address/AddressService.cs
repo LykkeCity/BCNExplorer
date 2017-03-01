@@ -104,30 +104,28 @@ namespace Services.Address
 
         public async Task<IAddressBalance> GetBalanceAsync(string id, int? at = null)
         {
-            var coloredSummary = _ninjaAddressProvider.GetAddressBalanceAsync(id, at, colored: true);
-            var btcSummary = _ninjaAddressProvider.GetAddressBalanceAsync(id, at, colored: false);
-            await Task.WhenAll(coloredSummary, btcSummary);
+            var coloredSummary =  await _ninjaAddressProvider.GetAddressBalanceAsync(id, at, colored: true);
 
-            if (coloredSummary.Result != null && btcSummary.Result != null)
+            if (coloredSummary != null )
             {
                 var result = new AddressBalance
                 {
                     AddressId = id,
-                    BtcBalance = btcSummary.Result.Confirmed.Balance,
-                    TotalTransactions = coloredSummary.Result.Confirmed.TotalTransactions,
-                    UnconfirmedBalanceDelta = btcSummary.Result.Unconfirmed?.Balance ?? 0
+                    BtcBalance = coloredSummary.Confirmed.Balance,
+                    TotalTransactions = coloredSummary.Confirmed.TotalTransactions,
+                    UnconfirmedBalanceDelta = coloredSummary.Unconfirmed?.Balance ?? 0
                 };
-                var unconfirmedAssets = coloredSummary.Result.Unconfirmed?.Assets ?? Enumerable.Empty<NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary>();
+                var unconfirmedAssets = coloredSummary.Unconfirmed?.Assets ?? Enumerable.Empty<NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary>();
 
-                foreach (var assetSummary in unconfirmedAssets.Where(p => !coloredSummary.Result.Confirmed.Assets.Select(x=>x.AssetId).Contains(p.AssetId))) //assets with 0
+                foreach (var assetSummary in unconfirmedAssets.Where(p => !coloredSummary.Confirmed.Assets.Select(x=>x.AssetId).Contains(p.AssetId))) //assets with 0
                 {
-                    coloredSummary.Result.Confirmed.Assets.Add(new NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary
+                    coloredSummary.Confirmed.Assets.Add(new NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary
                     {
                         AssetId = assetSummary.AssetId
                     });
                 }
 
-                result.ColoredBalances = coloredSummary.Result.Confirmed.Assets.Select(p =>
+                result.ColoredBalances = coloredSummary.Confirmed.Assets.Select(p =>
                 {
                     var coloredBalance = new ColoredBalance
                     {
@@ -166,28 +164,46 @@ namespace Services.Address
 
         public async Task<IAddressTransactions> GetTransactions(string id)
         {
-            var lastCachedTx = await _transactionCacheRepository.GetLastCachedTransaction(id);
+            //Сached tx implementation
+            //var lastCachedTx = await _transactionCacheRepository.GetLastCachedTransaction(id);
 
-            var cachedTxs = _transactionCacheRepository.GetAsync(id);
-            var notCachedTxs = _ninjaAddressProvider.GetTransactionsForAddressAsync(id, until:lastCachedTx?.BlockHeight);
+            //var cachedTxs = _transactionCacheRepository.GetAsync(id);
+            //var notCachedTxs = _ninjaAddressProvider.GetTransactionsForAddressAsync(id, until:lastCachedTx?.BlockHeight + 1);
 
-            await Task.WhenAll(cachedTxs, notCachedTxs);
+            //await Task.WhenAll(cachedTxs, notCachedTxs);
+
+            //var notCachedAllTxs = notCachedTxs.Result.AllTransactions.Select(AddressTransaction.Create);
+            //var notCachedReceivedTxs = notCachedTxs.Result.AllTransactions.Where(p => p.IsReceived).Select(AddressTransaction.Create);
+            //var notCachedSendTxs = notCachedTxs.Result.AllTransactions.Where(p => !p.IsReceived).Select(AddressTransaction.Create);
+
+            //var cachedAllTxs = cachedTxs.Result.Select(AddressTransaction.Create);
+            //var cachedReceivedTxs = cachedTxs.Result.Where(p => p.IsReceived).Select(AddressTransaction.Create);
+            //var cachedSendTxs = cachedTxs.Result.Where(p => !p.IsReceived).Select(AddressTransaction.Create);
+
+            //await _transactionCacheRepository.InsertOrReplaceAsync(notCachedTxs.Result.AllTransactions);
+
+            //return new AddressTransactions
+            //{
+            //    All = notCachedAllTxs.Union(cachedAllTxs).Distinct(AddressTransaction.TransactionIdComparer),
+            //    Received = notCachedReceivedTxs.Union(cachedReceivedTxs).Distinct(AddressTransaction.TransactionIdComparer),
+            //    Send = notCachedSendTxs.Union(cachedSendTxs).Distinct(AddressTransaction.TransactionIdComparer)
+            //};
+            
+            var notCachedTxs = _ninjaAddressProvider.GetTransactionsForAddressAsync(id);
+
+            await Task.WhenAll(notCachedTxs);
 
             var notCachedAllTxs = notCachedTxs.Result.AllTransactions.Select(AddressTransaction.Create);
             var notCachedReceivedTxs = notCachedTxs.Result.AllTransactions.Where(p => p.IsReceived).Select(AddressTransaction.Create);
             var notCachedSendTxs = notCachedTxs.Result.AllTransactions.Where(p => !p.IsReceived).Select(AddressTransaction.Create);
-
-            var cachedAllTxs = cachedTxs.Result.Select(AddressTransaction.Create);
-            var cachedReceivedTxs = cachedTxs.Result.Where(p => p.IsReceived).Select(AddressTransaction.Create);
-            var cachedSendTxs = cachedTxs.Result.Where(p => !p.IsReceived).Select(AddressTransaction.Create);
-
+            
             await _transactionCacheRepository.InsertOrReplaceAsync(notCachedTxs.Result.AllTransactions);
 
             return new AddressTransactions
             {
-                All = notCachedAllTxs.Union(cachedAllTxs).Distinct(AddressTransaction.TransactionIdComparer),
-                Received = notCachedReceivedTxs.Union(cachedReceivedTxs).Distinct(AddressTransaction.TransactionIdComparer),
-                Send = notCachedSendTxs.Union(cachedSendTxs).Distinct(AddressTransaction.TransactionIdComparer)
+                All = notCachedAllTxs.Distinct(AddressTransaction.TransactionIdComparer),
+                Received = notCachedReceivedTxs.Distinct(AddressTransaction.TransactionIdComparer),
+                Send = notCachedSendTxs.Distinct(AddressTransaction.TransactionIdComparer)
             };
         }
     }
