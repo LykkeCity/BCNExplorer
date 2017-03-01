@@ -41,8 +41,8 @@
                     @if (Model.Block != null)
                     {
                         <span class="action_text">@Model.Block.Time.ToStringBcnExplolerFormat()</span>
+                        <span class="middot">·</span>
                     }
-                    <span class="middot">·</span>
                     <span class="action_text">@Model.InputsCount @Utils.GenderAmount(Model.InputsCount, "input", "inputs", "inputs")</span>
                     <span class="middot">·</span>
                     <span class="action_text">@Model.OutputsCount @Utils.GenderAmount(Model.OutputsCount, "output", "outputs", "outputs")</span>
