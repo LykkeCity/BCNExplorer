@@ -11,7 +11,7 @@ namespace Services.Asset
     {
         private readonly CachedDataDictionary<string, IAssetDefinition> _assetDefinitionCachedDictionary;
         private readonly CachedDataDictionary<string, IAssetCoinholdersIndex> _assetCoinholdersIndexesDictionary;
-        private readonly CachedDataDictionary<string, IAssetScore> _assetScoreDictionary; 
+        private readonly CachedDataDictionary<string, IAssetScore> _assetScoreDictionary;
 
         public AssetService(CachedDataDictionary<string, IAssetDefinition> assetDefinitionCachedDictionary, 
             CachedDataDictionary<string, IAssetCoinholdersIndex> assetCoinholdersIndexesDictionary, 

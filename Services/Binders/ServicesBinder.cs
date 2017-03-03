@@ -52,7 +52,7 @@ namespace Services.Binders
 
             ioc.RegisterFactorySingleTone(() =>
                 new CachedDataDictionary<string, IAssetDefinition>(
-                    async () => AssetIndexer.IndexAssetsDefinitions(await ioc.GetObject<IAssetDefinitionRepository>().GetAllAsync())
+                    async () => AssetIndexer.IndexAssetsDefinitions(await ioc.GetObject<IAssetDefinitionRepository>().GetAllAsync(), await ioc.GetObject<IAssetImageRepository>().GetAllAsync())
                     , validDataInSeconds: 1 * 10 * 60));
 
             ioc.RegisterFactorySingleTone(() =>

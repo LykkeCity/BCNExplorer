@@ -26,9 +26,9 @@ namespace Core.Asset
 
         bool LinkToWebsite { get; }
 
-        string IconUrl { get; }
+        string IconUrl { get; set; }
 
-        string ImageUrl { get; }
+        string ImageUrl { get; set; }
 
         string Version { get; }
         string AssetDefinitionUrl { get; }
