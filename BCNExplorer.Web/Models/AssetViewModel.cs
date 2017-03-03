@@ -33,7 +33,7 @@ namespace BCNExplorer.Web.Models
 
         public string Version { get; set; }
         public string DefinitionUrl { get; set; }
-
+        public bool IsVerified { get; set; }
         public static AssetViewModel Create(IAssetDefinition source)
         {
             return new AssetViewModel
@@ -51,7 +51,8 @@ namespace BCNExplorer.Web.Models
                 NameShort = source.NameShort,
                 Type = source.Type,
                 Version = source.Version,
-                DefinitionUrl = source.AssetDefinitionUrl
+                DefinitionUrl = source.AssetDefinitionUrl,
+                IsVerified = source.IsVerified()
             };
         }
     }
