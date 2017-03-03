@@ -62,11 +62,11 @@ namespace AzureRepositories.Asset
 
             if (string.IsNullOrEmpty(newImage.IconUrl))
             {
-                newImage.IconUrl = existed.IconUrl;
+                newImage.IconUrl = existed?.IconUrl;
             }
             if (string.IsNullOrEmpty(newImage.ImageUrl))
             {
-                newImage.IconUrl = existed.ImageUrl;
+                newImage.IconUrl = existed?.ImageUrl;
             }
 
             await _tableStorage.InsertOrReplaceAsync(newImage);
