@@ -48,6 +48,7 @@ namespace Services.Binders
             
 
             ioc.Register<IEmailSender>(ServiceFactories.CreateEmailSenderProducer(baseSettings, log));
+            ioc.Register<IAssetImageCacher>(ServiceFactories.CreateIAssetImageCacher(baseSettings, log));
 
             ioc.RegisterFactorySingleTone(() =>
                 new CachedDataDictionary<string, IAssetDefinition>(

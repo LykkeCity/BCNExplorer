@@ -37,8 +37,11 @@ namespace AssetDefinitionScanner
                 var container = new DResolver();
                 InitContainer(container, settings, log);
 
-                var updateAssetDataCommandQueueConsumer = container.IoC.CreateInstance<UpdateAssetDataCommandQueueConsumer>();
-                updateAssetDataCommandQueueConsumer.Start();
+                var assetDefinitonCommandConsumer = container.IoC.CreateInstance<AssetDataCommandQueueConsumer>();
+                assetDefinitonCommandConsumer.Start();
+
+                var imageCommandConsumer = container.IoC.CreateInstance<AssetImagesCommandQueueConsumer>();
+                imageCommandConsumer.Start();
 
                 var parseBlockCommandQueueConsumer = container.IoC.CreateInstance<ParseBlockCommandQueueConsumer>();
                 parseBlockCommandQueueConsumer.Start();

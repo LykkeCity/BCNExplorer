@@ -115,13 +115,15 @@
     <Compile Include="Asset\AssetCoinholdersIndexRepository.cs" />
     <Compile Include="Asset\AssetDefinitionParseBlockCommandProducer.cs" />
     <Compile Include="Asset\AssetDefinitionParsedBlockRepository.cs" />
+    <Compile Include="Asset\AssetImagesRepository.cs" />
     <Compile Include="Asset\AssetDefinitionRepository.cs" />
+    <Compile Include="Asset\AssetImageCommandProducer.cs" />
     <Compile Include="Asset\AssetScoreRepository.cs" />
     <Compile Include="JobsQueueNames.cs" />
     <Compile Include="QueueReaders\CoinholderIndexesQueueReader.cs" />
     <Compile Include="QueueReaders\BalanceReportingQueueReader.cs" />
     <Compile Include="QueueReaders\ParseBlockQueueReader.cs" />
-    <Compile Include="Asset\UpdateAssetDataCommandProducer.cs" />
+    <Compile Include="Asset\AssetDataCommandProducer.cs" />
     <Compile Include="Binders\AzureRepoFactories.cs" />
     <Compile Include="Binders\AzureRepositoriesBinder.cs" />
     <Compile Include="CloudConfigurationLoader.cs" />

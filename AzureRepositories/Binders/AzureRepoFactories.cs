@@ -7,6 +7,7 @@ using AzureStorage.Blob;
 using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common.Log;
+using Core.Asset;
 using Core.Settings;
 using MongoDB.Driver;
 
@@ -18,10 +19,19 @@ namespace AzureRepositories.Binders
         {
             return new AssetDefinitionRepository(new AzureTableStorage<AssetDefinitionDefinitionEntity>(baseSettings.Db.AssetsConnString, "AssetDefinitions", log));
         }
+        public static AssetImageRepository CreateAssetImageRepository(BaseSettings baseSettings, ILog log)
+        {
+            return new AssetImageRepository(new AzureTableStorage<AssetImageImageEntity>(baseSettings.Db.AssetsConnString, "AssetImages", log));
+        }
 
-        public static AssetDataCommandProducer CreateUpdateAssetDataCommandProducer(BaseSettings baseSettings, ILog log)
+        public static AssetDataCommandProducer CreateAssetDataCommandProducer(BaseSettings baseSettings, ILog log)
         {
             return new AssetDataCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString,  JobsQueueNames.UpdateAssetDataCommands));
+        }
+
+        public static AssetImageCommandProducer CreateAssetImageCommandProducer(BaseSettings baseSettings, ILog log)
+        {
+            return new AssetImageCommandProducer(new AzureQueueExt(baseSettings.Db.AssetsConnString, JobsQueueNames.UpdateAssetImageCommands));
         }
 
         public static AssetDefinitionParseBlockCommandProducer CreateAssetDefinitionParseBlockCommandProducer(BaseSettings baseSettings, ILog log)

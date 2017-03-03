@@ -2,7 +2,7 @@
 using AzureStorage.Queue;
 using Common.Log;
 
-namespace AzureRepositories.AssetDefinition
+namespace AzureRepositories.Asset
 {
     public interface IAssetDataQueueReader : IQueueReader
     {

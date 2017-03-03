@@ -103,6 +103,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="QueueHandlers\AssetImagesCommandQueueConsumer.cs" />
     <Compile Include="TimerFunctions\SendMonitorDataFunctions.cs" />
     <Compile Include="TimerFunctions\UpdateAssetDataFunctions.cs" />
     <Compile Include="Program.cs" />
@@ -110,7 +111,7 @@
     <Compile Include="TimerFunctions\ParseBlocksFunctions.cs" />
     <Compile Include="Binders\AssetsFunctionsBinder.cs" />
     <Compile Include="QueueHandlers\ParseBlockCommandQueueConsumer.cs" />
-    <Compile Include="QueueHandlers\UpdateAssetDataCommandQueueConsumer.cs" />
+    <Compile Include="QueueHandlers\AssetDataCommandQueueConsumer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

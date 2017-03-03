@@ -56,6 +56,8 @@
     <Compile Include="Asset\IAssetCoinholdersIndexRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionParsedBlockRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionRepository.cs" />
+    <Compile Include="Asset\IAssetImageCacher.cs" />
+    <Compile Include="Asset\IAssetImageRepository.cs" />
     <Compile Include="Asset\IAssetScoreRepository.cs" />
     <Compile Include="BalanceReport\IReportRenderer.cs" />
     <Compile Include="Block\IBlockService.cs" />

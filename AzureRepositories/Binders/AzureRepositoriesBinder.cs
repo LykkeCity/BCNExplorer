@@ -19,8 +19,11 @@ namespace AzureRepositories.Binders
             ioc.Register<IAssetCoinholdersIndexRepository>(AzureRepoFactories.CreateAssetCoinholdersIndexRepository(baseSettings, log));
             ioc.Register<IAssetScoreRepository>(AzureRepoFactories.CreateAssetScoreRepository(baseSettings, log));
             ioc.Register<ITransactionCacheRepository>(AzureRepoFactories.CreateTransactionCacheRepository(baseSettings, log));
+            ioc.Register<IAssetImageRepository>(AzureRepoFactories.CreateAssetImageRepository(baseSettings, log));
 
-            ioc.Register(AzureRepoFactories.CreateUpdateAssetDataCommandProducer(baseSettings, log));
+            ioc.Register(AzureRepoFactories.CreateAssetDataCommandProducer(baseSettings, log));
+            ioc.Register(AzureRepoFactories.CreateAssetImageCommandProducer(baseSettings, log));
+            
             ioc.Register(AzureRepoFactories.CreateAssetDefinitionParseBlockCommandProducer(baseSettings, log));
             ioc.Register(AzureRepoFactories.CreateAssetChangesParseBlockCommandProducer(baseSettings, log));
             ioc.Register(AzureRepoFactories.CreateAssetCoinholdersIndexesCommandProducer(baseSettings, log));
