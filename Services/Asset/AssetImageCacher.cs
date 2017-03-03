@@ -92,7 +92,7 @@ namespace Services.Asset
 
         private string GenerateKeyName(string assetId, string extension)
         {
-            return assetId + "." + extension;
+            return assetId + extension;
         }
     }
 }
