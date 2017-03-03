@@ -55,7 +55,21 @@ namespace AzureRepositories.Asset
 
         public async Task InsertOrReplaceAsync(IAssetImage assetImage)
         {
-            await _tableStorage.InsertOrReplaceAsync(AssetImageImageEntity.Create(assetImage));
+            var existed = await _tableStorage.GetDataAsync(AssetImageImageEntity.GeneratePartitionKey(),
+                AssetImageImageEntity.GenerateRowKey(assetImage.AssetIds));
+
+            var newImage = AssetImageImageEntity.Create(assetImage);
+
+            if (string.IsNullOrEmpty(newImage.IconUrl))
+            {
+                newImage.IconUrl = existed.IconUrl;
+            }
+            if (string.IsNullOrEmpty(newImage.ImageUrl))
+            {
+                newImage.IconUrl = existed.ImageUrl;
+            }
+
+            await _tableStorage.InsertOrReplaceAsync(newImage);
         }
     }
 }

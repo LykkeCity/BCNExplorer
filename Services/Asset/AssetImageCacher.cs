@@ -71,10 +71,7 @@ namespace Services.Asset
                 var key = GenerateKeyName(assetId, GetImageExtension(url));
 
                 var resp = await url.GetAsync();
-                //using (var stream = new MemoryStream())
-                //{
-                //    await (await resp.Content.ReadAsStreamAsync()).CopyToAsync(stream);
-                //}
+
                 await _blobStorage.SaveBlobAsync(container, key, await resp.Content.ReadAsStreamAsync());
 
                 return ImageSaveResult.Ok(_blobStorage.GetBlobUrl(container, key));
