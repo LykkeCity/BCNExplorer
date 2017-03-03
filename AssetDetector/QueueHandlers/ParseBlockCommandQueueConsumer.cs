@@ -64,6 +64,8 @@ namespace AssetDefinitionScanner.QueueHandlers
                     if (assetDefUrl != null)
                     {
                         await _assetDataCommandProducer.CreateUpdateAssetDataCommand(assetDefUrl.AbsoluteUri);
+
+                        await _log.WriteInfo("ParseBlockCommandQueueConsumer", "ParseBlock", assetDefUrl.AbsoluteUri, "CreateUpdateAssetDataCommand ");
                     }
                 }
 

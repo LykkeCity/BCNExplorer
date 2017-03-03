@@ -41,6 +41,8 @@ namespace AssetDefinitionScanner.TimerFunctions
                 {
                     await _parseBlockCommandProducer.CreateParseBlockCommand(blockPtr.GetBlockId());
 
+                    await _log.WriteInfo("ParseBlocksFunctions", "ParseLast", blockPtr.GetBlockId(), "CreateParseBlockCommand Done");
+
                     blockPtr = client.GetBlock(blockPtr.HashPrevBlock).Header;
                 }
 
