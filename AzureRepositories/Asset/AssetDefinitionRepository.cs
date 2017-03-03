@@ -41,8 +41,6 @@ namespace AzureRepositories.AssetDefinition
         public string ImageUrl { get; set; }
         public string Version { get; set; }
         public string AssetDefinitionUrl { get; set; }
-        public bool IsVerified => AssetHelper.IsVerified(this);
-        public string IssuerWebsite => AssetHelper.GetIssuerWebsite(this);
 
         public static AssetDefinitionDefinitionEntity Create(IAssetDefinition data)
         {
@@ -78,35 +76,6 @@ namespace AzureRepositories.AssetDefinition
         }
     }
 
-    public static class AssetHelper
-    {
-        public static bool IsVerified(IAssetDefinition assetDefinition)
-        {
-            var url = assetDefinition.AssetDefinitionUrl ?? "";
-            Uri uriResult;
-            var isHttps = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
-                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            var isCoinPrismDomain = url.Contains("cpr.sm");
-
-            return isHttps && !isCoinPrismDomain;
-        }
-
-        public static string GetIssuerWebsite(IAssetDefinition assetDefinition)
-        {
-            var url = assetDefinition.ContactUrl ?? "";
-
-            Uri uriResult;
-            var isCorrectUrl = Uri.TryCreate(url, UriKind.Absolute, out uriResult);
-
-            if (isCorrectUrl)
-            {
-                return uriResult.Scheme + Uri.SchemeDelimiter + uriResult.Host;
-            }
-
-            return null;
-        }
-    }
 
     public class AssetDefinitionRepository:IAssetDefinitionRepository
     {

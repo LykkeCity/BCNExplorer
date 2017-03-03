@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Core.Asset
@@ -32,13 +33,44 @@ namespace Core.Asset
 
         string Version { get; }
         string AssetDefinitionUrl { get; }
-
-        bool IsVerified { get; }
-
-        string IssuerWebsite { get; }
     }
 
-    
+    public static class AssetHelper
+    {
+        public static bool IsVerified(this IAssetDefinition assetDefinition)
+        {
+            var url = assetDefinition.AssetDefinitionUrl ?? "";
+            Uri uriResult;
+            var isHttps = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            var isCoinPrismDomain = url.Contains("cpr.sm");
+
+            return isHttps && !isCoinPrismDomain;
+        }
+
+        public static string IssuerWebsite(this IAssetDefinition assetDefinition)
+        {
+            var url = assetDefinition.ContactUrl ?? "";
+
+            Uri uriResult;
+            var isCorrectUrl = Uri.TryCreate(url, UriKind.Absolute, out uriResult);
+
+            if (isCorrectUrl)
+            {
+                return uriResult.Scheme + Uri.SchemeDelimiter + uriResult.Host;
+            }
+
+            return null;
+        }
+
+        public static bool IsValid(this IAssetDefinition assetDefinition)
+        {
+            return assetDefinition.AssetIds.Any() && assetDefinition.AssetIds.All(x => x != null);
+        }
+    }
+
+
     public sealed class AssetDefinitionUrlEqualityComparer : IEqualityComparer<IAssetDefinition>
     {
         public bool Equals(IAssetDefinition x, IAssetDefinition y)

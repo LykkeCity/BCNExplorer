@@ -11,7 +11,7 @@ namespace Providers.Helpers
         public static double CalculateAssetScore(IAssetDefinition assetDefinition, IAssetCoinholdersIndex index,
             IEnumerable<IAssetCoinholdersIndex> allIndexes)
         {
-            var isVerified = (assetDefinition?.IsVerified??false) ? 0 : 1;
+            var isVerified = (assetDefinition?.IsVerified()??false) ? 0 : 1;
             
             var result =  Weight(Coef.IsVerified) * isVerified
                 + Weight(Coef.LastMonthTxCount) * Calc(index.LastMonthTransactionCount, allIndexes.Select(p => p.LastMonthTransactionCount))

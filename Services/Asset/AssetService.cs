@@ -41,7 +41,7 @@ namespace Services.Asset
         {
             return (await GetAssetDefinitionsAsync())
                 .Where(p => string.Equals(issuer, p.Issuer, StringComparison.InvariantCultureIgnoreCase) 
-                            && p.IsVerified);
+                            && p.IsVerified());
         }
 
         public async Task<IDictionary<string, IAssetCoinholdersIndex>> GetAssetCoinholdersIndexAsync()

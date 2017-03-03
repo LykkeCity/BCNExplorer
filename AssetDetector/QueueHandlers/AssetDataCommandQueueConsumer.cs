@@ -52,9 +52,14 @@ namespace AssetDefinitionScanner.QueueHandlers
                 var assetData = await _assetReader.ReadAssetDataAsync(context.AssetDefinitionUrl);
                 if (assetData != null)
                 {
-                    await _assetDefinitionRepository.InsertOrReplaceAsync(AssetDefinition.Create(assetData));
-                    await _assetImageCommandProducer.CreateUpdateAssetImageCommand(assetData.AssetIds, assetData.IconUrl,
-                            assetData.ImageUrl);
+                    var assetDefinition = AssetDefinition.Create(assetData);
+                    await _assetDefinitionRepository.InsertOrReplaceAsync(assetDefinition);
+                    if (assetDefinition.IsValid())
+                    {
+                        await _assetImageCommandProducer.CreateUpdateAssetImageCommand(assetData.AssetIds, assetData.IconUrl,
+                                assetData.ImageUrl);
+                    }
+
                 }
 
                 await _log.WriteInfo("UpdateAssetDataCommandQueueConsumer", "UpdateAssetData", context.ToJson(), "Done");

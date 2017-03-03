@@ -44,7 +44,7 @@ namespace AssetDefinitionScanner.QueueHandlers
             try
             {
                 await _log.WriteInfo("UpdateAssetImagesCommandQueueConsumer", "UpdateAssetImage", context.ToJson(), "Started");
-
+                
                 var iconResult = await _assetImageCacher.SaveAssetIconAsync(context.IconUrl, context.AssetIds.First());
                 var imageResult = await _assetImageCacher.SaveAssetImageAsync(context.ImageUrl, context.AssetIds.First());
 

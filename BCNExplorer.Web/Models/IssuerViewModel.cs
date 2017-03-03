@@ -25,7 +25,7 @@ namespace BCNExplorer.Web.Models
                 return new IssuerViewModel
                 {
                     IsVerified = true, //Temp Solution
-                    IssuerWebsite = assetDefinitions.Where(p => !string.IsNullOrEmpty(p.IssuerWebsite)).Select(p => p.IssuerWebsite).FirstOrDefault(),
+                    IssuerWebsite = assetDefinitions.Where(p => !string.IsNullOrEmpty(p.IssuerWebsite())).Select(p => p.IssuerWebsite()).FirstOrDefault(),
                     Issuer = issuer,
                     AssetDirectory = AssetDirectoryViewModel.Create(assetDefinitions, assetCoinholdersIndices, assetScoresDictionaries)
                 };

@@ -95,12 +95,12 @@ namespace BCNExplorer.Web.Models
                     NameShort = source.NameShort,
                     Type = source.Type,
                     Version = source.Version,
-                    IsVerified = source.IsVerified,
+                    IsVerified = source.IsVerified(),
                     CoinholdersCount = index?.CoinholdersCount,
                     TotalQuantity = index?.TotalQuantity,
                     Score = assetScore?.Score ?? 1,
                     IssuerEncoded = (source.Issuer ?? "").ToBase64(),
-                    IssuerWebSite = source.IssuerWebsite
+                    IssuerWebSite = source.IssuerWebsite()
                 };
             }
         }

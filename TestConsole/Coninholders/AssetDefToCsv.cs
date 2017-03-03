@@ -26,7 +26,7 @@ namespace TestConsole.Coninholders
             foreach (var assetDefinition in assetDefs)
             {
                 var str =
-                    $"{string.Join(",", assetDefinition.AssetIds)}|{assetDefinition.Name}|{assetDefinition.NameShort}|{assetDefinition.Divisibility}|{assetDefinition.IsVerified}";
+                    $"{string.Join(",", assetDefinition.AssetIds)}|{assetDefinition.Name}|{assetDefinition.NameShort}|{assetDefinition.Divisibility}|{assetDefinition.IsVerified()}";
                 Console.WriteLine(str);
                 csv.AppendLine(str);
             }
