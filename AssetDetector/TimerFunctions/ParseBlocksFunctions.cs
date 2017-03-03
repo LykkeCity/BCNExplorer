@@ -30,7 +30,6 @@ namespace AssetDefinitionScanner.TimerFunctions
 
         public async Task ParseLast([TimerTrigger("00:10:00", RunOnStartup = true)] TimerInfo timer)
         {
-            return;
             BlockHeader blockPtr = null;
 
             try
