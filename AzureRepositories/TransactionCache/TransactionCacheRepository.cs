@@ -13,8 +13,8 @@ namespace AzureRepositories.TransactionCache
     public class TransactionCacheItemEntity: TableEntity, ITransactionCacheItem
     {
         public bool IsReceived { get; set; }
+        public string TransactionId { get; set; }
 
-        public string TransactionId => GetTransactionId(RowKey);
         public int? BlockHeight => GetBlockHeight(RowKey);
         public string Address => GetAddress(PartitionKey);
 
@@ -26,11 +26,6 @@ namespace AzureRepositories.TransactionCache
         private static string GetAddress(string partitionKey)
         {
             return partitionKey;
-        }
-
-        private static string GetTransactionId(string rowKey)
-        {
-            return rowKey.Split(RowKeySeparator)[1];
         }
 
         private static int GetBlockHeight(string rowKey)
@@ -52,7 +47,8 @@ namespace AzureRepositories.TransactionCache
             {
                 IsReceived = source.IsReceived,
                 PartitionKey = GeneratePartitionKey(source.Address),
-                RowKey = GenerateRowKey(source)
+                RowKey = GenerateRowKey(source),
+                TransactionId = source.TransactionId
             };
         }
     }
