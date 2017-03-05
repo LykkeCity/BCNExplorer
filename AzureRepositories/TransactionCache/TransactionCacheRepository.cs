@@ -12,10 +12,10 @@ namespace AzureRepositories.TransactionCache
 {
     public class TransactionCacheItemEntity: TableEntity, ITransactionCacheItem
     {
-        public string TransactionId { get; set; }
         public bool IsReceived { get; set; }
-        public string BlockHash { get; set; }
-        public int? BlockHeight { get; set; }
+
+        public string TransactionId => GetTransactionId(RowKey);
+        public int? BlockHeight => GetBlockHeight(RowKey);
         public string Address => GetAddress(PartitionKey);
 
         public static string GeneratePartitionKey(string address)
@@ -28,20 +28,29 @@ namespace AzureRepositories.TransactionCache
             return partitionKey;
         }
 
+        private static string GetTransactionId(string rowKey)
+        {
+            return rowKey.Split(RowKeySeparator)[1];
+        }
+
+        private static int GetBlockHeight(string rowKey)
+        {
+            var value = int.Parse(rowKey.Split(RowKeySeparator)[0]);
+            return int.MaxValue - value;
+        }
+
+        private const char RowKeySeparator = '_';
 
         public static string GenerateRowKey(ITransactionCacheItem source)
         {
-            return $"{int.MaxValue - source.BlockHeight}_{source.TransactionId}";
+            return $"{int.MaxValue - source.BlockHeight}{RowKeySeparator}{source.TransactionId}";
         }
 
         public static TransactionCacheItemEntity Create(ITransactionCacheItem source)
         {
             return new TransactionCacheItemEntity
             {
-                BlockHeight = source.BlockHeight,
-                BlockHash = source.BlockHash,
                 IsReceived = source.IsReceived,
-                TransactionId = source.TransactionId,
                 PartitionKey = GeneratePartitionKey(source.Address),
                 RowKey = GenerateRowKey(source)
             };

@@ -10,7 +10,6 @@ namespace Core.TransactionCache
     {
         string TransactionId { get; }
         bool IsReceived { get; }
-        string BlockHash { get; }
         int? BlockHeight { get; }
         string Address { get; }
     }

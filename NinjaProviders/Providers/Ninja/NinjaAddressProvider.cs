@@ -82,7 +82,6 @@ namespace Providers.Providers.Ninja
             public bool IsReceived { get; set; }
             public int? BlockHeight { get; set; }
             public string Address { get; set; }
-            public string BlockHash { get; set; }
 
             public static NinjaAddressTransaction Create(string address, AddressTransactionListItemContract source)
             {
@@ -91,7 +90,6 @@ namespace Providers.Providers.Ninja
                     TransactionId = source.TxId,
                     IsReceived = source.IsReceived(),
                     BlockHeight = source.Height,
-                    BlockHash = source.BlockId,
                     Address = address
                 };
             }
