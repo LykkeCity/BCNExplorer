@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.SessionState;
 using BCNExplorer.Web.Models;
 using Core.AddressService;
 using Core.Asset;
@@ -10,6 +11,7 @@ using Services.MainChain;
 
 namespace BCNExplorer.Web.Controllers
 {
+    [SessionState(SessionStateBehavior.Disabled)]
     public class AddressController:Controller
     {
         private readonly IAddressService _addressProvider;
