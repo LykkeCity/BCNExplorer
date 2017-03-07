@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.SessionState;
 using BCNExplorer.Web.Models;
 using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
@@ -12,6 +13,7 @@ using Services.MainChain;
 
 namespace BCNExplorer.Web.Controllers
 {
+    [SessionState(SessionStateBehavior.Disabled)]
     public class AssetController : Controller
     {
         private readonly IAssetService _assetService;
