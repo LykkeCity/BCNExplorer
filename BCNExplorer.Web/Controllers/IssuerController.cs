@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.SessionState;
 using BCNExplorer.Web.Models;
 using Common;
 using Core.Asset;
 
 namespace BCNExplorer.Web.Controllers
 {
+    [SessionState(SessionStateBehavior.Disabled)]
     public class IssuerController: Controller
     {
         private readonly IAssetService _assetService;

@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.SessionState;
 using BCNExplorer.Web.Models;
 using Core.Block;
 using Providers.Providers.Ninja;
 
 namespace BCNExplorer.Web.Controllers
 {
+    [SessionState(SessionStateBehavior.Disabled)]
     public class BlockController : Controller
     {
         private readonly IBlockService _blockService;

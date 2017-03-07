@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.SessionState;
 using BCNExplorer.Web.Models;
 using Core.Block;
 using Core.SearchService;
@@ -7,6 +8,7 @@ using Services.Search;
 
 namespace BCNExplorer.Web.Controllers
 {
+    [SessionState(SessionStateBehavior.Disabled)]
     public class SearchController : Controller
     {
         private readonly ISearchService _searchService;

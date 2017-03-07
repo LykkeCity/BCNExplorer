@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.SessionState;
 using Core.Settings;
 using Services.MainChain;
 
 namespace BCNExplorer.Web.Controllers
 {
+    [SessionState(SessionStateBehavior.Disabled)]
     public class MainChainController:Controller
     {
         private readonly CachedMainChainService _cachedMainChainService;
