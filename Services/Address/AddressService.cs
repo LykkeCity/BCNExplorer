@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Core.AddressService;
+using Core.Settings;
 using Core.TransactionCache;
+using NBitcoin;
+using Providers.Helpers;
 using Providers.Providers.Ninja;
 using Services.MainChain;
 using IAddressTransaction = Core.TransactionCache.IAddressTransaction;
@@ -14,9 +18,9 @@ namespace Services.Address
     public class AddressMainInfo : IAddressMainInfo
     {
         public string AddressId { get; set; }
-        public int TotalTransactions { get; set; }
         public string UncoloredAddress { get; set; }
         public string ColoredAddress { get; set; }
+        public bool IsColored { get; set; }
     }
     public class AddressBalance:IAddressBalance
     {
@@ -97,16 +101,19 @@ namespace Services.Address
         private readonly ITransactionCacheItemRepository _transactionCacheItemRepository;
         private readonly ITransactionCacheStatusRepository _transactionCacheStatusRepository;
         private readonly CachedMainChainService _cachedMainChainService;
+        private readonly BaseSettings _baseSettings;
 
         public AddressService(NinjaAddressProvider ninjaAddressProvider, 
             ITransactionCacheItemRepository transactionCacheItemRepository, 
             ITransactionCacheStatusRepository transactionCacheStatusRepository, 
-            CachedMainChainService cachedMainChainService)
+            CachedMainChainService cachedMainChainService, 
+            BaseSettings baseSettings)
         {
             _ninjaAddressProvider = ninjaAddressProvider;
             _transactionCacheItemRepository = transactionCacheItemRepository;
             _transactionCacheStatusRepository = transactionCacheStatusRepository;
             _cachedMainChainService = cachedMainChainService;
+            _baseSettings = baseSettings;
         }
 
         public async Task<IAddressBalance> GetBalanceAsync(string id, int? at = null)
@@ -156,16 +163,45 @@ namespace Services.Address
 
         public async Task<IAddressMainInfo> GetMainInfoAsync(string id)
         {
-            var aliases = await _ninjaAddressProvider.GetAliases(id);
-            if (aliases != null)
+            if (BitcoinAddressHelper.IsBitcoinColoredAddress(id, _baseSettings.UsedNetwork()))
             {
+                var result = new BitcoinColoredAddress(id, _baseSettings.UsedNetwork());
+
                 return new AddressMainInfo
                 {
                     AddressId = id,
-                    ColoredAddress = aliases.ColoredAddress,
-                    UncoloredAddress = aliases.UncoloredAddress
+                    ColoredAddress = result.ToWif(),
+                    UncoloredAddress = result.Address.ToWif(),
+                    IsColored = true
                 };
             }
+
+            if (BitcoinAddressHelper.IsBitcoinPubKeyAddress(id, _baseSettings.UsedNetwork()))
+            {
+                var result = new BitcoinPubKeyAddress(id, _baseSettings.UsedNetwork());
+
+                return new AddressMainInfo
+                {
+                    AddressId = id,
+                    ColoredAddress = result.ToColoredAddress().ToWif(),
+                    UncoloredAddress = result.ToWif(),
+                    IsColored = false
+                };
+            }
+
+            if (BitcoinAddressHelper.IsBitcoinScriptAddress(id, _baseSettings.UsedNetwork()))
+            {
+                var result = new BitcoinScriptAddress(id, _baseSettings.UsedNetwork());
+
+                return new AddressMainInfo
+                {
+                    AddressId = id,
+                    ColoredAddress = result.ToColoredAddress().ToWif(),
+                    UncoloredAddress = result.ToWif(),
+                    IsColored = false
+                };
+            }
+
             return null;
         }
 

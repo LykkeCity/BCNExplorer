@@ -104,6 +104,7 @@
     <Compile Include="Helpers\AssetScoreHelper.cs" />
     <Compile Include="Helpers\BalanceIdHelper.cs" />
     <Compile Include="Helpers\BaseSettingsHelper.cs" />
+    <Compile Include="Helpers\BitcoinAddressHelper.cs" />
     <Compile Include="Helpers\BlockHelper.cs" />
     <Compile Include="Helpers\ConcurrentChainHelper.cs" />
     <Compile Include="Helpers\IndexerClientHelper.cs" />

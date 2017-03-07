@@ -13,7 +13,7 @@ namespace BCNExplorer.Web.Models
         public string UncoloredAddress { get; set; }
         public string ColoredAddress { get; set; }
 
-        public bool IsColoredAddress => UncoloredAddress != null;
+        public bool IsColoredAddress { get; set; }
 
 
 
@@ -24,7 +24,7 @@ namespace BCNExplorer.Web.Models
                 AddressId = addressMainInfo.AddressId,
                 ColoredAddress = addressMainInfo.ColoredAddress,
                 UncoloredAddress = addressMainInfo.UncoloredAddress,
-
+                IsColoredAddress = addressMainInfo.IsColored
             };
         }
     }

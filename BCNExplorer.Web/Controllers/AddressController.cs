@@ -31,7 +31,7 @@ namespace BCNExplorer.Web.Controllers
             _mainChainService = mainChainService;
         }
 
-        [OutputCache(Duration = 60 * 60, VaryByParam = "*")]
+        //[OutputCache(Duration = 60 * 60, VaryByParam = "*")]
         [Route("address/{id}")]
         public async Task<ActionResult> Index(string id, int? at)
         {

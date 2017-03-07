@@ -22,9 +22,9 @@ namespace Core.AddressService
     public interface IAddressMainInfo
     {
         string AddressId { get; }
-        int TotalTransactions { get; }
         string UncoloredAddress { get; }
         string ColoredAddress { get; }
+        bool IsColored { get; }
     }
 
     public interface IAddressTransactions
