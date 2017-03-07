@@ -103,7 +103,7 @@ namespace BCNExplorer.Web.Controllers
             return RedirectToAction("BalanceAtBlock", new { id = id, at = block?.Height ?? 0 });
         }
 
-        //[OutputCache(Duration = 1 * 60, VaryByParam = "*")]
+        [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
         [Route("address/transactions/{id}")]
         public async Task<ActionResult> Transactions(string id)
         {
