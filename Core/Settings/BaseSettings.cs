@@ -83,9 +83,7 @@ namespace Core.Settings
 
         [Required]
         public string SharedStorageConnString { get; set; }
-
-        public string SqlConnString { get; set; }
-
+        
         [Required]
         public AssetBalanceChangesDb AssetBalanceChanges { get; set; }
     }

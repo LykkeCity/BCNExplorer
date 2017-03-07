@@ -48,10 +48,6 @@
   <ItemGroup>
     <Compile Include="AddressService\IAddressService.cs" />
     <Compile Include="AssetBlockChanges\Mongo\IAssetBalanceChangesRepository.cs" />
-    <Compile Include="AssetBlockChanges\SQL\IAddressRepository.cs" />
-    <Compile Include="AssetBlockChanges\SQL\IAssetChangesContextRepository.cs" />
-    <Compile Include="AssetBlockChanges\SQL\IBalanceChangesRepository.cs" />
-    <Compile Include="AssetBlockChanges\SQL\ITransactionRepository.cs" />
     <Compile Include="Asset\IAssetChangesParsedBlockRepository.cs" />
     <Compile Include="Asset\IAssetCoinholdersIndexRepository.cs" />
     <Compile Include="Asset\IAssetDefinitionParsedBlockRepository.cs" />
@@ -69,7 +65,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchService\ISearchService.cs" />
     <Compile Include="Settings\BaseSettings.cs" />
-    <Compile Include="TransactionCache\ITransactionCacheItem.cs" />
+    <Compile Include="TransactionCache\IAddressTransaction.cs" />
+    <Compile Include="TransactionCache\ITransactionCacheStatus.cs" />
     <Compile Include="Transaction\ITransactionService.cs" />
   </ItemGroup>
   <ItemGroup>

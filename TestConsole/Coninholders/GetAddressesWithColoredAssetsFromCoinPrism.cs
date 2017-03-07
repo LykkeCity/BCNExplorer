@@ -25,95 +25,62 @@ namespace TestConsole
             var allAssets = assetDefRepo.GetAllAsync().Result.SelectMany(p=>p.AssetIds);
             var failAssets = new List<string>();
 
-            var addressResults = new List<AddressResult>();
-            var tasks = new List<Task>();
-            var counter = allAssets.Count();
-            foreach (var asset in allAssets)
-            {
-                var task = GetAddresses(asset).ContinueWith(p =>
-                {
-                    Console.WriteLine(counter);
-                    counter--;
-                    if (p.Result.Any(x => x == null))
-                    {
-                        throw new Exception();
-                    }
-                    addressResults.AddRange(p.Result);
-                });
-                tasks.Add(task);
+            //var addressResults = new List<AddressResult>();
+            //var tasks = new List<Task>();
+            //var counter = allAssets.Count();
+            //foreach (var asset in allAssets)
+            //{
+            //    var task = GetAddresses(asset).ContinueWith(p =>
+            //    {
+            //        Console.WriteLine(counter);
+            //        counter--;
+            //        if (p.Result.Any(x => x == null))
+            //        {
+            //            throw new Exception();
+            //        }
+            //        addressResults.AddRange(p.Result);
+            //    });
+            //    tasks.Add(task);
 
-            }
+            //}
 
-            try
-            {
-                Task.WaitAll(tasks.ToArray());
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    Task.WaitAll(tasks.ToArray());
+            //}
+            //catch (Exception e)
+            //{
                 
-            }
+            //}
 
-            Console.WriteLine("Done");
-            //Console.ReadLine();
+            //Console.WriteLine("Done");
+            ////Console.ReadLine();
 
-            var addressRepo = container.GetObject<IAddressRepository>();
+            //var addressRepo = container.GetObject<IAddressRepository>();
 
-            addressRepo.AddAsync(addressResults.ToArray()).Wait();
-            Console.WriteLine("save Done");
+            //addressRepo.AddAsync(addressResults.ToArray()).Wait();
+            //Console.WriteLine("save Done");
         }
 
-        public static async Task<IEnumerable<AddressResult>> GetAddresses(string asset)
-        {
-            var webRequest = (HttpWebRequest)WebRequest.Create(string.Format("https://api.coinprism.com/v1/assets/{0}/owners", asset));
-            webRequest.Method = "GET";
-            webRequest.ContentType = "application/x-www-form-urlencoded";
-            var webResponse = await webRequest.GetResponseAsync();
-            using (var receiveStream = webResponse.GetResponseStream())
-            {
-                using (var sr = new StreamReader(receiveStream))
-                {
-                    var t =
-                        Newtonsoft.Json.JsonConvert.DeserializeObject<CoinprismAssetContract>(await sr.ReadToEndAsync());
-                    return t.owners.Select(p=>new AddressResult
-                    {
-                        ColoredAddress = GetColoredAddress(p.Address).ToString()
-                    });
-                }
-            }
-        }
-
-        public class AddressResult:IAddress
-        {
-            private sealed class AddressColoredAddressEqualityComparer : IEqualityComparer<AddressResult>
-            {
-                public bool Equals(AddressResult x, AddressResult y)
-                {
-                    if (ReferenceEquals(x, y)) return true;
-                    if (ReferenceEquals(x, null)) return false;
-                    if (ReferenceEquals(y, null)) return false;
-                    if (x.GetType() != y.GetType()) return false;
-                    return string.Equals(x.ColoredAddress, y.ColoredAddress) && string.Equals(x.ColoredAddress, y.ColoredAddress);
-                }
-
-                public int GetHashCode(AddressResult obj)
-                {
-                    unchecked
-                    {
-                        return ((obj.ColoredAddress != null ? obj.ColoredAddress.GetHashCode() : 0)*397) ^ (obj.ColoredAddress != null ? obj.ColoredAddress.GetHashCode() : 0);
-                    }
-                }
-            }
-
-            private static readonly IEqualityComparer<AddressResult> AddressColoredAddressComparerInstance = new AddressColoredAddressEqualityComparer();
-
-            public static IEqualityComparer<AddressResult> AddressColoredAddressComparer
-            {
-                get { return AddressColoredAddressComparerInstance; }
-            }
-
-            public string ColoredAddress { get; set; }
-
-        }
+        //public static async Task<IEnumerable<AddressResult>> GetAddresses(string asset)
+        //{
+        //    var webRequest = (HttpWebRequest)WebRequest.Create(string.Format("https://api.coinprism.com/v1/assets/{0}/owners", asset));
+        //    webRequest.Method = "GET";
+        //    webRequest.ContentType = "application/x-www-form-urlencoded";
+        //    var webResponse = await webRequest.GetResponseAsync();
+        //    using (var receiveStream = webResponse.GetResponseStream())
+        //    {
+        //        using (var sr = new StreamReader(receiveStream))
+        //        {
+        //            var t =
+        //                Newtonsoft.Json.JsonConvert.DeserializeObject<CoinprismAssetContract>(await sr.ReadToEndAsync());
+        //            return t.owners.Select(p=>new AddressResult
+        //            {
+        //                ColoredAddress = GetColoredAddress(p.Address).ToString()
+        //            });
+        //        }
+        //    }
+        //}
 
         public static BitcoinColoredAddress GetColoredAddress(string legacyAddress)
         {

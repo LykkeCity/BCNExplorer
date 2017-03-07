@@ -76,9 +76,14 @@ namespace AzureRepositories.Binders
             return new AssetBalanceChangesRepository(client.GetDatabase(baseSettings.Db.AssetBalanceChanges.DbName), log);
         }
 
-        public static TransactionCacheRepository CreateTransactionCacheRepository(BaseSettings baseSettings, ILog log)
+        public static TransactionCachedStatusRepository CreateTransactionCacheStatusRepository(BaseSettings baseSettings, ILog log)
         {
-            return new TransactionCacheRepository(new AzureTableStorage<TransactionCacheItemEntity>(baseSettings.Db.AssetsConnString, "TransactionCacheItemEntity", log));
+            return new TransactionCachedStatusRepository(new AzureTableStorage<TransactionCachedStatusEntity>(baseSettings.Db.AssetsConnString, "TransactionCacheStatuses", log));
+        }
+
+        public static TransactionCacheItemRepository CreateTransactionCacheItemRepository(BaseSettings baseSettings, ILog log)
+        {
+            return new TransactionCacheItemRepository(new AzureBlobStorage(baseSettings.Db.AssetsConnString));
         }
 
         public static AzureBlobStorage CreateMainChainBlobStorage(BaseSettings baseSettings, ILog log)

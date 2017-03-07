@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Common.IocContainer;
-using Core.AssetBlockChanges;
-using NBitcoin;
-using Providers;
-using Providers.Helpers;
-using Services.BalanceChanges;
-using Services.MainChain;
-using ITransactionRepository = Core.AssetBlockChanges.ITransactionRepository;
 
 namespace TestConsole
 {

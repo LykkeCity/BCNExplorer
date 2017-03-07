@@ -66,33 +66,24 @@ namespace Providers.Providers.Ninja
             }
         }
     }
-    
-    public class NinjaAddressTransactionList
+
+
+    public class NinjaAddressTransaction : IAddressTransaction
     {
-        public NinjaAddressTransactionList()
-        {
-            AllTransactions = Enumerable.Empty<NinjaAddressTransaction>();
-        }
+        public string TransactionId { get; set; }
+        public bool IsReceived { get; set; }
+        public int? BlockHeight { get; set; }
+        public string Address { get; set; }
 
-        public IEnumerable<NinjaAddressTransaction> AllTransactions { get; set; }
-        
-        public class NinjaAddressTransaction: ITransactionCacheItem
+        public static NinjaAddressTransaction Create(string address, AddressTransactionListItemContract source)
         {
-            public string TransactionId { get; set; }
-            public bool IsReceived { get; set; }
-            public int? BlockHeight { get; set; }
-            public string Address { get; set; }
-
-            public static NinjaAddressTransaction Create(string address, AddressTransactionListItemContract source)
+            return new NinjaAddressTransaction
             {
-                return new NinjaAddressTransaction
-                {
-                    TransactionId = source.TxId,
-                    IsReceived = source.IsReceived(),
-                    BlockHeight = source.Height,
-                    Address = address
-                };
-            }
+                TransactionId = source.TxId,
+                IsReceived = source.IsReceived(),
+                BlockHeight = source.Height,
+                Address = address
+            };
         }
     }
 
@@ -121,7 +112,7 @@ namespace Providers.Providers.Ninja
             return null;
         }
 
-        public async Task<NinjaAddressTransactionList> GetTransactionsForAddressAsync(string id, int? until = null, int? from = null)
+        public async Task<IEnumerable<IAddressTransaction>> GetTransactionsForAddressAsync(string id, int? until = null, int? from = null)
         {
             var url = $"/balances/{id}";
 
@@ -141,10 +132,7 @@ namespace Providers.Providers.Ninja
             if (result != null)
             {
                 var tx = result.Transactions ?? Enumerable.Empty<AddressTransactionListItemContract>();
-                return new NinjaAddressTransactionList
-                {
-                    AllTransactions = tx.Select(p => NinjaAddressTransactionList.NinjaAddressTransaction.Create(id, p))
-                };
+                return tx.Select(p => NinjaAddressTransaction.Create(id, p));
             }
 
             return null;

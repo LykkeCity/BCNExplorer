@@ -133,7 +133,8 @@
     <Compile Include="Monitoring\ServiceMonitoringRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BalanceReport\SendBalanceReportCommandQueryProducer.cs" />
-    <Compile Include="TransactionCache\TransactionCacheRepository.cs" />
+    <Compile Include="TransactionCache\TransactionCachedStatusRepository.cs" />
+    <Compile Include="TransactionCache\TransactionCacheItemRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
