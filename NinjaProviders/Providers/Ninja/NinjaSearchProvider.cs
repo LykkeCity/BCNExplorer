@@ -27,10 +27,10 @@ namespace Providers.Providers.Ninja
             {
                 return SearchResultType.Transaction;
             }
-            if (IsAddress(responce))
-            {
-                return SearchResultType.Address;
-            }
+            //if (IsAddress(responce))
+            //{
+            //    return SearchResultType.Address;
+            //}
 
             return null;
         }
