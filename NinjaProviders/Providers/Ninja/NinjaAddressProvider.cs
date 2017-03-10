@@ -114,30 +114,40 @@ namespace Providers.Providers.Ninja
 
         public async Task<IEnumerable<IAddressTransaction>> GetTransactionsForAddressAsync(string id, int? until = null, int? from = null)
         {
-            var url = $"/balances/{id}";
-
-            if (until != null || from != null)
+            var baseUrl = $"/balances/{id}";
+            string continuationToken = null;
+            var result = new List<IAddressTransaction>();
+            do
             {
-                var queryParams = new
+                var url = baseUrl;
+                if (until != null || from != null || continuationToken != null)
                 {
-                    until = until,
-                    from = from
-                };
-                
-                url += "?" + queryParams.ToUrlParamString();
-            }
+                    var queryParams = new
+                    {
+                        until = until,
+                        from = from,
+                        continuation = continuationToken
+                    };
 
-            var result =  await _blockChainReader.GetAsync<AddressTransactionListContract>(url);
+                    url += "?" + queryParams.ToUrlParamString();
+                }
 
-            if (result != null)
-            {
-                var tx = result.Transactions ?? Enumerable.Empty<AddressTransactionListItemContract>();
-                return tx.Select(p => NinjaAddressTransaction.Create(id, p));
-            }
+                var resp = await _blockChainReader.GetAsync<AddressTransactionListContract>(url);
 
-            return null;
+                if (resp != null)
+                {
+                    continuationToken = resp.ContinuationToken;
+                    var tx = resp.Transactions ?? Enumerable.Empty<AddressTransactionListItemContract>();
+                    result.AddRange(tx.Select(p => NinjaAddressTransaction.Create(id, p)));
+                }
+                else
+                {
+                    return null;
+                }
+            } while (!string.IsNullOrEmpty(continuationToken));
+
+            return result;
         }
-
 
 
         public async Task<NinjaAddressSummary> GetAddressBalanceAsync(string id, int? at, bool colored)

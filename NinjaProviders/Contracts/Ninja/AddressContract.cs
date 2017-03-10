@@ -21,6 +21,9 @@ namespace Providers.Contracts.Ninja
 
     public class AddressTransactionListContract
     {
+        [JsonProperty("continuation")]
+        public string ContinuationToken { get; set; }
+
         [JsonProperty("operations")]
         public AddressTransactionListItemContract[] Transactions { get; set; }
     }
