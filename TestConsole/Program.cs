@@ -35,7 +35,7 @@ namespace TestConsole
             //AddAssetDefinitionsHistory.Run(container).Wait();
             //CopyMongoData.Run(container).Wait();
             //Pdf.Run(container).Wait();
-            PDFReports.Run(container).Wait();
+            ParseBlock.Run(container).Wait();
         }
 
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)
