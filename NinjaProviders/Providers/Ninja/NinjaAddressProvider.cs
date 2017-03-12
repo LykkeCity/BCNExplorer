@@ -80,7 +80,7 @@ namespace Providers.Providers.Ninja
             {
                 Transactions = transactions,
                 ContinuationToken = continuationToken,
-                FullLoaded = !string.IsNullOrEmpty(continuationToken)
+                FullLoaded = string.IsNullOrEmpty(continuationToken)
             };
         }
 
@@ -160,6 +160,7 @@ namespace Providers.Providers.Ninja
             {
                 var tx = resp.Transactions ?? Enumerable.Empty<AddressTransactionListItemContract>();
                 transactions.AddRange(tx.Select(p => NinjaAddressTransaction.Create(id, p)));
+                continuationToken = resp.ContinuationToken;
             }
             else
             {
