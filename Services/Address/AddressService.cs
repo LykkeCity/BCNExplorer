@@ -41,6 +41,7 @@ namespace Services.Address
         public IEnumerable<Core.AddressService.IAddressTransaction> All { get; set; }
         public IEnumerable<Core.AddressService.IAddressTransaction> Send { get; set; }
         public IEnumerable<Core.AddressService.IAddressTransaction> Received { get; set; }
+        public bool FullLoaded { get; set; }
 
         public AddressTransactions()
         {
@@ -208,29 +209,28 @@ namespace Services.Address
         public async Task<IAddressTransactions> GetTransactions(string id)
         {
             var mainChain = _cachedMainChainService.GetMainChainAsync();
-            var lastCached = _transactionCacheStatusRepository.GetAsync(id);
+            var cacheStatus = _transactionCacheStatusRepository.GetAsync(id);
 
-            await Task.WhenAll(mainChain, lastCached);
+            await Task.WhenAll(mainChain, cacheStatus);
 
-            var cacheIsExpired = lastCached.Result == null ||
-                                 lastCached.Result.BlockHeight < mainChain.Result.Tip.Height;
-
-
-            var cachedTxs = lastCached.Result != null ? 
+            var cacheIsExpired = cacheStatus.Result == null ||
+                                 cacheStatus.Result.BlockHeight < mainChain.Result.Tip.Height;
+            
+            var cachedTxs = cacheStatus.Result != null ? 
                 _transactionCacheItemRepository.GetAsync(id) : 
                 Task.FromResult(Enumerable.Empty<IAddressTransaction>());
 
-            var notCachedTxs = cacheIsExpired ? 
-                _ninjaAddressProvider.GetTransactionsForAddressAsync(id, until: lastCached.Result?.BlockHeight) : 
-                Task.FromResult(Enumerable.Empty<IAddressTransaction>());
+            var notCachedTxsResp = cacheIsExpired ? 
+                _ninjaAddressProvider.GetTransactionsForAddressAsync(id, until: cacheStatus.Result?.BlockHeight) : 
+                Task.FromResult(NinjaAddressTransactionsResponce.CreateMock(cacheStatus.Result?.FullLoaded ?? true));
 
-            await Task.WhenAll(cachedTxs, notCachedTxs);
+            await Task.WhenAll(cachedTxs, notCachedTxsResp);
 
-            var allTx = notCachedTxs.Result.Union(cachedTxs.Result).ToList();
+            var allTx = notCachedTxsResp.Result.Transactions.Union(cachedTxs.Result).ToList();
 
-            if (cacheIsExpired && notCachedTxs.Result.Any())
+            if (cacheIsExpired && notCachedTxsResp.Result.Transactions.Any())
             {
-                var setStatus = _transactionCacheStatusRepository.SetAsync(id, mainChain.Result.Tip.Height);
+                var setStatus = _transactionCacheStatusRepository.SetAsync(id, mainChain.Result.Tip.Height, notCachedTxsResp.Result.FullLoaded);
                 var updateData = _transactionCacheItemRepository.SetAsync(id, allTx);
 
                 await Task.WhenAll(setStatus, updateData);
@@ -240,7 +240,8 @@ namespace Services.Address
             {
                 All = allTx.Select(AddressTransaction.Create).Distinct(AddressTransaction.TransactionIdComparer),
                 Received = allTx.Where(p => p.IsReceived).Select(AddressTransaction.Create).Distinct(AddressTransaction.TransactionIdComparer),
-                Send = allTx.Where(p => !p.IsReceived).Select(AddressTransaction.Create).Distinct(AddressTransaction.TransactionIdComparer)
+                Send = allTx.Where(p => !p.IsReceived).Select(AddressTransaction.Create).Distinct(AddressTransaction.TransactionIdComparer),
+                FullLoaded = notCachedTxsResp.Result.FullLoaded
             };
         }
     }

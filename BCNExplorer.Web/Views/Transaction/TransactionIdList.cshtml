@@ -8,7 +8,17 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
-                    <h3>Transactions <span><span class="js-loaded-tx-count">0</span> of @Model.TotalItems</span> </h3>
+                    <h3>
+                        Transactions <span>
+                            <span class="js-loaded-tx-count">0</span>
+                            @if (Model.FullLoaded)
+                            {
+                                <span>
+                                    of @Model.TotalItems
+                                </span>
+                            }
+                        </span>
+                    </h3>
                 </div>
             </div>
         </div>
@@ -19,7 +29,7 @@
         {
             <li class="hidden transactions-container js-transactions-container"
                 data-page="@page"
-                data-transaction-ids="@Json.Encode(Model.GetPage(page).ToArray())" data-load-url="@Url.Action("List", "Transaction")">
+                data-transaction-ids="@Model.GetPage(page).ToArray().ToJson()" data-load-url="@Url.Action("List", "Transaction")">
 
                 @if (Model.CurrentPage != page)
                 {

@@ -67,7 +67,32 @@ namespace Providers.Providers.Ninja
         }
     }
 
+    public class NinjaAddressTransactionsResponce
+    {
+        public IEnumerable<IAddressTransaction> Transactions { get; set; }
+        public string ContinuationToken { get; set; }
+        public bool FullLoaded { get; set; }
 
+        public static NinjaAddressTransactionsResponce Create(IEnumerable<IAddressTransaction> transactions,
+            string continuationToken)
+        {
+            return new NinjaAddressTransactionsResponce
+            {
+                Transactions = transactions,
+                ContinuationToken = continuationToken,
+                FullLoaded = !string.IsNullOrEmpty(continuationToken)
+            };
+        }
+
+        public static NinjaAddressTransactionsResponce CreateMock(bool fullLoaded)
+        {
+            return new NinjaAddressTransactionsResponce
+            {
+                Transactions = Enumerable.Empty<IAddressTransaction>(),
+                FullLoaded = fullLoaded
+            };
+        }
+    }
     public class NinjaAddressTransaction : IAddressTransaction
     {
         public string TransactionId { get; set; }
@@ -112,41 +137,36 @@ namespace Providers.Providers.Ninja
             return null;
         }
 
-        public async Task<IEnumerable<IAddressTransaction>> GetTransactionsForAddressAsync(string id, int? until = null, int? from = null)
+        public async Task<NinjaAddressTransactionsResponce> GetTransactionsForAddressAsync(string id, int? until = null, int? from = null, string continuationToken = null)
         {
             var baseUrl = $"/balances/{id}";
-            string continuationToken = null;
-            var result = new List<IAddressTransaction>();
-            do
+            var transactions = new List<NinjaAddressTransaction>();
+            var url = baseUrl;
+            if (until != null || from != null || continuationToken != null)
             {
-                var url = baseUrl;
-                if (until != null || from != null || continuationToken != null)
+                var queryParams = new
                 {
-                    var queryParams = new
-                    {
-                        until = until,
-                        from = from,
-                        continuation = continuationToken
-                    };
+                    until = until,
+                    from = from,
+                    continuation = continuationToken
+                };
 
-                    url += "?" + queryParams.ToUrlParamString();
-                }
+                url += "?" + queryParams.ToUrlParamString();
+            }
 
-                var resp = await _blockChainReader.GetAsync<AddressTransactionListContract>(url);
+            var resp = await _blockChainReader.GetAsync<AddressTransactionListContract>(url);
 
-                if (resp != null)
-                {
-                    continuationToken = resp.ContinuationToken;
-                    var tx = resp.Transactions ?? Enumerable.Empty<AddressTransactionListItemContract>();
-                    result.AddRange(tx.Select(p => NinjaAddressTransaction.Create(id, p)));
-                }
-                else
-                {
-                    return null;
-                }
-            } while (!string.IsNullOrEmpty(continuationToken));
+            if (resp != null)
+            {
+                var tx = resp.Transactions ?? Enumerable.Empty<AddressTransactionListItemContract>();
+                transactions.AddRange(tx.Select(p => NinjaAddressTransaction.Create(id, p)));
+            }
+            else
+            {
+                return null;
+            }
 
-            return result;
+            return NinjaAddressTransactionsResponce.Create(transactions, continuationToken);
         }
 
 

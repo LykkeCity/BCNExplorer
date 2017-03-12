@@ -23,15 +23,17 @@ namespace AzureRepositories.TransactionCache
 
         public int BlockHeight { get; set; }
         public string Address { get; set; }
+        public bool FullLoaded { get; set; }
 
-        public static TransactionCachedStatusEntity Create(string address, int blockHeight)
+        public static TransactionCachedStatusEntity Create(string address, int blockHeight, bool fullLoaded)
         {
             return new TransactionCachedStatusEntity
             {
                 PartitionKey = GeneratePartitionKey(),
                 RowKey = GenerateRowKey(address),
                 Address = address,
-                BlockHeight = blockHeight
+                BlockHeight = blockHeight,
+                FullLoaded = fullLoaded
             };
         }
     }
@@ -52,9 +54,9 @@ namespace AzureRepositories.TransactionCache
                 TransactionCachedStatusEntity.GenerateRowKey(address));
         }
 
-        public Task SetAsync(string address, int blockHeight)
+        public Task SetAsync(string address, int blockHeight, bool fullLoaded)
         {
-            return _tableStorage.InsertOrReplaceAsync(TransactionCachedStatusEntity.Create(address, blockHeight));
+            return _tableStorage.InsertOrReplaceAsync(TransactionCachedStatusEntity.Create(address, blockHeight, fullLoaded));
         }
     }
 }

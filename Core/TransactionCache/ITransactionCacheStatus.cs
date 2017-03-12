@@ -10,11 +10,12 @@ namespace Core.TransactionCache
     {
         int BlockHeight { get; }
         string Address { get; }
+        bool FullLoaded { get; }
     }
 
     public interface ITransactionCacheStatusRepository
     {
         Task<ITransactionCacheStatus> GetAsync(string address);
-        Task SetAsync(string address, int blockHeight);
+        Task SetAsync(string address, int blockHeight, bool fullLoaded);
     }
 }

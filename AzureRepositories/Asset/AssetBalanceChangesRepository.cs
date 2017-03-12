@@ -242,7 +242,6 @@ namespace AzureRepositories.AssetCoinHolders
     [BsonIgnoreExtraElements]
     public class AddressAssetBalanceChangeMongoEntity
     {
-
         public static string CollectionName => "block-changes";
 
         public AddressAssetBalanceChangeMongoEntity()

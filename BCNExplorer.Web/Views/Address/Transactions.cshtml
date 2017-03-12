@@ -7,9 +7,39 @@
     <div class="container">
         <div class="mobile-scroll">
             <div class="tabs_stack pull-right js-tx-toggle-container">
-                <div class="tab_item js-tab_item tab_item--active"><a class="tab_item__link js-tx-toggle" href="#js-all-tx">All · @Model.AllTransactionIdList.TotalItems</a></div>
-                <div class="tab_item js-tab_item"><a class="tab_item__link js-tx-toggle" href="#js-send-tx">Send · @Model.SendTransactionIdList.TotalItems</a></div>
-                <div class="tab_item js-tab_item"><a class="tab_item__link js-tx-toggle" href="#js-received-tx">Received  · @Model.ReceivedTransactionIdList.TotalItems</a></div>
+                <div class="tab_item js-tab_item tab_item--active">
+                    <a class="tab_item__link js-tx-toggle" href="#js-all-tx">
+                        All
+                        @if (Model.FullLoaded)
+                        {
+                            <span>
+                                · @Model.AllTransactionIdList.TotalItems
+                            </span>
+                        }
+                    </a>
+                </div>
+                <div class="tab_item js-tab_item">
+                    <a class="tab_item__link js-tx-toggle" href="#js-send-tx">
+                        Send 
+                        @if (Model.FullLoaded)
+                        {
+                            <span>
+                                · @Model.SendTransactionIdList.TotalItems
+                            </span>
+                        }
+                    </a>
+                </div>
+                <div class="tab_item js-tab_item">
+                    <a class="tab_item__link js-tx-toggle" href="#js-received-tx">
+                        Received 
+                        @if (Model.FullLoaded)
+                        {
+                            <span>
+                                · @Model.ReceivedTransactionIdList.TotalItems
+                            </span>
+                        }
+                    </a>
+                </div>
             </div>
         </div>
     </div>

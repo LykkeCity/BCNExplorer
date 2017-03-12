@@ -32,6 +32,7 @@ namespace Core.AddressService
         IEnumerable<IAddressTransaction> All { get; }
         IEnumerable<IAddressTransaction> Send { get; }
         IEnumerable<IAddressTransaction> Received { get; }
+        bool FullLoaded { get; }
     }
 
     public interface IAddressTransaction
