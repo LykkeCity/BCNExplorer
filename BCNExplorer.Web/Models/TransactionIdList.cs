@@ -31,10 +31,9 @@ namespace BCNExplorer.Web.Models
 
         private IEnumerable<int> GetPages()
         {
-            var totalPages = TotalPages;
-            if (totalPages <= MaxItemsToShow)
+            if (TotalItems <= MaxItemsToShow)
             {
-                return Enumerable.Range(1, totalPages);
+                return Enumerable.Range(1, TotalPages);
             }
             else
             {
