@@ -232,7 +232,7 @@ namespace Services.Address
 
             if (cacheIsExpired && notCachedTxsResp.Result.Transactions.Any())
             {
-                var setStatus = _transactionCacheStatusRepository.SetAsync(id, mainChain.Result.Tip.Height, fullLoaded);
+                var setStatus = _transactionCacheStatusRepository.SetAsync(id, mainChain.Result.Tip.Height - 6, fullLoaded);
                 var updateData = _transactionCacheItemRepository.SetAsync(id, allTx);
 
                 await Task.WhenAll(setStatus, updateData);
