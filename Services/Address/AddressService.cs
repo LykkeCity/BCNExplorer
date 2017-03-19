@@ -232,7 +232,7 @@ namespace Services.Address
 
             if (cacheIsExpired && notCachedTxsResp.Result.Transactions.Any())
             {
-                var setStatus = _transactionCacheStatusRepository.SetAsync(id, mainChain.Result.Tip.Height, cacheStatus.Result?.FullLoaded ?? notCachedTxsResp.Result.FullLoaded);
+                var setStatus = _transactionCacheStatusRepository.SetAsync(id, mainChain.Result.Tip.Height, fullLoaded);
                 var updateData = _transactionCacheItemRepository.SetAsync(id, allTx);
 
                 await Task.WhenAll(setStatus, updateData);
@@ -243,7 +243,7 @@ namespace Services.Address
                 All = allTx.Select(AddressTransaction.Create).Distinct(AddressTransaction.TransactionIdComparer),
                 Received = allTx.Where(p => p.IsReceived).Select(AddressTransaction.Create).Distinct(AddressTransaction.TransactionIdComparer),
                 Send = allTx.Where(p => !p.IsReceived).Select(AddressTransaction.Create).Distinct(AddressTransaction.TransactionIdComparer),
-                FullLoaded = cacheStatus.Result?.FullLoaded ?? notCachedTxsResp.Result.FullLoaded
+                FullLoaded = fullLoaded
             };
         }
     }
