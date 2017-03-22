@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.SessionState;
 using BCNExplorer.Web.Models;
+using Core.Asset;
 using Core.Block;
 using Core.SearchService;
 using Services.Search;
@@ -13,11 +15,15 @@ namespace BCNExplorer.Web.Controllers
     {
         private readonly ISearchService _searchService;
         private readonly IBlockService _blockService;
+        private readonly IAssetService _assetService;
 
-        public SearchController(ISearchService searchService, IBlockService blockService)
+        public SearchController(ISearchService searchService, 
+            IBlockService blockService, 
+            IAssetService assetService)
         {
             _searchService = searchService;
             _blockService = blockService;
+            _assetService = assetService;
         }
 
         [Route("search")]
@@ -41,7 +47,8 @@ namespace BCNExplorer.Web.Controllers
                 }
                 case SearchResultType.Asset:
                 {
-                    return RedirectToAction("Index", "Asset", new { id = id });
+                    var asset = await _assetService.GetAssetAsync(id);
+                    return RedirectToAction("Index", "Asset", new { id = asset.AssetIds.First() });
                 }
                 default:
                 {
