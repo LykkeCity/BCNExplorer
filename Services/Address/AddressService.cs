@@ -257,15 +257,15 @@ namespace Services.Address
             //TODO check why
             if (_baseSettings.GetTopFromNinja)
             {
-                var mainChain = await _cachedMainChainService.GetMainChainAsync();
-
-                return mainChain.Tip.Height;
-            }
-            else
-            {
                 var tip = await _blockService.GetLastBlockHeaderAsync();
 
                 return tip.Height;
+            }
+            else
+            {
+                var mainChain = await _cachedMainChainService.GetMainChainAsync();
+
+                return mainChain.Tip.Height;
             }
         }
     }
