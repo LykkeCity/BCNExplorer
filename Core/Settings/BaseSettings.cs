@@ -37,6 +37,8 @@ namespace Core.Settings
 
         public bool DisableRedirectToHttps { get; set; }
 
+        public bool GetTopFromNinja { get; set; }
+
         [Required]
         public EmailGeneratorSettings EmalGeneratorSettings { get; set; }
 

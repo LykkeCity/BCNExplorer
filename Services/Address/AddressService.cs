@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Core.AddressService;
+using Core.Block;
 using Core.Settings;
 using Core.TransactionCache;
 using NBitcoin;
@@ -102,19 +103,22 @@ namespace Services.Address
         private readonly ITransactionCacheItemRepository _transactionCacheItemRepository;
         private readonly ITransactionCacheStatusRepository _transactionCacheStatusRepository;
         private readonly CachedMainChainService _cachedMainChainService;
+        private readonly IBlockService _blockService;
         private readonly BaseSettings _baseSettings;
 
         public AddressService(NinjaAddressProvider ninjaAddressProvider, 
             ITransactionCacheItemRepository transactionCacheItemRepository, 
             ITransactionCacheStatusRepository transactionCacheStatusRepository, 
             CachedMainChainService cachedMainChainService, 
-            BaseSettings baseSettings)
+            BaseSettings baseSettings, 
+            IBlockService blockService)
         {
             _ninjaAddressProvider = ninjaAddressProvider;
             _transactionCacheItemRepository = transactionCacheItemRepository;
             _transactionCacheStatusRepository = transactionCacheStatusRepository;
             _cachedMainChainService = cachedMainChainService;
             _baseSettings = baseSettings;
+            _blockService = blockService;
         }
 
         public async Task<IAddressBalance> GetBalanceAsync(string id, int? at = null)
@@ -208,13 +212,13 @@ namespace Services.Address
 
         public async Task<IAddressTransactions> GetTransactions(string id)
         {
-            var mainChain = _cachedMainChainService.GetMainChainAsync();
+            var lastBlockHeight = GetTipAsync();
             var cacheStatus = _transactionCacheStatusRepository.GetAsync(id);
 
-            await Task.WhenAll(mainChain, cacheStatus);
+            await Task.WhenAll(lastBlockHeight, cacheStatus);
 
             var cacheIsExpired = cacheStatus.Result == null ||
-                                 cacheStatus.Result.BlockHeight < mainChain.Result.Tip.Height;
+                                 cacheStatus.Result.BlockHeight < lastBlockHeight.Result;
             
             var cachedTxs = cacheStatus.Result != null ? 
                 _transactionCacheItemRepository.GetAsync(id) : 
@@ -232,7 +236,7 @@ namespace Services.Address
 
             if (cacheIsExpired && notCachedTxsResp.Result.Transactions.Any())
             {
-                var setStatus = _transactionCacheStatusRepository.SetAsync(id, mainChain.Result.Tip.Height - 6, fullLoaded);
+                var setStatus = _transactionCacheStatusRepository.SetAsync(id, lastBlockHeight.Result - 6, fullLoaded);
                 var updateData = _transactionCacheItemRepository.SetAsync(id, allTx);
 
                 await Task.WhenAll(setStatus, updateData);
@@ -245,6 +249,24 @@ namespace Services.Address
                 Send = allTx.Where(p => !p.IsReceived).Select(AddressTransaction.Create).Distinct(AddressTransaction.TransactionIdComparer),
                 FullLoaded = fullLoaded
             };
+        }
+
+        private async Task<int> GetTipAsync()
+        {
+            //getting cached chain on test net doesnt seem to work properly
+            //TODO check why
+            if (_baseSettings.GetTopFromNinja)
+            {
+                var mainChain = await _cachedMainChainService.GetMainChainAsync();
+
+                return mainChain.Tip.Height;
+            }
+            else
+            {
+                var tip = await _blockService.GetLastBlockHeaderAsync();
+
+                return tip.Height;
+            }
         }
     }
 }
