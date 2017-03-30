@@ -96,6 +96,7 @@
     <Compile Include="BlockChainReader\AssetReader.cs" />
     <Compile Include="BlockChainReader\NinjaBlockChainReader.cs" />
     <Compile Include="Contracts\AssetDefinition\AssetContract.cs" />
+    <Compile Include="Contracts\BtcBalance\BalanceViewModelContract.cs" />
     <Compile Include="Contracts\Lykke.API\Contracts.cs" />
     <Compile Include="Contracts\Ninja\BlockContract.cs" />
     <Compile Include="Contracts\Ninja\TransactionContract.cs" />

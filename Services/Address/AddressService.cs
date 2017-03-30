@@ -8,7 +8,10 @@ using Core.AddressService;
 using Core.Block;
 using Core.Settings;
 using Core.TransactionCache;
+using Flurl;
+using Flurl.Http;
 using NBitcoin;
+using Providers.Contracts.BtcBalance;
 using Providers.Helpers;
 using Providers.Providers.Ninja;
 using Services.MainChain;
@@ -16,14 +19,8 @@ using IAddressTransaction = Core.TransactionCache.IAddressTransaction;
 
 namespace Services.Address
 {
-    public class AddressMainInfo : IAddressMainInfo
-    {
-        public string AddressId { get; set; }
-        public string UncoloredAddress { get; set; }
-        public string ColoredAddress { get; set; }
-        public bool IsColored { get; set; }
-    }
-    public class AddressBalance:IAddressBalance
+
+    public class AddressBalance : IAddressBalance
     {
         public string AddressId { get; set; }
         public int TotalTransactions { get; set; }
@@ -36,6 +33,23 @@ namespace Services.Address
             ColoredBalances = Enumerable.Empty<IColoredBalance>();
         }
     }
+
+    public class ColoredBalance : IColoredBalance
+    {
+        public string AssetId { get; set; }
+        public double Quantity { get; set; }
+        public double UnconfirmedQuantityDelta { get; set; }
+    }
+
+    public class AddressMainInfo : IAddressMainInfo
+    {
+        public string AddressId { get; set; }
+        public string UncoloredAddress { get; set; }
+        public string ColoredAddress { get; set; }
+        public bool IsColored { get; set; }
+    }
+
+
 
     public class AddressTransactions : IAddressTransactions
     {
@@ -52,12 +66,6 @@ namespace Services.Address
         }
     }
 
-    public class ColoredBalance:IColoredBalance
-    {
-        public string AssetId { get; set; }
-        public double Quantity { get; set; }
-        public double UnconfirmedQuantityDelta { get; set; }
-    }
 
     public class AddressTransaction : Core.AddressService.IAddressTransaction
     {
@@ -121,50 +129,6 @@ namespace Services.Address
             _blockService = blockService;
         }
 
-        public async Task<IAddressBalance> GetBalanceAsync(string id, int? at = null)
-        {
-            var coloredSummary =  await _ninjaAddressProvider.GetAddressBalanceAsync(id, at, colored: true);
-
-            if (coloredSummary != null )
-            {
-                var result = new AddressBalance
-                {
-                    AddressId = id,
-                    BtcBalance = coloredSummary.Confirmed.Balance,
-                    TotalTransactions = coloredSummary.Confirmed.TotalTransactions,
-                    UnconfirmedBalanceDelta = coloredSummary.Unconfirmed?.Balance ?? 0
-                };
-                var unconfirmedAssets = coloredSummary.Unconfirmed?.Assets ?? Enumerable.Empty<NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary>();
-
-                foreach (var assetSummary in unconfirmedAssets.Where(p => !coloredSummary.Confirmed.Assets.Select(x=>x.AssetId).Contains(p.AssetId))) //assets with 0
-                {
-                    coloredSummary.Confirmed.Assets.Add(new NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary
-                    {
-                        AssetId = assetSummary.AssetId
-                    });
-                }
-
-                result.ColoredBalances = coloredSummary.Confirmed.Assets.Select(p =>
-                {
-                    var coloredBalance = new ColoredBalance
-                    {
-                        AssetId = p.AssetId,
-                        Quantity = p.Quantity
-                    };
-                    var unconfirmedAsset = unconfirmedAssets?.FirstOrDefault(ua => ua.AssetId == coloredBalance.AssetId);
-                    if (unconfirmedAsset != null)
-                    {
-                        coloredBalance.UnconfirmedQuantityDelta = unconfirmedAsset.Quantity;
-                    }
-
-                    return coloredBalance;
-                });
-                
-                return result;
-            }
-
-            return null;
-        }
 
         public async Task<IAddressMainInfo> GetMainInfoAsync(string id)
         {
@@ -249,6 +213,59 @@ namespace Services.Address
                 Send = allTx.Where(p => !p.IsReceived).Select(AddressTransaction.Create).Distinct(AddressTransaction.TransactionIdComparer),
                 FullLoaded = fullLoaded
             };
+        }
+
+        public async Task<IAddressBalance> GetBalanceAsync(string address, int? at = null)
+        {
+            var requestUrl = _baseSettings.BtcBalancesServiceUrl.AppendPathSegment($"balances/{address}/summary");
+
+            if (at != null)
+            {
+                requestUrl.QueryParams.Add("at", at);
+            }
+
+            var coloredSummary = await requestUrl.GetAsync().ReceiveJson<BalanceViewModelContract>();
+
+
+            if (coloredSummary?.Data != null)
+            {
+                var result = new AddressBalance
+                {
+                    AddressId = address,
+                    BtcBalance = coloredSummary.Data.Confirmed.Balance,
+                    TotalTransactions = coloredSummary.Data.Confirmed.TotalTransactions,
+                    UnconfirmedBalanceDelta = coloredSummary.Data.Unconfirmed?.Balance ?? 0
+                };
+                var unconfirmedAssets = coloredSummary.Data.Unconfirmed?.Assets ?? Enumerable.Empty<AddressAssetContract>();
+
+                foreach (var assetSummary in unconfirmedAssets.Where(p => !coloredSummary.Data.Confirmed.Assets.Select(x => x.AssetId).Contains(p.AssetId))) //assets with 0
+                {
+                    coloredSummary.Data.Confirmed.Assets.Add(new AddressAssetContract
+                    {
+                        AssetId = assetSummary.AssetId
+                    });
+                }
+
+                result.ColoredBalances = coloredSummary.Data.Confirmed.Assets.Select(p =>
+                {
+                    var coloredBalance = new ColoredBalance
+                    {
+                        AssetId = p.AssetId,
+                        Quantity = p.Quantity
+                    };
+                    var unconfirmedAsset = unconfirmedAssets?.FirstOrDefault(ua => ua.AssetId == coloredBalance.AssetId);
+                    if (unconfirmedAsset != null)
+                    {
+                        coloredBalance.UnconfirmedQuantityDelta = unconfirmedAsset.Quantity;
+                    }
+
+                    return coloredBalance;
+                });
+
+                return result;
+            }
+
+            return null;
         }
 
         private async Task<int> GetTipAsync()
