@@ -16,6 +16,8 @@ A website explores the blockchain and shows information about blocks, transactio
 
 ```
 {
+
+	"BtcBalancesServiceUrl": "http://52.178.105.30/",
     "NinjaUrl": "",
 	"Db": {
 		"LogsConnString":"",
@@ -61,6 +63,7 @@ A website explores the blockchain and shows information about blocks, transactio
 }
 ```
 * Keys description
+  *  BtcBalancesServiceUrl - wrapper to Nbitcoin ninja to retrieve balances
   *  NinjaUrl - NbitCoin Ninja (https://github.com/MetacoSA/NBitcoin) instance with blockchain core information
   *  LogsConnString - Connection string that points to the table storage with logging information
   *  AssetsConnString - Connection string that points to the table storage with asset definition information
@@ -74,3 +77,4 @@ A website explores the blockchain and shows information about blocks, transactio
   * Secret - secret, used in requests to index bcn exploler
   * ServiceBusEmailSettings - settings for email sender service
   * EmalGeneratorSettings - settings for email generation. EmailTemplatesHost - service stored email templates for various types of email(BalanceReporting mail etc)
+  
