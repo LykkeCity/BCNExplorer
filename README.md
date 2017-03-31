@@ -17,7 +17,7 @@ A website explores the blockchain and shows information about blocks, transactio
 ```
 {
 
-	"BtcBalancesServiceUrl": "http://52.178.105.30/",
+	"BtcBalancesServiceUrl": "",
     "NinjaUrl": "",
 	"Db": {
 		"LogsConnString":"",
