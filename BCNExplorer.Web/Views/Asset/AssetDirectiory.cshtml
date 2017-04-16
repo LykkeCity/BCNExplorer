@@ -73,52 +73,53 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table--simple table_asstes">
+                    <table ng-show="assetsToShow().length != 0" class="table table--simple table_asstes">
                         <tbody>
-                            <tr>
-                                <th class="_asset">Asset and address</th>
-                                <th class="issuer">Issuer</th>
-                                <th class="ticker">Ticker</th>
-                                <th class="coinholders">Coinholders</th>
-                                <th class="_coins">Coins issued</th>
-                            </tr>
-                            <tr ng-repeat="asset in assetsToShow()">
-                                <td class="issuer">
-                                    <div class="issuer__img">
-                                        <a ng-href="{{detailsUrl(asset)}}">
-                                            <img ng-src="{{asset.IconUrl ? asset.IconUrl:'/img/be/asset_default.jpg'}}" width="48" alt="{{asset.Name}}">
-                                        </a>
-                                    </div>
-                                    
-                                    <div class="issuer__content">
-                                        <div class="issuer__name">
-                                            <a ng-href="{{detailsUrl(asset)}}">{{asset.Name}}</a>
-                                        </div>
-                                        <div class="text-muted">
-                                            <a ng-href="{{detailsUrl(asset)}}">{{asset.AssetIds[0]}}</a>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="check" ng-class="{'check--green': asset.IsVerified, 'check--yellow': !asset.IsVerified}"></span> 
-                                    <a ng-href="{{issuerUrl(asset)}}" ng-show="{{asset.IsVerified}}">
-                                        <span class="ticker_name">{{asset.Issuer}}</span>
+                        <tr>
+                            <th class="_asset">Asset and address</th>
+                            <th class="issuer">Issuer</th>
+                            <th class="ticker">Ticker</th>
+                            <th class="coinholders">Coinholders</th>
+                            <th class="_coins">Coins issued</th>
+                        </tr>
+                        <tr ng-repeat="asset in assetsToShow()">
+                            <td class="issuer">
+                                <div class="issuer__img">
+                                    <a ng-href="{{detailsUrl(asset)}}">
+                                        <img ng-src="{{asset.IconUrl ? asset.IconUrl:'/img/be/asset_default.jpg'}}" width="48" alt="{{asset.Name}}">
                                     </a>
-                                    <span class="ticker_name" ng-show="{{!asset.IsVerified}}">{{asset.Issuer}}</span>
-                                </td>
-                                <td>{{asset.NameShort}}</td>
-                                <td>
-                                    {{asset.CoinholdersCount}}
-                                </td>
-                                <td>
-                                    <div ng-show="asset.TotalColored!=undefined">
-                                        <span>{{asset.TotalColoredDescription}}</span>
-                                        <span>{{asset.NameShort}}</span>
+                                </div>
+                                    
+                                <div class="issuer__content">
+                                    <div class="issuer__name">
+                                        <a ng-href="{{detailsUrl(asset)}}">{{asset.Name}}</a>
                                     </div>
-                                </td>
-                            </tr>
+                                    <div class="text-muted">
+                                        <a ng-href="{{detailsUrl(asset)}}">{{asset.AssetIds[0]}}</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="check" ng-class="{'check--green': asset.IsVerified, 'check--yellow': !asset.IsVerified}"></span> 
+                                <a ng-href="{{issuerUrl(asset)}}" ng-show="{{asset.IsVerified}}">
+                                    <span class="ticker_name">{{asset.Issuer}}</span>
+                                </a>
+                                <span class="ticker_name" ng-show="{{!asset.IsVerified}}">{{asset.Issuer}}</span>
+                            </td>
+                            <td>{{asset.NameShort}}</td>
+                            <td>
+                                {{asset.CoinholdersCount}}
+                            </td>
+                            <td>
+                                <div ng-show="asset.TotalColored!=undefined">
+                                    <span>{{asset.TotalColoredDescription}}</span>
+                                    <span>{{asset.NameShort}}</span>
+                                </div>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
+                    <div ng-show="assetsToShow().length == 0" class="hint_message">No results</div>
                 </div>
             </div>
         </section>
