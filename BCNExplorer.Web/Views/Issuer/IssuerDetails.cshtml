@@ -3,21 +3,6 @@
     ViewBag.Title = "Issuer " + Model.Issuer;
 }
 <div class="page--issuer">
-        @*<div class="page-header">
-            <h2 class="page__title">
-                @Model.Issuer
-                @if (Model.IsVerified)
-                {
-                    <span class="label label--green"><i class="icon icon--check"></i> verified issuer</span>
-                }
-                else
-                {
-                    <span class="label label--yellow"><i class="icon_question"></i> not verified</span>
-                    <span class="label label--yellow"><i class="icon icon--check"></i> Unverified issuer</span>
-                }
-            </h2>
-        </div>*@
-
     <section class="section section--padding">
         <div class="container container--extend">
             <h2>
@@ -54,35 +39,38 @@
                 <table class="table table--simple table_asstes">
                     <tbody>
                         <tr>
-                            <th colspan="2">Asset and address</th>
-                            <th>Ticker</th>
-                            <th class="text-right">Coinholders</th>
-                            <th>Coins issued</th>
+                            <th class="_asset">Asset and address</th>
+                            <th class="ticker">Ticker</th>
+                            <th class="coinholders">Coinholders</th>
+                            <th class="_coins">Coins issued</th>
                         </tr>
 
                         @foreach (var asset in Model.AssetDirectory.Assets)
                         {
                             <tr>
-                                <td class="issuer__img">
-                                    <a href="@Url.Action("Index", "Asset", new {id = asset.AssetIds.FirstOrDefault()})">
-
-                                        <img src="@(!string.IsNullOrEmpty(asset.IconUrl) ? asset.IconUrl : "/img/be/asset_default.jpg")" width="48" alt="">
-                                    </a>
-                                </td>
-                                <td class="issuer__content">
-                                    <div class="issuer__name">
+                                <td>
+                                    <div class="issuer__img">
+                                        
                                         <a href="@Url.Action("Index", "Asset", new {id = asset.AssetIds.FirstOrDefault()})">
-                                            @asset.Name
+
+                                            <img src="@(!string.IsNullOrEmpty(asset.IconUrl) ? asset.IconUrl : "/img/be/asset_default.jpg")" width="48" alt="">
                                         </a>
                                     </div>
-                                    <div class="text-muted">
-                                        <a href="@Url.Action("Index", "Asset", new {id = asset.AssetIds.FirstOrDefault()})">
-                                            @asset.AssetIds.FirstOrDefault()
-                                        </a>
+                                    <div class="issuer__content">
+                                        <div class="issuer__name">
+                                            <a href="@Url.Action("Index", "Asset", new {id = asset.AssetIds.FirstOrDefault()})">
+                                                @asset.Name
+                                            </a>
+                                        </div>
+                                        <div class="text-muted">
+                                            <a href="@Url.Action("Index", "Asset", new {id = asset.AssetIds.FirstOrDefault()})">
+                                                @asset.AssetIds.FirstOrDefault()
+                                            </a>
+                                        </div>
                                     </div>
                                 </td>
                                 <td>@asset.NameShort</td>
-                                <td class="text-right">@asset.CoinholdersCount</td>
+                                <td>@asset.CoinholdersCount</td>
                                 <td>@asset.TotalColoredDescription @asset.NameShort</td>
                             </tr>
                         }

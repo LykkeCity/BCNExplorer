@@ -75,23 +75,27 @@
                     <table class="table table--simple table_asstes">
                         <tbody>
                             <tr>
-                                <th colspan="2">Asset and address</th>
-                                <th>Issuer</th>
-                                <th>Ticker</th>
-                                <th class="text-right">Coinholders</th>
-                                <th>Coins issued</th>
+                                <th class="_asset">Asset and address</th>
+                                <th class="issuer">Issuer</th>
+                                <th class="ticker">Ticker</th>
+                                <th class="coinholders">Coinholders</th>
+                                <th class="_coins">Coins issued</th>
                             </tr>
                             <tr ng-repeat="asset in assetsToShow()">
-                                <td class="issuer__img">
-                                    <a ng-href="{{detailsUrl(asset)}}">
-                                        <img ng-src="{{asset.IconUrl ? asset.IconUrl:'/img/be/asset_default.jpg'}}" width="48" alt="">
-                                    </a></td>
-                                <td class="issuer__content">
-                                    <div class="issuer__name">
-                                        <a ng-href="{{detailsUrl(asset)}}">{{asset.Name}}</a>
+                                <td class="issuer">
+                                    <div class="issuer__img">
+                                        <a ng-href="{{detailsUrl(asset)}}">
+                                            <img ng-src="{{asset.IconUrl ? asset.IconUrl:'/img/be/asset_default.jpg'}}" width="48" alt="{{asset.Name}}">
+                                        </a>
                                     </div>
-                                    <div class="text-muted">
-                                        <a ng-href="{{detailsUrl(asset)}}">{{asset.AssetIds[0]}}</a>
+                                    
+                                    <div class="issuer__content">
+                                        <div class="issuer__name">
+                                            <a ng-href="{{detailsUrl(asset)}}">{{asset.Name}}</a>
+                                        </div>
+                                        <div class="text-muted">
+                                            <a ng-href="{{detailsUrl(asset)}}">{{asset.AssetIds[0]}}</a>
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
@@ -102,7 +106,7 @@
                                     <span class="ticker_name" ng-show="{{!asset.IsVerified}}">{{asset.Issuer}}</span>
                                 </td>
                                 <td>{{asset.NameShort}}</td>
-                                <td class="text-right">
+                                <td>
                                     {{asset.CoinholdersCount}}
                                 </td>
                                 <td>
