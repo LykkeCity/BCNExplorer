@@ -54,56 +54,139 @@
     @RenderSection("headerscripts", required: false)
 </head>
 
-<body class="new_page">
+<body>
+<aside class="menu_overlay"></aside>
 
-<header class="header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-2 col-md-4">
-                <a href="/" class="logo header__logo">
-                    <img src="/img/logo-lykke.svg" height="38" alt="">
-                    <span class="header__title hidden-xs hidden-sm"><b>Blockchain</b>Explorer</span>
+<aside class="sidebar_menu">
+    <div class="sidebar_menu__inner">
+        <div class="sidebar_menu__header">
+            <button class="btn btn--icon btn_close_menu">
+                <i class="icon icon--close"></i>
+            </button>
+            <div class="header_logo">
+                <a href="/">
+                    <img class="header_logo__img" src="img/lykke_new.svg" height="40" alt="lykke_logo">
                 </a>
             </div>
-            <div class="col-xs-8 col-md-4 text-center">
-                <div class="input-search">
-                    @if (!hideTopSearchForm)
-                    {
-                        <div class="input-search">
-                            <form method="get" action="@Url.Action("Search", "Search")">
-                                <button type="submit" class="btn btn--icon"><i class="icon icon--search"></i></button>
-                                <input type="text" name="id" class="form-control form-control--search" placeholder="Search block, address, transaction">
-                            </form>
-                        </div>
-                    }
-                </div>
-            </div>
-            @*<div class="col-xs-2 col-md-4">
-                @if (!User.Identity.IsAuthenticated)
-                {
-                    <a href="@Url.Action("SignIn", "Security")" class="btn btn-link pull-right">Sign In</a>
-                }
-                else
-                {
-                    <ul class="nav nav--header pull-right">
-                        <li class="pull-right">
-                            <a class="dropdown__control" >@ClaimsHelper.Get(User.Identity, ClaimTypes.GivenName) @ClaimsHelper.Get(User.Identity, ClaimTypes.Surname)</a>
-                            <div class="dropdown__container">
-                                <ul class="dropdown__nav">
-                                    <li>
-                                        <a href="@Url.Action("SignOut", "Security")">Sign Out</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                }
-            </div>*@
+        </div>
 
+        <div class="sidebar_menu__body">
+            <ul class="main_projects_list">
+                <li class="main_projects_list__item">
+                    <a href="https://www.lykke.com/" target="_blank" class="main_projects_list__link">
+                        <div class="main_projects_list__img">
+                            <img src="img/lykke_wallet_logo.svg" alt="lykke_wallet_logo" width="50">
+                        </div>
+                        <div class="main_projects_list__content">
+                            <div class="main_projects_list__title">Lykke<span>Wallet</span></div>
+                            <div class="main_projects_list__text">
+                                Trade FX and Digital Assets
+                            </div>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="main_projects_list__item">
+                    <a href="https://streams.lykke.com/" target="_blank" class="main_projects_list__link">
+                        <div class="main_projects_list__img">
+                            <img src="img/streams_logo.svg" alt="streams_logo" width="50">
+                        </div>
+                        <div class="main_projects_list__content">
+                            <div class="main_projects_list__title">Streams</div>
+                            <div class="main_projects_list__text">
+                                Collaboration platform. Here the great ideas meet bright minds.
+                            </div>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="main_projects_list__item">
+                    <a href="https://blockchainexplorer.lykke.com/" target="_blank" class="main_projects_list__link">
+                        <div class="main_projects_list__img">
+                            <img src="/img/bl_explorer_logo.svg" alt="bl_explorer_logo" width="50">
+                        </div>
+                        <div class="main_projects_list__content">
+                            <div class="main_projects_list__title">Blockchain<span>Explorer</span></div>
+                            <div class="main_projects_list__text">
+                                Explore the Blockchain. Search transaction, assets, addresses or blocks
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
 
         </div>
+
+        <div class="sidebar_menu__footer">
+            <ul class="social">
+                <li><a href="https://www.facebook.com/groups/542506412568917/" target="_blank" class="social__item"><i class="icon icon--fb_simple"></i><span> Facebook</span></a></li>
+                <li><a href="https://twitter.com/LykkeCity" target="_blank" class="social__item"><i class="icon icon--tw"></i><span> Twitter</span></a></li>
+                <li><a href="http://instagram.com/lykkecity" target="_blank" class="social__item"><i class="icon icon--instagram"></i><span> Instagram</span></a></li>
+                <li><a href="https://www.youtube.com/channel/UCmMYipGdKMF0kzfaE-PXsNQ" target="_blank" class="social__item"><i class="icon icon--youtube"></i><span> Youtube</span></a></li>
+                <li><a href="https://www.linkedin.com/company/lykke-ag" target="_blank" class="social__item"><i class="icon icon--linkedin-icn"></i><span> Linkedin</span></a></li>
+                <li><a href="https://www.reddit.com/r/lykke/" target="_blank" class="social__item"><i class="icon icon--reddit"></i><span> Reddit</span></a></li>
+                <li><a href="https://t.co/TmjMYnQD7T" target="_blank" class="social__item"><i class="icon icon--telegram"></i><span> Telegram</span></a></li>
+            </ul>
+        </div>
     </div>
-</header>
+</aside>
+
+<div class="header_container">
+    <header class="header">
+        <div class="container">
+            <div class="header__menu_button">
+                <button class="btn btn_menu btn--icon" type="button">
+                    <span></span>
+                </button>
+            </div>
+            <div class="header__logo header_logo">
+                <a href="/">
+                    <img class="header_logo__img" src="/img/bl_explorer_logo.svg" height="36" alt="lykke_logo">
+                    <div class="header_logo__title">Blockchain<span>Explorer</span></div>
+                </a>
+            </div>
+            <div class="header__actions header_actions pull-right">
+                <div class="header_actions__search">
+                    <button class="btn btn--icon btn_open_search" type="button">
+                        <i class="icon icon--search"></i>
+                    </button>
+                </div>
+                <!--
+                <div class="header_actions__notifications">
+                    <button class="btn btn--icon" type="button">
+                        <i class="icon icon--notificaton"></i>
+                    </button>
+                </div>
+                -->
+
+            </div>
+        </div>
+
+        <div class="header_search">
+            <div class="container">
+                <div class="header_search__inner">
+                    <div class="header_search__buttons">
+                        <button type="button" class="btn btn-sm btn--flat hidden-xs btn_close_header">Cancel</button>
+                        <button type="button" class="btn btn-sm btn--primary hidden-xs">Search</button>
+                        <button type="button" class="btn btn--icon visible-xs btn_close_header">
+                            <i class="icon icon--cancel_round"></i>
+                        </button>
+                    </div>
+                    <div class="header_search__field">
+
+                        <form method="get" action="@Url.Action("Search", "Search")">
+                            <button class="header_search__btn btn btn--icon" type="submit">
+                                <i class="icon icon--search"></i>
+                            </button>
+                            <input type="text" name="id" class="form-control" placeholder="Search block, address, transaction…">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+</div>
+
 <article class="content page">
     @RenderBody()
 
@@ -114,14 +197,7 @@
     <div class="footer__bottom">
         <div class="container">
             <div class="row">
-                <div class="col-xs-12 col-md-6  text-left">
-                    <div class="footer__copy">
-                        © Lykke @DateTime.UtcNow.Year. All rights reserved
-                        <span class="middot">·</span>
-                        <a href="https://lykke.com/terms_of_use">Terms of Use</a>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-6 text-right pull-right">
+                <div class="col-xs-12 col-md-7 text-right pull-right">
                     <div class="clearfix">
                         <ul class="social social--footer_alt">
                             <li><a href="https://lykke.com/" target="_blank"><i class="icon icon--lykke"></i></a></li>
@@ -135,21 +211,22 @@
                         </ul>
                     </div>
                 </div>
+                <div class="col-xs-12 col-md-5 text-left">
+                    <div class="footer__copy">© Lykke @DateTime.Now.Year. All rights reserved
+                        <span class="middot">·</span>
+                        <a href="">Terms of Use</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </footer>
 
-        @Scripts.Render("~/bundles/js/jquery")
-        @Scripts.Render("~/bundles/js/bootstrap")
-        @Scripts.Render("~/bundles/js/fastclick")
-        @Scripts.Render("~/bundles/js/clipboard")
-        @Scripts.Render("~/bundles/js/common")
-@*<script src="~/js/vendor/jquery.min.js"></script>
-<script src="~/js/vendor/bootstrap.min.js"></script>
-<script src="~/js/vendor/fastclick.min.js"></script>
-<script src="~/js/vendor/clipboard.min.js"></script>
-<script src="~/js/functions.js"></script>*@
+@Scripts.Render("~/bundles/js/jquery")
+@Scripts.Render("~/bundles/js/bootstrap")
+@Scripts.Render("~/bundles/js/fastclick")
+@Scripts.Render("~/bundles/js/clipboard")
+@Scripts.Render("~/bundles/js/common")
 <script>
     if ($('.section--search').length) {
         $('html').addClass('full_height');
