@@ -197,14 +197,7 @@
     <div class="footer__bottom">
         <div class="container">
             <div class="row">
-                <div class="col-xs-12 col-md-6  text-left">
-                    <div class="footer__copy">
-                        © Lykke @DateTime.UtcNow.Year. All rights reserved
-                        <span class="middot">·</span>
-                        <a href="https://lykke.com/terms_of_use">Terms of Use</a>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-6 text-right pull-right">
+                <div class="col-xs-12 col-md-7 text-right pull-right">
                     <div class="clearfix">
                         <ul class="social social--footer_alt">
                             <li><a href="https://lykke.com/" target="_blank"><i class="icon icon--lykke"></i></a></li>
@@ -218,21 +211,22 @@
                         </ul>
                     </div>
                 </div>
+                <div class="col-xs-12 col-md-5 text-left">
+                    <div class="footer__copy">© Lykke @DateTime.Now.Year. All rights reserved
+                        <span class="middot">·</span>
+                        <a href="">Terms of Use</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </footer>
 
-        @Scripts.Render("~/bundles/js/jquery")
-        @Scripts.Render("~/bundles/js/bootstrap")
-        @Scripts.Render("~/bundles/js/fastclick")
-        @Scripts.Render("~/bundles/js/clipboard")
-        @Scripts.Render("~/bundles/js/common")
-@*<script src="~/js/vendor/jquery.min.js"></script>
-<script src="~/js/vendor/bootstrap.min.js"></script>
-<script src="~/js/vendor/fastclick.min.js"></script>
-<script src="~/js/vendor/clipboard.min.js"></script>
-<script src="~/js/functions.js"></script>*@
+@Scripts.Render("~/bundles/js/jquery")
+@Scripts.Render("~/bundles/js/bootstrap")
+@Scripts.Render("~/bundles/js/fastclick")
+@Scripts.Render("~/bundles/js/clipboard")
+@Scripts.Render("~/bundles/js/common")
 <script>
     if ($('.section--search').length) {
         $('html').addClass('full_height');
