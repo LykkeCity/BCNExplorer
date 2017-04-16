@@ -9,15 +9,15 @@
             <div class="row">
                 <div class="col-sm-4">
                     <h3>
-                        Transactions <span>
+                        Transactions 
+
+                        @if (Model.FullLoaded)
+                        {
                             <span class="js-loaded-tx-count">0</span>
-                            @if (Model.FullLoaded)
-                            {
-                                <span>
-                                    of @Model.TotalItems
-                                </span>
-                            }
-                        </span>
+                            <span>
+                                of @Model.TotalItems
+                            </span>
+                        }
                     </h3>
                 </div>
             </div>
