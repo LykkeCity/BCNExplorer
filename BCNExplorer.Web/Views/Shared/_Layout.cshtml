@@ -165,22 +165,21 @@
         <div class="header_search">
             <div class="container">
                 <div class="header_search__inner">
-                    <div class="header_search__buttons">
-                        <button type="button" class="btn btn-sm btn--flat hidden-xs btn_close_header">Cancel</button>
-                        <button type="button" class="btn btn-sm btn--primary hidden-xs">Search</button>
-                        <button type="button" class="btn btn--icon visible-xs btn_close_header">
-                            <i class="icon icon--cancel_round"></i>
-                        </button>
-                    </div>
-                    <div class="header_search__field">
-
-                        <form method="get" action="@Url.Action("Search", "Search")">
+                    <form method="get" action="@Url.Action("Search", "Search")">
+                        <div class="header_search__buttons">
+                            <button type="button" class="btn btn-sm btn--flat hidden-xs btn_close_header">Cancel</button>
+                            <button type="submit" class="btn btn-sm btn--primary hidden-xs">Search</button>
+                            <button type="button" class="btn btn--icon visible-xs btn_close_header">
+                                <i class="icon icon--cancel_round"></i>
+                            </button>
+                        </div>
+                        <div class="header_search__field">
                             <button class="header_search__btn btn btn--icon" type="submit">
                                 <i class="icon icon--search"></i>
                             </button>
                             <input type="text" name="id" class="form-control" placeholder="Search block, address, transaction…">
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
