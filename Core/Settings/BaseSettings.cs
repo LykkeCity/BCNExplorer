@@ -50,6 +50,8 @@ namespace Core.Settings
 
         [Required]
         public BalanceReportSettings BalanceReportSettings { get; set; }
+
+        public bool ReadBalanceFromNinja { get; set; }
         //[Required]
         //public AuthenticationSettings Authentication { get; set; }
     }

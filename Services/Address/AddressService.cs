@@ -224,29 +224,38 @@ namespace Services.Address
                 requestUrl.QueryParams.Add("at", at);
             }
 
-            var coloredSummary = await requestUrl.GetAsync().ReceiveJson<BalanceViewModelContract>();
+            NinjaAddressSummary coloredSummary;
+
+            if (_baseSettings.ReadBalanceFromNinja)
+            {
+                coloredSummary = (await _ninjaAddressProvider.GetAddressBalanceAsync(address, at, true));
+            }
+            else
+            {
+                coloredSummary = (await requestUrl.GetAsync().ReceiveJson<BalanceViewModelContract>())?.Data;
+            }
 
 
-            if (coloredSummary?.Data != null)
+            if (coloredSummary != null)
             {
                 var result = new AddressBalance
                 {
                     AddressId = address,
-                    BtcBalance = coloredSummary.Data.Confirmed.Balance,
-                    TotalTransactions = coloredSummary.Data.Confirmed.TotalTransactions,
-                    UnconfirmedBalanceDelta = coloredSummary.Data.Unconfirmed?.Balance ?? 0
+                    BtcBalance = coloredSummary.Confirmed.Balance,
+                    TotalTransactions = coloredSummary.Confirmed.TotalTransactions,
+                    UnconfirmedBalanceDelta = coloredSummary.Unconfirmed?.Balance ?? 0
                 };
-                var unconfirmedAssets = coloredSummary.Data.Unconfirmed?.Assets ?? Enumerable.Empty<AddressAssetContract>();
+                var unconfirmedAssets = coloredSummary.Unconfirmed?.Assets ?? Enumerable.Empty<NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary>();
 
-                foreach (var assetSummary in unconfirmedAssets.Where(p => !coloredSummary.Data.Confirmed.Assets.Select(x => x.AssetId).Contains(p.AssetId))) //assets with 0
+                foreach (var assetSummary in unconfirmedAssets.Where(p => !coloredSummary.Confirmed.Assets.Select(x => x.AssetId).Contains(p.AssetId))) //assets with 0
                 {
-                    coloredSummary.Data.Confirmed.Assets.Add(new AddressAssetContract
+                    coloredSummary.Confirmed.Assets.Add(new NinjaAddressSummary.NinjaAddressBalance.NinjaAddressAssetSummary
                     {
                         AssetId = assetSummary.AssetId
                     });
                 }
 
-                result.ColoredBalances = coloredSummary.Data.Confirmed.Assets.Select(p =>
+                result.ColoredBalances = coloredSummary.Confirmed.Assets.Select(p =>
                 {
                     var coloredBalance = new ColoredBalance
                     {
