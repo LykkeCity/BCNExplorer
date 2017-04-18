@@ -217,13 +217,6 @@ namespace Services.Address
 
         public async Task<IAddressBalance> GetBalanceAsync(string address, int? at = null)
         {
-            var requestUrl = _baseSettings.BtcBalancesServiceUrl.AppendPathSegment($"balances/{address}/summary");
-
-            if (at != null)
-            {
-                requestUrl.QueryParams.Add("at", at);
-            }
-
             NinjaAddressSummary coloredSummary;
 
             if (_baseSettings.ReadBalanceFromNinja)
@@ -232,6 +225,14 @@ namespace Services.Address
             }
             else
             {
+
+                var requestUrl = _baseSettings.BtcBalancesServiceUrl.AppendPathSegment($"balances/{address}/summary");
+
+                if (at != null)
+                {
+                    requestUrl.QueryParams.Add("at", at);
+                }
+
                 coloredSummary = (await requestUrl.GetAsync().ReceiveJson<BalanceViewModelContract>())?.Data;
             }
 
