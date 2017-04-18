@@ -38,6 +38,8 @@ namespace Core.Settings
         public bool DisableRedirectToHttps { get; set; }
 
         public bool GetTopFromNinja { get; set; }
+        
+        public bool ReadBalanceFromNinja { get; set; }
     }
 
     public class DbSettings
