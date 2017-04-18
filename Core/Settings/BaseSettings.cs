@@ -12,8 +12,7 @@ namespace Core.Settings
     {
         [Required]
         public string NinjaUrl { get; set; }
-
-        [Required]
+        
         public string BtcBalancesServiceUrl {get; set;}
 
         [Required]
