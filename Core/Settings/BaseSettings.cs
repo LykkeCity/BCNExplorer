@@ -13,6 +13,7 @@ namespace Core.Settings
         [Required]
         public string NinjaUrl { get; set; }
         
+        public string BtcBalancesServiceUrl {get; set;}
         
         public string LykkeAPIUrl { get; set; }
 
