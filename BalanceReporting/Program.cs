@@ -26,6 +26,8 @@ namespace BalanceReporting
     {
         static void Main(string[] args)
         {
+            //disabled
+            return;
             LogToTableAndConsole log = null;
             try
             {
