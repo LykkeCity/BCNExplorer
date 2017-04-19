@@ -15,6 +15,7 @@ namespace Providers.BlockChainReader
             try
             {
                 var webRequest = (HttpWebRequest)WebRequest.Create(absUrl);
+                webRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true; //ignore sertificate
                 webRequest.Method = "GET";
                 webRequest.ContentType = "application/x-www-form-urlencoded";
                 var webResponse = await webRequest.GetResponseAsync();
