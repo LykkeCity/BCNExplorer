@@ -2,6 +2,7 @@
 using Core.Settings;
 using Microsoft.WindowsAzure.Storage.Auth;
 using NBitcoin.Indexer;
+using Providers.Helpers;
 
 namespace Providers.Binders
 {
@@ -11,7 +12,8 @@ namespace Providers.Binders
         {
             var indexerConfiguration = new IndexerConfiguration
             {
-                StorageCredentials = new StorageCredentials(baseSettings.NinjaIndexerCredentials.AzureName, baseSettings.NinjaIndexerCredentials.AzureKey)
+                StorageCredentials = new StorageCredentials(baseSettings.NinjaIndexerCredentials.AzureName, baseSettings.NinjaIndexerCredentials.AzureKey),
+                Network = baseSettings.UsedNetwork()
             };
 
             var result = new IndexerClient(indexerConfiguration) {ColoredBalance = true};
