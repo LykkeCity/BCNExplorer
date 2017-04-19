@@ -13,6 +13,21 @@ namespace Providers.Helpers
     {
         public static BalanceId Parse(string key, Network network)
         {
+            if (BitcoinAddressHelper.IsBitcoinColoredAddress(key, network))
+            {
+                return new BalanceId(new  BitcoinColoredAddress(key, network));
+            }
+
+            if (BitcoinAddressHelper.IsBitcoinPubKeyAddress(key, network))
+            {
+                return new BalanceId(new BitcoinPubKeyAddress(key, network));
+            }
+
+            if (BitcoinAddressHelper.IsBitcoinScriptAddress(key, network))
+            {
+                return new BalanceId(new BitcoinScriptAddress(key, network));
+            }
+
             if (key.Length > 3 && key.Length < 5000 && key.StartsWith("0x"))
             {
                 return new BalanceId(new Script(Encoders.Hex.DecodeData(key.Substring(2))));
