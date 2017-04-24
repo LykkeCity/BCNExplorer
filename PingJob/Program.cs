@@ -48,7 +48,7 @@ namespace PingJob
 
         private static void InitContainer(DResolver container, BaseSettings settings, AppSettings appSettings, ILog log)
         {
-            log.WriteInfo("InitContainer", "Program", null, $"BaseSettings : {settings.ToJson()}").Wait();
+            log.WriteInfo("InitContainer", "Program", null, null).Wait();
             container.IoC.Register<ILog>(log);
 
             container.IoC.Register(appSettings);

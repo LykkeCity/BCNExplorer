@@ -26,8 +26,6 @@ namespace BalanceReporting
     {
         static void Main(string[] args)
         {
-            //disabled
-            return;
             LogToTableAndConsole log = null;
             try
             {
@@ -57,14 +55,7 @@ namespace BalanceReporting
                 {
                     config.UseDevelopmentSettings();
                 }
-
-                //TEST
-                //container.IoC.GetObject<SendBalanceReportCommandQueryProducer>()
-                //    .CreaseSendBalanceReportCommandAsync("netsky@bk.ru", "Volkov Andrey", new[] { "anMUe3LgGapNHxKsGxmtbsPpNeC33sa7y9a", "anJBX5sKFK4vnbywKWE2NQa9xrvLJEqRAB2" }, new DateTime(2016, 12, 31))
-                //    .Wait();
-                //Test
-
-                container.IoC.CreateInstance<BalanceReportQueueConsumer>().Start();
+                //container.IoC.CreateInstance<BalanceReportQueueConsumer>().Start();
 
                 var host = new JobHost(config);
                 host.RunAndBlock();
@@ -79,7 +70,7 @@ namespace BalanceReporting
 
         private static void InitContainer(DResolver container, BaseSettings settings, ILog log)
         {
-            log.WriteInfo("InitContainer", "Program", null, $"BaseSettings : {settings.ToJson()}").Wait();
+            log.WriteInfo("InitContainer", "Program", null, null).Wait();
             container.IoC.Register<ILog>(log);
 
             container.IoC.BindProviders(settings, log);

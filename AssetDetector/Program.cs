@@ -74,7 +74,7 @@ namespace AssetDefinitionScanner
 
         private static void InitContainer(DResolver container, BaseSettings settings, ILog log)
         {
-            log.WriteInfo("InitContainer", "Program", null, $"BaseSettings : {settings.ToJson()}").Wait();
+            log.WriteInfo("InitContainer", "Program", null, null).Wait();
             container.IoC.Register<ILog>(log);
 
             container.IoC.RegisterSingleTone<SendMonitorData>();
