@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
 using Common.Log;
 using Core.AssetBlockChanges.Mongo;
+using Core.Block;
 using Core.Settings;
 using NBitcoin;
 using Providers;
@@ -20,18 +22,22 @@ namespace Services.BalanceChanges
         private readonly ILog _log;
         private readonly Network _network;
 
+        private readonly IBlockService _blockService;
+
 
         public BalanceChangesService(
             IAssetBalanceChangesRepository balanceChangesRepository,
             IndexerClientFactory indexerClient,
             MainChainService mainChainService, 
             ILog log,
-            BaseSettings baseSettings)
+            BaseSettings baseSettings, 
+            IBlockService blockService)
         {
             _balanceChangesRepository = balanceChangesRepository;
             _indexerClient = indexerClient;
             _mainChainService = mainChainService;
             _log = log;
+            _blockService = blockService;
             _network = baseSettings.UsedNetwork();
         }
 
@@ -80,6 +86,21 @@ namespace Services.BalanceChanges
             {
                 ChangedAssetIds = changedAssetIds.Distinct().ToList()
             };
+        }
+
+        public async Task RemoveForksAsync(int fromBlockHeight)
+        {
+            var blockHashes = await _balanceChangesRepository.GetBlockHashesAsync(fromBlockHeight);
+
+            foreach (var blockHash in blockHashes)
+            {
+                var blockHeader = await _blockService.GetBlockHeaderAsync(blockHash);
+                if (blockHeader.IsFork)
+                {
+                    await _balanceChangesRepository.RemoveBalancesAtBlockAsync(blockHash);
+                    await _log.WriteWarning("BalanceChangesService", "RemoveForksAsync", blockHeader.ToJson(), "Remove fork done");
+                }
+            }
         }
     }
 

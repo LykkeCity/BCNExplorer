@@ -12,6 +12,8 @@ namespace Core.Block
         int Height { get;  }
         DateTime Time { get;  }
         long Confirmations { get;  }
+
+        bool IsFork { get; }
     }
 
     public interface IBlock

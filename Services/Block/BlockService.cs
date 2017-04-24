@@ -16,6 +16,7 @@ namespace Services.BlockChain
         public int Height { get; set; }
         public DateTime Time { get; set; }
         public long Confirmations { get; set; }
+        public bool IsFork => Height == -1;
 
         public static BlockHeader Create(string hash, int height, DateTime time, long confirmations)
         {

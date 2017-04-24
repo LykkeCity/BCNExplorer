@@ -104,6 +104,20 @@ namespace AzureRepositories.AssetCoinHolders
 
         }
 
+        public async Task<IEnumerable<string>> GetBlockHashesAsync(int fromBlockHeight)
+        {
+            return await _mongoCollection.Find(p => p.BlockHeight >= fromBlockHeight)
+                .Project(p => p.BlockHash)
+                .Limit(int.MaxValue)
+                .ToListAsync();
+        }
+
+
+        public async Task RemoveBalancesAtBlockAsync(string blochHash)
+        {
+            await _mongoCollection.DeleteManyAsync(p => p.BlockHash == blochHash);
+        }
+
         public Task<IBalanceSummary> GetSummaryAsync(params string[] assetIds)
         {
             return GetSummaryAsync(null, assetIds);

@@ -97,6 +97,10 @@ namespace Core.AssetBlockChanges.Mongo
     public interface IAssetBalanceChangesRepository
     {
         Task AddAsync(string coloredAddress, IEnumerable<IBalanceChanges> balanceChanges);
+
+
+        Task<IEnumerable<string>> GetBlockHashesAsync(int fromBlockHeight);
+        Task RemoveBalancesAtBlockAsync(string blochHash);
         Task<IBalanceSummary> GetSummaryAsync(params string[] assetIds);
         Task<IBalanceSummary> GetSummaryAsync(IQueryOptions queryOptions, params string[] assetIds);
         Task<int> GetLastParsedBlockHeightAsync();

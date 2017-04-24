@@ -4,7 +4,10 @@ using AzureRepositories.AssetCoinHolders;
 using Common;
 using Common.Log;
 using Core.AssetBlockChanges.Mongo;
+using Core.Block;
 using Microsoft.Azure.WebJobs;
+using Providers.Helpers;
+using Services.BalanceChanges;
 using Services.MainChain;
 
 namespace AssetCoinHoldersScanner.TimerFunctions
@@ -15,16 +18,18 @@ namespace AssetCoinHoldersScanner.TimerFunctions
         private readonly AssetChangesParseBlockCommandProducer _parseBlockCommandProducer;
         private readonly IAssetBalanceChangesRepository _parsedBlockRepository;
         private readonly MainChainService _mainChainService;
+        private readonly BalanceChangesService _balanceChangesService;
 
         public ParseBlocksFunctions(ILog log,
             AssetChangesParseBlockCommandProducer parseBlockCommandProducer,
             IAssetBalanceChangesRepository parsedBlockRepository, 
-            MainChainService mainChainService)
+            MainChainService mainChainService, BalanceChangesService balanceChangesService)
         {
             _log = log;
             _parseBlockCommandProducer = parseBlockCommandProducer;
             _parsedBlockRepository = parsedBlockRepository;
             _mainChainService = mainChainService;
+            _balanceChangesService = balanceChangesService;
         }
 
         public async Task ParseLastBlock([TimerTrigger("00:05:00", RunOnStartup = true)] TimerInfo timer)
@@ -54,28 +59,26 @@ namespace AssetCoinHoldersScanner.TimerFunctions
             }
         }
 
-        //    public async Task TestRetrieveChanges([TimerTrigger("00:59:00", RunOnStartup = true)] TimerInfo timer)
-        //    {
-        //        var st = new Stopwatch();
-        //        var mainchain = await _mainChainRepository.GetMainChainAsync();
-        //        var coloredAddresses = _indexerClient.GetBlock(uint256.Parse("0000000000000000029559b0665cacb4470eda0696a69744263e82e7e4d0f27d")).GetAddressesWithColoredMarker(Network.Main);
-        //        var checkTasks = new List<Task>();
 
-        //        await _log.WriteInfo("TestRetrieveChanges", "TestRetrieveChanges", st.Elapsed.ToString("g"), "Started");
-        //        st.Start();
-        //        var semaphore = new SemaphoreSlim(1000);
-        //        foreach (var address in coloredAddresses)
-        //        {
-        //            var balanceId = BalanceIdHelper.Parse(address.ToString(), Network.Main);
-        //            //checkTasks.Add(_indexerClient.GetConfirmedBalanceChangesAsync(balanceId, mainchain, semaphore));p
-        //        }
+        public async Task RemoveForkBlocks([TimerTrigger("01:00:00", RunOnStartup = true)] TimerInfo timer)
+        {
+            try
+            {
+                await _log.WriteInfo("ParseBlocksFunctions", "RemoveForkBlocks", null, "Started");
 
-        //        await Task.WhenAll(checkTasks);
+                var mainChain = await _mainChainService.GetMainChainAsync();
 
-        //        st.Stop();
+                var removeFrom = mainChain.GetClosestToTimeBlock(DateTime.UtcNow.AddHours(-2));
 
-        //        await _log.WriteInfo("TestRetrieveChanges", "TestRetrieveChanges", st.Elapsed.ToString("g"), "Finished");
-        //    }
-        //}
+                await _balanceChangesService.RemoveForksAsync(removeFrom.Height);
+
+                await _log.WriteInfo("ParseBlocksFunctions", "RemoveForkBlocks", null, "Done");
+            }
+            catch (Exception e)
+            {
+                await
+                    _log.WriteError("ParseBlocksFunctions", "RemoveForkBlocks", null, e);
+            }
+        }
     }
 }
