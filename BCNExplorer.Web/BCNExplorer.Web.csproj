@@ -279,6 +279,7 @@
     <Content Include="fonts\ProximaNova-Black.svg" />
     <Content Include="fonts\ProximaNova-Light.svg" />
     <Content Include="fonts\ProximaNova-Semibold.svg" />
+    <Content Include="fonts\ProximaNovaBold.svg" />
     <Content Include="fonts\ProximaNovaRegular.svg" />
     <Content Include="fonts\ProximaNovaThin.svg" />
     <Content Include="Global.asax" />
@@ -480,6 +481,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Issuer\IssuerDetails.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\ProximaNovaBold.eot" />
+    <Content Include="fonts\ProximaNovaBold.ttf" />
+    <Content Include="fonts\ProximaNovaBold.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
