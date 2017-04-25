@@ -143,7 +143,7 @@ $(document).ready(function () {
     initEventsOnResize();
     initEventsOnClick();
     initClipboard();
-    initTabs();
+    //initTabs();
     initHeader();
     initSmoothScroll();
     initAffix();
