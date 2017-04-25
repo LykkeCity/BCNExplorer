@@ -38,14 +38,14 @@ function initEventsOnClick() {
                 $(this).attr('href').replace(/^tel:/, 'callto:'));
         });
     }
+    //moved to tx file
+    //$('.open_hidden_content').on('click', function (ev) {
+    //    ev.preventDefault();
+    //    var $this = $(this), id = $this.attr('href');
 
-    $('.open_hidden_content').on('click', function (ev) {
-        ev.preventDefault();
-        var $this = $(this), id = $this.attr('href');
-
-        $this.toggleClass('active');
-        $(id).slideToggle('fast');
-    });
+    //    $this.toggleClass('active');
+    //    $(id).slideToggle('fast');
+    //});
 }
 
 function initClipboard() {
