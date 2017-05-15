@@ -35,8 +35,12 @@
 
         $('body').on('transactions-loaded', initAssetQuantityPopover);
 
-        $(document).on('blur', popoverSelector, function () {
-            $(this).popover('hide');
+        $('body').on('click touchstart', function (e) {
+            $(popoverSelector).each(function () {
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('[data-toggle="popover"]').has(e.target).length === 0) {
+                    $(this).popover('hide');
+                }
+            });
         });
     })();    
 });
