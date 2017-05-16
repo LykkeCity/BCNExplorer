@@ -2069,6 +2069,8 @@ a.action_link:hover img, button.action_link:hover img { opacity: 1; }
 
 .section--heading h3 span { font-weight: normal; }
 
+.section--heading h3 span + span { margin-left: 0 !important; }
+
 .section--heading h3 > span { margin-left: 5px; margin-left: 0.3125rem; }
 
 .section--heading .btn_asset_download { margin-left: 2px; margin-left: 0.125rem; }
