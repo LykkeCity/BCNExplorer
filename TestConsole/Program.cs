@@ -1,4 +1,5 @@
-﻿using AzureRepositories;
+﻿using System;
+using AzureRepositories;
 using AzureRepositories.Binders;
 using BalanceReporting.Binders;
 using Common.IocContainer;
@@ -8,6 +9,7 @@ using JobsCommon;
 using Providers;
 using Providers.Binders;
 using Services.Binders;
+using Services.MainChain;
 using TestConsole.AssetScanner;
 using TestConsole.BalanceReport;
 using TestConsole.Coninholders;
@@ -28,20 +30,20 @@ namespace TestConsole
             //TestFillBalance.Run(container).Wait();
             // CheckBalance.Run(container).Wait();
             //MongoFillBalance.Run(container).Wait();
-            //AddAddressesFromBlockChain.Run(container).Wait();
+            AddAddressesFromBlockChain.Run(container).Wait();
             //AssetDefToCsv.Run(container).Wait();
             //AssetCoinholdersToCsv.Run(container).Wait();
             //AddMissingDefinitions.Run(container).Wait();
             //AddAssetDefinitionsHistory.Run(container).Wait();
             //CopyMongoData.Run(container).Wait();
             //Pdf.Run(container).Wait();
-            ParseBlock.Run(container).Wait();
+            //ParseBlock.Run(container).Wait();
         }
 
         private static void InitContainer(IoC container, BaseSettings settings, ILog log)
         {
             settings.CacheMainChainLocalFile = true;
-            settings.DisablePersistentCacheMainChain = true;
+            //settings.DisablePersistentCacheMainChain = true;
             settings.ExplolerUrl = "https://blockchainexplorer.lykke.com/";
             container.Register<ILog>(log);
             container.BindBalanceReportingFunctions(settings, log);
