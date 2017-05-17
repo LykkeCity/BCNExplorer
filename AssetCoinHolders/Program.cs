@@ -72,7 +72,7 @@ namespace AssetCoinHoldersScanner
 
             container.IoC.BindProviders(settings, log);
 
-            //settings.DisablePersistentCacheMainChain = true;
+            settings.DisablePersistentCacheMainChain = true;
             container.IoC.Register(settings);
 
             container.IoC.BindAzureRepositories(settings, log);
