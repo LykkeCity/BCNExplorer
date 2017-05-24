@@ -27,7 +27,11 @@ A website explores the blockchain and shows information about blocks, transactio
 		"AssetBalanceChanges" : {
 			"ConnectionString":"",		
 			"DbName":"",		
-		}
+		},
+		"Offchain" : {
+			"ConnectionString":"",		
+			"DbName":"",		
+		}		
 		
 	},
 	"NinjaIndexerCredentials": {

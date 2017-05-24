@@ -87,7 +87,10 @@ namespace Core.Settings
         public string SharedStorageConnString { get; set; }
         
         [Required]
-        public AssetBalanceChangesDb AssetBalanceChanges { get; set; }
+        public MongoDbCredentials AssetBalanceChanges { get; set; }
+
+        [Required]
+        public MongoDbCredentials Offchain { get; set; }
     }
 
     public class JobsSettings
@@ -104,7 +107,7 @@ namespace Core.Settings
         public string AzureKey { get; set; }
     }
 
-    public class AssetBalanceChangesDb
+    public class MongoDbCredentials
     {
         [Required]
         public string ConnectionString { get; set; }
