@@ -1,0 +1,101 @@
+﻿@model OffchainTransactionDetailsViewModel
+@{
+    
+    ViewData["Title"] = "Offchain transaction";
+
+    var lastOnChain = Model.Channel.CloseTransaction ?? Model.Channel.OpenTransaction;
+}
+
+<section class="section section--padding">
+    <div class="container ">
+        <div class="page__header">
+            <h2 class="page__title">Off-Chain Transaction</h2>
+            <div class="address_code address_code--lead">
+                <span>@Model.Transaction.TransactionId</span>
+                <button class="btn btn--icon copy_code" type="button" title="Copy code">
+                    <i class="icon icon--copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <table class="table table--be_info">
+                    <tbody>
+                        <tr>
+                            <td><b>Date:</b></td>
+                            <td>Sunday, September 4, 2016 10:57:34 PM</td>
+                        </tr>
+                        <tr>
+                            <td><b>Assets transacted:</b></td>
+                            <td>@(Model.Transaction.Asset.IsColored?1:0)</td>
+                        </tr>
+                        <tr>
+                            <td><b>Confirmations:</b></td>
+                            <td>
+                                @if (lastOnChain.IsConfirmed)
+                                     {
+                                         <span>@(lastOnChain.Block.Confirmations)</span>
+                                     }
+                                     else
+                                     {
+                                         <span>Unconfirmed</span>
+                                     }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <table class="table table--be_info">
+                    <tbody>
+                    <tr>
+                        <td><b>Time:</b></td>
+                        <td>Sunday, September 4, 2016 10:57:34 PM</td>
+                    </tr>
+                        @if (lastOnChain.IsConfirmed)
+                        {
+                            <tr>
+                                <td><b>Block:</b></td>
+                                <td>
+                                    <a href="@Url.Action("Index", "Block", new {id = lastOnChain.Block.BlockId})">
+                                        <span class="truncate" title="@lastOnChain.Block.BlockId">@lastOnChain.Block.BlockId</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Height:</b></td>
+                                <td>@lastOnChain.Block.Height</td>
+                            </tr>                       
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section--transactions">
+    @Html.Partial("OffchainTransactionDetails", Model.Transaction)
+</section>
+
+<section class="section section--heading">
+    <div class="container">
+        <h3>Off-chain history</h3>
+    </div>
+</section>
+
+<section class="section section--transactions">
+
+    @Html.Partial("TransactionDetails", Model.Channel.CloseTransaction)
+
+    @foreach (var tx in Model.Channel.OffChainTransactions)
+    {
+        @Html.Partial("OffchainTransactionDetails", tx)
+    }
+
+    @Html.Partial("TransactionDetails", Model.Channel.OpenTransaction)
+
+
+</section>

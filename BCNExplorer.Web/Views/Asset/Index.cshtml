@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    @if (Model.ShowAssetImage)
                     {
                         <div class="address_qrcode">
                             <img src="@Model.ImageUrl" alt="@Model.Name" width="140">

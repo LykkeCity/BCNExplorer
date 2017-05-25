@@ -1,0 +1,153 @@
+﻿@using BCNExplorer.Web.Helpers
+@using Common
+@model OffChainTransactionViewModel
+
+@{
+    Layout = null;
+}   
+
+<div class="panel transaction_panel" >
+    <div class="container">
+
+        <div class="panel__header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 pull-right text-right">
+                    <div class="confirmation_label">
+                        @if (Model.IsRevoked)
+                        {
+                            <span class="label label--gray">Revoked off-chain</span>
+                        }
+                        else
+                        {
+                            <span class="label label--gray">Confirmed off-chain</span>
+                        }
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="address_code">
+                        <a href="@Url.Action("Index", "OffchainTransaction", new {id=Model.TransactionId})">@Model.TransactionId</a>
+                        <button class="btn btn--icon copy_code" type="button" title="Copy code">
+                            <i class="icon icon--copy"></i>
+                        </button>
+                    </div>
+                    <span class="action_text">@Model.DateTime.ToStringBcnExplolerFormat()</span>
+                    <span class="middot">·</span>
+                    <span class="action_text">@Model.InputCount @Utils.GenderAmount(Model.InputCount, "input", "inputs", "inputs")</span>
+                    <span class="middot">·</span>
+                    <span class="action_text">@Model.OutputCount @Utils.GenderAmount(Model.OutputCount, "output", "outputs", "outputs")</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel__body">
+            <div class="transaction_details">
+                <div class="transaction_details__header">
+                    <table class="issuer">
+                        <tbody>
+                        <tr>
+                            <td class="issuer__img">
+                                    
+                                @if (Model.Asset.ShowAssetDetailsLink)
+                                {
+                                    <a href="@Url.Action("Index", "Asset", new {id = Model.Asset.AssetIds.FirstOrDefault()})">
+                                        <img src="@Model.Asset.IconUrl" width="48" alt="">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <img src="@Model.Asset.IconUrl" width="48" alt="">
+                                }
+
+                            </td>
+                            <td class="issuer__content">
+                                <div class="issuer__name pull-left">
+                                    @if (Model.Asset.ShowAssetDetailsLink)
+                                    {
+                                        <a href="@Url.Action("Index", "Asset", new {id = Model.Asset.AssetIds.FirstOrDefault()})">
+                                            @Model.Asset.Name
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        @Model.Asset.Name
+                                    }
+                                </div>
+                                <div class="wallet_value pull-right">@Model.TotalQuantity.ToStringBtcFormat() @Model.Asset.NameShort</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="transaction_details__body">
+                    <div class="transaction_item">
+                        <div class="transaction_item__left">
+                            <div class="transaction_list">
+
+                                <div class="transaction_list__item">
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            <div class="links_group">
+                                                <a href="@Url.Action("Index", "Address", new { id = Model.HubAddress })">
+                                                    <span class="truncate" title="@Model.HubAddress">@Model.HubAddress</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4"> - @Model.TotalQuantity.ToStringBtcFormat() @(Model.Asset.IsColored ? Model.Asset.NameShort: "")</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="transaction_item__center">
+                            <div class="transaction_arrow"><i class="icon icon--arrow_right_circle"></i>
+                            </div>
+                        </div>
+
+                        <div class="transaction_item__right">
+                            <div class="transaction_list">
+                                @RenderOutput(Model.Address1, Model.Address1Quantity, Model.Address1QuantityDiff, Model.Asset)
+                                @RenderOutput(Model.Address2, Model.Address2Quantity, Model.Address2QuantityDiff, Model.Asset)
+                            </div>
+                        </div>
+                    </div> 
+                </div> 
+            </div> 
+
+        </div> 
+
+    </div>
+</div>
+
+@helper RenderOutput(string address, decimal quantity, decimal quantityDiff, AssetViewModel asset)
+{
+    
+    <div class="transaction_list__item">
+        <div class="row">
+            <div class="col-xs-8">
+                <a href="@Url.Action("Index", "Address", new {id = address})">
+                    <span class="truncate" title="@address">@address</span>
+                </a>
+                @*<button class="btn btn--icon btn_asset_download" type="button">
+                    <i class="icon icon--download"></i>
+                </button>*@
+            </div>
+            <div class="col-xs-4">
+                <span>@quantity.ToStringBtcFormat() @(asset.IsColored ? asset.NameShort: "")</span>
+                @{
+                    var diffClass = "text--gray";
+                    if (quantityDiff > 0)
+                    {
+                        diffClass = "text--green";
+                    }
+                    else if(quantityDiff<0)
+                    {
+                        diffClass = "text--red";
+                    }
+                }
+                <span class="@diffClass">(@quantityDiff.ToStringBtcFormat())</span>
+            </div>
+        </div>
+    </div>
+}

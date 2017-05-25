@@ -7,54 +7,57 @@
     var toggleChangeItemClass = "js-toggle-change-item";
 }
 
-<div class="panel transaction_panel js-transaction-details @toggleChangeContainer" >
-    <div class="container">
-        <div class="panel__header">
-           <div class="row">
-                <div class="col-xs-12 col-sm-3 pull-right text-right">
-                    <div class="confirmation_label">
-                        @if (Model.IsConfirmed)
+@if (Model != null)
+{
+    
+    <div class="panel transaction_panel js-transaction-details @toggleChangeContainer" >
+        <div class="container">
+            <div class="panel__header">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3 pull-right text-right">
+                        <div class="confirmation_label">
+                            @if (Model.IsConfirmed)
+                            {
+                                <span class="label label--green @(Model.Block?.Confirmations >= 5 ? "label--green" : "label--gray")">@(Model.Block?.Confirmations) Confirmations</span>
+                            }
+                            else
+                            {
+                                <span class="label label--red label--plate">Unconfirmed</span>
+                            }
+                        </div>
+                        @if (Model.ShowChangeBtn)
                         {
-                            <span class="label label--green @(Model.Block?.Confirmations >= 5 ? "label--green" : "label--gray")">@(Model.Block?.Confirmations) Confirmations</span>
-                        }
-                        else
-                        {
-                            <span class="label label--red label--plate">Unconfirmed</span>
+                            <a href="#" class="btn_show_changes pull-right text--gray js-toggle-change-btn" data-toggle-container=".@toggleChangeContainer">
+                                <span class="js-toggle-change-label">Show</span>
+                                <span class="hidden js-toggle-change-label">Hide</span>
+                                change
+                            </a>
                         }
                     </div>
-                    @if (Model.ShowChangeBtn)
-                    {
-                        <a href="#" class="btn_show_changes pull-right text--gray js-toggle-change-btn" data-toggle-container=".@toggleChangeContainer">
-                            <span class="js-toggle-change-label">Show</span>
-                            <span class="hidden js-toggle-change-label">Hide</span>
-                            change
-                        </a>
-                    }
-                </div>
-                <div class="col-sm-9">
-                    <div class="address_code">
-                        <a href="@Url.Action("Index", "Transaction", new {id = Model.TransactionId})">@Model.TransactionId</a>
-                        <button class="btn btn--icon copy_code" type="button" title="Copy code">
-                            <i class="icon icon--copy"></i>
-                        </button>
-                    </div>
-                    @if (Model.Block != null)
-                    {
-                        <span class="action_text">@Model.Block.Time.ToStringBcnExplolerFormat()</span>
+                    <div class="col-sm-9">
+                        <div class="address_code">
+                            <a href="@Url.Action("Index", "Transaction", new {id = Model.TransactionId})">@Model.TransactionId</a>
+                            <button class="btn btn--icon copy_code" type="button" title="Copy code">
+                                <i class="icon icon--copy"></i>
+                            </button>
+                        </div>
+                        @if (Model.Block != null)
+                        {
+                            <span class="action_text">@Model.Block.Time.ToStringBcnExplolerFormat()</span>
+                            <span class="middot">·</span>
+                        }
+                        <span class="action_text">@Model.InputsCount @Utils.GenderAmount(Model.InputsCount, "input", "inputs", "inputs")</span>
                         <span class="middot">·</span>
-                    }
-                    <span class="action_text">@Model.InputsCount @Utils.GenderAmount(Model.InputsCount, "input", "inputs", "inputs")</span>
-                    <span class="middot">·</span>
-                    <span class="action_text">@Model.OutputsCount @Utils.GenderAmount(Model.OutputsCount, "output", "outputs", "outputs")</span>
+                        <span class="action_text">@Model.OutputsCount @Utils.GenderAmount(Model.OutputsCount, "output", "outputs", "outputs")</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="panel__body">
+            <div class="panel__body">
 
-            <div class="transaction_details">
-                <div class="transaction_details__header">
-                    <table class="issuer">
-                        <tbody>
+                <div class="transaction_details">
+                    <div class="transaction_details__header">
+                        <table class="issuer">
+                            <tbody>
                             <tr>
                                 <td class="issuer__img"><img src="/img/assets/bitcoin.png" width="48" alt=""></td>
                                 <td class="issuer__content">
@@ -74,28 +77,28 @@
 
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="@(Model.Bitcoin.ShowWithoutChange ? toggleChangeItemClass : "")">
-                    @RenderBtcInOuts(Model.Bitcoin.AggregatedIns, Model.Bitcoin.AggregatedOuts, showConsumedReleased: true)
-                </div>
-                @if (Model.Bitcoin.ShowWithoutChange)
-                {
-                    <div class="@toggleChangeItemClass hidden">
-                        @RenderBtcInOuts(Model.Bitcoin.AggregatedInsWithoutChange, Model.Bitcoin.AggregatedOutsWithoutChange, showConsumedReleased: false)
+                            </tbody>
+                        </table>
                     </div>
-                }
-            </div>
 
-            @foreach (var coloredAsset in Model.ColoredAssets)
-            {
-                var assetUrl = coloredAsset.IsKnown ? Url.Action("Index", "Asset", new {id= coloredAsset.AssetId}) : null;
-                <div class="transaction_details">
-                    <div class="transaction_details__header">
-                        <table class="issuer">
-                            <tbody>
+                    <div class="@(Model.Bitcoin.ShowWithoutChange ? toggleChangeItemClass : "")">
+                        @RenderBtcInOuts(Model.Bitcoin.AggregatedIns, Model.Bitcoin.AggregatedOuts, showConsumedReleased: true)
+                    </div>
+                    @if (Model.Bitcoin.ShowWithoutChange)
+                    {
+                        <div class="@toggleChangeItemClass hidden">
+                            @RenderBtcInOuts(Model.Bitcoin.AggregatedInsWithoutChange, Model.Bitcoin.AggregatedOutsWithoutChange, showConsumedReleased: false)
+                        </div>
+                    }
+                </div>
+
+                @foreach (var coloredAsset in Model.ColoredAssets)
+                {
+                    var assetUrl = coloredAsset.IsKnown ? Url.Action("Index", "Asset", new {id= coloredAsset.AssetId}) : null;
+                    <div class="transaction_details">
+                        <div class="transaction_details__header">
+                            <table class="issuer">
+                                <tbody>
                                 <tr>
                                     <td class="issuer__img">
                                         <a href="@assetUrl">
@@ -120,26 +123,27 @@
                                         </div>
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="@(coloredAsset.ShowWithoutChange? toggleChangeItemClass : "")">
-                        @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedIns, coloredAsset.AggregatedOuts)
-                    </div>
-                    @if (coloredAsset.ShowWithoutChange)
-                    {
-                        <div class="@toggleChangeItemClass hidden">
-                            @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedInsWithoutChange, coloredAsset.AggregatedOutsWithoutChange)
+                                </tbody>
+                            </table>
                         </div>
-                    }
-                </div>
-            }
+                    
+                        <div class="@(coloredAsset.ShowWithoutChange? toggleChangeItemClass : "")">
+                            @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedIns, coloredAsset.AggregatedOuts)
+                        </div>
+                        @if (coloredAsset.ShowWithoutChange)
+                        {
+                            <div class="@toggleChangeItemClass hidden">
+                                @RenderColoredAssetInOuts(coloredAsset, coloredAsset.AggregatedInsWithoutChange, coloredAsset.AggregatedOutsWithoutChange)
+                            </div>
+                        }
+                    </div>
+                }
+
+            </div>
 
         </div>
-
     </div>
-</div>
+}
 
 @*Helpers faster than Partial Views*@
 

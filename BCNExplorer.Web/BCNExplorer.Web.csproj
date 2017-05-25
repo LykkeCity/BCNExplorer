@@ -236,6 +236,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\IssuerController.cs" />
     <Compile Include="Controllers\MainChainController.cs" />
+    <Compile Include="Controllers\OffchainTransactionController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\BlockController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="Models\IssuerViewModel.cs" />
     <Compile Include="Models\LastBlockViewModel.cs" />
     <Compile Include="Models\BlockViewModel.cs" />
+    <Compile Include="Models\OffchainViewModels.cs" />
     <Compile Include="Models\TransactionIdList.cs" />
     <Compile Include="Models\TransactionViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -401,7 +403,7 @@
     <Content Include="Views\Block\Index.cshtml" />
     <Content Include="Views\Shared\NotFound.cshtml" />
     <Content Include="Views\Transaction\Index.cshtml" />
-    <Content Include="Views\Transaction\TransactionDetails.cshtml" />
+    <Content Include="Views\Shared\TransactionDetails.cshtml" />
     <Content Include="Views\Transaction\TransactionIdList.cshtml" />
     <Content Include="Views\Transaction\List.cshtml" />
     <Content Include="Views\Address\Index.cshtml" />
@@ -486,6 +488,12 @@
     <Content Include="fonts\ProximaNovaBold.eot" />
     <Content Include="fonts\ProximaNovaBold.ttf" />
     <Content Include="fonts\ProximaNovaBold.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\OffchainTransaction\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\OffchainTransactionDetails.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

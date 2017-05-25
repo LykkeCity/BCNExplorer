@@ -21,12 +21,12 @@ namespace Common
         const string BtcFormatString = "### ### ### ### ##0.#################";
         public static string ToStringBtcFormat(this double quantity)
         {
-            return quantity.ToString(BtcFormatString);
+            return quantity.ToString(BtcFormatString).Trim();
         }
 
         public static string ToStringBtcFormat(this decimal quantity)
         {
-            return quantity.ToString(BtcFormatString);
+            return quantity.ToString(BtcFormatString).Trim();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Asset;
 using Providers.TransportTypes.Asset;
@@ -7,7 +8,10 @@ namespace BCNExplorer.Web.Models
 {
     public class AssetViewModel
     {
+        private const string DefaultAssetIconUrl = "/img/be/asset_default.jpg";
         public IEnumerable<string> AssetIds { get; set; }
+
+        public bool IsColored { get; set; }
 
         public string ContactUrl { get; set; }
 
@@ -27,13 +31,18 @@ namespace BCNExplorer.Web.Models
 
         public bool LinkToWebsite { get; set; }
 
-        public string IconUrl { get; set; }
+        private string _iconUrl;
+        public string IconUrl => !string.IsNullOrEmpty(_iconUrl) ? _iconUrl : DefaultAssetIconUrl;
 
         public string ImageUrl { get; set; }
 
         public string Version { get; set; }
         public string DefinitionUrl { get; set; }
         public bool IsVerified { get; set; }
+        
+        public bool ShowAssetDetailsLink { get; set; }
+
+        public bool ShowAssetImage => !string.IsNullOrEmpty(ImageUrl);
         public static AssetViewModel Create(IAssetDefinition source)
         {
             return new AssetViewModel
@@ -43,7 +52,7 @@ namespace BCNExplorer.Web.Models
                 Description = source.Description,
                 DescriptionMime = source.DescriptionMime,
                 Divisibility = source.Divisibility,
-                IconUrl = source.IconUrl,
+                _iconUrl = source.IconUrl,
                 ImageUrl = source.ImageUrl,
                 Issuer = source.Issuer,
                 LinkToWebsite = source.LinkToWebsite,
@@ -52,7 +61,36 @@ namespace BCNExplorer.Web.Models
                 Type = source.Type,
                 Version = source.Version,
                 DefinitionUrl = source.AssetDefinitionUrl,
-                IsVerified = source.IsVerified()
+                IsVerified = source.IsVerified(),
+                ShowAssetDetailsLink = true,
+                IsColored = true
+            };
+        }
+
+        private static AssetViewModel CreateBtcAsset()
+        {
+            return new AssetViewModel
+            {
+                AssetIds = Enumerable.Empty<string>(),
+                Name = "Bitcoin",
+
+                NameShort = "BTC",
+                _iconUrl = "/img/assets/bitcoin.png",
+                ShowAssetDetailsLink = false,
+                IsColored = false
+            };
+        }
+
+        public static Lazy<AssetViewModel> BtcAsset = new Lazy<AssetViewModel>(CreateBtcAsset);
+
+        public static AssetViewModel CreateNotFoundAsset(string assetId)
+        {
+            return new AssetViewModel
+            {
+                AssetIds = new []{assetId},
+                Name = assetId,
+                ShowAssetDetailsLink = false,
+                IsColored = true
             };
         }
     }
