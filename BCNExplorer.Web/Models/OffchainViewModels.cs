@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Core.Asset;
+using Core.Channel;
 
 namespace BCNExplorer.Web.Models
 {
@@ -80,6 +83,61 @@ namespace BCNExplorer.Web.Models
                 Address2QuantityDiff = address2QuantityDiff
             };
         }
+
+
+        private static IEnumerable<OffChainTransactionViewModel> PopulateTxs(IOffchainTransaction[] offchainTransactions,
+            IDictionary<string, IAssetDefinition> assetDictionary)
+        {
+            IOffchainTransaction prevTx = null;
+
+            var confirmedTxId = offchainTransactions.LastOrDefault()?.TransactionId;
+            foreach (var tx in offchainTransactions)
+            {
+                AssetViewModel asset;
+                if (tx.IsColored)
+                {
+                    asset = assetDictionary.ContainsKey(tx.AssetId) ?
+                        AssetViewModel.Create(assetDictionary[tx.AssetId]) :
+                        AssetViewModel.CreateNotFoundAsset(tx.AssetId);
+                }
+                else
+                {
+                    asset = AssetViewModel.BtcAsset.Value;
+                }
+
+                yield return Create(
+                    transactionId: tx.TransactionId,
+                    asset: asset,
+                    dateTime: tx.DateTime,
+                    isRevoked: tx.TransactionId != confirmedTxId,
+                    hubAddress: tx.HubAddress,
+                    address1: tx.Address1,
+                    address2: tx.Address2,
+                    address1Quantity: tx.Address1Quantity,
+                    address2Quantity: tx.Address2Quantity,
+                    address1QuantityDiff: CalcDiff(prevTx, tx, p => p.Address1Quantity),
+                    address2QuantityDiff: CalcDiff(prevTx, tx, p => p.Address2Quantity));
+
+                prevTx = tx;
+            }
+        }
+
+        public static IEnumerable<OffChainTransactionViewModel> Create(IOffchainTransaction[] offchainTransactions, IDictionary<string, IAssetDefinition> assetDictionary)
+        {
+            return PopulateTxs(offchainTransactions, assetDictionary).ToList().AsEnumerable().Reverse();
+        }
+
+        private static decimal CalcDiff(IOffchainTransaction prevTx, IOffchainTransaction currentTx,
+            Func<IOffchainTransaction, decimal> propSelector)
+        {
+            if (prevTx == null)
+            {
+                return 0;
+            }
+
+            return propSelector(currentTx) - propSelector(prevTx);
+        }
+        
     }
 
     public class OffchainTransactionDetailsViewModel

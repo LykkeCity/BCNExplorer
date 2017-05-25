@@ -119,6 +119,7 @@
     <Compile Include="Asset\AssetDefinitionRepository.cs" />
     <Compile Include="Asset\AssetImageCommandProducer.cs" />
     <Compile Include="Asset\AssetScoreRepository.cs" />
+    <Compile Include="Channel\ChannelRepository.cs" />
     <Compile Include="JobsQueueNames.cs" />
     <Compile Include="QueueReaders\CoinholderIndexesQueueReader.cs" />
     <Compile Include="QueueReaders\BalanceReportingQueueReader.cs" />

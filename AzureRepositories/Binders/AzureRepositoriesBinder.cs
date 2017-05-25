@@ -1,9 +1,11 @@
-﻿using AzureRepositories.Monitoring;
+﻿using AzureRepositories.Channel;
+using AzureRepositories.Monitoring;
 using AzureStorage.Tables;
 using Common.IocContainer;
 using Common.Log;
 using Core.Asset;
 using Core.AssetBlockChanges.Mongo;
+using Core.Channel;
 using Core.Monitoring;
 using Core.Settings;
 using Core.TransactionCache;
@@ -30,6 +32,7 @@ namespace AzureRepositories.Binders
             ioc.Register(AzureRepoFactories.CreateAssetCoinholdersIndexesCommandProducer(baseSettings, log));
             ioc.Register(AzureRepoFactories.CreateSendBalanceReportCommandQueryProducer(baseSettings, log));
 
+            ioc.RegisterPerCall<IChannelRepository, ChannelRepository>();
             ioc.Register<IAssetBalanceChangesRepository>(AzureRepoFactories.CreateAssetBalanceChangesRepository(baseSettings, log));
             
             ioc.Register<IServiceMonitoringRepository>(
