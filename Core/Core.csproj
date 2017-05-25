@@ -58,6 +58,7 @@
     <Compile Include="BalanceReport\IReportRenderer.cs" />
     <Compile Include="Block\IBlockService.cs" />
     <Compile Include="Asset\IAssetService.cs" />
+    <Compile Include="Block\ICachedBlockService.cs" />
     <Compile Include="Channel\IChannelRepository.cs" />
     <Compile Include="Email\EmailTemplateModels.cs" />
     <Compile Include="Email\IEmailSender.cs" />

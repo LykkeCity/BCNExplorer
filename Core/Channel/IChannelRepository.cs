@@ -41,5 +41,6 @@ namespace Core.Channel
     public interface IChannelRepository
     {
         Task<IChannel> GetByOffchainTransactionId(string transactionId);
+        Task<IChannel> GetByBlockId(string blockId);
     }
 }

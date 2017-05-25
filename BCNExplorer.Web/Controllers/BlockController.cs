@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using System.Web.SessionState;
 using BCNExplorer.Web.Models;
 using Core.Block;
-using Providers.Providers.Ninja;
 
 namespace BCNExplorer.Web.Controllers
 {
@@ -11,22 +10,23 @@ namespace BCNExplorer.Web.Controllers
     public class BlockController : Controller
     {
         private readonly IBlockService _blockService;
+        private readonly ICachedBlockService _cachedBlockService;
 
-        public BlockController(IBlockService blockService)
+        public BlockController(IBlockService blockService, ICachedBlockService cachedBlockService)
         {
             _blockService = blockService;
+            _cachedBlockService = cachedBlockService;
         }
 
         [Route("block/{id}")]
-        [OutputCache(Duration = 10 * 60, VaryByParam = "*")]
         public async Task<ActionResult> Index(string id)
         {
-            var block = _blockService.GetBlockAsync(id);
+            var block = _cachedBlockService.GetBlockAsync(id);
             var lastBlock = _blockService.GetLastBlockHeaderAsync();
 
             await Task.WhenAll(block, lastBlock);
 
-            if (block != null)
+            if (block.Result != null)
             {
                 var result = BlockViewModel.Create(block.Result, lastBlock.Result);
 

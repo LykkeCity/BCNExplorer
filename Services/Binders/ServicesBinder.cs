@@ -20,6 +20,7 @@ using Services.Address;
 using Services.Asset;
 using Services.BalanceChanges;
 using Services.BalanceReport;
+using Services.Block;
 using Services.BlockChain;
 using Services.Email;
 using Services.MainChain;
@@ -39,6 +40,9 @@ namespace Services.Binders
             ioc.RegisterFactorySingleTone( ()=> new CachedMainChainService(ioc.GetObject<MainChainService>(), new MemoryCacheManager(), cachedTimeInMinutes: 10));
 
             ioc.RegisterPerCall<IBlockService, BlockService>();
+            ioc.RegisterFactorySingleTone(() => (ICachedBlockService) new CachedBlockService(new MemoryCacheManager(), ioc.GetObject<IBlockService>()));
+
+
             ioc.RegisterPerCall<ITransactionService, TransactionService>();
             ioc.RegisterPerCall<IAddressService, AddressService>();
             ioc.RegisterPerCall<ISearchService, SearchService>();

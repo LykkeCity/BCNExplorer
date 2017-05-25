@@ -84,6 +84,23 @@ namespace AzureRepositories.Channel
 
             return dbEntity != null ? Channel.Create(dbEntity) : null;
         }
+
+        public async Task<IChannel> GetByBlockId(string blockId)
+        {
+            var openTxEqualsfilterExpression =
+                Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.BlockId, blockId);
+
+            var closeTxEqualsfilterExpression =
+                Builders<ChannelMongoEntity>.Filter.Eq(p => p.CloseTransaction.Block.BlockId, blockId);
+
+            var finalFilterExpression = Builders<ChannelMongoEntity>.Filter.Or(openTxEqualsfilterExpression, closeTxEqualsfilterExpression);
+
+            var dbEntity = await _mongoCollection
+                .Find(finalFilterExpression)
+                .FirstOrDefaultAsync();
+
+            return dbEntity != null ? Channel.Create(dbEntity) : null;
+        }
     }
 
     public class ChannelMongoEntity
