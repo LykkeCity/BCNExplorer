@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddressService\IAddressService.cs" />
+    <Compile Include="AddressService\ICachedAddressService.cs" />
     <Compile Include="AssetBlockChanges\Mongo\IAssetBalanceChangesRepository.cs" />
     <Compile Include="Asset\IAssetChangesParsedBlockRepository.cs" />
     <Compile Include="Asset\IAssetCoinholdersIndexRepository.cs" />

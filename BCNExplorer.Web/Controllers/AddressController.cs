@@ -18,20 +18,23 @@ namespace BCNExplorer.Web.Controllers
         private readonly IAssetService _assetService;
         private readonly IBlockService _blockService;
 
+        private readonly ICachedAddressService _cachedAddressService;
+
         private readonly CachedMainChainService _mainChainService;
 
         public AddressController(IAddressService addressProvider, 
             IAssetService assetService, 
             IBlockService blockService, 
-            CachedMainChainService mainChainService)
+            CachedMainChainService mainChainService, 
+            ICachedAddressService cachedAddressService)
         {
             _addressProvider = addressProvider;
             _assetService = assetService;
             _blockService = blockService;
             _mainChainService = mainChainService;
+            _cachedAddressService = cachedAddressService;
         }
-
-        //[OutputCache(Duration = 60 * 60, VaryByParam = "*")]
+        
         [Route("address/{id}")]
         public async Task<ActionResult> Index(string id, int? at)
         {
@@ -102,12 +105,15 @@ namespace BCNExplorer.Web.Controllers
 
             return RedirectToAction("BalanceAtBlock", new { id = id, at = block?.Height ?? 0 });
         }
-
-        [OutputCache(Duration = 1 * 60, VaryByParam = "*")]
+        
         [Route("address/transactions/{id}")]
         public async Task<ActionResult> Transactions(string id)
         {
-            return View(AddressTransactionsViewModel.Create(await _addressProvider.GetTransactions(id)));
+            var onchainTransactions = _cachedAddressService.GetTransactions(id);
+
+            await Task.WhenAll(onchainTransactions);
+
+            return View(AddressTransactionsViewModel.Create(onchainTransactions.Result));
         } 
     }
 }

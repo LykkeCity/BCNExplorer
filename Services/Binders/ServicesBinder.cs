@@ -42,8 +42,11 @@ namespace Services.Binders
             ioc.RegisterFactorySingleTone( ()=> new CachedMainChainService(ioc.GetObject<MainChainService>(), new MemoryCacheManager(), cachedTimeInMinutes: 10));
 
             ioc.RegisterPerCall<IBlockService, BlockService>();
+
             ioc.RegisterFactorySingleTone(() => (ICachedBlockService) new CachedBlockService(new MemoryCacheManager(), ioc.GetObject<IBlockService>()));
             ioc.RegisterFactorySingleTone(() => (ICachedTransactionService)new CachedTransactionService(new MemoryCacheManager(), ioc.GetObject<ITransactionService>()));
+
+            ioc.RegisterFactorySingleTone(() => (ICachedAddressService)new CachedAddressService(new MemoryCacheManager(), ioc.GetObject<IAddressService>()));
 
 
 

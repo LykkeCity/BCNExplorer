@@ -14,7 +14,7 @@ namespace Services.Transaction
         private readonly ITransactionService _transactionService;
 
         private const string CachePrefix = "transaction_";
-        private int cacheTimeMinutes = 1;
+        private int cacheTimeMinutes = 2;
 
         private string GetCacheKey(string id)
         {
