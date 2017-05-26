@@ -85,21 +85,34 @@ namespace AzureRepositories.Channel
             return dbEntity != null ? Channel.Create(dbEntity) : null;
         }
 
-        public async Task<IChannel> GetByBlockId(string blockId)
+        public async Task<IEnumerable<IChannel>> GetByBlockId(string blockId)
         {
-            var openTxEqualsfilterExpression =
-                Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.BlockId, blockId);
+            var openTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.BlockId, blockId);
 
-            var closeTxEqualsfilterExpression =
-                Builders<ChannelMongoEntity>.Filter.Eq(p => p.CloseTransaction.Block.BlockId, blockId);
+            var closeTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.CloseTransaction.Block.BlockId, blockId);
 
             var finalFilterExpression = Builders<ChannelMongoEntity>.Filter.Or(openTxEqualsfilterExpression, closeTxEqualsfilterExpression);
 
-            var dbEntity = await _mongoCollection
+            var dbEntities = await _mongoCollection
                 .Find(finalFilterExpression)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
 
-            return dbEntity != null ? Channel.Create(dbEntity) : null;
+            return dbEntities.Select(Channel.Create);
+        }
+
+        public async Task<IEnumerable<IChannel>> GetByBlockHeight(int blockHeight)
+        {
+            var openTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.Height, blockHeight);
+
+            var closeTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.CloseTransaction.Block.Height, blockHeight);
+
+            var finalFilterExpression = Builders<ChannelMongoEntity>.Filter.Or(openTxEqualsfilterExpression, closeTxEqualsfilterExpression);
+
+            var dbEntities = await _mongoCollection
+                .Find(finalFilterExpression)
+                .ToListAsync();
+
+            return dbEntities.Select(Channel.Create);
         }
     }
 

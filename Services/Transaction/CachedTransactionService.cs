@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Common.Cache;
 using Core.Transaction;
@@ -42,6 +45,25 @@ namespace Services.Transaction
             }
 
             return null;
+        }
+
+        public async Task<IEnumerable<ITransaction>> GetAsync(IEnumerable<string> ids)
+        {
+            var result = new ConcurrentStack<ITransaction>();
+
+            var idList = ids as IList<string> ?? ids.ToList();
+
+            var loadTransactionTasks = idList.Select(id => _transactionService.GetAsync(id).ContinueWith(task =>
+            {
+                if (task.Result != null)
+                {
+                    result.Push(task.Result);
+                }
+            }));
+
+            await Task.WhenAll(loadTransactionTasks);
+            
+            return result.OrderBy(p => idList.IndexOf(p.TransactionId));
         }
     }
 }

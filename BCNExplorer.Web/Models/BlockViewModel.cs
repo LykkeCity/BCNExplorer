@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Core.Asset;
 using Core.Block;
+using Core.Channel;
 
 namespace BCNExplorer.Web.Models
 {
@@ -24,8 +27,13 @@ namespace BCNExplorer.Web.Models
         public TransactionIdList ColoredTransactionIdList { get; set; }
         public TransactionIdList UncoloredTransactionIdList { get; set; }
 
+        public OffchainChannelListViewModel OffchainChannelList { get; set; }
 
-        public static BlockViewModel Create(IBlock ninjaBlock, IBlockHeader lastBlock)
+
+        public static BlockViewModel Create(IBlock ninjaBlock, 
+            IBlockHeader lastBlock, 
+            IEnumerable<IFilledChannel> offchainChannels,  
+            IDictionary<string, IAssetDefinition> assetDictionary)
         {
             return new BlockViewModel
             {
@@ -42,7 +50,8 @@ namespace BCNExplorer.Web.Models
                 UncoloredTransactionIdList = new TransactionIdList(ninjaBlock.UncoloredTransactionIds),
                 TotalTransactions = ninjaBlock.TotalTransactions,
                 ShowNextBlock = ninjaBlock.Height < lastBlock?.Height,
-                NextBlockHeight = ninjaBlock.Height + 1
+                NextBlockHeight = ninjaBlock.Height + 1,
+                OffchainChannelList = OffchainChannelListViewModel.Create(offchainChannels, assetDictionary)
             };
         }
     }

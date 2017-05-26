@@ -136,6 +136,7 @@
     <Compile Include="CountryManager.cs" />
     <Compile Include="CSV\CsvHelper.cs" />
     <Compile Include="DateTimeUtils.cs" />
+    <Compile Include="DictionaryHelper.cs" />
     <Compile Include="DictionaryThreadSafe.cs" />
     <Compile Include="EncryptionTools\AESHelper.cs" />
     <Compile Include="Files\CsvWriter.cs" />

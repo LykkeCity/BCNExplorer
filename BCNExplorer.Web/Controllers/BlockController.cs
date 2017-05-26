@@ -2,7 +2,9 @@
 using System.Web.Mvc;
 using System.Web.SessionState;
 using BCNExplorer.Web.Models;
+using Core.Asset;
 using Core.Block;
+using Core.Channel;
 
 namespace BCNExplorer.Web.Controllers
 {
@@ -11,11 +13,18 @@ namespace BCNExplorer.Web.Controllers
     {
         private readonly IBlockService _blockService;
         private readonly ICachedBlockService _cachedBlockService;
+        private readonly IChannelService _channelService;
+        private readonly IAssetService _assetService;
 
-        public BlockController(IBlockService blockService, ICachedBlockService cachedBlockService)
+        public BlockController(IBlockService blockService, 
+            ICachedBlockService cachedBlockService,
+            IChannelService channelService, 
+            IAssetService assetService)
         {
             _blockService = blockService;
             _cachedBlockService = cachedBlockService;
+            _channelService = channelService;
+            _assetService = assetService;
         }
 
         [Route("block/{id}")]
@@ -23,12 +32,14 @@ namespace BCNExplorer.Web.Controllers
         {
             var block = _cachedBlockService.GetBlockAsync(id);
             var lastBlock = _blockService.GetLastBlockHeaderAsync();
+            var offchainChannels = _channelService.GetByBlock(id);
+            var assetDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
 
-            await Task.WhenAll(block, lastBlock);
+            await Task.WhenAll(block, lastBlock, offchainChannels, assetDictionary);
 
             if (block.Result != null)
             {
-                var result = BlockViewModel.Create(block.Result, lastBlock.Result);
+                var result = BlockViewModel.Create(block.Result, lastBlock.Result, offchainChannels.Result, assetDictionary.Result);
 
                 return View(result);
             }

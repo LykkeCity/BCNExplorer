@@ -56,7 +56,7 @@ namespace BCNExplorer.Web.Controllers
 
             await Task.WhenAll(loadTransactionTasks);
 
-            return View(result.OrderBy(p=> ids.IndexOf(p.TransactionId)));
+            return View(result.OrderBy(p => ids.IndexOf(p.TransactionId)));
         }
     }
 }

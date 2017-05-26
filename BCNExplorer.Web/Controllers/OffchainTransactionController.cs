@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.SessionState;
 using BCNExplorer.Web.Models;
 using Core.Asset;
 using Core.Channel;
@@ -9,26 +10,25 @@ using Core.Transaction;
 
 namespace BCNExplorer.Web.Controllers
 {
+    [SessionState(SessionStateBehavior.Disabled)]
     public class OffchainTransactionController: Controller
     {
-        private readonly ICachedTransactionService _transactionService;
         private readonly IAssetService _assetService;
-        private readonly IChannelRepository _channelRepository;
+        private readonly IChannelService _channelService;
 
         
         public OffchainTransactionController(ICachedTransactionService transactionService,
-            IAssetService assetService, 
-            IChannelRepository channelRepository)
+            IAssetService assetService,
+            IChannelService channelService)
         {
-            _transactionService = transactionService;
             _assetService = assetService;
-            _channelRepository = channelRepository;
+            _channelService = channelService;
         }
 
         [Route("transaction/offchain/{id}")]
         public async Task<ActionResult> Index(string id)
         {
-            var channel = _channelRepository.GetByOffchainTransactionId(id);
+            var channel = _channelService.GetByOffchainTransactionId(id);
             var assetDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
 
             await Task.WhenAll(channel, assetDictionary);
@@ -38,20 +38,9 @@ namespace BCNExplorer.Web.Controllers
                 return View("NotFound");
             }
 
-            var openTx = _transactionService.GetAsync(channel.Result.OpenTransactionId);
-            var closeTx = _transactionService.GetAsync(channel.Result.CloseTransactionId);
+            var channelViewModel = OffchainChannelViewModel.Create(channel.Result, assetDictionary.Result);
 
-            await Task.WhenAll(openTx, closeTx, assetDictionary);
-
-            var openOnChainTx = TransactionViewModel.Create(openTx.Result, assetDictionary.Result);
-            var closeOnChainTx = TransactionViewModel.Create(closeTx.Result, assetDictionary.Result);
-            
-            var offchainTransactions = OffChainTransactionViewModel.Create(channel.Result.OffchainTransactions,assetDictionary.Result).ToList();
-
-
-            var channelViewModel = OffchainChannelViewModel.Create(openOnChainTx, closeOnChainTx, offchainTransactions);
-
-            return View(OffchainTransactionDetailsViewModel.Create(channelViewModel, offchainTransactions.First(x => x.TransactionId ==id)));
+            return View(OffchainTransactionDetailsViewModel.Create(channelViewModel, id));
         }
     }
 }

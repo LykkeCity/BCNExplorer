@@ -15,14 +15,40 @@ namespace BCNExplorer.Web.Models
 
         public IEnumerable<OffChainTransactionViewModel> OffChainTransactions { get; set; }
 
-        public static OffchainChannelViewModel Create(TransactionViewModel openTransaction, TransactionViewModel closeTransaction, IEnumerable<OffChainTransactionViewModel> offChainTransactions)
+        public static OffchainChannelViewModel Create(IFilledChannel channel, IDictionary<string, IAssetDefinition> assetDictionary)
         {
+            var openOnChainTx = TransactionViewModel.Create(channel.OpenTransaction, assetDictionary);
+            var closeOnChainTx = TransactionViewModel.Create(channel.CloseTransaction, assetDictionary);
+
+            var offchainTransactions = OffChainTransactionViewModel.Create(channel.OffchainTransactions, assetDictionary).ToList();
+
             return new OffchainChannelViewModel
             {
-                OpenTransaction = openTransaction,
-                CloseTransaction = closeTransaction,
-                OffChainTransactions = offChainTransactions
+                OpenTransaction = openOnChainTx,
+                CloseTransaction = closeOnChainTx,
+                OffChainTransactions = offchainTransactions
             };
+        }
+    }
+
+    public class OffchainChannelListViewModel
+    {
+        public IEnumerable<OffchainChannelViewModel> Channels { get; set; }
+
+        public int TransactionCount => Channels.SelectMany(p => p.OffChainTransactions).Count();
+
+        public static OffchainChannelListViewModel Create(IEnumerable<IFilledChannel> channels, IDictionary<string, IAssetDefinition> assetDictionary)
+        {
+            return Create(channels.Select(p => OffchainChannelViewModel.Create(p, assetDictionary)));
+
+        }
+        public static OffchainChannelListViewModel Create(IEnumerable<OffchainChannelViewModel> channels)
+        {
+            return new OffchainChannelListViewModel
+            {
+                Channels = channels
+            };
+
         }
     }
 
@@ -148,12 +174,12 @@ namespace BCNExplorer.Web.Models
         public OffChainTransactionViewModel Transaction { get; set; }
 
         public static OffchainTransactionDetailsViewModel Create(OffchainChannelViewModel channel,
-            OffChainTransactionViewModel transaction)
+            string transactionId)
         {
             return new OffchainTransactionDetailsViewModel
             {
                 Channel = channel,
-                Transaction = transaction
+                Transaction = channel.OffChainTransactions.First(x => x.TransactionId == transactionId)
             };
         }
     }

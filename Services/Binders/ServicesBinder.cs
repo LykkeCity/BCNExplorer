@@ -9,6 +9,7 @@ using Core.AddressService;
 using Core.Asset;
 using Core.BalanceReport;
 using Core.Block;
+using Core.Channel;
 using Core.Email;
 using Core.SearchService;
 using Core.Settings;
@@ -22,6 +23,7 @@ using Services.BalanceChanges;
 using Services.BalanceReport;
 using Services.Block;
 using Services.BlockChain;
+using Services.Channel;
 using Services.Email;
 using Services.MainChain;
 using Services.Search;
@@ -45,6 +47,7 @@ namespace Services.Binders
 
 
 
+            ioc.RegisterPerCall<IChannelService, ChannelService>();
             ioc.RegisterPerCall<ITransactionService, TransactionService>();
             ioc.RegisterPerCall<IAddressService, AddressService>();
             ioc.RegisterPerCall<ISearchService, SearchService>();

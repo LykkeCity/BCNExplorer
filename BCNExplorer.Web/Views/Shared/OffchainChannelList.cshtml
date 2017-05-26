@@ -1,0 +1,9 @@
+﻿@model OffchainChannelListViewModel 
+@{
+    Layout = null;
+}
+
+@foreach (var item in Model.Channels)
+{
+    @Html.Partial("OffchainChannel", item)
+}

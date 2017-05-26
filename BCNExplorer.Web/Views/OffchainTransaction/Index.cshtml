@@ -24,15 +24,7 @@
 </section>
 
 <section class="section section--transactions">
-
-    @Html.Partial("TransactionDetails", Model.Channel.CloseTransaction)
-
-    @foreach (var tx in Model.Channel.OffChainTransactions)
-    {
-        @Html.Partial("OffchainTransactionDetails", tx)
-    }
-
-    @Html.Partial("TransactionDetails", Model.Channel.OpenTransaction)
-
+    
+    @Html.Partial("OffchainChannel", Model.Channel)
 
 </section>
