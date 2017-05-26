@@ -47,7 +47,7 @@
                         @if (Model.FullLoaded)
                         {
                             <span>
-                                · 
+                                · @Model.OffchainChannelList.TransactionCount
                             </span>
                         }
                     </a>
@@ -73,7 +73,7 @@
         </div>
         
         <div id="js-offchain-tx" class="hidden js-select-result">
-            Offchain
+            @Html.Partial("OffchainChannelList", Model.OffchainChannelList)
         </div>
     </div>
 </section>

@@ -114,6 +114,24 @@ namespace AzureRepositories.Channel
 
             return dbEntities.Select(Channel.Create);
         }
+
+        public async Task<IEnumerable<IChannel>> GetByAddress(string address)
+        {
+            var hubAddressFilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.HubAddress, address);
+
+            var address1filterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.ClientAddress1, address);
+            var address2FilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.ClientAddress2, address);
+
+            var filterExpression = Builders<ChannelMongoEntity>.Filter.Or(hubAddressFilterExpression, 
+                address1filterExpression, 
+                address2FilterExpression);
+
+            var dbEntities = await _mongoCollection
+                .Find(filterExpression)
+                .ToListAsync();
+
+            return dbEntities.Select(Channel.Create);
+        }
     }
 
     public class ChannelMongoEntity

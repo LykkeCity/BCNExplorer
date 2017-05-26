@@ -4,6 +4,7 @@ using System.Linq;
 using Core.AddressService;
 using Core.Asset;
 using Core.Block;
+using Core.Channel;
 
 namespace BCNExplorer.Web.Models
 {
@@ -69,17 +70,21 @@ namespace BCNExplorer.Web.Models
         public TransactionIdList AllTransactionIdList { get; set; }
         public TransactionIdList SendTransactionIdList { get; set; }
         public TransactionIdList ReceivedTransactionIdList { get; set; }
+        public OffchainChannelListViewModel OffchainChannelList { get; set; }
         public bool FullLoaded { get; set; }
         private const int PageSize = 20;
 
-        public static AddressTransactionsViewModel Create(IAddressTransactions source)
+        public static AddressTransactionsViewModel Create(IAddressTransactions source, 
+            IEnumerable<IFilledChannel> channels, 
+            IDictionary<string, IAssetDefinition> assetDictionary)
         {
             return new AddressTransactionsViewModel
             {
                 AllTransactionIdList = new TransactionIdList(source.All?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 SendTransactionIdList = new TransactionIdList(source.Send?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 ReceivedTransactionIdList = new TransactionIdList(source.Received?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
-                FullLoaded = source.FullLoaded
+                FullLoaded = source.FullLoaded,
+                OffchainChannelList = OffchainChannelListViewModel.Create(channels, assetDictionary)
             };
         }
     }

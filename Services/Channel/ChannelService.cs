@@ -67,6 +67,14 @@ namespace Services.Channel
             return await FillChannels(dbChannels);
         }
 
+        public async Task<IEnumerable<IFilledChannel>> GetByAddress(string address)
+        {
+            //todo process colored/uncolored address
+            var dbChannels = await _channelRepository.GetByAddress(address);
+
+            return await FillChannels(dbChannels);
+        }
+
 
         private async Task<IFilledChannel> FillChannel(IChannel channel)
         {

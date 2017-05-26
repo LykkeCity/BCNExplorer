@@ -43,5 +43,6 @@ namespace Core.Channel
         Task<IChannel> GetByOffchainTransactionId(string transactionId);
         Task<IEnumerable<IChannel>> GetByBlockId(string blockId);
         Task<IEnumerable<IChannel>> GetByBlockHeight(int blockHeight);
+        Task<IEnumerable<IChannel>> GetByAddress(string address);
     }
 }

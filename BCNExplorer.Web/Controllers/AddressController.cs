@@ -6,6 +6,7 @@ using BCNExplorer.Web.Models;
 using Core.AddressService;
 using Core.Asset;
 using Core.Block;
+using Core.Channel;
 using Providers.Helpers;
 using Services.MainChain;
 
@@ -17,22 +18,23 @@ namespace BCNExplorer.Web.Controllers
         private readonly IAddressService _addressProvider;
         private readonly IAssetService _assetService;
         private readonly IBlockService _blockService;
-
+        private readonly IChannelService _channelService;
         private readonly ICachedAddressService _cachedAddressService;
-
         private readonly CachedMainChainService _mainChainService;
 
         public AddressController(IAddressService addressProvider, 
             IAssetService assetService, 
             IBlockService blockService, 
             CachedMainChainService mainChainService, 
-            ICachedAddressService cachedAddressService)
+            ICachedAddressService cachedAddressService, 
+            IChannelService channelService)
         {
             _addressProvider = addressProvider;
             _assetService = assetService;
             _blockService = blockService;
             _mainChainService = mainChainService;
             _cachedAddressService = cachedAddressService;
+            _channelService = channelService;
         }
         
         [Route("address/{id}")]
@@ -110,10 +112,12 @@ namespace BCNExplorer.Web.Controllers
         public async Task<ActionResult> Transactions(string id)
         {
             var onchainTransactions = _cachedAddressService.GetTransactions(id);
+            var assetDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
+            var channels = _channelService.GetByAddress(id);
 
-            await Task.WhenAll(onchainTransactions);
+            await Task.WhenAll(onchainTransactions, assetDictionary, channels);
 
-            return View(AddressTransactionsViewModel.Create(onchainTransactions.Result));
+            return View(AddressTransactionsViewModel.Create(onchainTransactions.Result, channels.Result, assetDictionary.Result));
         } 
     }
 }
