@@ -69,6 +69,7 @@
     <Compile Include="Settings\BaseSettings.cs" />
     <Compile Include="TransactionCache\IAddressTransaction.cs" />
     <Compile Include="TransactionCache\ITransactionCacheStatus.cs" />
+    <Compile Include="Transaction\ICachedTransactionService.cs" />
     <Compile Include="Transaction\ITransactionService.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -41,6 +41,8 @@ namespace Services.Binders
 
             ioc.RegisterPerCall<IBlockService, BlockService>();
             ioc.RegisterFactorySingleTone(() => (ICachedBlockService) new CachedBlockService(new MemoryCacheManager(), ioc.GetObject<IBlockService>()));
+            ioc.RegisterFactorySingleTone(() => (ICachedTransactionService)new CachedTransactionService(new MemoryCacheManager(), ioc.GetObject<ITransactionService>()));
+
 
 
             ioc.RegisterPerCall<ITransactionService, TransactionService>();

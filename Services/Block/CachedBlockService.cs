@@ -13,7 +13,7 @@ namespace Services.Block
         private readonly ICacheManager _cacheManager;
         private readonly IBlockService _blockService;
 
-        private const string cachePrefix = "block_";
+        private const string CachePrefix = "block_";
         private int cacheTimeMinutes = 10;
 
         public CachedBlockService(ICacheManager cacheManager, 
@@ -25,7 +25,7 @@ namespace Services.Block
 
         private string GetCacheKey(string id)
         {
-            return cachePrefix + id;
+            return CachePrefix + id;
         }
 
         public async Task<IBlock> GetBlockAsync(string id)

@@ -136,6 +136,7 @@
     <Compile Include="MainChain\MainChainService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\SearchService.cs" />
+    <Compile Include="Transaction\CachedTransactionService.cs" />
     <Compile Include="Transaction\TransactionService.cs" />
   </ItemGroup>
   <ItemGroup>

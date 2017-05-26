@@ -11,12 +11,12 @@ namespace BCNExplorer.Web.Controllers
 {
     public class OffchainTransactionController: Controller
     {
-        private readonly ITransactionService _transactionService;
+        private readonly ICachedTransactionService _transactionService;
         private readonly IAssetService _assetService;
         private readonly IChannelRepository _channelRepository;
 
         
-        public OffchainTransactionController(ITransactionService transactionService,
+        public OffchainTransactionController(ICachedTransactionService transactionService,
             IAssetService assetService, 
             IChannelRepository channelRepository)
         {
