@@ -3,7 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common;
 using Core.Channel;
+using Core.Settings;
 using Core.Transaction;
+using NBitcoin;
+using Providers.Helpers;
 
 namespace Services.Channel
 {
@@ -34,13 +37,14 @@ namespace Services.Channel
     public class ChannelService:IChannelService
     {
         private readonly IChannelRepository _channelRepository;
-
+        private readonly BaseSettings _baseSettings;
         private readonly ICachedTransactionService _cachedTransactionService;
 
-        public ChannelService(IChannelRepository channelRepository, ICachedTransactionService cachedTransactionService)
+        public ChannelService(IChannelRepository channelRepository, ICachedTransactionService cachedTransactionService, BaseSettings baseSettings)
         {
             _channelRepository = channelRepository;
             _cachedTransactionService = cachedTransactionService;
+            _baseSettings = baseSettings;
         }
 
         public async Task<IFilledChannel> GetByOffchainTransactionId(string transactionId)
@@ -69,12 +73,31 @@ namespace Services.Channel
 
         public async Task<IEnumerable<IFilledChannel>> GetByAddress(string address)
         {
-            //todo process colored/uncolored address
-            var dbChannels = await _channelRepository.GetByAddress(address);
+            var uncoloredAddress = GetUncoloredAddress(address);
+
+            var dbChannels = await _channelRepository.GetByAddress(uncoloredAddress);
 
             return await FillChannels(dbChannels);
         }
 
+        public Task<bool> IsHub(string address)
+        {
+            var uncoloredAddress = GetUncoloredAddress(address);
+
+            return _channelRepository.IsHub(uncoloredAddress);
+        }
+
+        private string GetUncoloredAddress(string address)
+        {
+            if (BitcoinAddressHelper.IsBitcoinColoredAddress(address, _baseSettings.UsedNetwork()))
+            {
+                var coloredAddress= new BitcoinColoredAddress(address, _baseSettings.UsedNetwork());
+
+                return coloredAddress.Address.ToWif();
+            }
+
+            return address;
+        }
 
         private async Task<IFilledChannel> FillChannel(IChannel channel)
         {

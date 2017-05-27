@@ -132,6 +132,12 @@ namespace AzureRepositories.Channel
 
             return dbEntities.Select(Channel.Create);
         }
+
+        public async Task<bool> IsHub(string address)
+        {
+            var hubAddressFilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.HubAddress, address);
+            return await _mongoCollection.Find(hubAddressFilterExpression).CountAsync() > 0;
+        }
     }
 
     public class ChannelMongoEntity

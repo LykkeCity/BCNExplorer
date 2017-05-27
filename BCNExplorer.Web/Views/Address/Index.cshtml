@@ -21,7 +21,14 @@
         <div class="page__header noborder">
             <div class="row">
                 <div class="col-sm-9">
-                    <h2 class="page__title">Bitcoin @(Model.IsColoredAddress ? "Colored":"") Address</h2>
+                    @if (Model.IsOffchainHub)
+                    {
+                        <h2 class="page__title">Payment Channel Multisig 2-of-2 Address</h2>
+                    }
+                    else
+                    {
+                        <h2 class="page__title">Bitcoin @(Model.IsColoredAddress ? "Colored" : "") Address</h2>
+                    }
                     <div class="address_code address_code--lead">
                         <span>@Model.AddressId</span>
                         <button class="btn btn--icon copy_code" type="button" title="Copy code">

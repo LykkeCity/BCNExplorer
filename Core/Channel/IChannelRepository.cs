@@ -44,5 +44,6 @@ namespace Core.Channel
         Task<IEnumerable<IChannel>> GetByBlockId(string blockId);
         Task<IEnumerable<IChannel>> GetByBlockHeight(int blockHeight);
         Task<IEnumerable<IChannel>> GetByAddress(string address);
+        Task<bool> IsHub(string address);
     }
 }

@@ -1,13 +1,15 @@
 ﻿@model AddressTransactionsViewModel
 @{
     Layout = null;
+
+    var showOffchainTab = Model.OffchainChannelList.Channels.Any();
 }
 
 <section class="section section--heading section--heading_with_tabs">
     <div class="container">
         <div class="mobile-scroll">
             <div class="tabs_stack pull-right js-tx-toggle-container">
-                <div class="tab_item js-tab_item tab_item--active">
+                <div class="tab_item js-tab_item  @(showOffchainTab?"":"tab_item--active") ">
                     <a class="tab_item__link js-tx-toggle" href="#js-all-tx">
                         All
                         @if (Model.FullLoaded)
@@ -41,9 +43,9 @@
                     </a>
                 </div>
                 
-                <div class="tab_item js-tab_item">
+                <div class="tab_item js-tab_item  @(showOffchainTab?"tab_item--active":"") ">
                     <a class="tab_item__link js-tx-toggle" href="#js-offchain-tx">
-                        Offchain 
+                        Off-chain 
                         @if (Model.FullLoaded)
                         {
                             <span>
@@ -60,7 +62,7 @@
 <section class="section section--transactions">
     <div id="js-tx-select-result-container">
 
-        <div id="js-all-tx" class="js-select-result">
+        <div id="js-all-tx" class="@(showOffchainTab?"hidden":"") js-select-result">
             @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.AllTransactionIdList)
         </div>
 
@@ -72,7 +74,7 @@
             @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.ReceivedTransactionIdList)
         </div>
         
-        <div id="js-offchain-tx" class="hidden js-select-result">
+        <div id="js-offchain-tx" class="@(showOffchainTab?"":"hidden") js-select-result">
             @Html.Partial("OffchainChannelList", Model.OffchainChannelList)
         </div>
     </div>

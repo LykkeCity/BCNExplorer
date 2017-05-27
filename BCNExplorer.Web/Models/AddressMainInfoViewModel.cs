@@ -15,16 +15,18 @@ namespace BCNExplorer.Web.Models
 
         public bool IsColoredAddress { get; set; }
 
+        public bool IsOffchainHub { get; set; }
 
 
-        public static AddressMainInfoViewModel Create(IAddressMainInfo addressMainInfo)
+        public static AddressMainInfoViewModel Create(IAddressMainInfo addressMainInfo, bool isHub)
         {
             return new AddressMainInfoViewModel
             {
                 AddressId = addressMainInfo.AddressId,
                 ColoredAddress = addressMainInfo.ColoredAddress,
                 UncoloredAddress = addressMainInfo.UncoloredAddress,
-                IsColoredAddress = addressMainInfo.IsColored
+                IsColoredAddress = addressMainInfo.IsColored,
+                IsOffchainHub = isHub
             };
         }
     }

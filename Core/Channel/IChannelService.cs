@@ -19,5 +19,6 @@ namespace Core.Channel
         Task<IFilledChannel> GetByOffchainTransactionId(string transactionId);
         Task<IEnumerable<IFilledChannel>> GetByBlock(string blockId);
         Task<IEnumerable<IFilledChannel>> GetByAddress(string address);
+        Task<bool> IsHub(string address);
     }
 }

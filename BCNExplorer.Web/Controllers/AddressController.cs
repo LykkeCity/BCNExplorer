@@ -38,15 +38,16 @@ namespace BCNExplorer.Web.Controllers
         }
         
         [Route("address/{id}")]
-        public async Task<ActionResult> Index(string id, int? at)
+        public async Task<ActionResult> Index(string id)
         {
-            var mainInfoTask = _addressProvider.GetMainInfoAsync(id);
+            var mainInfo = _addressProvider.GetMainInfoAsync(id);
+            var isOffchainHub = _channelService.IsHub(id); 
 
-            await Task.WhenAll(mainInfoTask);
+            await Task.WhenAll(mainInfo, isOffchainHub);
 
-            if (mainInfoTask.Result != null)
+            if (mainInfo.Result != null)
             {
-                return View(AddressMainInfoViewModel.Create(mainInfoTask.Result));
+                return View(AddressMainInfoViewModel.Create(mainInfo.Result, isOffchainHub.Result));
             }
 
             return View("NotFound");
