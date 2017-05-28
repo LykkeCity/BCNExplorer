@@ -10,6 +10,8 @@ namespace Core.Channel
     
     public interface IChannel
     {
+        string AssetId { get; }
+        bool IsColored { get; }
         string OpenTransactionId { get; }
 
         string CloseTransactionId { get; }

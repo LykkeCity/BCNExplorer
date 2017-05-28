@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Core.AddressService;
 using Core.Asset;
 using Core.Block;
@@ -18,7 +19,7 @@ namespace BCNExplorer.Web.Models
         public double TotalConfirmedTransactions { get; set; }
         public IEnumerable<Asset> Assets { get; set; }
         public AssetDictionary AssetDic { get; set; }
-
+        public OffchainAssetDictionary OffchainAssetDictionary { get; set; }
         public DateTime LastBlockDateTime { get; set; }
         public int LastBlockHeight { get; set; }
 
@@ -29,9 +30,11 @@ namespace BCNExplorer.Web.Models
         public bool ShowPrev => PrevBlock >= 0;
         public int PrevBlock => AtBlockHeight - 1;
         public int NextBlock => AtBlockHeight + 1;
-
-
-        public static AddressBalanceViewModel Create(IAddressBalance balance, IDictionary<string, IAssetDefinition> assetDictionary, IBlockHeader lastBlock, IBlockHeader atBlock)
+        
+        public static AddressBalanceViewModel Create(IAddressBalance balance, 
+            IDictionary<string, IAssetDefinition> assetDictionary, 
+            IBlockHeader lastBlock, 
+            IBlockHeader atBlock)
         {
             return new AddressBalanceViewModel
             {
@@ -88,4 +91,56 @@ namespace BCNExplorer.Web.Models
             };
         }
     }
+
+    public class OffchainAssetDictionary
+    {
+        private IDictionary<string, OffchainChannelViewModel> AssetChannelDictionary { get; set; }
+        private IEnumerable<OffChainTransactionViewModel> BtcChannels { get; set; }
+
+        public static OffchainAssetDictionary Create(IEnumerable<IFilledChannel> channels, IDictionary<string, IAssetDefinition> assetDictionary)
+        {
+            return Create(channels.Select(p => OffchainChannelViewModel.Create(p, assetDictionary)));
+        }
+
+        public static OffchainAssetDictionary Create(IEnumerable<OffchainChannelViewModel> channels)
+        {
+            throw new Exception();
+            //return Create(channels.SelectMany(p => p.OffChainTransactions));
+        }
+
+        //public OffChainTransactionViewModel GetForBtc()
+        //{
+        //    return BtcTransaction;
+        //}
+
+        //public OffChainTransactionViewModel GetFor(string assetId)
+        //{
+        //    return AssetDictionary.GetValueOrDefault(assetId, null);
+        //}
+
+        //public static OffchainAssetDictionary Create(IEnumerable<OffChainTransactionViewModel> transactions)
+        //{
+        //    var confirmedTxs = transactions.Where(p => !p.IsRevoked).ToList();
+
+        //    var assetDic = new Dictionary<string, OffChainTransactionViewModel>();
+
+        //    foreach (var tx in confirmedTxs)
+        //    {
+        //        foreach (var assetId in tx.Asset.AssetIds)
+        //        {
+        //            assetDic[assetId] = tx;
+        //        }
+        //    }
+
+        //    var btcTransaction = confirmedTxs.FirstOrDefault(p => !p.Asset.IsColored);
+
+        //    return new OffchainAssetDictionary
+        //    {
+        //        AssetDictionary = assetDic,
+        //        BtcTransaction = btcTransaction
+        //    };
+        //}
+    }
+
+
 }

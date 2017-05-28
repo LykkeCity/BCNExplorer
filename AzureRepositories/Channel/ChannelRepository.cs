@@ -13,6 +13,8 @@ namespace AzureRepositories.Channel
 {
     public class Channel : IChannel
     {
+        public string AssetId { get; set; }
+        public bool IsColored => AssetId != ChannelMetadataMongoEntity.BtcAssetName;
         public string OpenTransactionId { get; set; }
         public string CloseTransactionId { get; set; }
         public IOffchainTransaction[] OffchainTransactions { get; set; }
@@ -23,6 +25,7 @@ namespace AzureRepositories.Channel
             {
                 OpenTransactionId = source.OpenTransaction?.TransactionId,
                 CloseTransactionId = source.CloseTransaction?.TransactionId,
+                AssetId = source.Metadata.AssetId,
                 OffchainTransactions = source.OffChainTransactions.Select(p => OffchainTransaction.Create(p, source.Metadata)).ToArray()
             };
         }

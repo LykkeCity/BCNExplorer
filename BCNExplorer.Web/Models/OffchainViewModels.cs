@@ -8,25 +8,41 @@ namespace BCNExplorer.Web.Models
 {
     public class OffchainChannelViewModel
     {
-
+        public AssetViewModel Asset { get; set; }
         public TransactionViewModel OpenTransaction { get; set; }
 
         public TransactionViewModel CloseTransaction { get; set; }
 
         public IEnumerable<OffChainTransactionViewModel> OffChainTransactions { get; set; }
 
+        public OffChainTransactionViewModel GetConfirmedOffchainTransaction =>
+            OffChainTransactions?.FirstOrDefault(p => !p.IsRevoked);
+
         public static OffchainChannelViewModel Create(IFilledChannel channel, IDictionary<string, IAssetDefinition> assetDictionary)
         {
+            AssetViewModel asset;
+            if (channel.IsColored)
+            {
+                asset = assetDictionary.ContainsKey(channel.AssetId) ?
+                    AssetViewModel.Create(assetDictionary[channel.AssetId]) :
+                    AssetViewModel.CreateNotFoundAsset(channel.AssetId);
+            }
+            else
+            {
+                asset = AssetViewModel.BtcAsset.Value;
+            }
+
             var openOnChainTx = TransactionViewModel.Create(channel.OpenTransaction, assetDictionary);
             var closeOnChainTx = TransactionViewModel.Create(channel.CloseTransaction, assetDictionary);
 
             var offchainTransactions = OffChainTransactionViewModel.Create(channel.OffchainTransactions, assetDictionary).ToList();
-
+            
             return new OffchainChannelViewModel
             {
                 OpenTransaction = openOnChainTx,
                 CloseTransaction = closeOnChainTx,
-                OffChainTransactions = offchainTransactions
+                OffChainTransactions = offchainTransactions,
+                Asset = asset
             };
         }
     }
@@ -57,6 +73,7 @@ namespace BCNExplorer.Web.Models
         public string TransactionId { get; set; }
         public DateTime DateTime { get; set; }
 
+        
         public string HubAddress { get; set; }
 
         public string Address1 { get; set; }
@@ -147,6 +164,7 @@ namespace BCNExplorer.Web.Models
                 prevTx = tx;
             }
         }
+        
 
         public static IEnumerable<OffChainTransactionViewModel> Create(IOffchainTransaction[] offchainTransactions, IDictionary<string, IAssetDefinition> assetDictionary)
         {

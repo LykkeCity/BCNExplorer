@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Asset;
-using Providers.TransportTypes.Asset;
 
 namespace BCNExplorer.Web.Models
 {

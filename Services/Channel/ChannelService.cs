@@ -12,6 +12,8 @@ namespace Services.Channel
 {
     public class FilledChannel:IFilledChannel
     {
+        public string AssetId { get; set; }
+        public bool IsColored { get; set; }
         public string OpenTransactionId { get; set; }
         public string CloseTransactionId { get; set; }
         public IOffchainTransaction[] OffchainTransactions { get; set; }
@@ -28,7 +30,9 @@ namespace Services.Channel
 
                 OffchainTransactions = channel.OffchainTransactions,
                 CloseTransaction = openTransaction,
-                OpenTransaction = openTransaction
+                OpenTransaction = openTransaction,
+                AssetId = channel.AssetId,
+                IsColored = channel.IsColored
             };
         }
     }
