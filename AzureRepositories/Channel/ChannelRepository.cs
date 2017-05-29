@@ -76,7 +76,7 @@ namespace AzureRepositories.Channel
                 .GetCollection<ChannelMongoEntity>(ChannelMongoEntity.CollectionName);
         }
 
-        public async Task<IChannel> GetByOffchainTransactionId(string transactionId)
+        public async Task<IChannel> GetByOffchainTransactionIdAsync(string transactionId)
         {
             var filterExpression = Builders<ChannelMongoEntity>.Filter.ElemMatch(p => p.OffChainTransactions,
                 p => p.TransactionId == transactionId);
@@ -88,7 +88,7 @@ namespace AzureRepositories.Channel
             return dbEntity != null ? Channel.Create(dbEntity) : null;
         }
 
-        public async Task<IEnumerable<IChannel>> GetByBlockId(string blockId)
+        public async Task<IEnumerable<IChannel>> GetByBlockIdAsync(string blockId)
         {
             var openTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.BlockId, blockId);
 
@@ -103,7 +103,7 @@ namespace AzureRepositories.Channel
             return dbEntities.Select(Channel.Create);
         }
 
-        public async Task<IEnumerable<IChannel>> GetByBlockHeight(int blockHeight)
+        public async Task<IEnumerable<IChannel>> GetByBlockHeightAsync(int blockHeight)
         {
             var openTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.Height, blockHeight);
 
@@ -118,7 +118,7 @@ namespace AzureRepositories.Channel
             return dbEntities.Select(Channel.Create);
         }
 
-        public async Task<IEnumerable<IChannel>> GetByAddress(string address)
+        public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address)
         {
             var hubAddressFilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.HubAddress, address);
 
@@ -136,7 +136,7 @@ namespace AzureRepositories.Channel
             return dbEntities.Select(Channel.Create);
         }
 
-        public async Task<bool> IsHub(string address)
+        public async Task<bool> IsHubAsync(string address)
         {
             var hubAddressFilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.HubAddress, address);
             return await _mongoCollection.Find(hubAddressFilterExpression).CountAsync() > 0;

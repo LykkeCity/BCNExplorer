@@ -41,7 +41,7 @@ namespace BCNExplorer.Web.Controllers
         public async Task<ActionResult> Index(string id)
         {
             var mainInfo = _addressProvider.GetMainInfoAsync(id);
-            var isOffchainHub = _channelService.IsHub(id); 
+            var isOffchainHub = _channelService.IsHubAsync(id); 
 
             await Task.WhenAll(mainInfo, isOffchainHub);
 
@@ -67,9 +67,10 @@ namespace BCNExplorer.Web.Controllers
 
         private async Task<ActionResult> BalanceAtBlockInner(string id, int? at)
         {
-            var balanceTask = _addressProvider.GetBalanceAsync(id, at);
-            var assetDefinitionDictionaryTask = _assetService.GetAssetDefinitionDictionaryAsync();
-            var lastBlockTask = _blockService.GetLastBlockHeaderAsync();
+            var balance = _addressProvider.GetBalanceAsync(id, at);
+            var assetDefinitionDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
+            var lastBlock = _blockService.GetLastBlockHeaderAsync();
+            var offchainChannels = _channelService.GetByAddressAsync(id);
             Task<IBlockHeader> atBlockTask;
 
             if (at != null)
@@ -81,19 +82,20 @@ namespace BCNExplorer.Web.Controllers
                 atBlockTask = Task.FromResult<IBlockHeader>(null);
             }
 
-            await Task.WhenAll(balanceTask, assetDefinitionDictionaryTask, lastBlockTask, atBlockTask);
+            await Task.WhenAll(balance, assetDefinitionDictionary, lastBlock, atBlockTask, offchainChannels);
 
-            if (balanceTask.Result != null)
+            if (balance.Result != null)
             {
-                return View("Balance" ,AddressBalanceViewModel.Create(balanceTask.Result,
-                    assetDefinitionDictionaryTask.Result,
-                    lastBlockTask.Result,
-                    atBlockTask.Result));
+                return View("Balance" ,AddressBalanceViewModel.Create(balance.Result,
+                    assetDefinitionDictionary.Result,
+                    lastBlock.Result,
+                    atBlockTask.Result,
+                    offchainChannels.Result));
             }
 
             if (at != null && atBlockTask.Result == null)
             {
-                return RedirectToAction("BalanceAtBlock", new {id = id, at = lastBlockTask.Result});
+                return RedirectToAction("BalanceAtBlock", new {id = id, at = lastBlock.Result});
             }
 
             return new HttpNotFoundResult();
@@ -114,7 +116,7 @@ namespace BCNExplorer.Web.Controllers
         {
             var onchainTransactions = _cachedAddressService.GetTransactions(id);
             var assetDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
-            var channels = _channelService.GetByAddress(id);
+            var channels = _channelService.GetByAddressAsync(id);
 
             await Task.WhenAll(onchainTransactions, assetDictionary, channels);
 

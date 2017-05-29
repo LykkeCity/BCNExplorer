@@ -161,4 +161,32 @@
                 .addClass('current-address-transaction');
         });
     })();
+
+    //offchain balance popover
+    (function () {
+        var popoverSelector = '.js-offchain-balance-popover';
+
+        var initOffchainPopover = function() {
+            $(popoverSelector).popover({
+                trigger: 'click',
+                container: this.parentNode,
+                html: true,
+                content: function () {
+                    return $(this).next('.popover-content').html();
+                }
+            });
+        };
+
+        $('body').on('balance-loaded', function() {
+                initOffchainPopover();
+         });
+
+        $('body').on('click touchstart', function (e) {
+            $(popoverSelector).each(function () {
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $(popoverSelector).has(e.target).length === 0) {
+                    $(this).popover('hide');
+                }
+            });
+        });
+    })();
 })

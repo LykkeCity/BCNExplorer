@@ -7,6 +7,9 @@ namespace BCNExplorer.Web.Models
 {
     public class AssetViewModel
     {
+
+
+
         private const string DefaultAssetIconUrl = "/img/be/asset_default.jpg";
         public IEnumerable<string> AssetIds { get; set; }
 
@@ -92,5 +95,26 @@ namespace BCNExplorer.Web.Models
                 IsColored = true
             };
         }
+
+        private sealed class AssetIdsEqualityComparer : IEqualityComparer<AssetViewModel>
+        {
+            public bool Equals(AssetViewModel x, AssetViewModel y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                if (x.AssetIds == null || y.AssetIds == null) return false;
+
+                return x.AssetIds.Any(p => y.AssetIds.Contains(p));
+            }
+
+            public int GetHashCode(AssetViewModel obj)
+            {
+                return string.Join("_", (obj.AssetIds ?? Enumerable.Empty<string>())).GetHashCode();
+            }
+        }
+
+        public static IEqualityComparer<AssetViewModel> AssetIdsComparer { get; } = new AssetIdsEqualityComparer();
     }
 }

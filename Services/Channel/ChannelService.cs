@@ -51,44 +51,44 @@ namespace Services.Channel
             _baseSettings = baseSettings;
         }
 
-        public async Task<IFilledChannel> GetByOffchainTransactionId(string transactionId)
+        public async Task<IFilledChannel> GetByOffchainTransactionIdAsync(string transactionId)
         {
-            var channel = await _channelRepository.GetByOffchainTransactionId(transactionId);
+            var channel = await _channelRepository.GetByOffchainTransactionIdAsync(transactionId);
 
             return await FillChannel(channel);
         }
 
-        public async Task<IEnumerable<IFilledChannel>> GetByBlock(string blockId)
+        public async Task<IEnumerable<IFilledChannel>> GetByBlockAsync(string blockId)
         {
             int height;
 
             IEnumerable<IChannel> dbChannels;
             if (int.TryParse(blockId, out height))
             {
-                dbChannels = await _channelRepository.GetByBlockHeight(height);
+                dbChannels = await _channelRepository.GetByBlockHeightAsync(height);
             }
             else
             {
-                dbChannels = await _channelRepository.GetByBlockId(blockId);
+                dbChannels = await _channelRepository.GetByBlockIdAsync(blockId);
             }
 
             return await FillChannels(dbChannels);
         }
 
-        public async Task<IEnumerable<IFilledChannel>> GetByAddress(string address)
+        public async Task<IEnumerable<IFilledChannel>> GetByAddressAsync(string address)
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
-            var dbChannels = await _channelRepository.GetByAddress(uncoloredAddress);
+            var dbChannels = await _channelRepository.GetByAddressAsync(uncoloredAddress);
 
             return await FillChannels(dbChannels);
         }
 
-        public Task<bool> IsHub(string address)
+        public Task<bool> IsHubAsync(string address)
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
-            return _channelRepository.IsHub(uncoloredAddress);
+            return _channelRepository.IsHubAsync(uncoloredAddress);
         }
 
         private string GetUncoloredAddress(string address)

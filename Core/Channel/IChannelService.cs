@@ -16,9 +16,9 @@ namespace Core.Channel
 
     public interface IChannelService
     {
-        Task<IFilledChannel> GetByOffchainTransactionId(string transactionId);
-        Task<IEnumerable<IFilledChannel>> GetByBlock(string blockId);
-        Task<IEnumerable<IFilledChannel>> GetByAddress(string address);
-        Task<bool> IsHub(string address);
+        Task<IFilledChannel> GetByOffchainTransactionIdAsync(string transactionId);
+        Task<IEnumerable<IFilledChannel>> GetByBlockAsync(string blockId);
+        Task<IEnumerable<IFilledChannel>> GetByAddressAsync(string address);
+        Task<bool> IsHubAsync(string address);
     }
 }

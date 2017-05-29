@@ -6,6 +6,7 @@
 
 @Html.Hidden("js-go-to-block-height-url", Url.Action("BalanceAtBlock", "Address", new {id = Model.AddressId}))
 @Html.Hidden("js-go-to-block-time-url", Url.Action("BalanceAtTime", "Address", new { id = Model.AddressId }))
+
 <section class="section section--heading">
     <div class="container">
         <div class="row">
@@ -57,73 +58,191 @@
 </section>
 <section class="section section--balance" id="js-balance-data">
     <div class="container">
-            <ul class="issuer_list row">
+        <ul class="issuer_list row">
+            <li class="issuer_list__item col-xs-12 col-sm-6">
+                <table class="issuer">
+                    <tbody>
+                    <tr>
+                        <td class="issuer__img"><img src="/img/assets/bitcoin.png" width="48" alt=""></td>
+                        <td class="issuer__content">
+                            <div class="issuer__name">
+                                Bitcoin
+                                @if (Model.OffchainChannelsByAsset.ExistsBtc())
+                                {
+                                    @RenderPopover(Model.OffchainChannelsByAsset.GetBtc())
+                                }
+
+                            </div>
+                            @if (Model.ShowUnconfirmedBalance)
+                            {
+                                <div class="text-muted">Unconfirmed balance</div>
+                            }
+                        </td>
+                        <td class="issuer__content text-right">
+                            <div class="wallet_value">@BitcoinUtils.SatoshiToBtc(Model.Balance).ToStringBtcFormat() BTC</div>
+                            @if (Model.ShowUnconfirmedBalance)
+                            {
+                                <div class="text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToStringBtcFormat() BTC</div>
+                            }
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </li>
+            @foreach (var assetBalance in Model.Assets.Where(p => p.ShowAsset))
+            {
+                var assetDivisibity = Model.AssetDic.GetAssetProp(assetBalance.AssetId, p => p.Divisibility, 0);
+                var assetShortName = Model.AssetDic.GetAssetProp(assetBalance.AssetId, p => p.NameShort, "");
+                var assetName = Model.AssetDic.GetAssetProp(assetBalance.AssetId, p => p.Name, assetBalance.AssetId);
+                var assetIcon = Model.AssetDic.GetAssetProp(assetBalance.AssetId, p => p.IconUrl, null);
+
+                var assetUrl = Model.AssetDic.Dic.ContainsKey(assetBalance.AssetId) ? Url.Action("Index", "Asset", new { id = assetBalance.AssetId }) : null;
+
                 <li class="issuer_list__item col-xs-12 col-sm-6">
                     <table class="issuer">
                         <tbody>
                         <tr>
-                            <td class="issuer__img"><img src="/img/assets/bitcoin.png" width="48" alt=""></td>
+                            <td class="issuer__img">
+                                <a href="@assetUrl">
+
+                                    <img src="@(!string.IsNullOrEmpty(assetIcon) ? assetIcon: "/img/be/asset_default.jpg")" width="48" alt="@assetName">
+                                </a>
+                            </td>
                             <td class="issuer__content">
-                                <div class="issuer__name">Bitcoin</div>
-                                @if (Model.ShowUnconfirmedBalance)
+                                <div class="issuer__name">
+                                    <a href="@assetUrl">
+                                        @assetName
+                                    </a>
+                                    @if (Model.OffchainChannelsByAsset.Exists(assetBalance.Asset))
+                                    {
+                                        @RenderPopover(Model.OffchainChannelsByAsset.Get(assetBalance.Asset))
+                                    }
+
+                                </div>
+                                @if (assetBalance.ShowUnconfirmedBalance)
                                 {
                                     <div class="text-muted">Unconfirmed balance</div>
                                 }
                             </td>
                             <td class="issuer__content text-right">
-                                <div class="wallet_value">@BitcoinUtils.SatoshiToBtc(Model.Balance).ToStringBtcFormat() BTC</div>
-                                @if (Model.ShowUnconfirmedBalance)
+                                <div class="wallet_value">@BitcoinUtils.CalculateColoredAssetQuantity(assetBalance.Quantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
+                                @if (assetBalance.ShowUnconfirmedBalance)
                                 {
-                                    <div class="text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToStringBtcFormat() BTC</div>
+                                    <div class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(assetBalance.UnconfirmedQuantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
                                 }
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </li>
-                @foreach (var asset in Model.Assets.Where(p => p.ShowAsset))
-                {
-                    var assetDivisibity = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Divisibility, 0);
-                    var assetShortName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.NameShort, "");
-                    var assetName = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.Name, asset.AssetId);
-                    var assetIcon = Model.AssetDic.GetAssetProp(asset.AssetId, p => p.IconUrl, null);
+            }
 
-                    var assetUrl = Model.AssetDic.Dic.ContainsKey(asset.AssetId) ? Url.Action("Index", "Asset", new { id = asset.AssetId }) : null;
-
-                    <li class="issuer_list__item col-xs-12 col-sm-6">
-                        <table class="issuer">
-                            <tbody>
-                                <tr>
-                                    <td class="issuer__img">
-                                        <a href="@assetUrl">
-
-                                            <img src="@(!string.IsNullOrEmpty(assetIcon) ? assetIcon: "/img/be/asset_default.jpg")" width="48" alt="@assetName">
-                                        </a>
-                                    </td>
-                                    <td class="issuer__content">
-                                        <div class="issuer__name">
-                                            <a href="@assetUrl">
-                                                @assetName
-                                            </a>
-                                        </div>
-                                        @if (asset.ShowUnconfirmedBalance)
-                                        {
-                                            <div class="text-muted">Unconfirmed balance</div>
-                                        }
-                                    </td>
-                                    <td class="issuer__content text-right">
-                                        <div class="wallet_value">@BitcoinUtils.CalculateColoredAssetQuantity(asset.Quantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
-                                        @if (asset.ShowUnconfirmedBalance)
-                                        {
-                                            <div class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(asset.UnconfirmedQuantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
-                                        }
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </li>
-                }
-
-            </ul>
-        </div>
+        </ul>
+    </div>
 </section>
+
+@helper RenderPopover(IEnumerable<OffchainChannelViewModel> channels)
+{
+    
+
+    <div class="popover_control multisig_popover">
+        <a class="js-offchain-balance-popover" tabindex="0" role="button" data-toggle="popover" data-placement="bottom" data-original-title="" title="">
+            <span class="middot">·</span>
+            2 multisig<span class="hidden-xs"> key holders</span>
+        </a>
+        <div class="popover-content">
+            
+            
+            @foreach (var channel in channels)
+            {
+                var confirmedTx = channel.ConfirmedOffchainTransaction;
+
+                <h3>Multisig key holders</h3>
+                
+                <table class="issuer">
+                    <tbody>
+                    <tr>
+                        <td class="issuer__content">
+
+                            <div class="issuer__name">
+                                @confirmedTx.Address1Quantity.ToStringBtcFormat() @confirmedTx.Asset.NameShort
+                                <span class="_change @WriteDiffClass(confirmedTx.Address1QuantityDiff)">
+                                    @confirmedTx.Address1QuantityDiff.ToStringBtcFormat()
+                                </span>
+                            </div>
+                            <div class="links_group text-muted">
+                                <a href="@Url.Action("Index", "Address", new {id = confirmedTx.Address1})">
+                                    <span class="truncate" title="@confirmedTx.Address1">@confirmedTx.Address1</span>
+                                </a>
+                            </div>
+                        </td>
+                        <td class="issuer__content text-right">
+                            <div class="graph graph--multisig">
+                                @foreach (var tx in channel.OffChainTransactions)
+                                {
+                                    <div class="graph_candle">
+                                        <span style="height: @tx.Address1QuanrtityPercents%"></span>
+                                    </div>                           
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table class="issuer">
+                    <tbody>
+                    <tr>
+                        <td class="issuer__content">
+
+                            <div class="issuer__name">
+                                @confirmedTx.Address2Quantity.ToStringBtcFormat() @confirmedTx.Asset.NameShort
+                                <span class="_change @WriteDiffClass(confirmedTx.Address2QuantityDiff)">
+                                    @confirmedTx.Address2QuantityDiff.ToStringBtcFormat()
+                                </span>
+                            </div>
+                            <div class="links_group text-muted">
+                                <a href="@Url.Action("Index", "Address", new {id = confirmedTx.Address2})">
+                                    <span class="truncate" title="@confirmedTx.Address2">@confirmedTx.Address2</span>
+                                </a>
+                            </div>
+                        </td>
+                        <td class="issuer__content text-right">
+                            <div class="graph graph--multisig">
+                                @foreach (var tx in channel.OffChainTransactions)
+                                {
+                                    <div class="graph_candle">
+                                        <span style="height: @tx.Address2QuanrtityPercents%"></span>
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>        
+            }
+
+        </div>
+    </div>
+}
+
+@helper  WriteDiffClass(decimal quantityDiff)
+{
+    var diffClass = "text--gray";
+    if (quantityDiff > 0)
+    {
+        diffClass = "text--green";
+    }
+    else if(quantityDiff<0)
+    {
+        diffClass = "text--red";
+    }
+    
+    <text>
+        @diffClass
+    </text>
+    
+    
+
+
+}

@@ -42,10 +42,10 @@ namespace Core.Channel
 
     public interface IChannelRepository
     {
-        Task<IChannel> GetByOffchainTransactionId(string transactionId);
-        Task<IEnumerable<IChannel>> GetByBlockId(string blockId);
-        Task<IEnumerable<IChannel>> GetByBlockHeight(int blockHeight);
-        Task<IEnumerable<IChannel>> GetByAddress(string address);
-        Task<bool> IsHub(string address);
+        Task<IChannel> GetByOffchainTransactionIdAsync(string transactionId);
+        Task<IEnumerable<IChannel>> GetByBlockIdAsync(string blockId);
+        Task<IEnumerable<IChannel>> GetByBlockHeightAsync(int blockHeight);
+        Task<IEnumerable<IChannel>> GetByAddressAsync(string address);
+        Task<bool> IsHubAsync(string address);
     }
 }

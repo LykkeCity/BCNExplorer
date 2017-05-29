@@ -32,7 +32,7 @@ namespace BCNExplorer.Web.Controllers
         {
             var block = _cachedBlockService.GetBlockAsync(id);
             var lastBlock = _blockService.GetLastBlockHeaderAsync();
-            var offchainChannels = _channelService.GetByBlock(id);
+            var offchainChannels = _channelService.GetByBlockAsync(id);
             var assetDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
 
             await Task.WhenAll(block, lastBlock, offchainChannels, assetDictionary);

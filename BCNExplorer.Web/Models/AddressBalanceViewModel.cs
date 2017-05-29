@@ -17,9 +17,9 @@ namespace BCNExplorer.Web.Models
         public double UnconfirmedBalanceDelta { get; set; }
         public bool ShowUnconfirmedBalance => UnconfirmedBalanceDelta != 0;
         public double TotalConfirmedTransactions { get; set; }
-        public IEnumerable<Asset> Assets { get; set; }
+        public IEnumerable<ColoredBalance> Assets { get; set; }
         public AssetDictionary AssetDic { get; set; }
-        public OffchainAssetDictionary OffchainAssetDictionary { get; set; }
+        public OffchainChannelsByAsset OffchainChannelsByAsset { get; set; }
         public DateTime LastBlockDateTime { get; set; }
         public int LastBlockHeight { get; set; }
 
@@ -34,37 +34,53 @@ namespace BCNExplorer.Web.Models
         public static AddressBalanceViewModel Create(IAddressBalance balance, 
             IDictionary<string, IAssetDefinition> assetDictionary, 
             IBlockHeader lastBlock, 
-            IBlockHeader atBlock)
+            IBlockHeader atBlock,
+            IEnumerable<IFilledChannel> channels)
         {
             return new AddressBalanceViewModel
             {
                 AddressId = balance.AddressId,
                 TotalConfirmedTransactions = balance.TotalTransactions,
                 Balance = balance.BtcBalance,
-                Assets = (balance.ColoredBalances??Enumerable.Empty<IColoredBalance>()).Select(p => new Asset
-                {
-                    AssetId = p.AssetId,
-                    Quantity = p.Quantity,
-                    UnconfirmedQuantityDelta = p.UnconfirmedQuantityDelta
-                }),
+                Assets = (balance.ColoredBalances ?? Enumerable.Empty<IColoredBalance>()).Select(p => ColoredBalance.Create(p, assetDictionary)),
                 UnconfirmedBalanceDelta = balance.UnconfirmedBalanceDelta,
                 AssetDic = AssetDictionary.Create(assetDictionary),
                 LastBlockHeight = lastBlock.Height,
                 LastBlockDateTime = lastBlock.Time,
                 AtBlockHeight = (atBlock ?? lastBlock).Height,
                 AtBlockDateTime = (atBlock ?? lastBlock).Time,
+                OffchainChannelsByAsset = OffchainChannelsByAsset.Create(channels, assetDictionary)
             };
         }
         
-        public class Asset
+        public class ColoredBalance
         {
             public string AssetId { get; set; }
+
+            public AssetViewModel Asset { get; set; }
             public double Quantity { get; set; }
             public double UnconfirmedQuantityDelta { get; set; }
             public bool ShowUnconfirmedBalance => UnconfirmedQuantityDelta != 0;
             public double UnconfirmedQuantity => Quantity + UnconfirmedQuantityDelta;
 
             public bool ShowAsset => Quantity != 0 || UnconfirmedQuantity != 0;
+
+            public static ColoredBalance Create(IColoredBalance coloredBalance, IDictionary<string, IAssetDefinition> assetDictionary)
+            {
+                var asset = assetDictionary.GetValueOrDefault(coloredBalance.AssetId, null);
+
+                var assetViewModel = asset != null
+                    ? AssetViewModel.Create(asset)
+                    : AssetViewModel.CreateNotFoundAsset(coloredBalance.AssetId);
+
+                return new ColoredBalance
+                {
+                    AssetId = coloredBalance.AssetId,
+                    Quantity = coloredBalance.Quantity,
+                    UnconfirmedQuantityDelta = coloredBalance.UnconfirmedQuantityDelta,
+                    Asset = assetViewModel,
+                };
+            }
         }
     }
 
@@ -92,55 +108,44 @@ namespace BCNExplorer.Web.Models
         }
     }
 
-    public class OffchainAssetDictionary
+    public class OffchainChannelsByAsset
     {
-        private IDictionary<string, OffchainChannelViewModel> AssetChannelDictionary { get; set; }
-        private IEnumerable<OffChainTransactionViewModel> BtcChannels { get; set; }
+        private ILookup<AssetViewModel, OffchainChannelViewModel> AssetChanneLookup { get; set; }
+        private IEnumerable<OffchainChannelViewModel> BtcChannels { get; set; }
 
-        public static OffchainAssetDictionary Create(IEnumerable<IFilledChannel> channels, IDictionary<string, IAssetDefinition> assetDictionary)
+        public bool Exists(AssetViewModel asset)
+        {
+            return Get(asset).Any();
+        }
+
+        public IEnumerable<OffchainChannelViewModel> Get(AssetViewModel asset)
+        {
+            return AssetChanneLookup[asset];
+        }
+
+        public bool ExistsBtc()
+        {
+            return GetBtc().Any();
+        }
+
+        public IEnumerable<OffchainChannelViewModel> GetBtc()
+        {
+            return BtcChannels;
+        }
+
+        public static OffchainChannelsByAsset Create(IEnumerable<IFilledChannel> channels, IDictionary<string, IAssetDefinition> assetDictionary)
         {
             return Create(channels.Select(p => OffchainChannelViewModel.Create(p, assetDictionary)));
         }
 
-        public static OffchainAssetDictionary Create(IEnumerable<OffchainChannelViewModel> channels)
+        public static OffchainChannelsByAsset Create(IEnumerable<OffchainChannelViewModel> channels)
         {
-            throw new Exception();
-            //return Create(channels.SelectMany(p => p.OffChainTransactions));
+            
+            return new OffchainChannelsByAsset
+            {
+                AssetChanneLookup = channels.Where(p => p.Asset.IsColored).ToLookup(p => p.Asset, AssetViewModel.AssetIdsComparer),
+                BtcChannels = channels.Where(p => !p.Asset.IsColored)
+            };
         }
-
-        //public OffChainTransactionViewModel GetForBtc()
-        //{
-        //    return BtcTransaction;
-        //}
-
-        //public OffChainTransactionViewModel GetFor(string assetId)
-        //{
-        //    return AssetDictionary.GetValueOrDefault(assetId, null);
-        //}
-
-        //public static OffchainAssetDictionary Create(IEnumerable<OffChainTransactionViewModel> transactions)
-        //{
-        //    var confirmedTxs = transactions.Where(p => !p.IsRevoked).ToList();
-
-        //    var assetDic = new Dictionary<string, OffChainTransactionViewModel>();
-
-        //    foreach (var tx in confirmedTxs)
-        //    {
-        //        foreach (var assetId in tx.Asset.AssetIds)
-        //        {
-        //            assetDic[assetId] = tx;
-        //        }
-        //    }
-
-        //    var btcTransaction = confirmedTxs.FirstOrDefault(p => !p.Asset.IsColored);
-
-        //    return new OffchainAssetDictionary
-        //    {
-        //        AssetDictionary = assetDic,
-        //        BtcTransaction = btcTransaction
-        //    };
-        //}
     }
-
-
 }

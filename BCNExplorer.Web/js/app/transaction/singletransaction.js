@@ -17,7 +17,7 @@
     });
 
     (function () {
-        var popoverSelector = '[data-toggle="popover"]';
+        var popoverSelector = '.js-tranasction-popover';
         var initAssetQuantityPopover = function () {
             var $elem = $(popoverSelector);
 
@@ -37,7 +37,7 @@
 
         $('body').on('click touchstart', function (e) {
             $(popoverSelector).each(function () {
-                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('[data-toggle="popover"]').has(e.target).length === 0) {
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $(popoverSelector).has(e.target).length === 0) {
                     $(this).popover('hide');
                 }
             });

@@ -15,7 +15,7 @@ namespace BCNExplorer.Web.Models
 
         public IEnumerable<OffChainTransactionViewModel> OffChainTransactions { get; set; }
 
-        public OffChainTransactionViewModel GetConfirmedOffchainTransaction =>
+        public OffChainTransactionViewModel ConfirmedOffchainTransaction =>
             OffChainTransactions?.FirstOrDefault(p => !p.IsRevoked);
 
         public static OffchainChannelViewModel Create(IFilledChannel channel, IDictionary<string, IAssetDefinition> assetDictionary)
@@ -87,10 +87,11 @@ namespace BCNExplorer.Web.Models
         public bool IsRevoked { get; set; }
 
         public decimal Address1Quantity { get; set; }
+        public decimal Address1QuanrtityPercents => Math.Round((Address1Quantity / TotalQuantity) * 100);
 
         public decimal Address2Quantity { get; set; }
 
-
+        public decimal Address2QuanrtityPercents => Math.Round((Address2Quantity / TotalQuantity) * 100);
         public int InputCount => 1;
         public int OutputCount => 2;
 
@@ -186,7 +187,6 @@ namespace BCNExplorer.Web.Models
 
     public class OffchainTransactionDetailsViewModel
     {
-
         public OffchainChannelViewModel Channel { get; set; }
 
         public OffChainTransactionViewModel Transaction { get; set; }
