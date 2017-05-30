@@ -15,7 +15,11 @@ namespace Core.Channel
     {
         Task<IFilledChannel> GetByOffchainTransactionIdAsync(string transactionId);
         Task<IEnumerable<IFilledChannel>> GetByBlockAsync(string blockId);
-        Task<IEnumerable<IFilledChannel>> GetByAddressPagedAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All);
+        Task<IEnumerable<IFilledChannel>> GetByAddressFilledAsync(string address, 
+            ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All,
+            IPageOptions pageOptions = null);
+
+        Task<long> GetCountByAddress(string address);
         Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All);
         Task<bool> IsHubAsync(string address);
     }

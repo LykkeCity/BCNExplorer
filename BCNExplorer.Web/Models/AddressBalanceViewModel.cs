@@ -89,13 +89,11 @@ namespace BCNExplorer.Web.Models
         public TransactionIdList AllTransactionIdList { get; set; }
         public TransactionIdList SendTransactionIdList { get; set; }
         public TransactionIdList ReceivedTransactionIdList { get; set; }
-        public OffchainChannelListViewModel OffchainChannelList { get; set; }
+        public OffchainChannelPagedList OffchainChannelPagedList { get; set; }
         public bool FullLoaded { get; set; }
         private const int PageSize = 20;
 
-        public static AddressTransactionsViewModel Create(IAddressTransactions source, 
-            IEnumerable<IFilledChannel> channels, 
-            IDictionary<string, IAssetDefinition> assetDictionary)
+        public static AddressTransactionsViewModel Create(string address, IAddressTransactions source, long offchainChannelsCount, int offchainTransactionsPageSize)
         {
             return new AddressTransactionsViewModel
             {
@@ -103,7 +101,7 @@ namespace BCNExplorer.Web.Models
                 SendTransactionIdList = new TransactionIdList(source.Send?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 ReceivedTransactionIdList = new TransactionIdList(source.Received?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 FullLoaded = source.FullLoaded,
-                OffchainChannelList = OffchainChannelListViewModel.Create(channels, assetDictionary)
+                OffchainChannelPagedList = OffchainChannelPagedList.Create(address, offchainChannelsCount, offchainTransactionsPageSize)
             };
         }
     }

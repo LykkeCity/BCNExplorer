@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.SessionState;
@@ -21,6 +22,8 @@ namespace BCNExplorer.Web.Controllers
         private readonly IChannelService _channelService;
         private readonly ICachedAddressService _cachedAddressService;
         private readonly CachedMainChainService _mainChainService;
+
+        private const int OffchainTransactionsPageSize = 1;
 
         public AddressController(IAddressService addressProvider, 
             IAssetService assetService, 
@@ -115,12 +118,24 @@ namespace BCNExplorer.Web.Controllers
         public async Task<ActionResult> Transactions(string id)
         {
             var onchainTransactions = _cachedAddressService.GetTransactions(id);
+            var offchainChannelsCount = _channelService.GetCountByAddress(id);
+
+            await Task.WhenAll(onchainTransactions,  offchainChannelsCount);
+
+            return View(AddressTransactionsViewModel.Create(id, onchainTransactions.Result, offchainChannelsCount.Result, OffchainTransactionsPageSize));
+        }
+
+        [Route("address/offchainchannelpage")]
+        public async Task<ActionResult> OffchainChannelPage(string address, int page)
+        {
+            var channels = _channelService.GetByAddressFilledAsync(address,
+                channelStatusQueryType: ChannelStatusQueryType.All,
+                pageOptions: PageOptions.Create(page, OffchainTransactionsPageSize));
             var assetDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
-            var channels = _channelService.GetByAddressPagedAsync(id);
 
-            await Task.WhenAll(onchainTransactions, assetDictionary, channels);
+            await Task.WhenAll(channels, assetDictionary);
 
-            return View(AddressTransactionsViewModel.Create(onchainTransactions.Result, channels.Result, assetDictionary.Result));
-        } 
+            return View(channels.Result.Select(p => OffchainFilledChannelViewModel.Create(p, assetDictionary.Result)));
+        }
     }
 }

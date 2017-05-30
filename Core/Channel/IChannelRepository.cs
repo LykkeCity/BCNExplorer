@@ -45,8 +45,9 @@ namespace Core.Channel
         Task<IChannel> GetByOffchainTransactionIdAsync(string transactionId);
         Task<IEnumerable<IChannel>> GetByBlockIdAsync(string blockId);
         Task<IEnumerable<IChannel>> GetByBlockHeightAsync(int blockHeight);
-        Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All);
+        Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All, IPageOptions pageOptions = null);
         Task<bool> IsHubAsync(string address);
+        Task<long> GetCountByAddress(string address);
     }
 
     public enum ChannelStatusQueryType
@@ -54,5 +55,31 @@ namespace Core.Channel
         All,
         OpenOnly,
         ClosedOnly
+    }
+
+    public interface IPageOptions
+    {
+        int ItemsToSkip { get; }
+        int ItemsToTake { get; }
+    }
+
+    public class PageOptions : IPageOptions
+    {
+        private int PageSize { get; set; }
+        private int PageNumber { get; set; }
+
+        public int ItemsToSkip => (PageNumber - 1) * PageSize;
+        public int ItemsToTake => PageSize;
+
+        public static PageOptions Create(int pageNumber, int pageSize)
+        {
+            return new PageOptions
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+
+
     }
 }

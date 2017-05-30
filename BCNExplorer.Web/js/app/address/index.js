@@ -6,6 +6,7 @@
 
         $addressPanel.load(loadUrl, function () {
             $('.js-transactions-container.hidden:first').trigger('load-transactions');
+            $addressPanel.trigger('address-transaction-list-loaded');
         });
     })();
 

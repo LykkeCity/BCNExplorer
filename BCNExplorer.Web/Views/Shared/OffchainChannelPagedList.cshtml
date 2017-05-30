@@ -1,0 +1,22 @@
+﻿@model OffchainChannelPagedList 
+@{
+    Layout = null;
+}
+
+
+<ul>
+    @foreach (var page in Model.Pages)
+    {
+        <li class="js-offchain-page hidden" data-page="@page.PageNumber"
+            data-load-url="@Url.Action("OffchainChannelPage", "Address", new {address=Model.Address, page = page.PageNumber })">
+
+
+            <div class="show_more">
+                <a class="btn js-load-offchain-page">Show More</a>
+            </div>
+        </li>
+    }
+</ul>
+
+
+@UiHelpers.Loader(htmlId: "js-offchain-page-loader", htmlClass: "hidden")

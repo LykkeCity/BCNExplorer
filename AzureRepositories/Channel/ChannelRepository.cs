@@ -118,16 +118,11 @@ namespace AzureRepositories.Channel
             return dbEntities.Select(Channel.Create);
         }
 
-        public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)
+        public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address, 
+            ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All,
+            IPageOptions pageOptions = null)
         {
-            var hubAddressFilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.HubAddress, address);
-
-            var address1filterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.ClientAddress1, address);
-            var address2FilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.ClientAddress2, address);
-
-            var filterExpression = Builders<ChannelMongoEntity>.Filter.Or(hubAddressFilterExpression, 
-                address1filterExpression, 
-                address2FilterExpression);
+            var filterExpression = GetAddressFilterExpression(address);
 
             if (channelStatusQueryType == ChannelStatusQueryType.OpenOnly)
             {
@@ -139,8 +134,15 @@ namespace AzureRepositories.Channel
                 filterExpression = Builders<ChannelMongoEntity>.Filter.And(filterExpression, closedFilterExpression);
             }
 
-            var dbEntities = await _mongoCollection
-                .Find(filterExpression)
+            var query = _mongoCollection
+                .Find(filterExpression);
+
+            if (pageOptions != null)
+            {
+                query = query.Skip(pageOptions.ItemsToSkip).Limit(pageOptions.ItemsToTake);
+            }
+
+            var dbEntities = await query
                 .ToListAsync();
 
             return dbEntities.Select(Channel.Create);
@@ -150,6 +152,28 @@ namespace AzureRepositories.Channel
         {
             var hubAddressFilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.HubAddress, address);
             return await _mongoCollection.Find(hubAddressFilterExpression).CountAsync() > 0;
+        }
+
+        private FilterDefinition<ChannelMongoEntity> GetAddressFilterExpression(string address)
+        {
+            var hubAddressFilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.HubAddress, address);
+            var address1filterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.ClientAddress1, address);
+            var address2FilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.ClientAddress2, address);
+
+            var filterExpression = Builders<ChannelMongoEntity>.Filter.Or(hubAddressFilterExpression,
+                address1filterExpression,
+                address2FilterExpression);
+
+            return filterExpression;
+        }
+
+        public async Task<long> GetCountByAddress(string address)
+        {
+            var filterExpression = GetAddressFilterExpression(address);
+
+            return await _mongoCollection
+                .Find(filterExpression)
+                .CountAsync();
         }
     }
 

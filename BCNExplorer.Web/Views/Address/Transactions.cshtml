@@ -2,7 +2,7 @@
 @{
     Layout = null;
 
-    var showOffchainTab = Model.OffchainChannelList.Channels.Any();
+    var showOffchainTab = Model.OffchainChannelPagedList.ChannelCount != 0;
 }
 
 <section class="section section--heading section--heading_with_tabs">
@@ -49,7 +49,7 @@
                         @if (Model.FullLoaded)
                         {
                             <span>
-                                · @Model.OffchainChannelList.TransactionCount
+                                ·
                             </span>
                         }
                     </a>
@@ -75,7 +75,7 @@
         </div>
         
         <div id="js-offchain-tx" class="@(showOffchainTab?"":"hidden") js-select-result">
-            @Html.Partial("OffchainChannelList", Model.OffchainChannelList)
+            @Html.Partial("OffchainChannelPagedList", Model.OffchainChannelPagedList)
         </div>
     </div>
 </section>

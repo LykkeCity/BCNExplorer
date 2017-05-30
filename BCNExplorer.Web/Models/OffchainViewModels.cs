@@ -221,4 +221,59 @@ namespace BCNExplorer.Web.Models
             };
         }
     }
+
+
+    public class OffchainChannelPagedList
+    {
+        public IEnumerable<OffchainChannelPageMetadata> Pages { get; set; }
+        public long ChannelCount { get; set; }
+        public string Address { get; set; }
+
+
+        public static OffchainChannelPagedList Create(string address, long totalCount, int pageSize)
+        {
+            return new OffchainChannelPagedList
+            {
+                Pages = OffchainChannelPageMetadata.CreatePageList(totalCount, pageSize),
+                ChannelCount = totalCount,
+                Address = address
+            };
+        }
+    }
+
+    public class OffchainChannelPageMetadata
+    {
+        public int PageNumber { get; set; }
+
+        public bool IsLastPage { get; set; }
+        public int NextPage => PageNumber + 1;
+
+        private static OffchainChannelPageMetadata Create(int pageNumber, bool isLastPage)
+        {
+            return new OffchainChannelPageMetadata
+            {
+                PageNumber = pageNumber,
+                IsLastPage = isLastPage
+            };
+        }
+
+        public static IEnumerable<OffchainChannelPageMetadata> CreatePageList(long totalCount, int pageSize)
+        {
+            if (pageSize == 0)
+            {
+                throw new InvalidOperationException(nameof(pageSize));
+            }
+
+            var lastPage = (totalCount + pageSize - 1) / pageSize;
+            var pageNumber = 0;
+
+            Func<int, bool> LastPage = (pageNum) => pageNum == lastPage;
+            while (!LastPage(pageNumber))
+            {
+                pageNumber++;
+                yield return Create(pageNumber, LastPage(pageNumber));
+            }
+        }
+    }
+    
 }

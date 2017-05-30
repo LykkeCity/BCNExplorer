@@ -354,6 +354,7 @@
     <Content Include="js\app\asset\directory\directory.js" />
     <Content Include="js\app\asset\index.js" />
     <Content Include="js\app\common\functions.js" />
+    <Content Include="js\app\offchain\paginationloader.js" />
     <Content Include="js\vendor\angular-mocks.js" />
     <Content Include="js\vendor\bootstrap-datetimepicker.min.js" />
     <Content Include="js\vendor\bootstrap.min.js" />
@@ -503,6 +504,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\OffchainChannelList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\OffchainChannelPagedList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\OffchainChannelPage.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

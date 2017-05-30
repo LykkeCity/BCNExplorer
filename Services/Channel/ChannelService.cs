@@ -75,13 +75,22 @@ namespace Services.Channel
             return await FillChannels(dbChannels);
         }
 
-        public async Task<IEnumerable<IFilledChannel>> GetByAddressPagedAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)
+        public async Task<IEnumerable<IFilledChannel>> GetByAddressFilledAsync(string address, 
+            ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All,
+            IPageOptions pageOptions = null)
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
-            var dbChannels = await _channelRepository.GetByAddressAsync(uncoloredAddress, channelStatusQueryType);
+            var dbChannels = await _channelRepository.GetByAddressAsync(uncoloredAddress, channelStatusQueryType, pageOptions);
 
             return await FillChannels(dbChannels);
+        }
+
+        public Task<long> GetCountByAddress(string address)
+        {
+            var uncoloredAddress = GetUncoloredAddress(address);
+
+            return _channelRepository.GetCountByAddress(uncoloredAddress);
         }
 
         public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)
