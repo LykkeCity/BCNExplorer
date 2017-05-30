@@ -45,21 +45,13 @@ namespace BCNExplorer.Web.Controllers
         [Route("transation/list")]
         public async Task<ActionResult> List(IList<string> ids)
         {
-            var result = new ConcurrentStack<TransactionViewModel>();
+            var assetDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
 
-            var assetDictionary = await _assetService.GetAssetDefinitionDictionaryAsync();
+            var loadTransactionTask = _cachedTransactionService.GetAsync(ids);
 
-            var loadTransactionTasks = ids.Select(id => _cachedTransactionService.GetAsync(id).ContinueWith(task =>
-            {
-                if (task.Result != null)
-                {
-                    result.Push(TransactionViewModel.Create(task.Result, assetDictionary));
-                }
-            }));
+            await Task.WhenAll(loadTransactionTask, assetDictionary);
 
-            await Task.WhenAll(loadTransactionTasks);
-
-            return View(result.OrderBy(p => ids.IndexOf(p.TransactionId)));
+            return View(loadTransactionTask.Result.Select(p=> TransactionViewModel.Create(p, assetDictionary.Result)).OrderBy(p => ids.IndexOf(p.TransactionId)));
         }
     }
 }
