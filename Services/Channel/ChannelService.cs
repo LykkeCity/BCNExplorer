@@ -75,13 +75,20 @@ namespace Services.Channel
             return await FillChannels(dbChannels);
         }
 
-        public async Task<IEnumerable<IFilledChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)
+        public async Task<IEnumerable<IFilledChannel>> GetByAddressPagedAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
             var dbChannels = await _channelRepository.GetByAddressAsync(uncoloredAddress, channelStatusQueryType);
 
             return await FillChannels(dbChannels);
+        }
+
+        public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)
+        {
+            var uncoloredAddress = GetUncoloredAddress(address);
+
+            return await _channelRepository.GetByAddressAsync(uncoloredAddress, channelStatusQueryType);
         }
 
         public Task<bool> IsHubAsync(string address)

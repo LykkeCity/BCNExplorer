@@ -38,7 +38,7 @@ namespace BCNExplorer.Web.Controllers
                 return View("NotFound");
             }
 
-            var channelViewModel = OffchainChannelViewModel.Create(channel.Result, assetDictionary.Result);
+            var channelViewModel = OffchainFilledChannelViewModel.Create(channel.Result, assetDictionary.Result);
 
             return View(OffchainTransactionDetailsViewModel.Create(channelViewModel, id));
         }

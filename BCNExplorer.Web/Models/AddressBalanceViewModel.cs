@@ -35,7 +35,7 @@ namespace BCNExplorer.Web.Models
             IDictionary<string, IAssetDefinition> assetDictionary, 
             IBlockHeader lastBlock, 
             IBlockHeader atBlock,
-            IEnumerable<IFilledChannel> channels)
+            IEnumerable<IChannel> channels)
         {
             return new AddressBalanceViewModel
             {
@@ -133,7 +133,7 @@ namespace BCNExplorer.Web.Models
             return BtcChannels;
         }
 
-        public static OffchainChannelsByAsset Create(IEnumerable<IFilledChannel> channels, IDictionary<string, IAssetDefinition> assetDictionary)
+        public static OffchainChannelsByAsset Create(IEnumerable<IChannel> channels, IDictionary<string, IAssetDefinition> assetDictionary)
         {
             return Create(channels.Select(p => OffchainChannelViewModel.Create(p, assetDictionary)));
         }

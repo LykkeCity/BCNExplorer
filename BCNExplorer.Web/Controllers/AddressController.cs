@@ -116,7 +116,7 @@ namespace BCNExplorer.Web.Controllers
         {
             var onchainTransactions = _cachedAddressService.GetTransactions(id);
             var assetDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
-            var channels = _channelService.GetByAddressAsync(id);
+            var channels = _channelService.GetByAddressPagedAsync(id);
 
             await Task.WhenAll(onchainTransactions, assetDictionary, channels);
 

@@ -6,19 +6,28 @@ using Core.Channel;
 
 namespace BCNExplorer.Web.Models
 {
-    public class OffchainChannelViewModel
+    public class OffchainFilledChannelViewModel: OffchainChannelViewModel
     {
-        public AssetViewModel Asset { get; set; }
+        private OffchainFilledChannelViewModel(IFilledChannel channel, IDictionary<string, IAssetDefinition> assetDictionary):base(channel, assetDictionary)
+        {
+            this.OpenTransaction = TransactionViewModel.Create(channel.OpenTransaction, assetDictionary);
+            this.CloseTransaction = TransactionViewModel.Create(channel.CloseTransaction, assetDictionary);
+        }
+
         public TransactionViewModel OpenTransaction { get; set; }
 
         public TransactionViewModel CloseTransaction { get; set; }
 
-        public IEnumerable<OffChainTransactionViewModel> OffChainTransactions { get; set; }
+        public static OffchainFilledChannelViewModel Create(IFilledChannel channel, IDictionary<string, IAssetDefinition> assetDictionary)
+        {
+            return new OffchainFilledChannelViewModel(channel, assetDictionary);
+        }
+    }
 
-        public OffChainTransactionViewModel ConfirmedOffchainTransaction =>
-            OffChainTransactions?.FirstOrDefault(p => !p.IsRevoked);
+    public class OffchainChannelViewModel
+    {
 
-        public static OffchainChannelViewModel Create(IFilledChannel channel, IDictionary<string, IAssetDefinition> assetDictionary)
+        protected OffchainChannelViewModel(IChannel channel, IDictionary<string, IAssetDefinition> assetDictionary)
         {
             AssetViewModel asset;
             if (channel.IsColored)
@@ -32,33 +41,44 @@ namespace BCNExplorer.Web.Models
                 asset = AssetViewModel.BtcAsset.Value;
             }
 
-            var openOnChainTx = TransactionViewModel.Create(channel.OpenTransaction, assetDictionary);
-            var closeOnChainTx = TransactionViewModel.Create(channel.CloseTransaction, assetDictionary);
-
             var offchainTransactions = OffChainTransactionViewModel.Create(channel.OffchainTransactions, assetDictionary).ToList();
-            
-            return new OffchainChannelViewModel
-            {
-                OpenTransaction = openOnChainTx,
-                CloseTransaction = closeOnChainTx,
-                OffChainTransactions = offchainTransactions,
-                Asset = asset
-            };
+
+            this.OpenTransactionTd = channel.OpenTransactionId;
+            this.CloseTransactionId = channel.CloseTransactionId;
+            this.OffChainTransactions = offchainTransactions;
+            this.Asset = asset;
+        }
+
+        public AssetViewModel Asset { get; set; }
+        public string OpenTransactionTd { get; set; }
+
+        public string CloseTransactionId { get; set; }
+
+        public IEnumerable<OffChainTransactionViewModel> OffChainTransactions { get; set; }
+
+        public OffChainTransactionViewModel ConfirmedOffchainTransaction =>
+            OffChainTransactions?.FirstOrDefault(p => !p.IsRevoked);
+
+        public static OffchainChannelViewModel Create(IChannel channel, IDictionary<string, IAssetDefinition> assetDictionary)
+        {
+            return new OffchainChannelViewModel(channel, assetDictionary);
         }
     }
 
+
+
     public class OffchainChannelListViewModel
     {
-        public IEnumerable<OffchainChannelViewModel> Channels { get; set; }
+        public IEnumerable<OffchainFilledChannelViewModel> Channels { get; set; }
 
         public int TransactionCount => Channels.SelectMany(p => p.OffChainTransactions).Count();
 
         public static OffchainChannelListViewModel Create(IEnumerable<IFilledChannel> channels, IDictionary<string, IAssetDefinition> assetDictionary)
         {
-            return Create(channels.Select(p => OffchainChannelViewModel.Create(p, assetDictionary)));
+            return Create(channels.Select(p => OffchainFilledChannelViewModel.Create(p, assetDictionary)));
 
         }
-        public static OffchainChannelListViewModel Create(IEnumerable<OffchainChannelViewModel> channels)
+        public static OffchainChannelListViewModel Create(IEnumerable<OffchainFilledChannelViewModel> channels)
         {
             return new OffchainChannelListViewModel
             {
@@ -187,17 +207,17 @@ namespace BCNExplorer.Web.Models
 
     public class OffchainTransactionDetailsViewModel
     {
-        public OffchainChannelViewModel Channel { get; set; }
+        public OffchainFilledChannelViewModel FilledChannel { get; set; }
 
         public OffChainTransactionViewModel Transaction { get; set; }
 
-        public static OffchainTransactionDetailsViewModel Create(OffchainChannelViewModel channel,
+        public static OffchainTransactionDetailsViewModel Create(OffchainFilledChannelViewModel filledChannel,
             string transactionId)
         {
             return new OffchainTransactionDetailsViewModel
             {
-                Channel = channel,
-                Transaction = channel.OffChainTransactions.First(x => x.TransactionId == transactionId)
+                FilledChannel = filledChannel,
+                Transaction = filledChannel.OffChainTransactions.First(x => x.TransactionId == transactionId)
             };
         }
     }
