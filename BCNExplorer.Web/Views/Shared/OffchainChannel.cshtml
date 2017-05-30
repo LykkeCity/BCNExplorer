@@ -3,20 +3,22 @@
     Layout = null;
 }
 
-
-@if (Model.CloseTransaction != null)
-{
+<div class="js-offchain-channel">
+    @if (Model.CloseTransaction != null)
+    {
     
-    @Html.Partial("TransactionDetails", Model.CloseTransaction)
-}
+        @Html.Partial("TransactionDetails", Model.CloseTransaction)
+    }
 
-@foreach (var tx in Model.OffChainTransactions)
-{
-    @Html.Partial("OffchainTransactionDetails", tx)
-}
+    @foreach (var tx in Model.OffChainTransactions)
+    {
+        @Html.Partial("OffchainTransactionDetails", tx)
+    }
 
-@if(Model.OpenTransaction != null)
-{
-    @Html.Partial("TransactionDetails", Model.OpenTransaction)
-}
+    @if(Model.OpenTransaction != null)
+    {
+        @Html.Partial("TransactionDetails", Model.OpenTransaction)
+    } 
+</div>
+
 

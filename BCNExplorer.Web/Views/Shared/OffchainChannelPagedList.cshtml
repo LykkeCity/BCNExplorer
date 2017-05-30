@@ -3,7 +3,22 @@
     Layout = null;
 }
 
-
+<div class="section section--heading">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <h3>
+                    Channels 
+                    <span class="js-offchain-loaded-channel-count">0</span>
+                    <span>
+                        of @Model.ChannelCount
+                    </span>
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
 <ul>
     @foreach (var page in Model.Pages)
     {

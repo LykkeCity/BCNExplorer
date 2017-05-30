@@ -2,7 +2,9 @@
     var selectors = {
         offchainPage: '.js-offchain-page',
         loader: '#js-offchain-page-loader',
-        showMoreBtn: '.js-load-offchain-page'
+        showMoreBtn: '.js-load-offchain-page',
+        channel: '.js-offchain-channel',
+        loadedChannelCount: '.js-offchain-loaded-channel-count'
     };
 
 
@@ -20,6 +22,8 @@
                 $container.next().removeClass('hidden'); // show Load more btn on next page"
 
                 $container.trigger('transactions-loaded');
+
+                $(selectors.loadedChannelCount).html($(selectors.channel).length)
             });
         };
 
