@@ -8,7 +8,7 @@
 
     (function() {
         var loadOffchainPage = function ($container) {
-            if ($container.length == 0) {
+            if ($container.length === 0) {
                 return;
             }
             $(selectors.loader).removeClass('hidden');
@@ -18,16 +18,21 @@
                 $(selectors.loader).addClass('hidden');
                 $container.removeClass('hidden');
                 $container.next().removeClass('hidden'); // show Load more btn on next page"
+
+                $container.trigger('transactions-loaded');
             });
         };
 
-        $('body').on('click', selectors.showMoreBtn, function() {
-            var $container = $(this).parents(selectors.offchainPage);
+        $('body').on('click', selectors.showMoreBtn, function () {
+            var $self = $(this);
+            $self.addClass('hidden');
+
+            var $container = $self.parents(selectors.offchainPage);
             loadOffchainPage($container);
         });
 
-        $('body').on('address-transaction-list-loaded', function () {
-            loadOffchainPage($(selectors.offchainPage).first());
+        $('body').on('address-transaction-list-loaded', function (e) {
+            loadOffchainPage($(e.target).find(selectors.offchainPage).first());
         });
     })();
 

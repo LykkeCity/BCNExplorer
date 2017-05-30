@@ -5,8 +5,9 @@
         var loadUrl = $addressPanel.data('load-url');
 
         $addressPanel.load(loadUrl, function () {
-            $('.js-transactions-container.hidden:first').trigger('load-transactions');
-            $addressPanel.trigger('address-transaction-list-loaded');
+            
+            $('.js-active-tab .js-transactions-container.hidden:first').trigger('load-transactions');
+            $('.js-active-tab').trigger('address-transaction-list-loaded');
         });
     })();
 

@@ -38,6 +38,9 @@ namespace BCNExplorer.Web
             bundles.Add(new ScriptBundle("~/bundles/js/asset").Include(
                 "~/js/app/asset/*.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/js/offchain").Include(
+                "~/js/app/offchain/*.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/js/angular").Include(
                 "~/js/vendor/angular.min.js"));
 

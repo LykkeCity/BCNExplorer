@@ -62,7 +62,7 @@
 <section class="section section--transactions">
     <div id="js-tx-select-result-container">
 
-        <div id="js-all-tx" class="@(showOffchainTab?"hidden":"") js-select-result">
+        <div id="js-all-tx" class="@(showOffchainTab?"hidden":"js-active-tab") js-select-result">
             @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.AllTransactionIdList)
         </div>
 
@@ -74,7 +74,7 @@
             @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.ReceivedTransactionIdList)
         </div>
         
-        <div id="js-offchain-tx" class="@(showOffchainTab?"":"hidden") js-select-result">
+        <div id="js-offchain-tx" class="@(showOffchainTab?"js-active-tab":"hidden") js-select-result">
             @Html.Partial("OffchainChannelPagedList", Model.OffchainChannelPagedList)
         </div>
     </div>
