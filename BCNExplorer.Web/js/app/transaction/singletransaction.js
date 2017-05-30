@@ -34,13 +34,5 @@
         initAssetQuantityPopover();
 
         $('body').on('transactions-loaded', initAssetQuantityPopover);
-
-        $('body').on('click touchstart', function (e) {
-            $(popoverSelector).each(function () {
-                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $(popoverSelector).has(e.target).length === 0) {
-                    $(this).popover('hide');
-                }
-            });
-        });
     })();    
 });
