@@ -16,11 +16,15 @@ namespace BCNExplorer.Web.Controllers
     {
         private readonly ITransactionService _transactionService;
         private readonly IAssetService _assetService;
+        private readonly ICachedTransactionService _cachedTransactionService;
 
-        public TransactionController(ITransactionService transactionService, IAssetService assetService)
+        public TransactionController(ITransactionService transactionService, 
+            IAssetService assetService, 
+            ICachedTransactionService cachedTransactionService)
         {
             _transactionService = transactionService;
             _assetService = assetService;
+            _cachedTransactionService = cachedTransactionService;
         }
 
         [Route("transaction/{id}")]
@@ -37,8 +41,7 @@ namespace BCNExplorer.Web.Controllers
 
             return View("NotFound");
         }
-
-        [OutputCache(Duration = 2 * 60)]
+        
         [Route("transation/list")]
         public async Task<ActionResult> List(IList<string> ids)
         {
@@ -46,7 +49,7 @@ namespace BCNExplorer.Web.Controllers
 
             var assetDictionary = await _assetService.GetAssetDefinitionDictionaryAsync();
 
-            var loadTransactionTasks = ids.Select(id => _transactionService.GetAsync(id).ContinueWith(task =>
+            var loadTransactionTasks = ids.Select(id => _cachedTransactionService.GetAsync(id).ContinueWith(task =>
             {
                 if (task.Result != null)
                 {

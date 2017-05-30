@@ -354,6 +354,7 @@
     <Content Include="js\app\asset\directory\directory.js" />
     <Content Include="js\app\asset\index.js" />
     <Content Include="js\app\common\functions.js" />
+    <Content Include="js\app\common\popoverFixes.js" />
     <Content Include="js\app\offchain\paginationloader.js" />
     <Content Include="js\vendor\angular-mocks.js" />
     <Content Include="js\vendor\bootstrap-datetimepicker.min.js" />
