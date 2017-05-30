@@ -386,6 +386,11 @@ namespace BCNExplorer.Web.Models
 
         public static TransactionViewModel Create(ITransaction ninjaTransaction, IDictionary<string, IAssetDefinition> assetDictionary)
         {
+            if (ninjaTransaction == null)
+            {
+                return null;
+            }
+
             var bc = ninjaTransaction.TransactionsByAssets.First(p => !p.IsColored);
             var colored = ninjaTransaction.TransactionsByAssets.Where(p => p.IsColored).OrderBy(p => p.AssetId);
             var assetDic = AssetDictionary.Create(assetDictionary);

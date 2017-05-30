@@ -4,11 +4,19 @@
 }
 
 
-@Html.Partial("TransactionDetails", Model.CloseTransaction)
+@if (Model.CloseTransaction != null)
+{
+    
+    @Html.Partial("TransactionDetails", Model.CloseTransaction)
+}
 
 @foreach (var tx in Model.OffChainTransactions)
 {
     @Html.Partial("OffchainTransactionDetails", tx)
 }
 
-@Html.Partial("TransactionDetails", Model.OpenTransaction)
+@if(Model.OpenTransaction != null)
+{
+    @Html.Partial("TransactionDetails", Model.OpenTransaction)
+}
+

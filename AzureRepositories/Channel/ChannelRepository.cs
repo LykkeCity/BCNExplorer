@@ -118,7 +118,7 @@ namespace AzureRepositories.Channel
             return dbEntities.Select(Channel.Create);
         }
 
-        public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address)
+        public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)
         {
             var hubAddressFilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.HubAddress, address);
 
@@ -128,6 +128,16 @@ namespace AzureRepositories.Channel
             var filterExpression = Builders<ChannelMongoEntity>.Filter.Or(hubAddressFilterExpression, 
                 address1filterExpression, 
                 address2FilterExpression);
+
+            if (channelStatusQueryType == ChannelStatusQueryType.OpenOnly)
+            {
+                var openFilterExpession = Builders<ChannelMongoEntity>.Filter.Exists(p => p.CloseTransaction.TransactionId, false);
+                filterExpression = Builders<ChannelMongoEntity>.Filter.And(filterExpression, openFilterExpession);
+            }else if (channelStatusQueryType == ChannelStatusQueryType.ClosedOnly)
+            {
+                var closedFilterExpression = Builders<ChannelMongoEntity>.Filter.Exists(p => p.CloseTransaction.TransactionId, true);
+                filterExpression = Builders<ChannelMongoEntity>.Filter.And(filterExpression, closedFilterExpression);
+            }
 
             var dbEntities = await _mongoCollection
                 .Find(filterExpression)

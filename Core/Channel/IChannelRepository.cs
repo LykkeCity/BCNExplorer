@@ -45,7 +45,14 @@ namespace Core.Channel
         Task<IChannel> GetByOffchainTransactionIdAsync(string transactionId);
         Task<IEnumerable<IChannel>> GetByBlockIdAsync(string blockId);
         Task<IEnumerable<IChannel>> GetByBlockHeightAsync(int blockHeight);
-        Task<IEnumerable<IChannel>> GetByAddressAsync(string address);
+        Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All);
         Task<bool> IsHubAsync(string address);
+    }
+
+    public enum ChannelStatusQueryType
+    {
+        All,
+        OpenOnly,
+        ClosedOnly
     }
 }

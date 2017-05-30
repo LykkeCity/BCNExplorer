@@ -70,7 +70,7 @@ namespace BCNExplorer.Web.Controllers
             var balance = _addressProvider.GetBalanceAsync(id, at);
             var assetDefinitionDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
             var lastBlock = _blockService.GetLastBlockHeaderAsync();
-            var offchainChannels = _channelService.GetByAddressAsync(id);
+            var offchainChannels = _channelService.GetByAddressAsync(id, ChannelStatusQueryType.OpenOnly);
             Task<IBlockHeader> atBlockTask;
 
             if (at != null)

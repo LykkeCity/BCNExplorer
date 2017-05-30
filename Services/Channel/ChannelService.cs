@@ -29,7 +29,7 @@ namespace Services.Channel
                 CloseTransactionId = channel.CloseTransactionId,
 
                 OffchainTransactions = channel.OffchainTransactions,
-                CloseTransaction = openTransaction,
+                CloseTransaction = closeTransaction,
                 OpenTransaction = openTransaction,
                 AssetId = channel.AssetId,
                 IsColored = channel.IsColored
@@ -75,11 +75,11 @@ namespace Services.Channel
             return await FillChannels(dbChannels);
         }
 
-        public async Task<IEnumerable<IFilledChannel>> GetByAddressAsync(string address)
+        public async Task<IEnumerable<IFilledChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
-            var dbChannels = await _channelRepository.GetByAddressAsync(uncoloredAddress);
+            var dbChannels = await _channelRepository.GetByAddressAsync(uncoloredAddress, channelStatusQueryType);
 
             return await FillChannels(dbChannels);
         }
@@ -116,10 +116,11 @@ namespace Services.Channel
                 .ToList();
 
             var txs = (await _cachedTransactionService.GetAsync(txIds)).ToDictionary(p => p.TransactionId);
-
-
-            return channels.Select(p => FilledChannel.Create(p, txs.GetValueOrDefault(p.OpenTransactionId, null),
-                txs.GetValueOrDefault(p.CloseTransactionId, null)));
+            
+            return channels.Select(p => 
+            FilledChannel.Create(p, 
+                p.OpenTransactionId != null ? txs.GetValueOrDefault(p.OpenTransactionId, null): null,
+                p.CloseTransactionId != null ? txs.GetValueOrDefault(p.CloseTransactionId, null): null));
         }
     }
 }
