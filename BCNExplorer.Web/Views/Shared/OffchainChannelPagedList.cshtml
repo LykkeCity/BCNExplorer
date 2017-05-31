@@ -23,7 +23,7 @@
     @foreach (var page in Model.Pages)
     {
         <li class="js-offchain-page hidden" data-page="@page.PageNumber"
-            data-load-url="@Url.Action("OffchainChannelPage", "Address", new {address=Model.Address, page = page.PageNumber })">
+            data-load-url="@Model.BuildUrl(Url, page.PageNumber)">
 
 
             <div class="show_more">

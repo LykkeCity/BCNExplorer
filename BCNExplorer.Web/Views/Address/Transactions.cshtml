@@ -46,12 +46,9 @@
                 <div class="tab_item js-tab_item  @(showOffchainTab?"tab_item--active":"") ">
                     <a class="tab_item__link js-tx-toggle" href="#js-offchain-tx">
                         Off-chain 
-                        @if (Model.FullLoaded)
-                        {
-                            <span>
-                                ·
-                            </span>
-                        }
+                        <span>
+                            · @Model.OffchainChannelPagedList.ChannelCount
+                        </span>
                     </a>
                 </div>
             </div>

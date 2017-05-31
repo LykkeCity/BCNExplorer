@@ -88,59 +88,18 @@ namespace AzureRepositories.Channel
             return dbEntity != null ? Channel.Create(dbEntity) : null;
         }
 
-        public async Task<IEnumerable<IChannel>> GetByBlockIdAsync(string blockId)
-        {
-            var openTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.BlockId, blockId);
-
-            var closeTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.CloseTransaction.Block.BlockId, blockId);
-
-            var finalFilterExpression = Builders<ChannelMongoEntity>.Filter.Or(openTxEqualsfilterExpression, closeTxEqualsfilterExpression);
-
-            var dbEntities = await _mongoCollection
-                .Find(finalFilterExpression)
-                .ToListAsync();
-
-            return dbEntities.Select(Channel.Create);
-        }
-
-        public async Task<IEnumerable<IChannel>> GetByBlockHeightAsync(int blockHeight)
-        {
-            var openTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.Height, blockHeight);
-
-            var closeTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.CloseTransaction.Block.Height, blockHeight);
-
-            var finalFilterExpression = Builders<ChannelMongoEntity>.Filter.Or(openTxEqualsfilterExpression, closeTxEqualsfilterExpression);
-
-            var dbEntities = await _mongoCollection
-                .Find(finalFilterExpression)
-                .ToListAsync();
-
-            return dbEntities.Select(Channel.Create);
-        }
-
-        public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address, 
-            ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All,
+        public async Task<IEnumerable<IChannel>> GetByBlockIdAsync(string blockId, 
+            ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All, 
             IPageOptions pageOptions = null)
         {
-            var filterExpression = GetAddressFilterExpression(address);
+            var filterExpression = GetBlockIdFilterExpression(blockId);
 
-            if (channelStatusQueryType == ChannelStatusQueryType.OpenOnly)
-            {
-                var openFilterExpession = Builders<ChannelMongoEntity>.Filter.Exists(p => p.CloseTransaction.TransactionId, false);
-                filterExpression = Builders<ChannelMongoEntity>.Filter.And(filterExpression, openFilterExpession);
-            }else if (channelStatusQueryType == ChannelStatusQueryType.ClosedOnly)
-            {
-                var closedFilterExpression = Builders<ChannelMongoEntity>.Filter.Exists(p => p.CloseTransaction.TransactionId, true);
-                filterExpression = Builders<ChannelMongoEntity>.Filter.And(filterExpression, closedFilterExpression);
-            }
+            filterExpression = FilterByChannelType(filterExpression, channelStatusQueryType);
 
             var query = _mongoCollection
                 .Find(filterExpression);
 
-            if (pageOptions != null)
-            {
-                query = query.Skip(pageOptions.ItemsToSkip).Limit(pageOptions.ItemsToTake);
-            }
+            query = PageQuery(query, pageOptions);
 
             var dbEntities = await query
                 .ToListAsync();
@@ -148,10 +107,91 @@ namespace AzureRepositories.Channel
             return dbEntities.Select(Channel.Create);
         }
 
+        public async Task<IEnumerable<IChannel>> GetByBlockHeightAsync(int blockHeight, 
+            ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All, 
+            IPageOptions pageOptions = null)
+        {
+            var filterExpression = GetBlockHeightFilterExpression(blockHeight);
+            filterExpression = FilterByChannelType(filterExpression, channelStatusQueryType);
+
+            var query = _mongoCollection
+                .Find(filterExpression);
+
+            query = PageQuery(query, pageOptions);
+
+            var dbEntities = await query
+                .ToListAsync();
+            
+            return dbEntities.Select(Channel.Create);
+        }
+        
+        public async Task<long> GetCountByBlockIdAsync(string blockId)
+        {
+            var filterExpression = GetBlockIdFilterExpression(blockId);
+
+            return await _mongoCollection.Find(filterExpression).CountAsync();
+        }
+
+        public async Task<long> GetCountByBlockHeightAsync(int blockHeight)
+        {
+            var filterExpression = GetBlockHeightFilterExpression(blockHeight);
+
+            return await _mongoCollection.Find(filterExpression).CountAsync();
+        }
+
+
+        public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address, 
+            ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All,
+            IPageOptions pageOptions = null)
+        {
+            var filterExpression = GetAddressFilterExpression(address);
+            
+            filterExpression = FilterByChannelType(filterExpression, channelStatusQueryType);
+
+            var query = _mongoCollection
+                .Find(filterExpression);
+            
+            query = PageQuery(query, pageOptions);
+
+            var dbEntities = await query
+                .ToListAsync();
+
+            return dbEntities.Select(Channel.Create);
+        }
+
+
+
         public async Task<bool> IsHubAsync(string address)
         {
             var hubAddressFilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.Metadata.HubAddress, address);
+
             return await _mongoCollection.Find(hubAddressFilterExpression).CountAsync() > 0;
+        }
+
+        public async Task<long> GetCountByAddressAsync(string address)
+        {
+            var filterExpression = GetAddressFilterExpression(address);
+
+            return await _mongoCollection
+                .Find(filterExpression)
+                .CountAsync();
+        }
+
+        private FilterDefinition<ChannelMongoEntity> FilterByChannelType(
+            FilterDefinition<ChannelMongoEntity> filterExpression, ChannelStatusQueryType channelStatusQueryType)
+        {
+            if (channelStatusQueryType == ChannelStatusQueryType.OpenOnly)
+            {
+                var openFilterExpession = Builders<ChannelMongoEntity>.Filter.Exists(p => p.CloseTransaction.TransactionId, false);
+                return Builders<ChannelMongoEntity>.Filter.And(filterExpression, openFilterExpession);
+            }
+            else if (channelStatusQueryType == ChannelStatusQueryType.ClosedOnly)
+            {
+                var closedFilterExpression = Builders<ChannelMongoEntity>.Filter.Exists(p => p.CloseTransaction.TransactionId, true);
+                return Builders<ChannelMongoEntity>.Filter.And(filterExpression, closedFilterExpression);
+            }
+
+            return filterExpression;
         }
 
         private FilterDefinition<ChannelMongoEntity> GetAddressFilterExpression(string address)
@@ -167,13 +207,35 @@ namespace AzureRepositories.Channel
             return filterExpression;
         }
 
-        public async Task<long> GetCountByAddress(string address)
+        private FilterDefinition<ChannelMongoEntity> GetBlockIdFilterExpression(string blockId)
         {
-            var filterExpression = GetAddressFilterExpression(address);
+            var openTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.BlockId, blockId);
 
-            return await _mongoCollection
-                .Find(filterExpression)
-                .CountAsync();
+            var closeTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.CloseTransaction.Block.BlockId, blockId);
+
+            return Builders<ChannelMongoEntity>.Filter.Or(openTxEqualsfilterExpression, closeTxEqualsfilterExpression);
+        }
+
+
+        private FilterDefinition<ChannelMongoEntity> GetBlockHeightFilterExpression(int blockHeight)
+        {
+            var openTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.OpenTransaction.Block.Height, blockHeight);
+
+            var closeTxEqualsfilterExpression = Builders<ChannelMongoEntity>.Filter.Eq(p => p.CloseTransaction.Block.Height, blockHeight);
+
+            return Builders<ChannelMongoEntity>.Filter.Or(openTxEqualsfilterExpression, closeTxEqualsfilterExpression);
+        }
+
+
+        private IFindFluent<ChannelMongoEntity, ChannelMongoEntity> PageQuery(IFindFluent<ChannelMongoEntity, ChannelMongoEntity> query,
+            IPageOptions pageOptions)
+        {
+            if (pageOptions != null)
+            {
+                query = query.Skip(pageOptions.ItemsToSkip).Limit(pageOptions.ItemsToTake);
+            }
+
+            return query;
         }
     }
 

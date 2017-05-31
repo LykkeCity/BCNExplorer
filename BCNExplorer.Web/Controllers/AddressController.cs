@@ -113,12 +113,14 @@ namespace BCNExplorer.Web.Controllers
 
             return RedirectToAction("BalanceAtBlock", new { id = id, at = block?.Height ?? 0 });
         }
-        
+
+
+        [OutputCache(Duration = 2 * 60, VaryByParam = "*")]
         [Route("address/transactions/{id}")]
         public async Task<ActionResult> Transactions(string id)
         {
             var onchainTransactions = _cachedAddressService.GetTransactions(id);
-            var offchainChannelsCount = _channelService.GetCountByAddress(id);
+            var offchainChannelsCount = _channelService.GetCountByAddressAsync(id);
 
             await Task.WhenAll(onchainTransactions,  offchainChannelsCount);
 

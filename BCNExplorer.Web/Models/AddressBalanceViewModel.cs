@@ -101,7 +101,11 @@ namespace BCNExplorer.Web.Models
                 SendTransactionIdList = new TransactionIdList(source.Send?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 ReceivedTransactionIdList = new TransactionIdList(source.Received?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 FullLoaded = source.FullLoaded,
-                OffchainChannelPagedList = OffchainChannelPagedList.Create(address, offchainChannelsCount, offchainTransactionsPageSize)
+                OffchainChannelPagedList = OffchainChannelPagedList.Create(
+                    offchainChannelsCount, 
+                    offchainTransactionsPageSize, 
+                    (url, page)=> url.Action("OffchainChannelPage", "Address", new {address = address, page = page})
+                )
             };
         }
     }

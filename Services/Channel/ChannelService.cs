@@ -58,21 +58,41 @@ namespace Services.Channel
             return await FillChannel(channel);
         }
 
-        public async Task<IEnumerable<IFilledChannel>> GetByBlockAsync(string blockId)
+        public async Task<IEnumerable<IFilledChannel>> GetByBlockAsync(string blockId,
+            ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All,
+            IPageOptions pageOptions = null)
         {
             int height;
 
             IEnumerable<IChannel> dbChannels;
             if (int.TryParse(blockId, out height))
             {
-                dbChannels = await _channelRepository.GetByBlockHeightAsync(height);
+                dbChannels = await _channelRepository.GetByBlockHeightAsync(height, 
+                    channelStatusQueryType, 
+                    pageOptions);
             }
             else
             {
-                dbChannels = await _channelRepository.GetByBlockIdAsync(blockId);
+                dbChannels = await _channelRepository.GetByBlockIdAsync(blockId, 
+                    channelStatusQueryType, 
+                    pageOptions);
             }
 
             return await FillChannels(dbChannels);
+        }
+
+        public async Task<long> GetCountByBlockAsync(string blockId)
+        {
+            int height;
+            
+            if (int.TryParse(blockId, out height))
+            {
+                return await _channelRepository.GetCountByBlockHeightAsync(height);
+            }
+            else
+            {
+                return await _channelRepository.GetCountByBlockIdAsync(blockId);
+            }
         }
 
         public async Task<IEnumerable<IFilledChannel>> GetByAddressFilledAsync(string address, 
@@ -85,12 +105,12 @@ namespace Services.Channel
 
             return await FillChannels(dbChannels);
         }
-
-        public Task<long> GetCountByAddress(string address)
+        
+        public Task<long> GetCountByAddressAsync(string address)
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
-            return _channelRepository.GetCountByAddress(uncoloredAddress);
+            return _channelRepository.GetCountByAddressAsync(uncoloredAddress);
         }
 
         public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using Core.Asset;
 using Core.Channel;
 
@@ -227,16 +228,17 @@ namespace BCNExplorer.Web.Models
     {
         public IEnumerable<OffchainChannelPageMetadata> Pages { get; set; }
         public long ChannelCount { get; set; }
-        public string Address { get; set; }
+
+        public Func<UrlHelper, int, string> BuildUrl;
 
 
-        public static OffchainChannelPagedList Create(string address, long totalCount, int pageSize)
+        public static OffchainChannelPagedList Create(long totalCount, int pageSize, Func<UrlHelper, int, string> buildUrlFunc)
         {
             return new OffchainChannelPagedList
             {
                 Pages = OffchainChannelPageMetadata.CreatePageList(totalCount, pageSize),
                 ChannelCount = totalCount,
-                Address = address
+                BuildUrl = buildUrlFunc
             };
         }
     }

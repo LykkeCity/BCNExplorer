@@ -41,6 +41,7 @@ namespace BCNExplorer.Web.Controllers
 
             return View("NotFound");
         }
+
         
         [Route("transation/list")]
         public async Task<ActionResult> List(IList<string> ids)

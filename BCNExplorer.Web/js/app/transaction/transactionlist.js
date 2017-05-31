@@ -67,6 +67,7 @@
         $btnGroup.find('.js-tx-toggle').parent('.js-tab_item').removeClass('tab_item--active');
         $self.parent('.js-tab_item').addClass('tab_item--active');
 
+        $panelToShow.trigger('js-tx-tab-toggled');
         $panelToShow.find('.js-transactions-container').first().trigger('load-transactions');
         $panelsToHide.addClass('hidden');
         $panelToShow.removeClass('hidden');
