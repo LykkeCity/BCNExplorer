@@ -41,6 +41,11 @@ namespace BCNExplorer.Web.Controllers
                 {
                     return RedirectToAction("Index", "Transaction", new { id = id });
                 }
+
+                case SearchResultType.OffchainTransaction:
+                {
+                    return RedirectToAction("Index", "OffchainTransaction", new { id = id });
+                }
                 case SearchResultType.Address:
                 {
                     return RedirectToAction("Index", "Address", new { id = id });

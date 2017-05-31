@@ -10,6 +10,7 @@ namespace Core.SearchService
     {
         Block,
         Transaction,
+        OffchainTransaction,
         Address,
         Asset
     }

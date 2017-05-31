@@ -14,6 +14,7 @@ namespace Core.Channel
     public interface IChannelService
     {
         Task<IFilledChannel> GetByOffchainTransactionIdAsync(string transactionId);
+        Task<bool> OffchainTransactionExistsAsync(string transactionId);
 
         Task<IEnumerable<IFilledChannel>> GetByBlockAsync(string blockId,
             ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All,

@@ -58,6 +58,11 @@ namespace Services.Channel
             return await FillChannel(channel);
         }
 
+        public Task<bool> OffchainTransactionExistsAsync(string transactionId)
+        {
+            return _channelRepository.OffchainTransactionExistsAsync(transactionId);
+        }
+
         public async Task<IEnumerable<IFilledChannel>> GetByBlockAsync(string blockId,
             ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All,
             IPageOptions pageOptions = null)

@@ -78,14 +78,22 @@ namespace AzureRepositories.Channel
 
         public async Task<IChannel> GetByOffchainTransactionIdAsync(string transactionId)
         {
-            var filterExpression = Builders<ChannelMongoEntity>.Filter.ElemMatch(p => p.OffChainTransactions,
-                p => p.TransactionId == transactionId);
+            var filterExpression = GetOffchainTransactionFilterExpression(transactionId);
 
             var dbEntity = await _mongoCollection
                 .Find(filterExpression)
                 .FirstOrDefaultAsync();
 
             return dbEntity != null ? Channel.Create(dbEntity) : null;
+        }
+
+
+        
+        public async Task<bool> OffchainTransactionExistsAsync(string transactionId)
+        {
+            var filterExpression = GetOffchainTransactionFilterExpression(transactionId);
+
+            return (await _mongoCollection.Find(filterExpression).CountAsync()) > 0;
         }
 
         public async Task<IEnumerable<IChannel>> GetByBlockIdAsync(string blockId, 
@@ -226,6 +234,12 @@ namespace AzureRepositories.Channel
             return Builders<ChannelMongoEntity>.Filter.Or(openTxEqualsfilterExpression, closeTxEqualsfilterExpression);
         }
 
+        private FilterDefinition<ChannelMongoEntity> GetOffchainTransactionFilterExpression(string transactionId)
+        {
+            return Builders<ChannelMongoEntity>.Filter.ElemMatch(p => p.OffChainTransactions,
+                p => p.TransactionId == transactionId);
+        }
+
 
         private IFindFluent<ChannelMongoEntity, ChannelMongoEntity> PageQuery(IFindFluent<ChannelMongoEntity, ChannelMongoEntity> query,
             IPageOptions pageOptions)
@@ -253,7 +267,6 @@ namespace AzureRepositories.Channel
 
         public OffChainTransactionMongoEntity[] OffChainTransactions { get; set; }
     }
-
 
     public class ChannelMetadataMongoEntity
     {
