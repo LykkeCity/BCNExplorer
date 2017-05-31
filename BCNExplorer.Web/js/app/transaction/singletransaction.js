@@ -24,10 +24,12 @@
             var is_touch_device = ("ontouchstart" in window) || window.DocumentTouch && document instanceof DocumentTouch;
 
             $elem.popover('destroy');
-            $elem.popover({
-                trigger: is_touch_device ? 'click' : 'hover',
-                container: this.parentNode,
-                placement: 'auto'
+            $.each($elem, function(index, elem) {
+                $(elem).popover({
+                        trigger: is_touch_device ? 'click' : 'hover',
+                        container: this.parentNode,
+                        placement: 'auto'
+                    });
             });
         }
 
