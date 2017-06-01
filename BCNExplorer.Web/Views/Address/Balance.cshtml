@@ -67,11 +67,6 @@
                         <td class="issuer__content">
                             <div class="issuer__name">
                                 Bitcoin
-                                @if (Model.OffchainChannelsByAsset.ExistsBtc())
-                                {
-                                    @RenderPopover(Model.OffchainChannelsByAsset.GetBtc())
-                                }
-
                             </div>
                             @if (Model.ShowUnconfirmedBalance)
                             {
@@ -79,7 +74,19 @@
                             }
                         </td>
                         <td class="issuer__content text-right">
-                            <div class="wallet_value">@BitcoinUtils.SatoshiToBtc(Model.Balance).ToStringBtcFormat() BTC</div>
+                            <div class="wallet_value">
+                                @{
+                                    var btcQuantityDescription = $"{BitcoinUtils.SatoshiToBtc(Model.Balance).ToStringBtcFormat()} BTC";
+                                }
+                                @if (Model.OffchainChannelsByAsset.ExistsBtc())
+                                {
+                                    @RenderPopover(Model.OffchainChannelsByAsset.GetBtc(), btcQuantityDescription)
+                                }
+                                else
+                                {
+                                    <span>@btcQuantityDescription</span>
+                                }
+                            </div>
                             @if (Model.ShowUnconfirmedBalance)
                             {
                                 <div class="text-muted">@BitcoinUtils.SatoshiToBtc(Model.UnconfirmedBalance).ToStringBtcFormat() BTC</div>
@@ -113,10 +120,6 @@
                                     <a href="@assetUrl">
                                         @assetName
                                     </a>
-                                    @if (Model.OffchainChannelsByAsset.Exists(assetBalance.Asset))
-                                    {
-                                        @RenderPopover(Model.OffchainChannelsByAsset.Get(assetBalance.Asset))
-                                    }
 
                                 </div>
                                 @if (assetBalance.ShowUnconfirmedBalance)
@@ -125,7 +128,19 @@
                                 }
                             </td>
                             <td class="issuer__content text-right">
-                                <div class="wallet_value">@BitcoinUtils.CalculateColoredAssetQuantity(assetBalance.Quantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
+                                <div class="wallet_value">
+                                    @{
+                                        var assetQuantityDescription = $"{BitcoinUtils.CalculateColoredAssetQuantity(assetBalance.Quantity, assetDivisibity).ToStringBtcFormat()} {assetShortName}";
+                                    }
+                                    @if (Model.OffchainChannelsByAsset.Exists(assetBalance.Asset))
+                                    {
+                                        @RenderPopover(Model.OffchainChannelsByAsset.Get(assetBalance.Asset), assetQuantityDescription)
+                                    }
+                                    else
+                                    {
+                                        <text>@assetQuantityDescription</text>
+                                    }
+                                </div>
                                 @if (assetBalance.ShowUnconfirmedBalance)
                                 {
                                     <div class="text-muted">@BitcoinUtils.CalculateColoredAssetQuantity(assetBalance.UnconfirmedQuantity, assetDivisibity).ToStringBtcFormat() @assetShortName</div>
@@ -141,14 +156,13 @@
     </div>
 </section>
 
-@helper RenderPopover(IEnumerable<OffchainChannelViewModel> channels)
+@helper RenderPopover(IEnumerable<OffchainChannelViewModel> channels, string popoverTitle)
 {
     
 
     <div class="popover_control multisig_popover">
         <a class="js-offchain-balance-popover" tabindex="0" role="button" data-toggle="popover" data-placement="bottom" data-original-title="" title="">
-            <span class="middot">·</span>
-            2 multisig<span class="hidden-xs"> key holders</span>
+            @popoverTitle
         </a>
         <div class="popover-content">
             
