@@ -8,7 +8,6 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/js/transaction")
-    @Scripts.Render("~/bundles/js/offchain")
 }
 
 <section class="section section--padding">
@@ -97,9 +96,6 @@
                 <div class="tab_item js-tab_item">
                     <a class="tab_item__link js-tx-toggle" href="#js-uncolored-tx">Uncolored · @Model.UncoloredTransactionIdList.TotalItems</a>
                 </div>
-                <div class="tab_item js-tab_item">
-                    <a class="tab_item__link js-tx-toggle" href="#js-offchain-tx">Off-chain · @Model.OffchainChannelPagedList.ChannelCount</a>
-                </div>
             </div>
         </div>
     </div>
@@ -118,10 +114,6 @@
 
         <div id="js-uncolored-tx" class="hidden js-select-result">
             @Html.Partial("~/Views/Transaction/TransactionIdList.cshtml", Model.UncoloredTransactionIdList)
-        </div>
-        
-        <div id="js-offchain-tx" class="hidden js-select-result">
-            @Html.Partial("OffchainChannelPagedList", Model.OffchainChannelPagedList)
         </div>
     </div>
 </section>

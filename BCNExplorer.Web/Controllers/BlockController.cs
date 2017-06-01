@@ -14,10 +14,8 @@ namespace BCNExplorer.Web.Controllers
     {
         private readonly IBlockService _blockService;
         private readonly ICachedBlockService _cachedBlockService;
-        private readonly IChannelService _channelService;
         private readonly IAssetService _assetService;
-
-        private const int OffchainChannelsPageSize = 1;
+        
 
         public BlockController(IBlockService blockService, 
             ICachedBlockService cachedBlockService,
@@ -26,7 +24,6 @@ namespace BCNExplorer.Web.Controllers
         {
             _blockService = blockService;
             _cachedBlockService = cachedBlockService;
-            _channelService = channelService;
             _assetService = assetService;
         }
 
@@ -35,31 +32,17 @@ namespace BCNExplorer.Web.Controllers
         {
             var block = _cachedBlockService.GetBlockAsync(id);
             var lastBlock = _blockService.GetLastBlockHeaderAsync();
-            var offchainChannelsCount = _channelService.GetCountByBlockAsync(id);
 
-            await Task.WhenAll(block, lastBlock, offchainChannelsCount);
+            await Task.WhenAll(block, lastBlock);
 
             if (block.Result != null)
             {
-                var result = BlockViewModel.Create(block.Result, lastBlock.Result, offchainChannelsCount.Result, OffchainChannelsPageSize);
+                var result = BlockViewModel.Create(block.Result, lastBlock.Result);
 
                 return View(result);
             }
 
             return View("NotFound");
-        }
-
-        [Route("block/offchainchannelpage")]
-        public async Task<ActionResult> OffchainChannelPage(string block, int page)
-        {
-            var channels = _channelService.GetByBlockAsync(block,
-                channelStatusQueryType: ChannelStatusQueryType.All,
-                pageOptions: PageOptions.Create(page, OffchainChannelsPageSize));
-            var assetDictionary = _assetService.GetAssetDefinitionDictionaryAsync();
-
-            await Task.WhenAll(channels, assetDictionary);
-
-            return View(channels.Result.Select(p => OffchainFilledChannelViewModel.Create(p, assetDictionary.Result)));
         }
     }
 }

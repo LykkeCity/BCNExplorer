@@ -27,13 +27,8 @@ namespace BCNExplorer.Web.Models
         public TransactionIdList ColoredTransactionIdList { get; set; }
         public TransactionIdList UncoloredTransactionIdList { get; set; }
 
-
-        public OffchainChannelPagedList OffchainChannelPagedList { get; set; }
-
         public static BlockViewModel Create(IBlock ninjaBlock, 
-            IBlockHeader lastBlock,
-            long offchainChannelsCount, 
-            int offchainTransactionsPageSize)
+            IBlockHeader lastBlock)
         {
             return new BlockViewModel
             {
@@ -50,12 +45,7 @@ namespace BCNExplorer.Web.Models
                 UncoloredTransactionIdList = new TransactionIdList(ninjaBlock.UncoloredTransactionIds),
                 TotalTransactions = ninjaBlock.TotalTransactions,
                 ShowNextBlock = ninjaBlock.Height < lastBlock?.Height,
-                NextBlockHeight = ninjaBlock.Height + 1,
-                OffchainChannelPagedList = OffchainChannelPagedList.Create(
-                    offchainChannelsCount, 
-                    offchainTransactionsPageSize,
-                    (url, page) => url.Action("OffchainChannelPage", "Block", new { block = ninjaBlock.Hash, page = page })
-                )
+                NextBlockHeight = ninjaBlock.Height + 1
             };
         }
     }
