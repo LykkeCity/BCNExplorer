@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Mvc;
 using BCNExplorer.Web.Models;
 using Core.Asset;
+using Core.AssetBlockChanges.Mongo;
 
-namespace BCNExplorer.Web.Controllers
+namespace BCNExplorer.Web.Controllers.api
 {
     public class AssetsController : ApiController
     {
         private readonly IAssetService _assetService;
+        private readonly IAssetBalanceChangesRepository _balanceChangesRepository;
 
-        public AssetsController(IAssetService assetService)
+        public AssetsController(IAssetService assetService, 
+            IAssetBalanceChangesRepository balanceChangesRepository)
         {
             _assetService = assetService;
+            _balanceChangesRepository = balanceChangesRepository;
         }
 
         public async Task<IEnumerable<AssetDirectoryViewModel.Asset>> Get()
