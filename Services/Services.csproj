@@ -131,7 +131,9 @@
     <Compile Include="Binders\ServicesBinder.cs" />
     <Compile Include="Block\BlockService.cs" />
     <Compile Include="Block\CachedBlockService.cs" />
+    <Compile Include="Channel\OffchainNotificationsApiProvider.cs" />
     <Compile Include="Channel\ChannelService.cs" />
+    <Compile Include="Channel\OffchainNotificationsContracts.cs" />
     <Compile Include="Email\EmailSender.cs" />
     <Compile Include="Email\RemoteTemplateGenerator.cs" />
     <Compile Include="MainChain\CachedMainChainService.cs" />

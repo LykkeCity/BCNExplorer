@@ -150,7 +150,8 @@ namespace BCNExplorer.Web.Models
         }
 
 
-        private static IEnumerable<OffChainTransactionViewModel> PopulateTxs(IOffchainTransaction[] offchainTransactions,
+        private static IEnumerable<OffChainTransactionViewModel> PopulateTxs(
+            IEnumerable<IOffchainTransaction> offchainTransactions,
             IDictionary<string, IAssetDefinition> assetDictionary)
         {
             IOffchainTransaction prevTx = null;
@@ -188,7 +189,7 @@ namespace BCNExplorer.Web.Models
         }
         
 
-        public static IEnumerable<OffChainTransactionViewModel> Create(IOffchainTransaction[] offchainTransactions, IDictionary<string, IAssetDefinition> assetDictionary)
+        public static IEnumerable<OffChainTransactionViewModel> Create(IEnumerable<IOffchainTransaction> offchainTransactions, IDictionary<string, IAssetDefinition> assetDictionary)
         {
             return PopulateTxs(offchainTransactions, assetDictionary).ToList().AsEnumerable().Reverse();
         }

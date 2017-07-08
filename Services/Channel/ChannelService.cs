@@ -16,7 +16,7 @@ namespace Services.Channel
         public bool IsColored { get; set; }
         public string OpenTransactionId { get; set; }
         public string CloseTransactionId { get; set; }
-        public IOffchainTransaction[] OffchainTransactions { get; set; }
+        public IEnumerable<IOffchainTransaction> OffchainTransactions { get; set; }
         public ITransaction OpenTransaction { get; set; }
         public ITransaction CloseTransaction { get; set; }
 
@@ -40,27 +40,27 @@ namespace Services.Channel
 
     public class ChannelService:IChannelService
     {
-        private readonly IChannelRepository _channelRepository;
+        private readonly IOffchainNotificationsApiProvider _offchainNotificationsApiProvider;
         private readonly BaseSettings _baseSettings;
         private readonly ICachedTransactionService _cachedTransactionService;
 
-        public ChannelService(IChannelRepository channelRepository, ICachedTransactionService cachedTransactionService, BaseSettings baseSettings)
+        public ChannelService(IOffchainNotificationsApiProvider offchainNotificationsApiProvider, ICachedTransactionService cachedTransactionService, BaseSettings baseSettings)
         {
-            _channelRepository = channelRepository;
+            _offchainNotificationsApiProvider = offchainNotificationsApiProvider;
             _cachedTransactionService = cachedTransactionService;
             _baseSettings = baseSettings;
         }
 
         public async Task<IFilledChannel> GetByOffchainTransactionIdAsync(string transactionId)
         {
-            var channel = await _channelRepository.GetByOffchainTransactionIdAsync(transactionId);
+            var channel = await _offchainNotificationsApiProvider.GetByOffchainTransactionIdAsync(transactionId);
 
             return await FillChannel(channel);
         }
 
         public Task<bool> OffchainTransactionExistsAsync(string transactionId)
         {
-            return _channelRepository.OffchainTransactionExistsAsync(transactionId);
+            return _offchainNotificationsApiProvider.OffchainTransactionExistsAsync(transactionId);
         }
 
         public async Task<IEnumerable<IFilledChannel>> GetByBlockAsync(string blockId,
@@ -72,13 +72,13 @@ namespace Services.Channel
             IEnumerable<IChannel> dbChannels;
             if (int.TryParse(blockId, out height))
             {
-                dbChannels = await _channelRepository.GetByBlockHeightAsync(height, 
+                dbChannels = await _offchainNotificationsApiProvider.GetByBlockHeightAsync(height, 
                     channelStatusQueryType, 
                     pageOptions);
             }
             else
             {
-                dbChannels = await _channelRepository.GetByBlockIdAsync(blockId, 
+                dbChannels = await _offchainNotificationsApiProvider.GetByBlockIdAsync(blockId, 
                     channelStatusQueryType, 
                     pageOptions);
             }
@@ -92,11 +92,11 @@ namespace Services.Channel
             
             if (int.TryParse(blockId, out height))
             {
-                return await _channelRepository.GetCountByBlockHeightAsync(height);
+                return await _offchainNotificationsApiProvider.GetCountByBlockHeightAsync(height);
             }
             else
             {
-                return await _channelRepository.GetCountByBlockIdAsync(blockId);
+                return await _offchainNotificationsApiProvider.GetCountByBlockIdAsync(blockId);
             }
         }
 
@@ -106,7 +106,7 @@ namespace Services.Channel
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
-            var dbChannels = await _channelRepository.GetByAddressAsync(uncoloredAddress, channelStatusQueryType, pageOptions);
+            var dbChannels = await _offchainNotificationsApiProvider.GetByAddressAsync(uncoloredAddress, channelStatusQueryType, pageOptions);
 
             return await FillChannels(dbChannels);
         }
@@ -115,21 +115,21 @@ namespace Services.Channel
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
-            return _channelRepository.GetCountByAddressAsync(uncoloredAddress);
+            return _offchainNotificationsApiProvider.GetCountByAddressAsync(uncoloredAddress);
         }
 
         public async Task<IEnumerable<IChannel>> GetByAddressAsync(string address, ChannelStatusQueryType channelStatusQueryType = ChannelStatusQueryType.All)
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
-            return await _channelRepository.GetByAddressAsync(uncoloredAddress, channelStatusQueryType);
+            return await _offchainNotificationsApiProvider.GetByAddressAsync(uncoloredAddress, channelStatusQueryType);
         }
 
         public Task<bool> IsHubAsync(string address)
         {
             var uncoloredAddress = GetUncoloredAddress(address);
 
-            return _channelRepository.IsHubAsync(uncoloredAddress);
+            return _offchainNotificationsApiProvider.IsHubAsync(uncoloredAddress);
         }
 
         private string GetUncoloredAddress(string address)

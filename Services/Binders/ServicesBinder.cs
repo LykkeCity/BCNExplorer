@@ -89,6 +89,9 @@ namespace Services.Binders
                     , validDataInSeconds: 2 * 60 * 60));
 
             ioc.RegisterPerCall<IAssetService, AssetService>();
+
+
+            ioc.RegisterPerCall<IOffchainNotificationsApiProvider, OffchainNotificationsApiProvider>();
         }
     }
 }

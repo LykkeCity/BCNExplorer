@@ -12,7 +12,10 @@ namespace Core.Settings
     {
         [Required]
         public string NinjaUrl { get; set; }
-        
+
+        [Required]
+        public string OffchainNotificationsHandlerUrl { get; set; }
+
         public string BtcBalancesServiceUrl {get; set;}
         
         public string LykkeAPIUrl { get; set; }
@@ -88,9 +91,6 @@ namespace Core.Settings
         
         [Required]
         public MongoDbCredentials AssetBalanceChanges { get; set; }
-
-        [Required]
-        public MongoDbCredentials Offchain { get; set; }
     }
 
     public class JobsSettings

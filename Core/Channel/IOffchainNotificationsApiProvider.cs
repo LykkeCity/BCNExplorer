@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace Core.Channel
 {
-
-    
     public interface IChannel
     {
         string AssetId { get; }
@@ -16,7 +14,7 @@ namespace Core.Channel
 
         string CloseTransactionId { get; }
 
-        IOffchainTransaction[] OffchainTransactions { get; }
+        IEnumerable<IOffchainTransaction> OffchainTransactions { get; }
     }
 
     public interface IOffchainTransaction
@@ -40,7 +38,7 @@ namespace Core.Channel
         decimal Address2Quantity { get; }
     }
 
-    public interface IChannelRepository
+    public interface IOffchainNotificationsApiProvider
     {
         Task<IChannel> GetByOffchainTransactionIdAsync(string transactionId);
         Task<bool> OffchainTransactionExistsAsync(string transactionId);
