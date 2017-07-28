@@ -49,9 +49,6 @@ namespace Providers.Contracts.Ninja
 
     public class InOutContract
     {
-        [JsonProperty("address")]
-        public string Address { get; set; }
-
         [JsonProperty("transactionId")]
         public string TransactionId { get; set; }
 
