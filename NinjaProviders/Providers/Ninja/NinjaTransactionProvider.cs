@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Settings;
+using NBitcoin;
+using NBitcoin.DataEncoders;
 using Providers.BlockChainReader;
 using Providers.Contracts.Ninja;
+using Providers.Helpers;
 
 namespace Providers.Providers.Ninja
 {
@@ -23,7 +27,7 @@ namespace Providers.Providers.Ninja
         
         public DateTime FirstSeen { get; set; }
 
-        public static NinjaTransaction Create(TransactionContract contract)
+        public static NinjaTransaction Create(TransactionContract contract, Network network)
         {
             return new NinjaTransaction
             {
@@ -31,8 +35,8 @@ namespace Providers.Providers.Ninja
                 Block = BlockMinInfo.Create(contract.Block),
                 FirstSeen = contract.FirstSeen,
                 Hex = contract.Hex,
-                Inputs = contract.Inputs.Select(InOut.Create),
-                Outputs = contract.Outputs.Select(InOut.Create),
+                Inputs = contract.Inputs.Select(p => InOut.Create(p, network)),
+                Outputs = contract.Outputs.Select(p => InOut.Create(p, network)),
                 TransactionId = contract.TransactionId
             };
         }
@@ -81,11 +85,19 @@ namespace Providers.Providers.Ninja
             
             public double Quantity { get; set; }
 
-            public static InOut Create(InOutContract contract)
+            public static InOut Create(InOutContract contract, Network network)
             {
+                string address = null;
+                try
+                {
+                    address = GetScriptFromBytes(contract.ScriptPubKey).GetDestinationAddress(network).ToWif();
+                }
+                catch (Exception e)
+                {
+                }
                 return new InOut
                 {
-                    Address = contract.Address,
+                    Address = address,
                     AssetId = contract.AssetId,
                     Index = contract.Index,
                     Quantity = contract.Quantity ?? 0,
@@ -93,6 +105,21 @@ namespace Providers.Providers.Ninja
                     TransactionId = contract.TransactionId,
                     Value = contract.Value
                 };
+            }
+            //todo move to helper class
+            private static Script GetScriptFromBytes(string data)
+            {
+                var bytes = Encoders.Hex.DecodeData(data);
+                var script = Script.FromBytesUnsafe(bytes);
+                bool hasOps = false;
+                var reader = script.CreateReader();
+                foreach (var op in reader.ToEnumerable())
+                {
+                    hasOps = true;
+                    if (op.IsInvalid || (op.Name == "OP_UNKNOWN" && op.PushData == null))
+                        return null;
+                }
+                return !hasOps ? null : script;
             }
         }
 
@@ -102,10 +129,12 @@ namespace Providers.Providers.Ninja
     public class NinjaTransactionProvider
     {
         private readonly NinjaBlockChainReader _blockChainReader;
+        private readonly BaseSettings _baseSettings;
 
-        public NinjaTransactionProvider(NinjaBlockChainReader blockChainReader)
+        public NinjaTransactionProvider(NinjaBlockChainReader blockChainReader, BaseSettings baseSettings)
         {
             _blockChainReader = blockChainReader;
+            _baseSettings = baseSettings;
         }
 
         public async Task<NinjaTransaction> GetAsync(string id)
@@ -116,7 +145,7 @@ namespace Providers.Providers.Ninja
                 return null;
             }
 
-            return NinjaTransaction.Create(responce);
+            return NinjaTransaction.Create(responce, _baseSettings.UsedNetwork());
             
         }
     }
