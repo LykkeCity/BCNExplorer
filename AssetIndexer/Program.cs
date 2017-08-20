@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using AssetIndexer.Binders;
 using AssetIndexer.QueueHandlers;
@@ -24,9 +25,12 @@ namespace AssetIndexer
             LogToTableAndConsole log = null;
             try
             {
-                var settings =
-                    GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(
-                        JobsConnectionStringSettings.ConnectionString);
+#if DEBUG
+            var settings = GeneralSettingsReader.ReadGeneralSettingsLocal<BaseSettings>("../settings.json");
+#else
+                var generalSettings = GeneralSettingsReader.ReadGeneralSettingsViaHttp<GeneralSettings>(ConfigurationManager.AppSettings["SettingsUrl"]);
+                var settings = generalSettings.BcnExploler;
+#endif
 
                 var logToTable =
                     new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString, "LogAssetIndexer",

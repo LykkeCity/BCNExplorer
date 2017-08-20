@@ -30,7 +30,12 @@ namespace BCNExplorer.Web.App_Start
         {
             var dr = new DependencyResolver();
             
-            var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(WebSiteSettings.ConnectionString);
+#if DEBUG
+            var settings = GeneralSettingsReader.ReadGeneralSettingsLocal<BaseSettings>("../settings.json");
+#else
+            var generalSettings = GeneralSettingsReader.ReadGeneralSettingsViaHttp<GeneralSettings>(ConfigurationManager.AppSettings["SettingsUrl"]);
+            var settings = generalSettings.BcnExploler;
+#endif
 
             GeneralSettingsValidator.Validate(settings);
 

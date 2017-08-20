@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Configuration;
+using System.Diagnostics;
 using AzureRepositories;
 using AzureRepositories.Log;
 using AzureStorage.Tables;
@@ -15,7 +16,12 @@ namespace PingJob
         static void Main()
         {
             var appSettings = CloudConfigurationLoader.ReadCloudConfiguration<AppSettings>();
-            var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(JobsConnectionStringSettings.ConnectionString);
+#if DEBUG
+            var settings = GeneralSettingsReader.ReadGeneralSettingsLocal<BaseSettings>("../settings.json");
+#else
+            var generalSettings = GeneralSettingsReader.ReadGeneralSettingsViaHttp<GeneralSettings>(ConfigurationManager.AppSettings["SettingsUrl"]);
+            var settings = generalSettings.BcnExploler;
+#endif
 
             appSettings.UpdateMainChainIndexerUrl = settings.ExplolerUrl.AddLastSymbolIfNotExists('/') +
                                                     "/mainchain/update/" + settings.Secret;

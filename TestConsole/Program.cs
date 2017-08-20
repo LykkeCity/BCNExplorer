@@ -1,6 +1,6 @@
-﻿using AzureRepositories;
+﻿using System.Configuration;
+using AzureRepositories;
 using AzureRepositories.Binders;
-using BalanceReporting.Binders;
 using Common.IocContainer;
 using Common.Log;
 using Core.Settings;
@@ -8,9 +8,6 @@ using JobsCommon;
 using Providers;
 using Providers.Binders;
 using Services.Binders;
-using TestConsole.AssetScanner;
-using TestConsole.BalanceReport;
-using TestConsole.Coninholders;
 
 namespace TestConsole
 {
@@ -18,8 +15,13 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(JobsConnectionStringSettings.ConnectionString);
-     
+#if DEBUG
+            var settings = GeneralSettingsReader.ReadGeneralSettingsLocal<BaseSettings>("../settings.json");
+#else
+            var generalSettings = GeneralSettingsReader.ReadGeneralSettingsViaHttp<GeneralSettings>(ConfigurationManager.AppSettings["SettingsUrl"]);
+            var settings = generalSettings.BcnExploler;
+#endif
+
             var container = new IoC();
             InitContainer(container, settings, new LogToConsole());
 
@@ -44,7 +46,6 @@ namespace TestConsole
             settings.DisablePersistentCacheMainChain = true;
             settings.ExplolerUrl = "https://blockchainexplorer.lykke.com/";
             container.Register<ILog>(log);
-            container.BindBalanceReportingFunctions(settings, log);
 
             container.BindProviders(settings, log);
             container.Register(settings);

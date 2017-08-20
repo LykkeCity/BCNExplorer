@@ -15,15 +15,15 @@ namespace BCNExplorer.Web
     {
         protected void Application_Start()
         {
+            var resolver = Dependencies.CreateDepencencyResolver();
+            DependencyResolver.SetResolver(resolver);
+            GlobalConfiguration.Configuration.DependencyResolver = resolver;
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            var resolver = Dependencies.CreateDepencencyResolver();
-            DependencyResolver.SetResolver(resolver);
-            GlobalConfiguration.Configuration.DependencyResolver = resolver;
         }
 
         protected void Application_EndRequest()
