@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCNExplorer.Web", "BCNExplorer.Web\BCNExplorer.Web.csproj", "{A9E6EC52-A2A1-40DF-A135-F2B458414783}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -40,8 +40,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetCoinHoldersScanner", "AssetCoinHolders\AssetCoinHoldersScanner.csproj", "{34634339-EEE3-44E5-B33A-FA807A10E98A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{610F820D-9443-453C-ABFD-1A34026B4AE5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BalanceReporting", "BalanceReporting\BalanceReporting.csproj", "{154C0122-AF9E-4B48-BCC1-36CBFB74698B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetIndexer", "AssetIndexer\AssetIndexer.csproj", "{14D08040-CD5F-41A8-A667-F5F35B85EA7D}"
 EndProject
@@ -157,14 +155,6 @@ Global
 		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Release|x64.ActiveCfg = Release|Any CPU
 		{610F820D-9443-453C-ABFD-1A34026B4AE5}.Release|x64.Build.0 = Release|Any CPU
-		{154C0122-AF9E-4B48-BCC1-36CBFB74698B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{154C0122-AF9E-4B48-BCC1-36CBFB74698B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{154C0122-AF9E-4B48-BCC1-36CBFB74698B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{154C0122-AF9E-4B48-BCC1-36CBFB74698B}.Debug|x64.Build.0 = Debug|Any CPU
-		{154C0122-AF9E-4B48-BCC1-36CBFB74698B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{154C0122-AF9E-4B48-BCC1-36CBFB74698B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{154C0122-AF9E-4B48-BCC1-36CBFB74698B}.Release|x64.ActiveCfg = Release|Any CPU
-		{154C0122-AF9E-4B48-BCC1-36CBFB74698B}.Release|x64.Build.0 = Release|Any CPU
 		{14D08040-CD5F-41A8-A667-F5F35B85EA7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{14D08040-CD5F-41A8-A667-F5F35B85EA7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14D08040-CD5F-41A8-A667-F5F35B85EA7D}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -182,7 +172,9 @@ Global
 		{7E768C48-D21E-4C1D-8681-267D6107EEA0} = {C8221CC5-1FFE-416C-BD0D-4867AF5CC184}
 		{17A86AF3-952F-4251-B93A-C26DE2592B50} = {C8221CC5-1FFE-416C-BD0D-4867AF5CC184}
 		{34634339-EEE3-44E5-B33A-FA807A10E98A} = {C8221CC5-1FFE-416C-BD0D-4867AF5CC184}
-		{154C0122-AF9E-4B48-BCC1-36CBFB74698B} = {C8221CC5-1FFE-416C-BD0D-4867AF5CC184}
 		{14D08040-CD5F-41A8-A667-F5F35B85EA7D} = {C8221CC5-1FFE-416C-BD0D-4867AF5CC184}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA9B67D1-34C3-47E3-9402-7086FCDEB3D9}
 	EndGlobalSection
 EndGlobal

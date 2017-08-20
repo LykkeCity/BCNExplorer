@@ -58,9 +58,6 @@
     <Compile Include="BalanceReport\IReportRenderer.cs" />
     <Compile Include="Block\IBlockService.cs" />
     <Compile Include="Asset\IAssetService.cs" />
-    <Compile Include="Email\EmailTemplateModels.cs" />
-    <Compile Include="Email\IEmailSender.cs" />
-    <Compile Include="Email\ITemplateGenerator.cs" />
     <Compile Include="Monitoring\Monitoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchService\ISearchService.cs" />

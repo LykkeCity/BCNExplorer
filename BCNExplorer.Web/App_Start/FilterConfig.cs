@@ -12,7 +12,7 @@ namespace BCNExplorer.Web
         {
             filters.Add(new ErrorHandler.CustomHandleErrorAttribute());
 
-            var settings = GeneralSettingsReader.ReadGeneralSettings<BaseSettings>(Dependencies.WebSiteSettings.ConnectionString);
+            var settings = App.BaseSettings;
             if (!settings.DisableRedirectToHttps)
             {
                 filters.Add(new RequireHttpsAttribute());

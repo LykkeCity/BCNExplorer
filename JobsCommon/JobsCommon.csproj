@@ -108,7 +108,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DResolver.cs" />
-    <Compile Include="JobsConnectionStringSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
