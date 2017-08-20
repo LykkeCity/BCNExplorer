@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Email;
 
 namespace Core.Settings
 {
@@ -42,42 +41,10 @@ namespace Core.Settings
         public bool DisableRedirectToHttps { get; set; }
 
         public bool GetTopFromNinja { get; set; }
-        
-        public EmailGeneratorSettings EmalGeneratorSettings { get; set; }
-        
-        public ServiceBusEmailSettings ServiceBusEmailSettings { get; set; }
-        
-        public BalanceReportSettings BalanceReportSettings { get; set; }
 
         public bool ReadBalanceFromNinja { get; set; }
-        //[Required]
-        //public AuthenticationSettings Authentication { get; set; }
     }
-
-    public class EmailGeneratorSettings
-    {
-        [Required]
-        public string EmailTemplatesHost { get; set; }
-    }
-
-    public class AuthenticationSettings
-    {
-        [Required]
-        public string ClientId { get; set; }
-
-        [Required]
-        public string ClientSecret { get; set; }
-
-        [Required]
-        public string RedirectUri { get; set; }
-
-        [Required]
-        public string PostLogoutRedirectUri { get; set; }
-
-        [Required]
-        public string Authority { get; set; }
-    }
-
+    
     public class DbSettings
     {
         [Required]
@@ -115,24 +82,10 @@ namespace Core.Settings
         [Required]
         public string DbName { get; set; }
     }
+    
 
-    public class ServiceBusEmailSettings : IServiceBusEmailSettings
+    public class GeneralSettings
     {
-        [Required]
-        public string NamespaceUrl { get; set; }
-
-        [Required]
-        public string PolicyName { get; set; }
-
-        [Required]
-        public string Key { get; set; }
-
-        [Required]
-        public string QueueName { get; set; }
-    }
-
-    public class BalanceReportSettings
-    {
-        public string[] AssetIds { get; set; }
+        public BaseSettings BcnExploler { get; set; }
     }
 }

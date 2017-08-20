@@ -62,9 +62,6 @@
     <Compile Include="Block\ICachedBlockService.cs" />
     <Compile Include="Channel\IChannelService.cs" />
     <Compile Include="Channel\IOffchainNotificationsApiProvider.cs" />
-    <Compile Include="Email\EmailTemplateModels.cs" />
-    <Compile Include="Email\IEmailSender.cs" />
-    <Compile Include="Email\ITemplateGenerator.cs" />
     <Compile Include="Monitoring\Monitoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchService\ISearchService.cs" />

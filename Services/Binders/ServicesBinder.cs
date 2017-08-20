@@ -10,7 +10,6 @@ using Core.Asset;
 using Core.BalanceReport;
 using Core.Block;
 using Core.Channel;
-using Core.Email;
 using Core.SearchService;
 using Core.Settings;
 using Core.Transaction;
@@ -24,7 +23,6 @@ using Services.BalanceReport;
 using Services.Block;
 using Services.BlockChain;
 using Services.Channel;
-using Services.Email;
 using Services.MainChain;
 using Services.Search;
 using Services.Transaction;
@@ -55,11 +53,8 @@ namespace Services.Binders
             ioc.RegisterPerCall<IAddressService, AddressService>();
             ioc.RegisterPerCall<ISearchService, SearchService>();
             ioc.RegisterPerCall<IReportRenderer, PdfReportRenderer>();
-            ioc.RegisterPerCall<ITemplateGenerator, RemoteTemplateGenerator>();
             ioc.RegisterSingleTone<FiatRatesService>();
             
-
-            ioc.Register<IEmailSender>(ServiceFactories.CreateEmailSenderProducer(baseSettings, log));
             ioc.Register<IAssetImageCacher>(ServiceFactories.CreateIAssetImageCacher(baseSettings, log));
 
             ioc.RegisterFactorySingleTone(() =>

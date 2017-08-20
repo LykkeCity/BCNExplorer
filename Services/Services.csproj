@@ -134,8 +134,6 @@
     <Compile Include="Channel\OffchainNotificationsApiProvider.cs" />
     <Compile Include="Channel\ChannelService.cs" />
     <Compile Include="Channel\OffchainNotificationsContracts.cs" />
-    <Compile Include="Email\EmailSender.cs" />
-    <Compile Include="Email\RemoteTemplateGenerator.cs" />
     <Compile Include="MainChain\CachedMainChainService.cs" />
     <Compile Include="MainChain\MainChainService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
