@@ -124,8 +124,6 @@
     <Compile Include="Asset\AssetIndexer.cs" />
     <Compile Include="Asset\AssetService.cs" />
     <Compile Include="BalanceChanges\BalanceChangesService.cs" />
-    <Compile Include="BalanceChanges\FiatRatesService.cs" />
-    <Compile Include="BalanceReport\PdfReportRenderer.cs" />
     <Compile Include="Binders\ServiceFactories.cs" />
     <Compile Include="Binders\ServicesBinder.cs" />
     <Compile Include="Block\BlockService.cs" />

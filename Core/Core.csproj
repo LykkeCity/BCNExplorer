@@ -55,7 +55,6 @@
     <Compile Include="Asset\IAssetImageCacher.cs" />
     <Compile Include="Asset\IAssetImageRepository.cs" />
     <Compile Include="Asset\IAssetScoreRepository.cs" />
-    <Compile Include="BalanceReport\IReportRenderer.cs" />
     <Compile Include="Block\IBlockService.cs" />
     <Compile Include="Asset\IAssetService.cs" />
     <Compile Include="Monitoring\Monitoring.cs" />

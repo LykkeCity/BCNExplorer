@@ -17,7 +17,6 @@ using Providers.Providers.Lykke.API;
 using Services.Address;
 using Services.Asset;
 using Services.BalanceChanges;
-using Services.BalanceReport;
 using Services.BlockChain;
 using Services.MainChain;
 using Services.Search;
@@ -39,7 +38,6 @@ namespace Services.Binders
             ioc.RegisterPerCall<ITransactionService, TransactionService>();
             ioc.RegisterPerCall<IAddressService, AddressService>();
             ioc.RegisterPerCall<ISearchService, SearchService>();
-            ioc.RegisterSingleTone<FiatRatesService>();
             
             ioc.Register<IAssetImageCacher>(ServiceFactories.CreateIAssetImageCacher(baseSettings, log));
 
