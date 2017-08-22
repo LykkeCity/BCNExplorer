@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Providers.Contracts.Ninja;
 using Providers.Providers.Ninja;
 
 namespace Providers.Contracts.BtcBalance
@@ -14,7 +15,7 @@ namespace Providers.Contracts.BtcBalance
         public BalanceErrorContract Error { get; set; }
 
         [JsonProperty("balance")]
-        public NinjaAddressSummary Data { get; set; }
+        public AddressSummaryContract Data { get; set; }
     }
     
 

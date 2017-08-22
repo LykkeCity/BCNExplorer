@@ -232,7 +232,13 @@ namespace Services.Address
                     requestUrl.QueryParams.Add("at", at);
                 }
 
-                coloredSummary = (await requestUrl.GetAsync().ReceiveJson<BalanceViewModelContract>())?.Data;
+                var resp = (await requestUrl.GetAsync().ReceiveJson<BalanceViewModelContract>())?.Data;
+
+                coloredSummary = new NinjaAddressSummary
+                {
+                    Confirmed = NinjaAddressSummary.NinjaAddressBalance.Create(resp?.Confirmed),
+                    Unconfirmed = NinjaAddressSummary.NinjaAddressBalance.Create(resp?.Unconfirmed),
+                };
             }
 
 
