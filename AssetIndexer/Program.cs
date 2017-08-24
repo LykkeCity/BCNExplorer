@@ -26,7 +26,7 @@ namespace AssetIndexer
             try
             {
 #if DEBUG
-            var settings = GeneralSettingsReader.ReadGeneralSettingsLocal<BaseSettings>("../settings.json");
+            var settings = GeneralSettingsReader.ReadGeneralSettingsLocal<BaseSettings>();
 #else
                 var generalSettings = GeneralSettingsReader.ReadGeneralSettingsViaHttp<GeneralSettings>(ConfigurationManager.AppSettings["SettingsUrl"]);
                 var settings = generalSettings.BcnExploler;
