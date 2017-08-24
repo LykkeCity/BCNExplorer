@@ -19,11 +19,13 @@ namespace AzureRepositories
             return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(settingsData);
         }
 
-        public static T ReadGeneralSettingsLocal<T>(string path)
+        public static T ReadGeneralSettingsLocal<T>()
         {
-            var content = File.ReadAllText(path);
+            var settingsStorage = new AzureBlobStorage("UseDevelopmentStorage=true");
+            var settingsData = settingsStorage.GetAsync("settings", "bcnexplolersettings.json").Result.ToBytes();
+            var str = Encoding.UTF8.GetString(settingsData);
 
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(content);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(str);
         }
     }
 }
