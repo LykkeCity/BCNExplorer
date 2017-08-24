@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Common;
 using Core.Settings;
 
 namespace Providers.BlockChainReader
@@ -15,17 +16,19 @@ namespace Providers.BlockChainReader
             HttpReader httpReader)
         {
             _httpReader = httpReader;
-            _ninjaBaseUrl = baseSettings.NinjaUrl;
+            _ninjaBaseUrl = baseSettings.NinjaUrl.RemoveLastSymbolIfExists('/');
         }
 
         public Task<string> GetAsync(string url)
         {
-            return _httpReader.GetAsync(_ninjaBaseUrl + url);
+            url = url.RemoveFirstSymbolIfExists('/');
+            return _httpReader.GetAsync(_ninjaBaseUrl + "/" + url);
         }
 
         public async Task<T> GetAsync<T>(string url)
         {
-            return (await _httpReader.GetAsync<T>(_ninjaBaseUrl + url)).ParsedBody;
+            url = url.RemoveFirstSymbolIfExists('/');
+            return (await _httpReader.GetAsync<T>(_ninjaBaseUrl + "/" + url)).ParsedBody;
         }
     }
 }
