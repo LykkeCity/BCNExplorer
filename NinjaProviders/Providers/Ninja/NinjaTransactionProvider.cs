@@ -100,7 +100,7 @@ namespace Providers.Providers.Ninja
                     Address = address,
                     AssetId = contract.AssetId,
                     Index = contract.Index,
-                    Quantity = contract.Quantity,
+                    Quantity = contract.Quantity ?? 0,
                     ScriptPubKey = contract.ScriptPubKey,
                     TransactionId = contract.TransactionId,
                     Value = contract.Value

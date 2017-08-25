@@ -65,6 +65,6 @@ namespace Providers.Contracts.Ninja
         public string AssetId { get; set; }
 
         [JsonProperty("quantity")]
-        public double Quantity { get; set; }
+        public double? Quantity { get; set; }
     }
 }
