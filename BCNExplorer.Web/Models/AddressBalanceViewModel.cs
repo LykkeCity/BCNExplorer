@@ -15,6 +15,7 @@ namespace BCNExplorer.Web.Models
         public double UnconfirmedBalanceDelta { get; set; }
         public bool ShowUnconfirmedBalance => UnconfirmedBalanceDelta != 0;
         public double TotalConfirmedTransactions { get; set; }
+        public bool TotalTransactionsCountCalculated { get; set; }
         public IEnumerable<Asset> Assets { get; set; }
         public AssetDictionary AssetDic { get; set; }
 
@@ -28,7 +29,6 @@ namespace BCNExplorer.Web.Models
         public bool ShowPrev => PrevBlock >= 0;
         public int PrevBlock => AtBlockHeight - 1;
         public int NextBlock => AtBlockHeight + 1;
-
 
         public static AddressBalanceViewModel Create(IAddressBalance balance, IDictionary<string, IAssetDefinition> assetDictionary, IBlockHeader lastBlock, IBlockHeader atBlock)
         {
@@ -49,6 +49,7 @@ namespace BCNExplorer.Web.Models
                 LastBlockDateTime = lastBlock.Time,
                 AtBlockHeight = (atBlock ?? lastBlock).Height,
                 AtBlockDateTime = (atBlock ?? lastBlock).Time,
+                TotalTransactionsCountCalculated = balance.TotalTransactionsCountCalculated
             };
         }
         
@@ -76,7 +77,7 @@ namespace BCNExplorer.Web.Models
         {
             return new AddressTransactionsViewModel
             {
-                AllTransactionIdList = new TransactionIdList(source.All?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
+                AllTransactionIdList = new TransactionIdList(source.All?.Select(p => p.TransactionId), PageSize, false),
                 SendTransactionIdList = new TransactionIdList(source.Send?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 ReceivedTransactionIdList = new TransactionIdList(source.Received?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 FullLoaded = source.FullLoaded

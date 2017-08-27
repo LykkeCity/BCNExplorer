@@ -24,6 +24,7 @@ namespace Services.Address
     {
         public string AddressId { get; set; }
         public int TotalTransactions { get; set; }
+        public bool TotalTransactionsCountCalculated => TotalTransactions != -1;
         public double BtcBalance { get; set; }
         public double UnconfirmedBalanceDelta { get; set; }
         public IEnumerable<IColoredBalance> ColoredBalances { get; set; }

@@ -6,6 +6,13 @@
 
 @Html.Hidden("js-go-to-block-height-url", Url.Action("BalanceAtBlock", "Address", new {id = Model.AddressId}))
 @Html.Hidden("js-go-to-block-time-url", Url.Action("BalanceAtTime", "Address", new { id = Model.AddressId }))
+
+@if (Model.TotalTransactionsCountCalculated)
+{
+    
+    @Html.Hidden("js-total-transactions", Model.TotalConfirmedTransactions)
+}
+
 <section class="section section--heading">
     <div class="container">
         <div class="row">
