@@ -21,6 +21,17 @@ namespace BCNExplorer.Web.Controllers
         [OutputCache(Duration = 10 * 60, VaryByParam = "*")]
         public async Task<ActionResult> Index(string id)
         {
+            int numBlockHeight;
+
+            if(int.TryParse(id, out numBlockHeight))
+            {
+                var header = await _blockService.GetBlockHeaderAsync(numBlockHeight.ToString());
+                if (header != null)
+                {
+                    return RedirectToAction("Index", "Block", new {id = header.Hash});
+                }
+            }
+
             var block = _blockService.GetBlockAsync(id);
             var lastBlock = _blockService.GetLastBlockHeaderAsync();
 
