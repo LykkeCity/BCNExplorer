@@ -12,12 +12,10 @@
                 <div class="tab_item js-tab_item  @(showOffchainTab?"":"tab_item--active") ">
                     <a class="tab_item__link js-tx-toggle" href="#js-all-tx">
                         All
-                        @if (Model.FullLoaded)
-                        {
-                            <span>
-                                · @Model.AllTransactionIdList.TotalItems
-                            </span>
-                        }
+                        <span class="hidden js-tx-count-container">
+                            ·
+                            <span class="js-tx-count"></span>
+                        </span>
                     </a>
                 </div>
                 <div class="tab_item js-tab_item">

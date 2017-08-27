@@ -10,14 +10,16 @@
                 <div class="col-sm-4">
                     <h3>
                         Transactions 
-
-                        @if (Model.FullLoaded)
-                        {
+                        
+                        <span class="js-tx-count-container @(Model.FullLoaded ? "" : "hidden")">
                             <span class="js-loaded-tx-count">0</span>
                             <span>
-                                of @Model.TotalItems
-                            </span>
-                        }
+                                of 
+                                <span class="js-tx-count">
+                                    @Model.TotalItems
+                                </span>
+                            </span>                              
+                        </span>
                     </h3>
                 </div>
             </div>

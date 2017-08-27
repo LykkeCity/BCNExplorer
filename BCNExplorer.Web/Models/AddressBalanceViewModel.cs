@@ -18,6 +18,7 @@ namespace BCNExplorer.Web.Models
         public bool ShowUnconfirmedBalance => UnconfirmedBalanceDelta != 0;
         public double TotalConfirmedTransactions { get; set; }
         public IEnumerable<ColoredBalance> Assets { get; set; }
+        public bool TotalTransactionsCountCalculated { get; set; }
         public AssetDictionary AssetDic { get; set; }
         public OffchainChannelsByAsset OffchainChannelsByAsset { get; set; }
         public DateTime LastBlockDateTime { get; set; }
@@ -30,10 +31,9 @@ namespace BCNExplorer.Web.Models
         public bool ShowPrev => PrevBlock >= 0;
         public int PrevBlock => AtBlockHeight - 1;
         public int NextBlock => AtBlockHeight + 1;
-        
-        public static AddressBalanceViewModel Create(IAddressBalance balance, 
-            IDictionary<string, IAssetDefinition> assetDictionary, 
-            IBlockHeader lastBlock, 
+        public static AddressBalanceViewModel Create(IAddressBalance balance,
+            IDictionary<string, IAssetDefinition> assetDictionary,
+            IBlockHeader lastBlock,
             IBlockHeader atBlock,
             IEnumerable<IChannel> channels)
         {
@@ -49,7 +49,8 @@ namespace BCNExplorer.Web.Models
                 LastBlockDateTime = lastBlock.Time,
                 AtBlockHeight = (atBlock ?? lastBlock).Height,
                 AtBlockDateTime = (atBlock ?? lastBlock).Time,
-                OffchainChannelsByAsset = OffchainChannelsByAsset.Create(channels, assetDictionary)
+                OffchainChannelsByAsset = OffchainChannelsByAsset.Create(channels, assetDictionary),
+                TotalTransactionsCountCalculated = balance.TotalTransactionsCountCalculated
             };
         }
         
@@ -97,7 +98,7 @@ namespace BCNExplorer.Web.Models
         {
             return new AddressTransactionsViewModel
             {
-                AllTransactionIdList = new TransactionIdList(source.All?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
+                AllTransactionIdList = new TransactionIdList(source.All?.Select(p => p.TransactionId), PageSize, false),
                 SendTransactionIdList = new TransactionIdList(source.Send?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 ReceivedTransactionIdList = new TransactionIdList(source.Received?.Select(p => p.TransactionId), PageSize, source.FullLoaded),
                 FullLoaded = source.FullLoaded,

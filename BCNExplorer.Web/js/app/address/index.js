@@ -1,13 +1,45 @@
 ﻿$(function () {
+    //set tx count in dom
+    (function () {
+        var txCount = undefined;
+        var retrieveTxCount = function () {
+            var $elem = $('#js-total-transactions');
+            if ($elem.length !== 0) {
+                txCount = $elem.val();
+            }
+        };
+
+        var putTxCountInDom = function () {
+            if (txCount != undefined) {
+                var $tabs = $('.js-tx-toggle-container');
+                var $allTxs = $('#js-all-tx'); //txs in "All" tab
+                var $context = $tabs.add($allTxs);
+
+                $('.js-tx-count', $context).html(txCount);
+                $('.js-tx-count-container', $context).removeClass('hidden');
+            }
+        }
+
+        $('body').on('tx-history-loaded', function () {
+            putTxCountInDom();
+        });
+
+        $('body').on('balance-loaded', function () {
+            retrieveTxCount();
+            putTxCountInDom();
+        });
+    })();
+
     //Load tx history
     (function () {
         var $addressPanel = $('#js-address-transactions');
         var loadUrl = $addressPanel.data('load-url');
 
         $addressPanel.load(loadUrl, function () {
-            
             $('.js-active-tab .js-transactions-container.hidden:first').trigger('load-transactions');
             $('.js-active-tab').trigger('address-transaction-list-loaded');
+            
+            $addressPanel.trigger('tx-history-loaded');
         });
     })();
 
@@ -20,6 +52,7 @@
         var loadBalance = function () {
             $.ajax(loadUrl).done(function (resp) {
                 $loadContainer.html(resp);
+                
                 $loadContainer.trigger('balance-loaded');
                 $loader.hide();
             });
@@ -27,7 +60,7 @@
 
         loadBalance();
     })();
-
+    
     //Balance History go to time
     (function () {
         var init = function () {
