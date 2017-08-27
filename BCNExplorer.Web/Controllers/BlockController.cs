@@ -30,7 +30,19 @@ namespace BCNExplorer.Web.Controllers
         [Route("block/{id}")]
         public async Task<ActionResult> Index(string id)
         {
+            int numBlockHeight;
+
+            if (int.TryParse(id, out numBlockHeight))
+            {
+                var header = await _blockService.GetBlockHeaderAsync(numBlockHeight.ToString());
+                if (header != null)
+                {
+                    return RedirectToAction("Index", "Block", new { id = header.Hash });
+                }
+            }
+
             var block = _cachedBlockService.GetBlockAsync(id);
+
             var lastBlock = _blockService.GetLastBlockHeaderAsync();
 
             await Task.WhenAll(block, lastBlock);
