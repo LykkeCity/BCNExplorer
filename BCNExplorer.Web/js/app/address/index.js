@@ -20,11 +20,11 @@
             }
         }
 
-        $('body').on('tx-history-loaded', function () {
+        $('body').one('tx-history-loaded', function () {
             putTxCountInDom();
         });
 
-        $('body').on('balance-loaded', function () {
+        $('body').one('balance-loaded', function () {
             retrieveTxCount();
             putTxCountInDom();
         });
