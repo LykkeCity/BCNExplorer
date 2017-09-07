@@ -8276,7 +8276,7 @@ a {
 }
 
 .show_more {
-    margin-bottom: 0;
+    margin-bottom: -1px;
     background: #F5F6F7;
     padding: 25px;
     padding: 1.5625rem;
@@ -8848,13 +8848,18 @@ h2 .label {
 }
 
 @media (max-width: 767px) {
-    .footer .social--footer_alt > li {
-        margin-left: 6px;
+    .footer .social--footer_alt {
+        max-width: 220px;
+        margin: 0 auto;
     }
 
-        .footer .social--footer_alt > li:first-child {
-            margin-left: 0;
+        .footer .social--footer_alt > li {
+            margin: 0 6px 6px;
         }
+
+            .footer .social--footer_alt > li:first-child {
+                margin-left: 0;
+            }
 }
 
 .graph {
@@ -8913,5 +8918,4 @@ h2 .label {
 
 .transactions-container .show_more {
     margin-bottom: -16px;
-    margin-bottom: -1rem;
 }
