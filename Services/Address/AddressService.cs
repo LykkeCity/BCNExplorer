@@ -218,30 +218,7 @@ namespace Services.Address
 
         public async Task<IAddressBalance> GetBalanceAsync(string address, int? at = null)
         {
-            NinjaAddressSummary coloredSummary;
-
-            if (_baseSettings.ReadBalanceFromNinja)
-            {
-                coloredSummary = (await _ninjaAddressProvider.GetAddressBalanceAsync(address, at, true));
-            }
-            else
-            {
-
-                var requestUrl = _baseSettings.BtcBalancesServiceUrl.AppendPathSegment($"balances/{address}/summary");
-
-                if (at != null)
-                {
-                    requestUrl.QueryParams.Add("at", at);
-                }
-
-                var resp = (await requestUrl.GetAsync().ReceiveJson<BalanceViewModelContract>())?.Data;
-
-                coloredSummary = new NinjaAddressSummary
-                {
-                    Confirmed = NinjaAddressSummary.NinjaAddressBalance.Create(resp?.Confirmed),
-                    Unconfirmed = NinjaAddressSummary.NinjaAddressBalance.Create(resp?.Unconfirmed),
-                };
-            }
+            var coloredSummary = (await _ninjaAddressProvider.GetAddressBalanceAsync(address, at, true));
 
 
             if (coloredSummary != null)

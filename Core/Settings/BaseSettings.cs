@@ -11,12 +11,9 @@ namespace Core.Settings
     {
         [Required]
         public string NinjaUrl { get; set; }
-
         [Required]
         public string OffchainNotificationsHandlerUrl { get; set; }
 
-        public string BtcBalancesServiceUrl {get; set;}
-        
         public string LykkeAPIUrl { get; set; }
 
         public string Network { get; set; }
@@ -41,8 +38,6 @@ namespace Core.Settings
         public bool DisableRedirectToHttps { get; set; }
 
         public bool GetTopFromNinja { get; set; }
-
-        public bool ReadBalanceFromNinja { get; set; }
     }
     
     public class DbSettings
