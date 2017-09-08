@@ -2649,9 +2649,15 @@ h2 .label { vertical-align: middle; font-weight: 600 !important; display: inline
 
 .form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
 
-@media (max-width: 767px) { .footer .social--footer_alt { max-width: 220px; margin: 0 auto; }
-  .footer .social--footer_alt > li { margin: 0 6px 6px; }
-  .footer .social--footer_alt > li:first-child { margin-left: 0; } }
+.social--footer_alt > li, .social--header > li { margin-left: 20px; margin-left: 1.25rem; }
+
+.social--footer_alt > li:first-child, .social--header > li:first-child { margin-left: 0; }
+
+@media (max-width: 767px) { .footer .social--footer_alt > li { margin: 0 6px 6px; } }
+
+@media (max-width: 480px) { .footer .social--footer_alt { max-width: 220px; margin: 0 auto; }
+  .footer .social--footer_alt .icon { font-size: 18px; }
+  .footer__copy { padding: 10px 0; } }
 
 .graph { position: relative; }
 
