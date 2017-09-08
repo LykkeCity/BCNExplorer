@@ -73,7 +73,7 @@
                     <th class="_ownership">Ownership</th>
                     <th class="_value">&nbsp;</th>
                 </tr>
-                @foreach (var addressSum in Model.AddressSummaries)
+                @foreach (var addressSum in Model.AddressSummaries.Where(p=>p.Balance>0))
                 {
                     <tr>
                         <td class="_address">
