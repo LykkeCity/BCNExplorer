@@ -16,7 +16,7 @@ function initEventsOnResize() {
         });
 
         $('body').css({
-            paddingBottom: $('footer').outerHeight()
+            paddingBottom: $('footer').outerHeight() - 1
         })
     }).trigger('resize');
 }
