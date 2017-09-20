@@ -31,11 +31,13 @@ namespace BCNExplorer.Web.Models
         public bool ShowPrev => PrevBlock >= 0;
         public int PrevBlock => AtBlockHeight - 1;
         public int NextBlock => AtBlockHeight + 1;
+
         public static AddressBalanceViewModel Create(IAddressBalance balance,
             IDictionary<string, IAssetDefinition> assetDictionary,
             IBlockHeader lastBlock,
             IBlockHeader atBlock,
             IEnumerable<IChannel> channels)
+
         {
             return new AddressBalanceViewModel
             {

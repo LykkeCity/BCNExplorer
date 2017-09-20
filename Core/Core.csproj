@@ -56,7 +56,6 @@
     <Compile Include="Asset\IAssetImageCacher.cs" />
     <Compile Include="Asset\IAssetImageRepository.cs" />
     <Compile Include="Asset\IAssetScoreRepository.cs" />
-    <Compile Include="BalanceReport\IReportRenderer.cs" />
     <Compile Include="Block\IBlockService.cs" />
     <Compile Include="Asset\IAssetService.cs" />
     <Compile Include="Block\ICachedBlockService.cs" />
@@ -80,7 +79,9 @@
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BalanceReport\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

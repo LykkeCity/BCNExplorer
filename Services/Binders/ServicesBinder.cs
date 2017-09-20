@@ -7,7 +7,6 @@ using Common.IocContainer;
 using Common.Log;
 using Core.AddressService;
 using Core.Asset;
-using Core.BalanceReport;
 using Core.Block;
 using Core.Channel;
 using Core.SearchService;
@@ -19,7 +18,6 @@ using Providers.Providers.Lykke.API;
 using Services.Address;
 using Services.Asset;
 using Services.BalanceChanges;
-using Services.BalanceReport;
 using Services.Block;
 using Services.BlockChain;
 using Services.Channel;
@@ -52,9 +50,6 @@ namespace Services.Binders
             ioc.RegisterPerCall<ITransactionService, TransactionService>();
             ioc.RegisterPerCall<IAddressService, AddressService>();
             ioc.RegisterPerCall<ISearchService, SearchService>();
-            ioc.RegisterPerCall<IReportRenderer, PdfReportRenderer>();
-            ioc.RegisterSingleTone<FiatRatesService>();
-            
             ioc.Register<IAssetImageCacher>(ServiceFactories.CreateIAssetImageCacher(baseSettings, log));
 
             ioc.RegisterFactorySingleTone(() =>

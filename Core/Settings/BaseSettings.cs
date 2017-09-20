@@ -13,7 +13,6 @@ namespace Core.Settings
         public string NinjaUrl { get; set; }
         [Required]
         public string OffchainNotificationsHandlerUrl { get; set; }
-
         public string LykkeAPIUrl { get; set; }
 
         public string Network { get; set; }
@@ -39,7 +38,7 @@ namespace Core.Settings
 
         public bool GetTopFromNinja { get; set; }
     }
-    
+
     public class DbSettings
     {
         [Required]
