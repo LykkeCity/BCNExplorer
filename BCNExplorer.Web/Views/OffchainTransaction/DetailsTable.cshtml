@@ -4,6 +4,7 @@
     Layout =null;
 
     var lastOnChain = Model.FilledChannel.CloseTransaction ?? Model.FilledChannel.OpenTransaction;
+    var lastOnChainConfirmed = lastOnChain?.IsConfirmed ?? false;
 }
 
 <div class="container ">
@@ -21,7 +22,7 @@
         <div class="col-xs-12 col-md-6">
             <table class="table table--be_info">
                 <tbody>
-                @if (lastOnChain.IsConfirmed)
+                @if (lastOnChainConfirmed)
                 {
                     <tr>
                         <td><b>Date:</b></td>
@@ -35,7 +36,7 @@
                 <tr>
                     <td><b>Confirmations:</b></td>
                     <td>
-                        @if (lastOnChain.IsConfirmed)
+                        @if (lastOnChainConfirmed)
                         {
                             <span>@(lastOnChain.Block.Confirmations)</span>
                         }
@@ -51,7 +52,7 @@
         <div class="col-xs-12 col-md-6">
             <table class="table table--be_info">
                 <tbody>
-                @if (lastOnChain.IsConfirmed)
+                @if (lastOnChainConfirmed)
                 {
                     <tr>
                         <td><b>Block:</b></td>
