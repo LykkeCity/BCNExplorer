@@ -78,7 +78,7 @@ namespace BCNExplorer.Web.Models
             public bool ShowUnconfirmedBalance => UnconfirmedQuantityDelta != 0;
             public double UnconfirmedQuantity => Quantity + UnconfirmedQuantityDelta;
 
-            public bool ShowAsset => Quantity != 0 || UnconfirmedQuantity != 0;
+            public bool HasOnChainBalance => Quantity != 0 || UnconfirmedQuantity != 0;
 
             public static ColoredBalance Create(IColoredBalance coloredBalance, IDictionary<string, IAssetDefinition> assetDictionary)
             {
