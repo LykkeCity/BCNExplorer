@@ -101,7 +101,7 @@
                     </tbody>
                 </table>
             </li>
-            @foreach (var assetBalance in Model.Assets.Where(p => p.ShowAsset))
+            @foreach (var assetBalance in Model.Assets.Where(p => p.ShowAsset || Model.OffchainChannelsByAsset.Exists(p.Asset)))
             {
                 var assetDivisibity = Model.AssetDic.GetAssetProp(assetBalance.AssetId, p => p.Divisibility, 0);
                 var assetShortName = Model.AssetDic.GetAssetProp(assetBalance.AssetId, p => p.NameShort, "");

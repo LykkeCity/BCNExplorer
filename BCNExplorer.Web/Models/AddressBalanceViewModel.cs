@@ -39,12 +39,24 @@ namespace BCNExplorer.Web.Models
             IEnumerable<IChannel> channels)
 
         {
+            var onchainColoredBalances =
+                (balance.ColoredBalances ?? Enumerable.Empty<IColoredBalance>()).Select(p =>
+                    ColoredBalance.Create(p, assetDictionary)).ToList();
+
+            var existedOnchainAssetsBalances = onchainColoredBalances.Select(p => p.AssetId).ToDictionary(p=>p);
+
+            //show balances for offchain assets with 0 onchain balance
+            var missedOffchainColoredBalances = channels.Where(p => p.IsColored && !existedOnchainAssetsBalances.ContainsKey(p.AssetId))
+                .Select(p => p.AssetId)
+                .Distinct()
+                .Select(assetId => ColoredBalance.CreateEmpty(assetId, assetDictionary));
+
             return new AddressBalanceViewModel
             {
                 AddressId = balance.AddressId,
                 TotalConfirmedTransactions = balance.TotalTransactions,
                 Balance = balance.BtcBalance,
-                Assets = (balance.ColoredBalances ?? Enumerable.Empty<IColoredBalance>()).Select(p => ColoredBalance.Create(p, assetDictionary)),
+                Assets = onchainColoredBalances.Union(missedOffchainColoredBalances).ToList(),
                 UnconfirmedBalanceDelta = balance.UnconfirmedBalanceDelta,
                 AssetDic = AssetDictionary.Create(assetDictionary),
                 LastBlockHeight = lastBlock.Height,
@@ -81,6 +93,23 @@ namespace BCNExplorer.Web.Models
                     AssetId = coloredBalance.AssetId,
                     Quantity = coloredBalance.Quantity,
                     UnconfirmedQuantityDelta = coloredBalance.UnconfirmedQuantityDelta,
+                    Asset = assetViewModel,
+                };
+            }
+
+            public static ColoredBalance CreateEmpty(string assetId, IDictionary<string, IAssetDefinition> assetDictionary)
+            {
+                var asset = assetDictionary.GetValueOrDefault(assetId, null);
+
+                var assetViewModel = asset != null
+                    ? AssetViewModel.Create(asset)
+                    : AssetViewModel.CreateNotFoundAsset(assetId);
+
+                return new ColoredBalance
+                {
+                    AssetId = assetId,
+                    Quantity = 0,
+                    UnconfirmedQuantityDelta =0,
                     Asset = assetViewModel,
                 };
             }
