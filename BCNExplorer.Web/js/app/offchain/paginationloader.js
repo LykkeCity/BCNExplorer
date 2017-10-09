@@ -13,13 +13,13 @@
             if ($container.length === 0) {
                 return;
             }
-            $(selectors.loader).removeClass('hidden');
 
             var loadUrl = $container.data('load-url');
             var loadedClass = "js-offchain-loaded";
 
             if (!$container.hasClass(loadedClass)) {
 
+                $(selectors.loader).removeClass('hidden');
                 $.ajax(loadUrl).success(function(resp) {
                     $(selectors.loader).addClass('hidden');
                     $container.html(resp)
