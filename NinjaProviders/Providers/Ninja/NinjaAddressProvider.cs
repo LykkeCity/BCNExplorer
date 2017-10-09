@@ -220,7 +220,7 @@ namespace Providers.Providers.Ninja
 
         public static bool IsReceived(this AddressTransactionListItemContract source)
         {
-            if (source.Amount > 0  || (source.Amount == 0 && source.Received.Any()))
+            if (!source.Spent.Any())
             {
                 return true;
             }
