@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Log;
@@ -8,6 +9,7 @@ using Core.AssetBlockChanges.Mongo;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace AzureRepositories.AssetCoinHolders
 {
@@ -57,6 +59,8 @@ namespace AzureRepositories.AssetCoinHolders
         private readonly ILog _log;
         private readonly IMongoCollection<AddressAssetBalanceChangeMongoEntity> _mongoCollection;
         private static  SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1);
+
+        private readonly Lazy<Task> _ensureQueryIndexesLocker;
         static AssetBalanceChangesRepository()
         {
             BsonClassMap.RegisterClassMap<AddressAssetBalanceChangeMongoEntity>();
@@ -65,6 +69,7 @@ namespace AzureRepositories.AssetCoinHolders
         public AssetBalanceChangesRepository(IMongoDatabase db, ILog log)
         {
             _log = log;
+            _ensureQueryIndexesLocker = new Lazy<Task>(SetQueryIndexes);
             _mongoCollection = db.GetCollection<AddressAssetBalanceChangeMongoEntity>(AddressAssetBalanceChangeMongoEntity.CollectionName);
         }
 
@@ -125,31 +130,35 @@ namespace AzureRepositories.AssetCoinHolders
 
         public async Task<IBalanceSummary> GetSummaryAsync(IQueryOptions queryOptions, params string[] assetIds)
         {
-            IFindFluent<AddressAssetBalanceChangeMongoEntity, AddressAssetBalanceChangeMongoEntity> query;
+            await EnsureQueryIndexes();
+
+            Expression<Func<AddressAssetBalanceChangeMongoEntity, bool>> predicate;
+
             if (queryOptions != null)
             {
-                query = _mongoCollection.Find(p => assetIds.Contains(p.AssetId)
-                           && p.BlockHeight <= queryOptions.ToBlockHeight
-                           && p.BlockHeight >= queryOptions.FromBlockHeight
-                           && p.TotalChanged != 0);
+                predicate = p => assetIds.Contains(p.AssetId)
+                                                   && p.BlockHeight <= queryOptions.ToBlockHeight
+                                                   && p.BlockHeight >= queryOptions.FromBlockHeight;
             }
             else
             {
-                query= _mongoCollection.Find(p => assetIds.Contains(p.AssetId)
-                            && p.TotalChanged != 0);
+                predicate = p => assetIds.Contains(p.AssetId);
             }
-            
-            var addressBalanceChanges = await query.Project(p => new { p.ColoredAddress, Balance = p.TotalChanged }).ToListAsync();
-            
+
+            var queryResult = await _mongoCollection.AsQueryable().Where(predicate)
+
+                .GroupBy(p=>p.ColoredAddress)
+                .Select(p=>new {coloredAddress = p.Key,sum = p.Sum(x=>x.TotalChanged)})
+                .ToListAsync();
 
             return new BalanceSummary
             {
                 AssetIds = assetIds,
                 AddressSummaries =
-                    addressBalanceChanges.GroupBy(p => p.ColoredAddress).Select(bc => new BalanceAddressSummary
+                    queryResult.Select(bc => new BalanceAddressSummary
                     {
-                        Address = bc.Key,
-                        Balance = bc.Sum(p => p.Balance)
+                        Address = bc.coloredAddress,
+                        Balance = bc.sum
                     })
             };
         }
@@ -251,6 +260,31 @@ namespace AzureRepositories.AssetCoinHolders
 
             return result.Distinct().Select(p => BalanceBlock.Create(p.BlockHash, p.BlockHeight));
         }
+
+        private async Task SetQueryIndexes()
+        {
+            var assetId = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Ascending(p => p.AssetId);
+            var address = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Ascending(p => p.ColoredAddress);
+            var blockHeight = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Ascending(p => p.BlockHeight);
+            var total = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Ascending(p => p.TotalChanged);
+
+            var definition = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Combine(assetId, address, blockHeight, total);
+            await _mongoCollection.Indexes.CreateOneAsync(definition, new CreateIndexOptions { Background = true, Name = "SupportSummaryHistory" });
+
+        }
+
+        private async Task EnsureQueryIndexes()
+        {
+            try
+            {
+
+                await _ensureQueryIndexesLocker.Value;
+            }
+            catch 
+            {
+            }
+        }
+
     }
 
     [BsonIgnoreExtraElements]
