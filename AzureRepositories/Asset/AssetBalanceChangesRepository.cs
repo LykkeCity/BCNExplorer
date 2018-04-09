@@ -263,6 +263,13 @@ namespace AzureRepositories.AssetCoinHolders
 
         private async Task SetQueryIndexes()
         {
+            await SetSupportSummaryHistoryIndex();
+            await SetSupportBlockHeightIndexIndex();
+        }
+
+
+        private async Task SetSupportSummaryHistoryIndex()
+        {
             var assetId = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Ascending(p => p.AssetId);
             var address = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Ascending(p => p.ColoredAddress);
             var blockHeight = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Ascending(p => p.BlockHeight);
@@ -270,7 +277,14 @@ namespace AzureRepositories.AssetCoinHolders
 
             var definition = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Combine(assetId, address, blockHeight, total);
             await _mongoCollection.Indexes.CreateOneAsync(definition, new CreateIndexOptions { Background = true, Name = "SupportSummaryHistory" });
+        }
+        private async Task SetSupportBlockHeightIndexIndex()
+        {
+            var assetId = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Ascending(p => p.AssetId);
+            var blockHeight = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Descending(p => p.BlockHeight);
 
+            var definition = Builders<AddressAssetBalanceChangeMongoEntity>.IndexKeys.Combine(assetId, blockHeight);
+            await _mongoCollection.Indexes.CreateOneAsync(definition, new CreateIndexOptions { Background = true, Name = "SupportBlockHeight" });
         }
 
         private async Task EnsureQueryIndexes()
